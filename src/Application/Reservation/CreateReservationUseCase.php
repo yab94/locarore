@@ -15,7 +15,8 @@ class CreateReservationUseCase
     ) {}
 
     /**
-     * @param array<int, int> $items  [productId => quantity]
+     * @param array<int, int>   $items        [productId => quantity]
+     * @param array<int, float> $priceSnapshots [productId => unitPrice]
      */
     public function execute(
         string  $customerName,
@@ -26,7 +27,8 @@ class CreateReservationUseCase
         string  $startDate,
         string  $endDate,
         array   $items,
-        ?string $notes = null,
+        ?string $notes          = null,
+        array   $priceSnapshots = [],
     ): int {
         $now = new \DateTimeImmutable();
 
@@ -48,10 +50,11 @@ class CreateReservationUseCase
         $reservationItems = [];
         foreach ($items as $productId => $quantity) {
             $reservationItems[] = new ReservationItem(
-                id:            null,
-                reservationId: 0,
-                productId:     (int) $productId,
-                quantity:      (int) $quantity,
+                id:                null,
+                reservationId:     0,
+                productId:         (int) $productId,
+                quantity:          (int) $quantity,
+                unitPriceSnapshot: $priceSnapshots[$productId] ?? null,
             );
         }
         $reservation->setItems($reservationItems);

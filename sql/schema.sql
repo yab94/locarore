@@ -110,6 +110,7 @@ CREATE TABLE IF NOT EXISTS `reservation_items` (
     `product_id`     INT UNSIGNED NOT NULL,
     `pack_id`        INT UNSIGNED NULL DEFAULT NULL,
     `quantity`       INT          NOT NULL,
+    `unit_price_snapshot` DECIMAL(10,2) NULL DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_ri_reservation` (`reservation_id`),
     KEY `idx_ri_product`     (`product_id`),

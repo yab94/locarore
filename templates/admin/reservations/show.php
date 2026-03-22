@@ -62,19 +62,55 @@
                     <tr>
                         <th class="pb-2 text-left">Produit</th>
                         <th class="pb-2 text-right">Qté</th>
+                        <th class="pb-2 text-right">Prix capturé</th>
+                        <th class="pb-2 text-right">Prix actuel</th>
+                        <th class="pb-2 text-right">Total capturé</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    <?php foreach ($reservation->getItems() as $item): ?>
+                    <?php
+                    $grandTotalSnapshot = 0;
+                    $grandTotalCurrent  = 0;
+                    foreach ($reservation->getItems() as $item):
+                        $p            = $products[$item->getProductId()] ?? null;
+                        $snapshot     = $item->getUnitPriceSnapshot();
+                        $currentPrice = $p ? $p->calculatePrice($reservation->getStartDate(), $reservation->getEndDate()) : null;
+                        $totalSnap    = $snapshot !== null ? $snapshot * $item->getQuantity() : null;
+                        $totalCurrent = $currentPrice !== null ? $currentPrice * $item->getQuantity() : null;
+                        if ($totalSnap    !== null) $grandTotalSnapshot += $totalSnap;
+                        if ($totalCurrent !== null) $grandTotalCurrent  += $totalCurrent;
+                        $differs = $snapshot !== null && $currentPrice !== null && abs($snapshot - $currentPrice) > 0.001;
+                    ?>
                         <tr>
                             <td class="py-3">
-                                <?php $p = $products[$item->getProductId()] ?? null; ?>
                                 <?= $p ? e($p->getName()) : 'Produit #' . $item->getProductId() ?>
                             </td>
                             <td class="py-3 text-right"><?= $item->getQuantity() ?></td>
+                            <td class="py-3 text-right font-medium">
+                                <?= $snapshot !== null ? number_format($snapshot, 2, ',', ' ') . ' €' : '—' ?>
+                            </td>
+                            <td class="py-3 text-right <?= $differs ? 'text-orange-600 font-semibold' : 'text-gray-500' ?>">
+                                <?= $currentPrice !== null ? number_format($currentPrice, 2, ',', ' ') . ' €' : '—' ?>
+                                <?= $differs ? ' ⚠' : '' ?>
+                            </td>
+                            <td class="py-3 text-right font-semibold">
+                                <?= $totalSnap !== null ? number_format($totalSnap, 2, ',', ' ') . ' €' : '—' ?>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
+                <tfoot class="border-t-2 border-gray-200 text-sm font-semibold">
+                    <tr>
+                        <td colspan="4" class="pt-3 text-right text-gray-600">Total capturé</td>
+                        <td class="pt-3 text-right text-gray-900"><?= number_format($grandTotalSnapshot, 2, ',', ' ') ?> €</td>
+                    </tr>
+                    <?php if (abs($grandTotalSnapshot - $grandTotalCurrent) > 0.001): ?>
+                    <tr>
+                        <td colspan="4" class="pt-1 text-right text-orange-600 text-xs">Total au tarif actuel</td>
+                        <td class="pt-1 text-right text-orange-600 text-xs"><?= number_format($grandTotalCurrent, 2, ',', ' ') ?> €</td>
+                    </tr>
+                    <?php endif; ?>
+                </tfoot>
             </table>
         </div>
     </div>

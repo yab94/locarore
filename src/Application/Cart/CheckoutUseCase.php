@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Cart;
 
 use Rore\Application\Reservation\CreateReservationUseCase;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
 class CheckoutUseCase
 {
@@ -28,6 +29,19 @@ class CheckoutUseCase
             throw new \RuntimeException("Le panier est vide.");
         }
 
+        // Calculer le prix unitaire par produit au moment du checkout
+        $productRepo    = new MySqlProductRepository();
+        $priceSnapshots = [];
+        foreach ($this->cart->getItems() as $productId => $qty) {
+            $product = $productRepo->findById((int) $productId);
+            if ($product) {
+                $priceSnapshots[$productId] = $product->calculatePrice(
+                    $this->cart->getStartDate(),
+                    $this->cart->getEndDate(),
+                );
+            }
+        }
+
         $reservationId = $this->createReservation->execute(
             customerName:    $customerName,
             customerEmail:   $customerEmail,
@@ -38,6 +52,7 @@ class CheckoutUseCase
             endDate:         $this->cart->getEndDate(),
             items:           $this->cart->getItems(),
             notes:           $notes,
+            priceSnapshots:  $priceSnapshots,
         );
 
         $this->cart->clear();

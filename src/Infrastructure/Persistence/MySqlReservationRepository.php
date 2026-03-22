@@ -116,14 +116,15 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
     private function insertItem(int $reservationId, ReservationItem $item): void
     {
         $stmt = $this->pdo->prepare(
-            'INSERT INTO reservation_items (reservation_id, product_id, pack_id, quantity)
-             VALUES (?, ?, ?, ?)'
+            'INSERT INTO reservation_items (reservation_id, product_id, pack_id, quantity, unit_price_snapshot)
+             VALUES (?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $reservationId,
             $item->getProductId(),
             $item->getPackId(),
             $item->getQuantity(),
+            $item->getUnitPriceSnapshot(),
         ]);
     }
 
@@ -219,11 +220,14 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
     private function hydrateItem(array $row): ReservationItem
     {
         return new ReservationItem(
-            id:            (int) $row['id'],
-            reservationId: (int) $row['reservation_id'],
-            productId:     (int) $row['product_id'],
-            quantity:      (int) $row['quantity'],
-            packId:        isset($row['pack_id']) && $row['pack_id'] !== null ? (int) $row['pack_id'] : null,
+            id:                (int) $row['id'],
+            reservationId:     (int) $row['reservation_id'],
+            productId:         (int) $row['product_id'],
+            quantity:          (int) $row['quantity'],
+            packId:            isset($row['pack_id']) && $row['pack_id'] !== null ? (int) $row['pack_id'] : null,
+            unitPriceSnapshot: isset($row['unit_price_snapshot']) && $row['unit_price_snapshot'] !== null
+                                   ? (float) $row['unit_price_snapshot']
+                                   : null,
         );
     }
 }
