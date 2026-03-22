@@ -1,0 +1,30 @@
+# Dépendances
+/vendor/
+
+# Uploads
+/public/assets/uploads/
+
+# Docker volumes
+/docker/mysql-data/
+
+# Logs
+*.log
+/var/log/
+
+# PHP
+*.cache
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environnement (les valeurs réelles ne se committent pas)
+.env
+.env.local
+# .env.example est volontairement tracké (modèle sans valeurs sensibles)

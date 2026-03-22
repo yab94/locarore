@@ -1,0 +1,42 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./public:/var/www/html/public
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - locarore
+
+  php:
+    build: ./docker/php
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - mysql
+    networks:
+      - locarore
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: locarore
+      MYSQL_USER: locarore
+      MYSQL_PASSWORD: locarore
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - locarore
+
+volumes:
+  mysql_data:
+
+networks:
+  locarore:

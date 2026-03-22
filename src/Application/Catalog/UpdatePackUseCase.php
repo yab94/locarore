@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Rore\Application\Catalog;
+
+use Rore\Domain\Catalog\Entity\PackItem;
+use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
+use Rore\Domain\Catalog\ValueObject\Slug;
+
+class UpdatePackUseCase
+{
+    public function __construct(
+        private PackRepositoryInterface $packRepository,
+    ) {}
+
+    /**
+     * @param array<int, int> $items [productId => quantity]
+     */
+    public function execute(
+        int     $id,
+        string  $name,
+        ?string $description,
+        float   $pricePerDay,
+        array   $items,
+        ?string $customSlug = null,
+    ): void {
+        $pack = $this->packRepository->findById($id);
+        if (!$pack) {
+            throw new \RuntimeException("Pack introuvable.");
+        }
+
+        $slug = $customSlug ? Slug::from($customSlug)->getValue()
+                            : Slug::from($name)->getValue();
+
+        $pack->setName($name);
+        $pack->setSlug($slug);
+        $pack->setDescription($description);
+        $pack->setPricePerDay($pricePerDay);
+        $pack->setUpdatedAt(new \DateTimeImmutable());
+
+        $packItems = [];
+        foreach ($items as $productId => $qty) {
+            if ((int) $qty < 1) continue;
+            $packItems[] = new PackItem(null, $id, (int) $productId, (int) $qty);
+        }
+        $pack->setItems($packItems);
+
+        $this->packRepository->save($pack);
+    }
+}

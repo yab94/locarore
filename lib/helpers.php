@@ -1,0 +1,108 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Helpers globaux — namespace Rore
+ */
+
+/**
+ * Convertit une chaîne en slug SEO-friendly (supporte les accents).
+ */
+function slugify(string $text): string
+{
+    $text = mb_strtolower($text, 'UTF-8');
+    $text = strtr($text, [
+        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
+        'à' => 'a', 'â' => 'a', 'ä' => 'a', 'á' => 'a',
+        'ô' => 'o', 'ö' => 'o', 'ó' => 'o',
+        'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ú' => 'u',
+        'î' => 'i', 'ï' => 'i', 'í' => 'i',
+        'ç' => 'c', 'ñ' => 'n',
+    ]);
+    $text = preg_replace('/[^a-z0-9\s\-]/', '', $text);
+    $text = preg_replace('/[\s\-]+/', '-', trim($text));
+    return $text;
+}
+
+/**
+ * Formate une date en français.
+ */
+function formatDate(string|\DateTimeInterface $date, string $format = 'd/m/Y'): string
+{
+    if (is_string($date)) {
+        $date = new \DateTimeImmutable($date);
+    }
+    return $date->format($format);
+}
+
+/**
+ * Retourne le libellé d'un intervalle de dates.
+ * Ex : "du 12 juin au 14 juin 2026"
+ */
+function dateRangeLabel(string|\DateTimeInterface $start, string|\DateTimeInterface $end): string
+{
+    if (is_string($start)) $start = new \DateTimeImmutable($start);
+    if (is_string($end))   $end   = new \DateTimeImmutable($end);
+
+    $months = [
+        1 => 'janvier', 2 => 'février',  3 => 'mars',      4 => 'avril',
+        5 => 'mai',     6 => 'juin',      7 => 'juillet',   8 => 'août',
+        9 => 'septembre', 10 => 'octobre', 11 => 'novembre', 12 => 'décembre',
+    ];
+
+    $startStr = $start->format('j') . ' ' . $months[(int)$start->format('n')];
+    $endStr   = $end->format('j')   . ' ' . $months[(int)$end->format('n')]
+              . ' ' . $end->format('Y');
+
+    if ($start->format('Y') !== $end->format('Y')) {
+        $startStr .= ' ' . $start->format('Y');
+    }
+
+    return "du $startStr au $endStr";
+}
+
+/**
+ * Calcul du nombre de jours dans un intervalle (inclusif).
+ */
+function nbDays(string|\DateTimeInterface $start, string|\DateTimeInterface $end): int
+{
+    if (is_string($start)) $start = new \DateTimeImmutable($start);
+    if (is_string($end))   $end   = new \DateTimeImmutable($end);
+
+    return (int) $start->diff($end)->days + 1;
+}
+
+/**
+ * Echappe une valeur pour l'affichage HTML.
+ */
+function e(mixed $value): string
+{
+    return htmlspecialchars((string) $value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+
+/**
+ * Retourne le libellé d'un statut de réservation.
+ */
+function statusLabel(string $status): string
+{
+    return match($status) {
+        'pending'   => 'En attente',
+        'confirmed' => 'Confirmée',
+        'cancelled' => 'Annulée',
+        default     => $status,
+    };
+}
+
+/**
+ * Retourne les classes Tailwind pour le badge d'un statut.
+ */
+function statusBadgeClass(string $status): string
+{
+    return match($status) {
+        'pending'   => 'bg-yellow-100 text-yellow-800',
+        'confirmed' => 'bg-green-100 text-green-800',
+        'cancelled' => 'bg-red-100 text-red-800',
+        default     => 'bg-gray-100 text-gray-800',
+    };
+}

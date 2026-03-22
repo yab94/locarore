@@ -1,0 +1,253 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Formulaire principal -->
+    <div class="lg:col-span-2">
+        <form method="post"
+              action="<?= $product ? '/admin/produits/' . $product->getId() . '/modifier' : '/admin/produits/creer' ?>"
+              class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
+
+            <!-- Catégorie principale -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie principale *</label>
+                <select name="category_id" required
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+                    <option value="">— Choisir —</option>
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= $cat->getId() ?>"
+                            <?= $product && $product->getCategoryId() === $cat->getId() ? 'selected' : '' ?>>
+                            <?= e($cat->getName()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Catégories supplémentaires -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Catégories supplémentaires
+                    <span class="text-gray-400 font-normal text-xs ml-1">— Ctrl+clic pour sélection multiple</span>
+                </label>
+                <select name="extra_category_ids[]" multiple
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600 h-28">
+                    <?php
+                    $currentCatIds = $product ? $product->getCategoryIds() : [];
+                    foreach ($categories as $cat): ?>
+                        <option value="<?= $cat->getId() ?>"
+                            <?= in_array($cat->getId(), $currentCatIds) ? 'selected' : '' ?>>
+                            <?= e($cat->getName()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Nom -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
+                <input type="text" name="name" id="name" required
+                       value="<?= e($product?->getName() ?? '') ?>"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+            </div>
+
+            <!-- Slug personnalisable -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Slug (URL)
+                    <span class="text-gray-400 font-normal text-xs ml-1">— généré automatiquement si vide</span>
+                </label>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-400">/produit/</span>
+                    <input type="text" name="slug" id="slug"
+                           value="<?= e($product?->getSlug() ?? '') ?>"
+                           placeholder="ex: vase-en-verre"
+                           pattern="[a-z0-9\-]+"
+                           title="Uniquement des lettres minuscules, chiffres et tirets"
+                           class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+                </div>
+                <p class="text-xs text-gray-400 mt-1">Uniquement : lettres minuscules, chiffres, tirets</p>
+            </div>
+
+            <!-- Description WYSIWYG -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea name="description" id="description"
+                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                ><?= e($product?->getDescription() ?? '') ?></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Stock *</label>
+                    <input type="number" name="stock" min="0" required
+                           value="<?= $product?->getStock() ?? 0 ?>"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Prix par jour (€) *</label>
+                    <input type="number" name="price_per_day" min="0" step="0.01" required
+                           value="<?= number_format($product?->getPricePerDay() ?? 0, 2, '.', '') ?>"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+            </div>
+
+            <div class="flex gap-3 pt-2">
+                <button type="submit"
+                        class="bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-brand-700 transition text-sm">
+                    <?= $product ? 'Enregistrer' : 'Créer le produit' ?>
+                </button>
+                <a href="/admin/produits"
+                   class="px-6 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 transition">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Photos (uniquement en édition) -->
+    <?php if ($product): ?>
+    <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+            <h3 class="font-semibold text-gray-700 mb-4">Ajouter une photo</h3>
+            <form method="post" action="/admin/produits/<?= $product->getId() ?>/photo"
+                  enctype="multipart/form-data" class="space-y-3">
+                <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required
+                       class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
+                <button type="submit"
+                        class="w-full bg-gray-800 text-white text-sm font-medium py-2 rounded-lg hover:bg-gray-900 transition">
+                    Uploader
+                </button>
+            </form>
+        </div>
+
+        <?php $photos = $product->getPhotos(); ?>
+        <?php if (!empty($photos)): ?>
+            <div class="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 class="font-semibold text-gray-700 mb-4">Photos (<?= count($photos) ?>)</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <?php foreach ($photos as $photo): ?>
+                        <div class="relative group">
+                            <img src="<?= e($photo->getPublicPath()) ?>" alt=""
+                                 class="w-full h-24 object-cover rounded-lg">
+                            <form method="post"
+                                  action="/admin/produits/photo/<?= $photo->getId() ?>/supprimer"
+                                  class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/50 rounded-lg">
+                                <button type="submit"
+                                        class="bg-red-600 text-white text-xs px-2 py-1 rounded"
+                                        data-confirm="Supprimer cette photo ?">
+                                    Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+</div>
+
+<script>
+document.getElementById('name').addEventListener('input', function () {
+    const slugField = document.getElementById('slug');
+    if (slugField.dataset.manual) return;
+    slugField.value = this.value
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+});
+document.getElementById('slug').addEventListener('input', function () {
+    this.dataset.manual = '1';
+});
+
+new EasyMDE({
+    element: document.getElementById('description'),
+    spellChecker: false,
+    toolbar: ['bold', 'italic', 'heading', '|', 'unordered-list', 'ordered-list', '|', 'link', '|', 'preview'],
+    minHeight: '140px',
+    status: false,
+});
+</script>
+
+<?php if ($product && isset($calendarEvents)): ?>
+<!-- Calendrier de disponibilité (fiche admin uniquement) -->
+<section class="mt-10">
+    <h2 class="text-lg font-semibold text-gray-700 mb-4">Calendrier de disponibilité</h2>
+    <div id="product-calendar" class="bg-white border border-gray-200 rounded-xl p-6 overflow-x-auto"></div>
+</section>
+
+<script>
+(function () {
+    const reservedPeriods = <?= json_encode($calendarEvents) ?>;
+
+    function isReserved(date) {
+        const d = date.toISOString().slice(0, 10);
+        return reservedPeriods.some(p => d >= p.start && d <= p.end);
+    }
+
+    const container = document.getElementById('product-calendar');
+    const today = new Date();
+    const monthsToShow = 6;
+
+    for (let m = 0; m < monthsToShow; m++) {
+        const year     = today.getFullYear() + Math.floor((today.getMonth() + m) / 12);
+        const month    = (today.getMonth() + m) % 12;
+        const firstDay = new Date(year, month, 1);
+        const lastDay  = new Date(year, month + 1, 0);
+
+        const monthEl = document.createElement('div');
+        monthEl.className = 'inline-block mr-6 mb-6 align-top';
+
+        const title = document.createElement('p');
+        title.className = 'text-sm font-semibold text-gray-600 mb-2 text-center capitalize';
+        title.textContent = firstDay.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+        monthEl.appendChild(title);
+
+        const grid = document.createElement('div');
+        grid.className = 'grid grid-cols-7 gap-0.5 text-xs text-center';
+
+        ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di'].forEach(d => {
+            const h = document.createElement('div');
+            h.className = 'text-gray-400 font-medium py-1';
+            h.textContent = d;
+            grid.appendChild(h);
+        });
+
+        const offset = (firstDay.getDay() + 6) % 7;
+        for (let i = 0; i < offset; i++) grid.appendChild(document.createElement('div'));
+
+        for (let day = 1; day <= lastDay.getDate(); day++) {
+            const date   = new Date(year, month, day);
+            const isPast = date < new Date(today.toDateString());
+            const cell   = document.createElement('div');
+            cell.textContent = day;
+            cell.className = 'rounded py-1 ';
+            if (isPast) {
+                cell.className += 'text-gray-300';
+            } else if (isReserved(date)) {
+                cell.className += 'bg-red-100 text-red-700 font-semibold';
+                cell.title = 'Réservé';
+            } else {
+                cell.className += 'bg-green-50 text-green-700';
+                cell.title = 'Disponible';
+            }
+            grid.appendChild(cell);
+        }
+
+        monthEl.appendChild(grid);
+        container.appendChild(monthEl);
+    }
+
+    const legend = document.createElement('div');
+    legend.className = 'mt-4 flex gap-6 text-xs text-gray-500 border-t border-gray-100 pt-4';
+    legend.innerHTML = `
+        <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-green-100"></span> Disponible</span>
+        <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-red-100"></span> Réservé (confirmé)</span>
+        <span class="flex items-center gap-1.5 text-gray-300"><span class="inline-block w-3 h-3 rounded bg-gray-100"></span> Passé</span>
+    `;
+    container.appendChild(legend);
+})();
+</script>
+<?php endif; ?>

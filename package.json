@@ -1,0 +1,12 @@
+{
+  "name": "locarore",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "css:build": "tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css/app.css --minify",
+    "css:watch": "tailwindcss -i ./public/assets/css/input.css -o ./public/assets/css/app.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}
