@@ -52,7 +52,9 @@ class ProductController extends AdminController
                 name:             trim($_POST['name'] ?? ''),
                 description:      trim($_POST['description'] ?? '') ?: null,
                 stock:            (int) ($_POST['stock'] ?? 0),
-                pricePerDay:      (float) ($_POST['price_per_day'] ?? 0),
+                priceBase:        (float) ($_POST['price_base'] ?? 80),
+                priceExtraWe:     (float) ($_POST['price_extra_we'] ?? 0),
+                priceExtraSem:    (float) ($_POST['price_extra_sem'] ?? 15),
                 extraCategoryIds: array_map('intval', $_POST['extra_category_ids'] ?? []),
                 customSlug:       trim($_POST['slug'] ?? '') ?: null,
             );
@@ -96,7 +98,9 @@ class ProductController extends AdminController
                 name:             trim($_POST['name'] ?? ''),
                 description:      trim($_POST['description'] ?? '') ?: null,
                 stock:            (int) ($_POST['stock'] ?? 0),
-                pricePerDay:      (float) ($_POST['price_per_day'] ?? 0),
+                priceBase:        (float) ($_POST['price_base'] ?? 80),
+                priceExtraWe:     (float) ($_POST['price_extra_we'] ?? 0),
+                priceExtraSem:    (float) ($_POST['price_extra_sem'] ?? 15),
                 extraCategoryIds: array_map('intval', $_POST['extra_category_ids'] ?? []),
                 customSlug:       trim($_POST['slug'] ?? '') ?: null,
             );

@@ -70,8 +70,7 @@
                         </h3>
                         <p class="text-sm text-gray-500">Quantité : <?= $qty ?></p>
                         <p class="text-sm text-gray-500">
-                            <?= number_format($p->getPricePerDay() * $qty * nbDays($cart->getStartDate(), $cart->getEndDate()), 2, ',', ' ') ?> €
-                            (<?= nbDays($cart->getStartDate(), $cart->getEndDate()) ?> jr × <?= number_format($p->getPricePerDay(), 2, ',', ' ') ?> €)
+                            <?= number_format($p->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $qty, 2, ',', ' ') ?> €
                         </p>
                     </div>
                     <form method="post" action="/panier/supprimer">
@@ -89,10 +88,10 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6 h-fit">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Récapitulatif</h2>
             <?php
-            $total = 0;
+            $total   = 0;
             $nbJours = nbDays($cart->getStartDate(), $cart->getEndDate());
             foreach ($cartProducts as $row) {
-                $total += $row['product']->getPricePerDay() * $row['quantity'] * $nbJours;
+                $total += $row['product']->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $row['quantity'];
             }
             ?>
             <div class="flex justify-between text-sm text-gray-600 mb-2">

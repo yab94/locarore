@@ -13,7 +13,7 @@
         <p class="text-sm text-gray-500 mb-3 line-clamp-2"><?= e($product->getDescription() ?? '') ?></p>
         <div class="flex items-center justify-between">
             <span class="text-brand-700 font-bold">
-                <?= number_format($product->getPricePerDay(), 2, ',', ' ') ?> € / jour
+                à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
             </span>
             <a href="/produit/<?= e($product->getSlug()) ?>"
                class="text-sm bg-brand-600 text-white px-3 py-1.5 rounded-lg hover:bg-brand-700 transition">

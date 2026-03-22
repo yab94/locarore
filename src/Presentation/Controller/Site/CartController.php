@@ -48,10 +48,21 @@ class CartController extends Controller
     {
         $this->requirePost();
         $redirect = $_POST['redirect'] ?? '/panier';
+
+        $startDate = trim($_POST['start_date'] ?? '');
+        $endDate   = trim($_POST['end_date']   ?? '');
+
+        // Dates vides = intention de réinitialiser le panier
+        if ($startDate === '' || $endDate === '') {
+            $this->cart->clear();
+            $this->redirect('/panier');
+            return;
+        }
+
         try {
             (new SetCartDatesUseCase($this->cart))->execute(
-                startDate: $_POST['start_date'] ?? '',
-                endDate:   $_POST['end_date']   ?? '',
+                startDate: $startDate,
+                endDate:   $endDate,
             );
             $this->flash('success', 'Dates enregistrées.');
         } catch (\Throwable $e) {

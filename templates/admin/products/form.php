@@ -85,9 +85,26 @@
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Prix par jour (€) *</label>
-                    <input type="number" name="price_per_day" min="0" step="0.01" required
-                           value="<?= number_format($product?->getPricePerDay() ?? 0, 2, '.', '') ?>"
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Forfait de base (€) *</label>
+                    <p class="text-xs text-gray-400 mb-1">Couvre 1 à 2 jours de location</p>
+                    <input type="number" name="price_base" min="0" step="0.01" required
+                           value="<?= number_format($product?->getPriceBase() ?? 80, 2, '.', '') ?>"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Supp./jour WE (€)</label>
+                    <p class="text-xs text-gray-400 mb-1">Sam+dim inclus, ≤ 4 jours</p>
+                    <input type="number" name="price_extra_we" min="0" step="0.01"
+                           value="<?= number_format($product?->getPriceExtraWe() ?? 0, 2, '.', '') ?>"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Supp./jour semaine (€)</label>
+                    <p class="text-xs text-gray-400 mb-1">Sinon (hors WE ou &gt; 4 jours)</p>
+                    <input type="number" name="price_extra_sem" min="0" step="0.01"
+                           value="<?= number_format($product?->getPriceExtraSem() ?? 15, 2, '.', '') ?>"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
                 </div>
             </div>

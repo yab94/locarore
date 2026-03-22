@@ -45,7 +45,7 @@
     <div>
         <h1 class="text-3xl font-bold text-gray-900 mb-2"><?= e($product->getName()) ?></h1>
         <p class="text-2xl font-semibold text-brand-600 mb-4">
-            <?= number_format($product->getPricePerDay(), 2, ',', ' ') ?> € / jour
+            à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
         </p>
 
         <?php if ($product->getDescription()): ?>
@@ -73,9 +73,16 @@
                 </form>
             </div>
         <?php else: ?>
-            <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-sm text-green-800">
-                📅 Du <?= htmlspecialchars($cart['start_date']) ?> au <?= htmlspecialchars($cart['end_date']) ?>
-                <a href="/panier" class="ml-2 text-green-600 underline">Modifier</a>
+            <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-sm text-green-800 flex items-center justify-between">
+                <span>📅 Du <?= htmlspecialchars($cart['start_date']) ?> au <?= htmlspecialchars($cart['end_date']) ?></span>
+                <form method="post" action="/panier/dates">
+                    <input type="hidden" name="start_date" value="">
+                    <input type="hidden" name="end_date" value="">
+                    <button type="submit" class="ml-2 text-green-600 underline text-xs"
+                            data-confirm="Modifier les dates videra votre panier. Continuer ?">
+                        Modifier
+                    </button>
+                </form>
             </div>
 
             <?php if ($availableQty !== null && $availableQty <= 0): ?>

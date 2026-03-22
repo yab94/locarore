@@ -33,7 +33,7 @@
                     </td>
                     <td class="px-6 py-4 text-gray-500">—</td>
                     <td class="px-6 py-4 text-right"><?= $p->getStock() ?></td>
-                    <td class="px-6 py-4 text-right"><?= number_format($p->getPricePerDay(), 2, ',', ' ') ?> €</td>
+                    <td class="px-6 py-4 text-right"><?= number_format($p->getPriceBase(), 2, ',', ' ') ?> €</td>
                     <td class="px-6 py-4 text-center">
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
                             <?= $p->isActive() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">

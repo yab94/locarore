@@ -96,8 +96,8 @@ class MySqlProductRepository implements ProductRepositoryInterface
         if ($product->getId() === null) {
             $stmt = $this->pdo->prepare(
                 'INSERT INTO products
-                    (category_id, name, slug, description, stock, price_per_day, is_active, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                    (category_id, name, slug, description, stock, price_base, price_extra_we, price_extra_sem, is_active, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $product->getCategoryId(),
@@ -105,7 +105,9 @@ class MySqlProductRepository implements ProductRepositoryInterface
                 $product->getSlug(),
                 $product->getDescription(),
                 $product->getStock(),
-                $product->getPricePerDay(),
+                $product->getPriceBase(),
+                $product->getPriceExtraWe(),
+                $product->getPriceExtraSem(),
                 (int) $product->isActive(),
                 $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 $product->getUpdatedAt()->format('Y-m-d H:i:s'),
@@ -115,7 +117,8 @@ class MySqlProductRepository implements ProductRepositoryInterface
             $stmt = $this->pdo->prepare(
                 'UPDATE products
                     SET category_id = ?, name = ?, slug = ?, description = ?,
-                        stock = ?, price_per_day = ?, is_active = ?, updated_at = ?
+                        stock = ?, price_base = ?, price_extra_we = ?, price_extra_sem = ?,
+                        is_active = ?, updated_at = ?
                   WHERE id = ?'
             );
             $stmt->execute([
@@ -124,7 +127,9 @@ class MySqlProductRepository implements ProductRepositoryInterface
                 $product->getSlug(),
                 $product->getDescription(),
                 $product->getStock(),
-                $product->getPricePerDay(),
+                $product->getPriceBase(),
+                $product->getPriceExtraWe(),
+                $product->getPriceExtraSem(),
                 (int) $product->isActive(),
                 $product->getUpdatedAt()->format('Y-m-d H:i:s'),
                 $product->getId(),
@@ -230,16 +235,18 @@ class MySqlProductRepository implements ProductRepositoryInterface
     private function hydrate(array $row): Product
     {
         return new Product(
-            id:          (int) $row['id'],
-            categoryId:  (int) $row['category_id'],
-            name:        $row['name'],
-            slug:        $row['slug'],
-            description: $row['description'],
-            stock:       (int) $row['stock'],
-            pricePerDay: (float) $row['price_per_day'],
-            isActive:    (bool) $row['is_active'],
-            createdAt:   new \DateTimeImmutable($row['created_at']),
-            updatedAt:   new \DateTimeImmutable($row['updated_at']),
+            id:           (int) $row['id'],
+            categoryId:   (int) $row['category_id'],
+            name:         $row['name'],
+            slug:         $row['slug'],
+            description:  $row['description'],
+            stock:        (int) $row['stock'],
+            priceBase:    (float) $row['price_base'],
+            priceExtraWe: (float) $row['price_extra_we'],
+            priceExtraSem: (float) $row['price_extra_sem'],
+            isActive:     (bool) $row['is_active'],
+            createdAt:    new \DateTimeImmutable($row['created_at']),
+            updatedAt:    new \DateTimeImmutable($row['updated_at']),
         );
     }
 
