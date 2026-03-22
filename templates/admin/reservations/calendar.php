@@ -64,9 +64,9 @@ $daysInMonth = (int) $end->format('j');
                 <?php foreach ($dayReservations as $r): ?>
                     <a href="/admin/reservations/<?= $r->getId() ?>"
                        class="block mt-0.5 px-1 py-0.5 rounded text-xs truncate
-                           <?= $r->getStatus() === 'confirmed'
-                               ? 'bg-green-100 text-green-800'
-                               : 'bg-yellow-100 text-yellow-800' ?>">
+                           <?= $r->isConfirmed() ? 'bg-green-100 text-green-800' :
+                              ($r->isQuoted()    ? 'bg-orange-100 text-orange-800' :
+                                                   'bg-yellow-100 text-yellow-800') ?>">
                         <?= e($r->getCustomerName()) ?>
                     </a>
                 <?php endforeach; ?>

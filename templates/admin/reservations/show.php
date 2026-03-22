@@ -80,24 +80,46 @@
     </div>
 
     <!-- Actions -->
-    <div class="space-y-4">
-        <?php if ($reservation->isPending()): ?>
-            <form method="post" action="/admin/reservations/<?= $reservation->getId() ?>/confirmer">
-                <button type="submit"
-                        class="w-full bg-green-600 text-white font-semibold py-3 rounded-xl hover:bg-green-700 transition">
-                    ✓ Confirmer
-                </button>
-            </form>
+    <div class="space-y-3">
+
+        <?php
+        $s  = $reservation->getStatus();
+        $id = $reservation->getId();
+        // Helper local : bouton POST
+        $btn = fn(string $action, string $label, string $cls, ?string $confirm = null) =>
+            '<form method="post" action="/admin/reservations/' . $id . '/' . $action . '">'
+            . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '"'
+            . ($confirm ? ' data-confirm="' . htmlspecialchars($confirm) . '"' : '') . '>'
+            . $label . '</button></form>';
+        // Bouton vers statut via /statut (champ caché)
+        $btnStatus = fn(string $target, string $label, string $cls) =>
+            '<form method="post" action="/admin/reservations/' . $id . '/statut">'
+            . '<input type="hidden" name="status" value="' . $target . '">'
+            . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '">'
+            . $label . '</button></form>';
+        ?>
+
+        <?php if ($s === 'pending'): ?>
+            <?= $btn('devis',     '📄 Envoyer un devis', 'bg-orange-500 text-white hover:bg-orange-600') ?>
+            <?= $btn('confirmer', '✓ Confirmer',          'bg-green-600 text-white hover:bg-green-700') ?>
         <?php endif; ?>
 
-        <?php if (!$reservation->isCancelled()): ?>
-            <form method="post" action="/admin/reservations/<?= $reservation->getId() ?>/annuler">
-                <button type="submit"
-                        class="w-full bg-red-50 text-red-700 border border-red-200 font-semibold py-3 rounded-xl hover:bg-red-100 transition"
-                        data-confirm="Annuler cette réservation ?">
-                    ✕ Annuler
-                </button>
-            </form>
+        <?php if ($s === 'quoted'): ?>
+            <?= $btn('confirmer', '✓ Confirmer',                    'bg-green-600 text-white hover:bg-green-700') ?>
+            <?= $btnStatus('pending', '↩ Remettre en attente',     'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
+        <?php endif; ?>
+
+        <?php if ($s === 'confirmed'): ?>
+            <?= $btnStatus('quoted',   '↩ Repasser en devis',      'bg-orange-100 text-orange-700 hover:bg-orange-200') ?>
+            <?= $btnStatus('pending',  '↩ Remettre en attente',    'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
+        <?php endif; ?>
+
+        <?php if ($s === 'cancelled'): ?>
+            <?= $btnStatus('pending', '↩ Remettre en attente',     'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
+        <?php endif; ?>
+
+        <?php if ($s !== 'cancelled'): ?>
+            <?= $btn('annuler', '✕ Annuler', 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100', 'Annuler cette réservation ?') ?>
         <?php endif; ?>
 
         <a href="/admin/reservations"

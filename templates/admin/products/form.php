@@ -182,9 +182,10 @@ new EasyMDE({
 (function () {
     const reservedPeriods = <?= json_encode($calendarEvents) ?>;
 
-    function isReserved(date) {
+    function getStatus(date) {
         const d = date.toISOString().slice(0, 10);
-        return reservedPeriods.some(p => d >= p.start && d <= p.end);
+        const match = reservedPeriods.find(p => d >= p.start && d <= p.end);
+        return match ? match.status : null;
     }
 
     const container = document.getElementById('product-calendar');
@@ -224,11 +225,15 @@ new EasyMDE({
             const cell   = document.createElement('div');
             cell.textContent = day;
             cell.className = 'rounded py-1 ';
+            const status = getStatus(date);
             if (isPast) {
                 cell.className += 'text-gray-300';
-            } else if (isReserved(date)) {
+            } else if (status === 'confirmed') {
                 cell.className += 'bg-red-100 text-red-700 font-semibold';
-                cell.title = 'Réservé';
+                cell.title = 'Réservé (confirmé)';
+            } else if (status === 'quoted') {
+                cell.className += 'bg-orange-100 text-orange-700 font-semibold';
+                cell.title = 'Devis envoyé';
             } else {
                 cell.className += 'bg-green-50 text-green-700';
                 cell.title = 'Disponible';
@@ -244,6 +249,7 @@ new EasyMDE({
     legend.className = 'mt-4 flex gap-6 text-xs text-gray-500 border-t border-gray-100 pt-4';
     legend.innerHTML = `
         <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-green-100"></span> Disponible</span>
+        <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-orange-100"></span> Devis envoyé</span>
         <span class="flex items-center gap-1.5"><span class="inline-block w-3 h-3 rounded bg-red-100"></span> Réservé (confirmé)</span>
         <span class="flex items-center gap-1.5 text-gray-300"><span class="inline-block w-3 h-3 rounded bg-gray-100"></span> Passé</span>
     `;

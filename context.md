@@ -32,6 +32,10 @@ Les descriptions de produits et catégories doivent être stylisables et donc le
 
 l'url d'un produit ou d'une sous categorie doit comporter les troncons des categories parentes.
 
+On peut revenir sur les status de commandes (si on se trompe par exemple, confirmation par erreur)
+
+Il faut un nouveau status pour les reservaitons car si deux personnes louent la meme choses sur la même période et qu'un devis est envoyé achacun le premier qui répond invldera l'autre. Il faut dont un status intermédiaire qui bloque le stock comme le ferait 'confirmed' mais sans pour autant apparaitre en vert dans le calendrier, il faudra apparaitre en orange en status 'quoted' devis en cours.
+
 - La partie publique
 
 Une navigation catégorie/produits optimisées pour le SEO, des urls slug etc...

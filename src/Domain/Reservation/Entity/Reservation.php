@@ -47,6 +47,7 @@ class Reservation
     public function setItems(array $items): void       { $this->items = $items; }
 
     public function isPending(): bool   { return $this->status === 'pending'; }
+    public function isQuoted(): bool    { return $this->status === 'quoted'; }
     public function isConfirmed(): bool { return $this->status === 'confirmed'; }
     public function isCancelled(): bool { return $this->status === 'cancelled'; }
 }

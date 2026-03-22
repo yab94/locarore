@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Reservation\CancelReservationUseCase;
 use Rore\Application\Reservation\ConfirmReservationUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
+use Rore\Application\Reservation\SetReservationStatusUseCase;
 use Rore\Domain\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
@@ -53,6 +54,31 @@ class ReservationController extends AdminController
             'reservation' => $reservation,
             'products'    => $products,
         ]);
+    }
+
+    public function quote(string $id): void
+    {
+        $this->requirePost();
+        try {
+            (new SetReservationStatusUseCase($this->repo))->execute((int) $id, 'quoted');
+            $this->flash('success', 'Devis marqué comme envoyé.');
+        } catch (\Throwable $e) {
+            $this->flash('error', $e->getMessage());
+        }
+        $this->redirect('/admin/reservations/' . $id);
+    }
+
+    public function setStatus(string $id): void
+    {
+        $this->requirePost();
+        $newStatus = trim($_POST['status'] ?? '');
+        try {
+            (new SetReservationStatusUseCase($this->repo))->execute((int) $id, $newStatus);
+            $this->flash('success', 'Statut mis à jour.');
+        } catch (\Throwable $e) {
+            $this->flash('error', $e->getMessage());
+        }
+        $this->redirect('/admin/reservations/' . $id);
     }
 
     public function confirm(string $id): void

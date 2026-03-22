@@ -53,7 +53,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
     ): array {
         $stmt = $this->pdo->prepare(
             "SELECT * FROM reservations
-              WHERE status = 'confirmed'
+              WHERE status IN ('confirmed','quoted')
                 AND start_date <= ?
                 AND end_date   >= ?"
         );
@@ -186,7 +186,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
              FROM reservation_items ri
              JOIN reservations r ON r.id = ri.reservation_id
              WHERE ri.product_id = ?
-               AND r.status IN ('pending','confirmed')
+               AND r.status IN ('pending','quoted','confirmed')
                AND r.start_date <= ? AND r.end_date >= ?"
         );
         $stmt->execute([$productId, $endDate, $startDate]);
@@ -200,18 +200,19 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
     public function getReservedPeriodsByProduct(int $productId): array
     {
         $stmt = $this->pdo->prepare(
-            "SELECT r.start_date, r.end_date, ri.quantity
+            "SELECT r.start_date, r.end_date, r.status, ri.quantity
              FROM reservation_items ri
              JOIN reservations r ON r.id = ri.reservation_id
              WHERE ri.product_id = ?
-               AND r.status = 'confirmed'
+               AND r.status IN ('confirmed','quoted')
              ORDER BY r.start_date"
         );
         $stmt->execute([$productId]);
         return array_map(fn($row) => [
-            'start' => $row['start_date'],
-            'end'   => $row['end_date'],
-            'qty'   => (int) $row['quantity'],
+            'start'  => $row['start_date'],
+            'end'    => $row['end_date'],
+            'qty'    => (int) $row['quantity'],
+            'status' => $row['status'],
         ], $stmt->fetchAll());
     }
 

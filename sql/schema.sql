@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `reservations` (
     `event_address`    TEXT         NULL,
     `start_date`       DATE         NOT NULL,
     `end_date`         DATE         NOT NULL,
-    `status`           ENUM('pending','confirmed','cancelled') NOT NULL DEFAULT 'pending',
+    `status`           ENUM('pending','quoted','confirmed','cancelled') NOT NULL DEFAULT 'pending',
     `notes`            TEXT         NULL,
     `created_at`       DATETIME     NOT NULL,
     `updated_at`       DATETIME     NOT NULL,

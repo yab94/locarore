@@ -143,6 +143,10 @@ $router->get('/admin/reservations/{id}',
     [\Rore\Presentation\Controller\Admin\ReservationController::class, 'show']);
 $router->post('/admin/reservations/{id}/confirmer',
     [\Rore\Presentation\Controller\Admin\ReservationController::class, 'confirm']);
+$router->post('/admin/reservations/{id}/devis',
+    [\Rore\Presentation\Controller\Admin\ReservationController::class, 'quote']);
+$router->post('/admin/reservations/{id}/statut',
+    [\Rore\Presentation\Controller\Admin\ReservationController::class, 'setStatus']);
 $router->post('/admin/reservations/{id}/annuler',
     [\Rore\Presentation\Controller\Admin\ReservationController::class, 'cancel']);
 

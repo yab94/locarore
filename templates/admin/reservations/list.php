@@ -1,6 +1,6 @@
 <!-- Filtres statut -->
 <div class="flex gap-2 mb-6 flex-wrap">
-    <?php foreach (['all' => 'Toutes', 'pending' => 'En attente', 'confirmed' => 'Confirmées', 'cancelled' => 'Annulées'] as $val => $label): ?>
+    <?php foreach (['all' => 'Toutes', 'pending' => 'En attente', 'quoted' => 'Devis envoyé', 'confirmed' => 'Confirmées', 'cancelled' => 'Annulées'] as $val => $label): ?>
         <a href="/admin/reservations?status=<?= $val ?>"
            class="px-3 py-1.5 rounded-lg text-sm font-medium border transition
                <?= ($currentStatus ?? 'all') === $val
