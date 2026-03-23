@@ -11,7 +11,7 @@ class LegalController extends Controller
     public function mentions(): void
     {
         $this->render('site/legal', [
-            'title' => 'Mentions légales — ' . $this->setting('site.name'),
+            'title' => 'Mentions légales — ' . $this->settings->get('site.name'),
         ]);
     }
 }

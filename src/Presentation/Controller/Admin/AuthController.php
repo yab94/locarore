@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function login(): void
     {
-        if (!empty($this->sessionGet('admin_logged_in'))) {
+        if (!empty($this->session->get('admin_logged_in'))) {
             $this->redirect('/admin/dashboard');
         }
         $this->render('admin/login', ['title' => 'Administration']);
@@ -24,7 +24,7 @@ class AuthController extends Controller
         $password = $this->inputString('password');
 
         if ($password === $config['admin']['password']) {
-            $this->sessionSet('admin_logged_in', true);
+            $this->session->set('admin_logged_in', true);
             $this->redirect('/admin/dashboard');
         }
 
@@ -34,7 +34,7 @@ class AuthController extends Controller
 
     public function logout(): void
     {
-        $this->sessionUnset('admin_logged_in');
+        $this->session->remove('admin_logged_in');
         $this->redirect('/admin');
     }
 }

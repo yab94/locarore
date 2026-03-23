@@ -11,34 +11,14 @@ use Rore\Infrastructure\Config\SettingsStore;
 abstract class Controller
 {
     public function __construct(
-        private readonly SessionStorageInterface $session,
+        readonly SessionStorageInterface $session,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
-        private readonly SettingsStore $settings,
+        readonly SettingsStore $settings,
     ) {}
-
-    protected function setting(string $key, array $vars = []): string
-    {
-        return $this->settings->get($key, $vars);
-    }
 
     protected function requestMethod(): string
     {
         return (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET');
-    }
-
-    protected function sessionGet(string $key, mixed $default = null): mixed
-    {
-        return $this->session->get($key, $default);
-    }
-
-    protected function sessionSet(string $key, mixed $value): void
-    {
-        $this->session->set($key, $value);
-    }
-
-    protected function sessionUnset(string $key): void
-    {
-        $this->session->remove($key);
     }
 
     protected function render(
@@ -66,7 +46,7 @@ abstract class Controller
 
     private function getCartItemCount(): int
     {
-        $cart = $this->sessionGet('rore_cart', []);
+        $cart = $this->session->get('rore_cart', []);
         if (!is_array($cart)) {
             return 0;
         }
@@ -90,18 +70,18 @@ abstract class Controller
 
     protected function flash(string $type, string $message): void
     {
-        $flash = $this->sessionGet('flash', []);
+        $flash = $this->session->get('flash', []);
         if (!is_array($flash)) {
             $flash = [];
         }
         $flash[$type] = $message;
-        $this->sessionSet('flash', $flash);
+        $this->session->set('flash', $flash);
     }
 
     protected function getFlash(): array
     {
-        $flash = $this->sessionGet('flash', []);
-        $this->sessionUnset('flash');
+        $flash = $this->session->get('flash', []);
+        $this->session->remove('flash');
         return is_array($flash) ? $flash : [];
     }
 

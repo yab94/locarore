@@ -17,7 +17,7 @@ abstract class AdminController extends Controller
         SettingsStore           $settings,
     ) {
         parent::__construct($session, $csrfTokenManager, $settings);
-        if (empty($this->sessionGet('admin_logged_in'))) {
+        if (empty($this->session->get('admin_logged_in'))) {
             $this->redirect('/admin');
         }
     }

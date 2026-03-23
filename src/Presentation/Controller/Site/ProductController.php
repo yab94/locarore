@@ -56,7 +56,7 @@ class ProductController extends Controller
             : [];
         $breadcrumb[] = $product;   // Le produit lui-même en dernier
 
-        $cart      = $this->sessionGet('rore_cart');
+        $cart      = $this->session->get('rore_cart');
         $startDate = $cart['start_date'] ?? null;
         $endDate   = $cart['end_date']   ?? null;
 
