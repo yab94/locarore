@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Rore\Application\Cart;
 
 use Rore\Application\Reservation\CreateReservationUseCase;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 
 class CheckoutUseCase
 {
     public function __construct(
         private CartSession              $cart,
+        private ProductRepositoryInterface $productRepository,
         private CreateReservationUseCase $createReservation,
     ) {}
 
@@ -30,10 +31,9 @@ class CheckoutUseCase
         }
 
         // Calculer le prix unitaire par produit au moment du checkout
-        $productRepo    = new MySqlProductRepository();
         $priceSnapshots = [];
         foreach ($this->cart->getItems() as $productId => $qty) {
-            $product = $productRepo->findById((int) $productId);
+            $product = $this->productRepository->findById((int) $productId);
             if ($product) {
                 $priceSnapshots[$productId] = $product->calculatePrice(
                     $this->cart->getStartDate(),
