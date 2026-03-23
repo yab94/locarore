@@ -6,6 +6,7 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 use Rore\Presentation\Http\RequestInterface;
@@ -17,11 +18,12 @@ class SettingsController extends AdminController
         private readonly MySqlSettingsRepository $repo,
         RequestInterface                         $request,
         ResponseInterface                        $response,
+        Config                                   $config,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsStore                            $settings,
     ) {
-        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

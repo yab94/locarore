@@ -6,6 +6,7 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
@@ -22,11 +23,12 @@ class HomeController extends Controller
         private readonly PageMetaBuilder         $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
+        Config                                   $config,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsStore                            $settings,
     ) {
-        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

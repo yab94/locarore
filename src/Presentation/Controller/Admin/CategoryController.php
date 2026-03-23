@@ -9,6 +9,7 @@ use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
+use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Presentation\Http\RequestInterface;
@@ -23,11 +24,12 @@ class CategoryController extends AdminController
         private readonly ToggleCategoryUseCase   $toggleCategoryUseCase,
         RequestInterface                         $request,
         ResponseInterface                        $response,
+        Config                                   $config,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsStore                            $settings,
     ) {
-        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

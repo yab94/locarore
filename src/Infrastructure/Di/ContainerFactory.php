@@ -12,6 +12,7 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
+use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Security\CsrfTokenManager;
 use Rore\Infrastructure\Http\HttpRequest;
 use Rore\Infrastructure\Http\HttpResponse;
@@ -35,11 +36,14 @@ use Rore\Presentation\Http\ResponseInterface;
 final class ContainerFactory
 {
     /**
-     * @param array<string, mixed> $config  tableau issu de app.ini (sections indexées)
+     * @param Config $config
      */
-    public static function create(array $config): Container
+    public static function create(Config $config): Container
     {
         $c = new Container();
+
+        // ── Config (instance partagée) ────────────────────────────────
+        $c->instance(Config::class, $config);
 
         // ── Repositories : Interface → MySQL ────────────────────────────
         $c->bind(CategoryRepositoryInterface::class,
@@ -59,7 +63,7 @@ final class ContainerFactory
 
         // ── Infrastructure scalaire (config-dépendante) ─────────────────
         $c->bind(FileUploader::class,
-            fn($c) => new FileUploader($config['upload']));
+            fn($c) => new FileUploader($config->section('upload')));
 
         // ── Storage : Session ──────────────────────────────────────────
         $c->bind(SessionStorageInterface::class,

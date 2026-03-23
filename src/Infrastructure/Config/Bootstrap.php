@@ -12,7 +12,7 @@ use Rore\Infrastructure\Database\Connection;
  * Doit être appelé après que BASE_PATH est défini et que l'autoloader
  * est enregistré.
  *
- * @return array<string, mixed> La config complète issue de app.ini
+ * @return Config La config complète issue de app.ini
  */
 final class Bootstrap
 {
@@ -21,13 +21,13 @@ final class Bootstrap
      * 2. Charge config/app.ini en résolvant les placeholders ${VAR}
      * 3. Initialise la connexion à la base de données
      *
-     * @return array<string, mixed>
+     * @return Config
      */
-    public static function boot(): array
+    public static function boot(): Config
     {
         self::loadEnv();
-        $config = self::loadIni();
-        Connection::init($config['database']);
+        $config = new Config(self::loadIni());
+        Connection::init($config->section('database'));
 
         return $config;
     }

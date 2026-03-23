@@ -20,10 +20,10 @@ class AuthController extends Controller
     {
         $this->requirePost();
 
-        $config   = parse_ini_file(BASE_PATH . '/config/app.ini', true);
         $password = $this->request->inputString('password');
+        $expected = (string) $this->config->getParam('admin.password', '');
 
-        if ($password === $config['admin']['password']) {
+        if ($password === $expected) {
             $this->session->set('admin_logged_in', true);
             $this->redirect('/admin/dashboard');
         }

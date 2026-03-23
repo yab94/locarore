@@ -9,6 +9,7 @@ use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
@@ -25,11 +26,12 @@ class PackController extends AdminController
         private readonly TogglePackUseCase      $togglePackUseCase,
         RequestInterface                        $request,
         ResponseInterface                       $response,
+        Config                                   $config,
         SessionStorageInterface                 $session,
         CsrfTokenManagerInterface               $csrfTokenManager,
         SettingsStore                           $settings,
     ) {
-        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
     }
 
     public function index(): void
