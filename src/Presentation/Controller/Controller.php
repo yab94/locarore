@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller;
 
 use Rore\Application\Security\CsrfTokenManagerInterface;
+use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 
@@ -19,7 +19,7 @@ abstract class Controller
         readonly Config $config,
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
-        readonly SettingsStore $settings,
+        readonly SettingsServiceInterface $settings,
     ) {}
 
     protected function render(

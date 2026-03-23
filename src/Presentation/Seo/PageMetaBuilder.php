@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
+use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Infrastructure\Config\SettingsStore;
 
 /**
  * Construit les métadonnées SEO (PageMeta) pour chaque type de page du site.
- * S'appuie sur MetaFormatter pour le formatage et sur SettingsStore (injecté) pour les settings DB.
+ * S'appuie sur SettingsServiceInterface (injecté) pour les settings DB.
  */
 final class PageMetaBuilder
 {
     public function __construct(
-        private readonly SettingsStore $settings,
+        private readonly SettingsServiceInterface $settings,
     ) {}
 
     /**

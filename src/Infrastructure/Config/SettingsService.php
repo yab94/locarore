@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Config;
 
+use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 
-final class SettingsStore
+final class SettingsService implements SettingsServiceInterface
 {
     public function __construct(
         private readonly SettingsRepositoryInterface $repo,
     ) {}
 
     /**
-     * Retourne la valeur brute d'une clé de paramètre.
-     * Supporte l'interpolation : get('hero.title', ['name' => 'Rore']) remplace {name}.
-     *
      * @param array<string,string> $vars
      */
     public function get(string $key, array $vars = []): string

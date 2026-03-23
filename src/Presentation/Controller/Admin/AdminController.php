@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Security\CsrfTokenManagerInterface;
+use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
@@ -20,7 +20,7 @@ abstract class AdminController extends Controller
         Config $config,
         SessionStorageInterface $session,
         CsrfTokenManagerInterface $csrfTokenManager,
-        SettingsStore           $settings,
+        SettingsServiceInterface           $settings,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
         if (empty($this->session->get('admin_logged_in'))) {

@@ -6,6 +6,7 @@ namespace Rore\Infrastructure\Di;
 
 use Rore\Application\Cart\CartSession;
 use Rore\Application\Security\CsrfTokenManagerInterface;
+use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
@@ -13,6 +14,7 @@ use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 use Rore\Infrastructure\Config\Config;
+use Rore\Infrastructure\Config\SettingsService;
 use Rore\Infrastructure\Security\CsrfTokenManager;
 use Rore\Infrastructure\Http\HttpRequest;
 use Rore\Infrastructure\Http\HttpResponse;
@@ -72,6 +74,10 @@ final class ContainerFactory
         // ── Security : CSRF (port → adapter) ───────────────────────────
         $c->bind(CsrfTokenManagerInterface::class,
             fn($c) => $c->get(CsrfTokenManager::class));
+
+        // ── Application : Settings (port → adapter) ────────────────────
+        $c->bind(SettingsServiceInterface::class,
+            fn($c) => $c->get(SettingsService::class));
 
         // ── HTTP : Request/Response (ports → adapters) ─────────────────
         $c->bind(RequestInterface::class,
