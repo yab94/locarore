@@ -40,8 +40,13 @@
                 <div>
                     <dt class="text-gray-500">Statut</dt>
                     <dd>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::badgeClass($reservation->getStatus()) ?>">
-                            <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::label($reservation->getStatus()) ?>
+                        <?php
+                        $status = $reservation->getStatus();
+                        $statusLabel = \Rore\Infrastructure\Config\SettingsStore::get('reservation.status.label.' . $status);
+                        $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
+                        ?>
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">
+                            <?= \Rore\Presentation\Template\Html::e($statusLabel) ?>
                         </span>
                     </dd>
                 </div>

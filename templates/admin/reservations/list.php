@@ -1,12 +1,23 @@
 <!-- Filtres statut -->
 <div class="flex gap-2 mb-6 flex-wrap">
-    <?php foreach (['all' => 'Toutes', 'pending' => 'En attente', 'quoted' => 'Devis envoyé', 'confirmed' => 'Confirmées', 'cancelled' => 'Annulées'] as $val => $label): ?>
-        <a href="/admin/reservations?status=<?= $val ?>"
+    <?php
+    $statusLabelsFallback = [
+        'all'       => 'Toutes',
+        'pending'   => 'En attente',
+        'quoted'    => 'Devis envoyé',
+        'confirmed' => 'Confirmées',
+        'cancelled' => 'Annulées',
+    ];
+    foreach ($statusLabelsFallback as $val => $fallbackLabel):
+        $label = \Rore\Infrastructure\Config\SettingsStore::get('reservation.status.filter.' . $val);
+        $label = $label !== '' ? $label : $fallbackLabel;
+    ?>
+        <a href="/admin/reservations?status=<?= \Rore\Presentation\Template\Html::e((string) $val) ?>"
            class="px-3 py-1.5 rounded-lg text-sm font-medium border transition
                <?= ($currentStatus ?? 'all') === $val
                    ? 'bg-brand-600 text-white border-brand-600'
                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' ?>">
-            <?= $label ?>
+            <?= \Rore\Presentation\Template\Html::e($label) ?>
         </a>
     <?php endforeach; ?>
 </div>
@@ -38,8 +49,13 @@
                         <?= \Rore\Presentation\Template\Html::e($r->getStartDate()->format('d/m/Y')) ?> → <?= \Rore\Presentation\Template\Html::e($r->getEndDate()->format('d/m/Y')) ?>
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::badgeClass($r->getStatus()) ?>">
-                            <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::label($r->getStatus()) ?>
+                        <?php
+                        $status = $r->getStatus();
+                        $statusLabel = \Rore\Infrastructure\Config\SettingsStore::get('reservation.status.label.' . $status);
+                        $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
+                        ?>
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">
+                            <?= \Rore\Presentation\Template\Html::e($statusLabel) ?>
                         </span>
                     </td>
                     <td class="px-6 py-4 text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>

@@ -189,5 +189,16 @@ INSERT IGNORE INTO `settings` (`key`, `value`, `label`, `type`, `group`) VALUES
 ('confirmation.title',     'Demande envoyée !',                                'Confirmation — titre',             'text',     'reservation'),
 ('confirmation.message',   'Nous vous contacterons par email pour confirmer la disponibilité.', 'Message après réservation', 'text', 'reservation'),
 ('cart.footer_note',       'Votre demande sera confirmée par notre équipe.',   'Panier — note bas de récap',       'text',     'reservation'),
+('reservation.status.label.pending',   'En attente',    'Réservation — statut “pending” (badge)',     'text', 'reservation'),
+('reservation.status.label.quoted',    'Devis envoyé',  'Réservation — statut “quoted” (badge)',      'text', 'reservation'),
+('reservation.status.label.confirmed', 'Confirmée',     'Réservation — statut “confirmed” (badge)',   'text', 'reservation'),
+('reservation.status.label.cancelled', 'Annulée',       'Réservation — statut “cancelled” (badge)',   'text', 'reservation'),
+
+('reservation.status.filter.all',       'Tous',         'Réservations — filtre “all” (label)',        'text', 'reservation'),
+('reservation.status.filter.pending',   'En attente',   'Réservations — filtre “pending” (label)',     'text', 'reservation'),
+('reservation.status.filter.quoted',    'Devis envoyé', 'Réservations — filtre “quoted” (label)',      'text', 'reservation'),
+('reservation.status.filter.confirmed', 'Confirmée',    'Réservations — filtre “confirmed” (label)',   'text', 'reservation'),
+('reservation.status.filter.cancelled', 'Annulée',      'Réservations — filtre “cancelled” (label)',   'text', 'reservation'),
+
 ('mentions.content',       '<h2>Mentions légales</h2><p><strong>Raison sociale :</strong> Locarore SAS<br><strong>SIRET :</strong> 000 000 000 00000<br><strong>Siège social :</strong> 1 rue de la Fête, 75001 Paris<br><strong>Directeur de la publication :</strong> Prénom Nom<br><strong>Contact :</strong> contact@locarore.fr</p><h2>Hébergement</h2><p>Site hébergé par OVHcloud — 2 rue Kellermann, 59100 Roubaix.</p><h2>Données personnelles</h2><p>Conformément au RGPD, vous disposez d\'un droit d\'accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@locarore.fr.</p><h2>Cookies</h2><p>Ce site n\'utilise pas de cookies de traçage ou publicitaires.</p>', 'Mentions légales — contenu (WYSIWYG)', 'richtext', 'legal');
 
