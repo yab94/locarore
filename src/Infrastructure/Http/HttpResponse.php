@@ -6,7 +6,7 @@ namespace Rore\Infrastructure\Http;
 
 use Rore\Presentation\Http\ResponseInterface;
 
-final class PhpHttpResponse implements ResponseInterface
+final class HttpResponse implements ResponseInterface
 {
     public function setStatusCode(int $code): void
     {

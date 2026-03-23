@@ -6,7 +6,7 @@ namespace Rore\Infrastructure\Http;
 
 use Rore\Presentation\Http\RequestInterface;
 
-final class PhpHttpRequest implements RequestInterface
+final class HttpRequest implements RequestInterface
 {
     public function method(): string
     {

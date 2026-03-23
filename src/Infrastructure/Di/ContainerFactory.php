@@ -13,8 +13,8 @@ use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 use Rore\Infrastructure\Security\CsrfTokenManager;
-use Rore\Infrastructure\Http\PhpHttpRequest;
-use Rore\Infrastructure\Http\PhpHttpResponse;
+use Rore\Infrastructure\Http\HttpRequest;
+use Rore\Infrastructure\Http\HttpResponse;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
@@ -71,10 +71,10 @@ final class ContainerFactory
 
         // ── HTTP : Request/Response (ports → adapters) ─────────────────
         $c->bind(RequestInterface::class,
-            fn($c) => $c->get(PhpHttpRequest::class));
+            fn($c) => $c->get(HttpRequest::class));
 
         $c->bind(ResponseInterface::class,
-            fn($c) => $c->get(PhpHttpResponse::class));
+            fn($c) => $c->get(HttpResponse::class));
 
         // ── Application : session (via storage) ─────────────────────────
         $c->bind(CartSession::class,
