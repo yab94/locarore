@@ -37,15 +37,12 @@ class AddToCartUseCase
         $totalRequested = $alreadyInCart + $quantity;
 
         if (!$this->availabilityService->isAvailable(
-            $productId,
-            $product->getTotalStock(),
+            $product,
             $totalRequested,
             $start,
             $end,
         )) {
-            $available = $this->availabilityService->getAvailableQuantity(
-                $productId, $product->getTotalStock(), $start, $end
-            );
+            $available = $this->availabilityService->getAvailableQuantity($product, $start, $end);
             throw new \RuntimeException(
                 "Stock insuffisant. Disponible : $available."
             );

@@ -23,6 +23,7 @@ class UpdateProductUseCase
         int     $stock,
         float   $priceBase,
         int     $stockOnDemand    = 0,
+        float   $fabricationTimeDays = 0.0,
         float   $priceExtraWeekend = 0.0,
         float   $priceExtraWeekday = 15.0,
         array   $extraCategoryIds = [],
@@ -46,6 +47,7 @@ class UpdateProductUseCase
         $product->setDescription($description);
         $product->setStock($stock);
         $product->setStockOnDemand($stockOnDemand);
+        $product->setFabricationTimeDays($fabricationTimeDays);
         $product->setPriceBase($priceBase);
         $product->setPriceExtraWeekend($priceExtraWeekend);
         $product->setPriceExtraWeekday($priceExtraWeekday);

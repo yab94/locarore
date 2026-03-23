@@ -98,6 +98,15 @@
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Temps de fabrication unitaire (jours)</label>
+                    <p class="text-xs text-gray-400 mb-1">Utilisé si stock à la demande (&gt; 0). 0 = immédiat.</p>
+                    <input type="number" name="fabrication_time_days" min="0" step="0.01"
+                           value="<?= number_format($product?->getFabricationTimeDays() ?? 0, 2, '.', '') ?>"
+                           class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Forfait de base (€) *</label>
                     <p class="text-xs text-gray-400 mb-1">Couvre 1 à 2 jours de location</p>
                     <input type="number" name="price_base" min="0" step="0.01" required

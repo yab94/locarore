@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Reservation\Service;
 
+use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 
 /**
@@ -16,11 +17,10 @@ class AvailabilityService
         private ReservationRepositoryInterface $reservationRepository,
     ) {}
 
-    public function getAvailableQuantity(
-        int                $productId,
-        int                $totalStock,
+    private function getConsumedQuantity(
+        int $productId,
         \DateTimeImmutable $start,
-        \DateTimeImmutable $end
+        \DateTimeImmutable $end,
     ): int {
         $reservations = $this->reservationRepository->findConfirmedOverlapping($start, $end);
 
@@ -33,16 +33,90 @@ class AvailabilityService
             }
         }
 
-        return max(0, $totalStock - $consumed);
+        return $consumed;
+    }
+
+    public function getAvailableQuantity(
+        Product            $product,
+        \DateTimeImmutable $start,
+        \DateTimeImmutable $end,
+        ?\DateTimeImmutable $now = null,
+    ): int {
+        $productId = (int) ($product->getId() ?? 0);
+
+        $consumed = $this->getConsumedQuantity($productId, $start, $end);
+
+        $availableDurable = max(0, $product->getStock() - $consumed);
+        $consumedAfterDurable = max(0, $consumed - $product->getStock());
+        $remainingOnDemand = max(0, $product->getStockOnDemand() - $consumedAfterDurable);
+
+        if ($remainingOnDemand <= 0) {
+            return $availableDurable;
+        }
+
+        $unitDays = $product->getFabricationTimeDays();
+        if ($unitDays <= 0) {
+            return $availableDurable + $remainingOnDemand;
+        }
+
+        $now = $now ?? new \DateTimeImmutable();
+        $secondsRemaining = max(0, $start->getTimestamp() - $now->getTimestamp());
+        $unitSeconds = (float) ($unitDays * 86400);
+        if ($unitSeconds <= 0) {
+            return $availableDurable + $remainingOnDemand;
+        }
+
+        $maxBuildable = (int) floor($secondsRemaining / $unitSeconds);
+        $usableOnDemand = min($remainingOnDemand, $maxBuildable);
+
+        return $availableDurable + $usableOnDemand;
     }
 
     public function isAvailable(
-        int                $productId,
-        int                $totalStock,
+        Product            $product,
         int                $requestedQty,
         \DateTimeImmutable $start,
-        \DateTimeImmutable $end
+        \DateTimeImmutable $end,
+        ?\DateTimeImmutable $now = null,
     ): bool {
-        return $this->getAvailableQuantity($productId, $totalStock, $start, $end) >= $requestedQty;
+        if ($requestedQty < 1) {
+            return true;
+        }
+        $productId = (int) ($product->getId() ?? 0);
+
+        $consumed = $this->getConsumedQuantity($productId, $start, $end);
+
+        $availableDurable = max(0, $product->getStock() - $consumed);
+        $consumedAfterDurable = max(0, $consumed - $product->getStock());
+        $remainingOnDemand = max(0, $product->getStockOnDemand() - $consumedAfterDurable);
+
+        $availableTotal = $availableDurable + $remainingOnDemand;
+        if ($availableTotal < $requestedQty) {
+            return false;
+        }
+
+        // Si la demande est couverte par le stock durable, pas de délai de fabrication.
+        if ($requestedQty <= $availableDurable) {
+            return true;
+        }
+
+        $onDemandNeeded = $requestedQty - $availableDurable;
+        if ($onDemandNeeded > $remainingOnDemand) {
+            return false;
+        }
+
+        $unitDays = $product->getFabricationTimeDays();
+        if ($unitDays <= 0) {
+            return true;
+        }
+
+        $now = $now ?? new \DateTimeImmutable();
+        $secondsRemaining = $start->getTimestamp() - $now->getTimestamp();
+        if ($secondsRemaining <= 0) {
+            return false;
+        }
+
+        $requiredSeconds = (float) $onDemandNeeded * ($unitDays * 86400);
+        return $secondsRemaining >= $requiredSeconds;
     }
 }

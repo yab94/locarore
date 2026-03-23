@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `products` (
     `description`  TEXT            NULL,
     `stock`        INT             NOT NULL DEFAULT 0,
     `stock_on_demand` INT          NOT NULL DEFAULT 0,
+    `fabrication_time_days` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
     `price_base`      DECIMAL(10,2)  NOT NULL DEFAULT 80.00,
     `price_extra_weekend` DECIMAL(10,2)  NOT NULL DEFAULT 0.00,
     `price_extra_weekday` DECIMAL(10,2)  NOT NULL DEFAULT 15.00,

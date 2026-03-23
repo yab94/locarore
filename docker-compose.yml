@@ -35,6 +35,19 @@ services:
     networks:
       - locarore
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 128M
+    networks:
+      - locarore
+
 volumes:
   mysql_data:
 

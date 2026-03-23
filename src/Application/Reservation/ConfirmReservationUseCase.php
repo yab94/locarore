@@ -34,8 +34,7 @@ class ConfirmReservationUseCase
             }
 
             if (!$this->availabilityService->isAvailable(
-                $item->getProductId(),
-                $product->getStock(),
+                $product,
                 $item->getQuantity(),
                 $reservation->getStartDate(),
                 $reservation->getEndDate(),

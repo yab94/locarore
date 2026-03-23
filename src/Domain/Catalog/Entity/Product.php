@@ -20,6 +20,7 @@ class Product
         private ?string             $description,
         private int                 $stock,
         private int                 $stockOnDemand,   // unités fabricables à la commande
+        private float               $fabricationTimeDays, // temps de fabrication unitaire (jours)
         private float               $priceBase,       // forfait de base (couvre 1-2 jours)
         private float               $priceExtraWeekend, // supplément/jour si WE (sam+dim, ≤4j)
         private float               $priceExtraWeekday, // supplément/jour sinon
@@ -35,6 +36,7 @@ class Product
     public function getDescription(): ?string          { return $this->description; }
     public function getStock(): int                    { return $this->stock; }
     public function getStockOnDemand(): int            { return $this->stockOnDemand; }
+    public function getFabricationTimeDays(): float    { return $this->fabricationTimeDays; }
     /** Stock physique + fabricable = capacité totale à disposer */
     public function getTotalStock(): int               { return $this->stock + $this->stockOnDemand; }
     public function getPriceBase(): float              { return $this->priceBase; }
@@ -86,6 +88,7 @@ class Product
     public function setDescription(?string $d): void   { $this->description = $d; }
     public function setStock(int $stock): void         { $this->stock = $stock; }
     public function setStockOnDemand(int $s): void     { $this->stockOnDemand = $s; }
+    public function setFabricationTimeDays(float $d): void  { $this->fabricationTimeDays = max(0.0, $d); }
     public function setPriceBase(float $p): void       { $this->priceBase = $p; }
     public function setPriceExtraWeekend(float $p): void  { $this->priceExtraWeekend = $p; }
     public function setPriceExtraWeekday(float $p): void { $this->priceExtraWeekday = $p; }
