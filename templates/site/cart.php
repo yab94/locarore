@@ -64,7 +64,7 @@
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-800 truncate">
-                            <a href="/produit/<?= e($p->getSlug()) ?>" class="hover:text-brand-700">
+                            <a href="<?= e(productCanonicalUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
                                 <?= e($p->getName()) ?>
                             </a>
                         </h3>

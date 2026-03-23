@@ -1,3 +1,8 @@
+<?php
+$_productUrl = isset($productContextPath)
+    ? '/produit/' . $productContextPath . '/' . $product->getSlug()
+    : productCanonicalUrl($product, $allCategories ?? []);
+?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
     <?php if ($photo = $product->getMainPhoto()): ?>
         <img src="<?= e($photo->getPublicPath()) ?>"
@@ -15,7 +20,7 @@
             <span class="text-brand-700 font-bold">
                 à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
             </span>
-            <a href="/produit/<?= e($product->getSlug()) ?>"
+            <a href="<?= e($_productUrl) ?>"
                class="text-sm bg-brand-600 text-white px-3 py-1.5 rounded-lg hover:bg-brand-700 transition">
                 Voir
             </a>

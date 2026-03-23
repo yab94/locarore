@@ -54,12 +54,14 @@ class ProductController extends Controller
         }
 
         $this->render('site/product', [
-            'title'        => $product->getName() . ' — Locarore',
-            'product'      => $product,
-            'category'     => $category,
-            'breadcrumb'   => $breadcrumb,
-            'availableQty' => $availableQty,
-            'cart'         => $cart,
+            'title'         => $product->getName() . ' — Locarore',
+            'product'       => $product,
+            'category'      => $category,
+            'breadcrumb'    => $breadcrumb,
+            'availableQty'  => $availableQty,
+            'cart'          => $cart,
+            'allCategories' => $allCategories,
+            'canonicalUrl'  => productCanonicalUrl($product, $allCategories, $category),
         ]);
     }
 

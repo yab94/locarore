@@ -4,7 +4,7 @@
     <?php foreach ($breadcrumb as $crumb): ?>
         <span>›</span>
         <?php if ($crumb->getId() !== $category->getId()): ?>
-            <a href="/categorie/<?= e($crumb->getSlug()) ?>" class="hover:underline">
+            <a href="/categorie/<?= e(categoryCanonicalPath($crumb, $allCategories)) ?>" class="hover:underline">
                 <?= e($crumb->getName()) ?>
             </a>
         <?php else: ?>
@@ -28,7 +28,7 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Sous-catégories</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <?php foreach ($children as $child): ?>
-            <a href="/categorie/<?= e($slugPath ? $slugPath . '/' . $child->getSlug() : $child->getSlug()) ?>"
+            <a href="/categorie/<?= e(categoryCanonicalPath($child, $allCategories)) ?>"
                class="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-600 hover:shadow-sm transition text-center">
                 <div class="text-2xl mb-2">🏷️</div>
                 <div class="text-sm font-medium text-gray-800"><?= e($child->getName()) ?></div>
@@ -47,7 +47,9 @@
 <?php else: ?>
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Produits</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <?php foreach ($products as $product): ?>
+        <?php
+        $productContextPath = categoryCanonicalPath($category, $allCategories);
+        foreach ($products as $product): ?>
             <?php include BASE_PATH . '/templates/site/partials/product-card.php'; ?>
         <?php endforeach; ?>
     </div>

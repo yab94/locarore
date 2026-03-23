@@ -19,9 +19,10 @@ class HomeController extends Controller
         $featured    = array_slice($allProducts, 0, 6);
 
         $this->render('site/home', [
-            'title'      => 'Locarore — Location de décoration',
-            'categories' => $categories,
-            'featured'   => $featured,
+            'title'         => 'Locarore — Location de décoration',
+            'categories'    => $categories,
+            'featured'      => $featured,
+            'allCategories' => $categories,
         ]);
     }
 }

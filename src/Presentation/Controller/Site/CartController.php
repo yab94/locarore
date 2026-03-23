@@ -37,10 +37,13 @@ class CartController extends Controller
             }
         }
 
+        $allCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
+
         $this->render('site/cart', [
-            'title'        => 'Mon panier — Locarore',
-            'cart'         => $this->cart,
-            'cartProducts' => $cartProducts,
+            'title'         => 'Mon panier — Locarore',
+            'cart'          => $this->cart,
+            'cartProducts'  => $cartProducts,
+            'allCategories' => $allCategories,
         ]);
     }
 

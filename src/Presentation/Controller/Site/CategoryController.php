@@ -39,12 +39,13 @@ class CategoryController extends Controller
         $breadcrumb = $this->buildBreadcrumb($category, $allCategories);
 
         $this->render('site/category', [
-            'title'      => $category->getName() . ' — Locarore',
-            'category'   => $category,
-            'products'   => $products,
-            'children'   => array_values($children),
-            'breadcrumb' => $breadcrumb,
-            'slugPath'   => $path,
+            'title'        => $category->getName() . ' — Locarore',
+            'category'     => $category,
+            'products'     => $products,
+            'children'     => array_values($children),
+            'breadcrumb'   => $breadcrumb,
+            'slugPath'     => $path,
+            'allCategories' => $allCategories,
         ]);
     }
 

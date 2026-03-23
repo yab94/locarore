@@ -128,3 +128,53 @@ function se(string $key, array $vars = []): string
     return e(setting($key, $vars));
 }
 
+/**
+ * Construit le chemin canonique d'une catégorie en remontant ses parents.
+ * Ex : pour "Ballons" enfant de "Décoration" → "decoration/ballons"
+ *
+ * @param \Rore\Domain\Catalog\Entity\Category   $category
+ * @param \Rore\Domain\Catalog\Entity\Category[] $allCategories  tableau indexé (ou non) de toutes les catégories
+ * @return string  chemin sans slash initial ni final
+ */
+function categoryCanonicalPath(object $category, array $allCategories): string
+{
+    $byId = [];
+    foreach ($allCategories as $c) {
+        $byId[$c->getId()] = $c;
+    }
+
+    $segments = [$category->getSlug()];
+    $current  = $category;
+    while ($current->getParentId() !== null && isset($byId[$current->getParentId()])) {
+        $current    = $byId[$current->getParentId()];
+        array_unshift($segments, $current->getSlug());
+    }
+    return implode('/', $segments);
+}
+
+/**
+ * Construit l'URL canonique d'un produit incluant son chemin catégorie.
+ * Ex : "/produit/decoration/ballons/arc-lumineux"
+ *
+ * @param \Rore\Domain\Catalog\Entity\Product    $product
+ * @param \Rore\Domain\Catalog\Entity\Category[] $allCategories
+ * @param \Rore\Domain\Catalog\Entity\Category|null $category  catégorie principale déjà chargée (optionnel)
+ * @return string  URL absolue
+ */
+function productCanonicalUrl(object $product, array $allCategories, ?object $category = null): string
+{
+    if ($category === null) {
+        $byId     = [];
+        foreach ($allCategories as $c) {
+            $byId[$c->getId()] = $c;
+        }
+        $category = $byId[$product->getCategoryId()] ?? null;
+    }
+
+    if ($category === null) {
+        return '/produit/' . $product->getSlug();
+    }
+
+    return '/produit/' . categoryCanonicalPath($category, $allCategories) . '/' . $product->getSlug();
+}
+

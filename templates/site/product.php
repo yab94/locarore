@@ -7,7 +7,7 @@
             <!-- C'est le produit lui-même (dernier élément) -->
             <span class="text-gray-800 font-medium"><?= e($crumb->getName()) ?></span>
         <?php else: ?>
-            <a href="/categorie/<?= e($crumb->getSlug()) ?>" class="hover:underline">
+            <a href="/categorie/<?= e(categoryCanonicalPath($crumb, $allCategories)) ?>" class="hover:underline">
                 <?= e($crumb->getName()) ?>
             </a>
         <?php endif; ?>
@@ -70,7 +70,7 @@
                     <input type="date" name="end_date" required
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
                            min="<?= date('Y-m-d') ?>">
-                    <input type="hidden" name="redirect" value="/produit/<?= e($product->getSlug()) ?>">
+                    <input type="hidden" name="redirect" value="<?= e(productCanonicalUrl($product, $allCategories)) ?>">
                     <button type="submit"
                             class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 transition">
                         Valider
@@ -96,7 +96,7 @@
                            value="<?= htmlspecialchars($cart['end_date']) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
-                    <input type="hidden" name="redirect" value="/produit/<?= e($product->getSlug()) ?>">
+                    <input type="hidden" name="redirect" value="<?= e(productCanonicalUrl($product, $allCategories)) ?>">
                     <button type="submit"
                             class="bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-800 transition">
                         Valider
@@ -111,7 +111,7 @@
             <?php else: ?>
                 <form method="post" action="/panier/ajouter">
                     <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
-                    <input type="hidden" name="redirect" value="/produit/<?= e($product->getSlug()) ?>">
+                    <input type="hidden" name="redirect" value="<?= e(productCanonicalUrl($product, $allCategories)) ?>">
                     <div class="flex items-center gap-3 mb-4">
                         <label class="text-sm font-medium text-gray-700">Quantité</label>
                         <input type="number" name="quantity" value="1" min="1"
