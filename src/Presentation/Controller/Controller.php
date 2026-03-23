@@ -13,10 +13,10 @@ use Rore\Presentation\Http\ResponseInterface;
 abstract class Controller
 {
     public function __construct(
-        protected readonly RequestInterface $request,
-        protected readonly ResponseInterface $response,
+        readonly RequestInterface $request,
+        readonly ResponseInterface $response,
         readonly SessionStorageInterface $session,
-        private readonly CsrfTokenManagerInterface $csrfTokenManager,
+        readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly SettingsStore $settings,
     ) {}
 
