@@ -20,11 +20,6 @@ abstract class Controller
         readonly SettingsStore $settings,
     ) {}
 
-    protected function requestMethod(): string
-    {
-        return $this->request->method();
-    }
-
     protected function render(
         string $template,
         array  $data   = [],
@@ -89,53 +84,14 @@ abstract class Controller
         return is_array($flash) ? $flash : [];
     }
 
-    protected function input(string $key, mixed $default = ''): mixed
-    {
-        return $this->request->input($key, $default);
-    }
-
-    protected function inputString(string $key, string $default = ''): string
-    {
-        return trim((string) $this->input($key, $default));
-    }
-
-    protected function inputStringOrNull(string $key): ?string
-    {
-        $value = $this->inputString($key, '');
-        return $value !== '' ? $value : null;
-    }
-
-    protected function inputInt(string $key, int $default = 0): int
-    {
-        return (int) $this->input($key, $default);
-    }
-
-    protected function inputFloat(string $key, float $default = 0.0): float
-    {
-        return (float) $this->input($key, $default);
-    }
-
-    /** @return array<mixed> */
-    protected function inputArray(string $key, array $default = []): array
-    {
-        $value = $this->input($key, $default);
-        return is_array($value) ? $value : $default;
-    }
-
-    /** @return array<mixed>|null  $_FILES entry or null if absent/empty */
-    protected function file(string $key): ?array
-    {
-        return $this->request->file($key);
-    }
-
     protected function requirePost(): void
     {
-        if ($this->requestMethod() !== 'POST') {
+        if ($this->request->method() !== 'POST') {
             $this->response->setStatusCode(405);
             $this->response->write('Method Not Allowed');
             exit;
         }
-        $posted = $this->inputString($this->csrfTokenManager->postKey());
+        $posted = $this->request->inputString($this->csrfTokenManager->postKey());
         if (!$this->csrfTokenManager->validate($posted)) {
             $this->response->setStatusCode(419);
             $this->response->write('Token CSRF invalide.');

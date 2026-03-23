@@ -43,7 +43,7 @@ class SettingsController extends AdminController
     {
         $this->requirePost();
 
-        $values = $this->inputArray('settings', []);
+        $values = $this->request->inputArray('settings', []);
         if (!empty($values)) {
             $this->repo->saveValues($values);
         }

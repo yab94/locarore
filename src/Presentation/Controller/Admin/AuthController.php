@@ -21,7 +21,7 @@ class AuthController extends Controller
         $this->requirePost();
 
         $config   = parse_ini_file(BASE_PATH . '/config/app.ini', true);
-        $password = $this->inputString('password');
+        $password = $this->request->inputString('password');
 
         if ($password === $config['admin']['password']) {
             $this->session->set('admin_logged_in', true);

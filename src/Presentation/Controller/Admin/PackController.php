@@ -55,11 +55,11 @@ class PackController extends AdminController
         try {
             $items = $this->parseItems();
             $this->createPackUseCase->execute(
-                name:        $this->inputString('name'),
-                description: $this->inputStringOrNull('description'),
-                pricePerDay: $this->inputFloat('price_per_day'),
+                name:        $this->request->inputString('name'),
+                description: $this->request->inputStringOrNull('description'),
+                pricePerDay: $this->request->inputFloat('price_per_day'),
                 items:       $items,
-                customSlug:  $this->inputStringOrNull('slug'),
+                customSlug:  $this->request->inputStringOrNull('slug'),
             );
             $this->flash('success', 'Pack créé.');
         } catch (\Throwable $e) {
@@ -88,11 +88,11 @@ class PackController extends AdminController
             $items = $this->parseItems();
             $this->updatePackUseCase->execute(
                 id:          (int) $id,
-                name:        $this->inputString('name'),
-                description: $this->inputStringOrNull('description'),
-                pricePerDay: $this->inputFloat('price_per_day'),
+                name:        $this->request->inputString('name'),
+                description: $this->request->inputStringOrNull('description'),
+                pricePerDay: $this->request->inputFloat('price_per_day'),
                 items:       $items,
-                customSlug:  $this->inputStringOrNull('slug'),
+                customSlug:  $this->request->inputStringOrNull('slug'),
             );
             $this->flash('success', 'Pack mis à jour.');
         } catch (\Throwable $e) {
@@ -116,8 +116,8 @@ class PackController extends AdminController
     private function parseItems(): array
     {
         $items = [];
-        $productIds = $this->inputArray('item_product_id');
-        $quantities = $this->inputArray('item_quantity');
+        $productIds = $this->request->inputArray('item_product_id');
+        $quantities = $this->request->inputArray('item_quantity');
         foreach ($productIds as $i => $pid) {
             $pid = (int) $pid;
             $qty = (int) ($quantities[$i] ?? 0);
