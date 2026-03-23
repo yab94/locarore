@@ -18,9 +18,10 @@ class ProductController extends Controller
      */
     public function show(string $path): void
     {
-        // Le dernier segment est le slug du produit
-        $segments = explode('/', trim($path, '/'));
-        $slug     = end($segments);
+        // Le dernier segment est le slug du produit, les précédents sont les slugs de catégorie
+        $segments    = explode('/', trim($path, '/'));
+        $slug        = end($segments);
+        $catSegments = array_slice($segments, 0, -1);
 
         $productRepo = new MySqlProductRepository();
         $product     = $productRepo->findBySlug($slug);
@@ -31,16 +32,20 @@ class ProductController extends Controller
             return;
         }
 
-        // Catégorie principale (pour fil d'ariane et lien retour)
-        $categoryRepo = new MySqlCategoryRepository();
-        $category     = $categoryRepo->findById($product->getCategoryId());
-
-        // Fil d'ariane de la catégorie
+        $categoryRepo  = new MySqlCategoryRepository();
         $allCategories = $categoryRepo->findAllActive();
-        $breadcrumb    = [];
-        if ($category) {
-            $breadcrumb = $this->buildCategoryBreadcrumb($category, $allCategories);
-        }
+
+        // Catégorie pour le fil d'ariane : déduite du dernier segment de l'URL
+        // (permet d'afficher le bon contexte quand on arrive via une URL non canonique)
+        $urlCatSlug = !empty($catSegments) ? end($catSegments) : null;
+        $category   = $urlCatSlug
+            ? ($categoryRepo->findBySlug($urlCatSlug) ?? $categoryRepo->findById($product->getCategoryId()))
+            : $categoryRepo->findById($product->getCategoryId());
+
+        // Fil d'ariane
+        $breadcrumb = $category
+            ? $this->buildCategoryBreadcrumb($category, $allCategories)
+            : [];
         $breadcrumb[] = $product;   // Le produit lui-même en dernier
 
         // Stock disponible (en tenant compte des réservations en cours)
@@ -56,7 +61,8 @@ class ProductController extends Controller
         }
 
         $catChain     = array_slice($breadcrumb, 0, -1); // catégories sans le produit
-        $canonicalUrl = CanonicalUrlResolver::productUrl($product, $allCategories, $category);
+        $mainCategory = $categoryRepo->findById($product->getCategoryId());
+        $canonicalUrl = CanonicalUrlResolver::productUrl($product, $allCategories, $mainCategory);
         $meta         = (new PageMetaBuilder())->forProduct($product, $category, $catChain, $canonicalUrl);
 
         $this->render('site/product', [
