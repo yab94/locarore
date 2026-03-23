@@ -1,6 +1,7 @@
 FROM php:8.5-fpm
 
 RUN apt-get update && apt-get install -y \
+    lftp \
     libpng-dev \
     libjpeg-dev \
     libwebp-dev \
