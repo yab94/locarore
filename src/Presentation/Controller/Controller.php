@@ -7,10 +7,14 @@ namespace Rore\Presentation\Controller;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\SettingsStore;
+use Rore\Presentation\Http\RequestInterface;
+use Rore\Presentation\Http\ResponseInterface;
 
 abstract class Controller
 {
     public function __construct(
+        protected readonly RequestInterface $request,
+        protected readonly ResponseInterface $response,
         readonly SessionStorageInterface $session,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly SettingsStore $settings,
@@ -18,7 +22,7 @@ abstract class Controller
 
     protected function requestMethod(): string
     {
-        return (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET');
+        return $this->request->method();
     }
 
     protected function render(
@@ -64,7 +68,7 @@ abstract class Controller
 
     protected function redirect(string $url): never
     {
-        header('Location: ' . $url);
+        $this->response->redirect($url);
         exit;
     }
 
@@ -87,7 +91,7 @@ abstract class Controller
 
     protected function input(string $key, mixed $default = ''): mixed
     {
-        return $_POST[$key] ?? $_GET[$key] ?? $default;
+        return $this->request->input($key, $default);
     }
 
     protected function inputString(string $key, string $default = ''): string
@@ -121,28 +125,21 @@ abstract class Controller
     /** @return array<mixed>|null  $_FILES entry or null if absent/empty */
     protected function file(string $key): ?array
     {
-        $f = $_FILES[$key] ?? null;
-        if ($f === null) {
-            return null;
-        }
-        // Single file upload
-        if (isset($f['error']) && !is_array($f['error'])) {
-            return $f['error'] !== UPLOAD_ERR_NO_FILE ? $f : null;
-        }
-        // Multiple files upload (name[] syntax)
-        return (!empty($f['name'][0])) ? $f : null;
+        return $this->request->file($key);
     }
 
     protected function requirePost(): void
     {
         if ($this->requestMethod() !== 'POST') {
-            http_response_code(405);
-            exit('Method Not Allowed');
+            $this->response->setStatusCode(405);
+            $this->response->write('Method Not Allowed');
+            exit;
         }
         $posted = $this->inputString($this->csrfTokenManager->postKey());
         if (!$this->csrfTokenManager->validate($posted)) {
-            http_response_code(419);
-            exit('Token CSRF invalide.');
+            $this->response->setStatusCode(419);
+            $this->response->write('Token CSRF invalide.');
+            exit;
         }
     }
 }

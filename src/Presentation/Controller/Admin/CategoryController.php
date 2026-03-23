@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
 use Rore\Infrastructure\Config\SettingsStore;
-use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Presentation\Http\RequestInterface;
+use Rore\Presentation\Http\ResponseInterface;
 
 class CategoryController extends AdminController
 {
@@ -19,11 +21,13 @@ class CategoryController extends AdminController
         private readonly CreateCategoryUseCase   $createCategoryUseCase,
         private readonly UpdateCategoryUseCase   $updateCategoryUseCase,
         private readonly ToggleCategoryUseCase   $toggleCategoryUseCase,
+        RequestInterface                         $request,
+        ResponseInterface                        $response,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsStore                            $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

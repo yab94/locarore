@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\SettingsStore;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Http\RequestInterface;
+use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\CanonicalUrlResolver;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
@@ -21,11 +23,13 @@ class ProductController extends Controller
         private readonly MySqlCategoryRepository    $categoryRepo,
         private readonly MySqlReservationRepository $reservationRepo,
         private readonly PageMetaBuilder            $metaBuilder,
+        RequestInterface                            $request,
+        ResponseInterface                           $response,
         SessionStorageInterface                     $session,
         CsrfTokenManagerInterface                   $csrfTokenManager,
         SettingsStore                               $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
     }
 
     public function show(string $path): void
@@ -37,7 +41,7 @@ class ProductController extends Controller
         $product = $this->productRepo->findBySlug($slug);
 
         if (!$product || !$product->isActive()) {
-            http_response_code(404);
+            $this->response->setStatusCode(404);
             require BASE_PATH . '/templates/errors/404.php';
             return;
         }

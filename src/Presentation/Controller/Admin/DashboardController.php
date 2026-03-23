@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Infrastructure\Config\SettingsStore;
-use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Presentation\Http\RequestInterface;
+use Rore\Presentation\Http\ResponseInterface;
 
 class DashboardController extends AdminController
 {
@@ -17,11 +19,13 @@ class DashboardController extends AdminController
         private readonly MySqlCategoryRepository $categoryRepo,
         private readonly MySqlProductRepository  $productRepo,
         private readonly GetReservationsUseCase  $getReservationsUseCase,
+        RequestInterface                         $request,
+        ResponseInterface                        $response,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsStore                            $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

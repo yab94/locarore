@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\SettingsStore;
-use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Http\RequestInterface;
+use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CategoryController extends Controller
@@ -18,11 +20,13 @@ class CategoryController extends Controller
         private readonly MySqlCategoryRepository $categoryRepo,
         private readonly MySqlProductRepository  $productRepo,
         private readonly PageMetaBuilder         $metaBuilder,
+        RequestInterface                         $request,
+        ResponseInterface                        $response,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsStore                            $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $session, $csrfTokenManager, $settings);
     }
 
     /**
@@ -37,7 +41,7 @@ class CategoryController extends Controller
         $category = $this->categoryRepo->findBySlug($slug);
 
         if (!$category || !$category->isActive()) {
-            http_response_code(404);
+            $this->response->setStatusCode(404);
             require BASE_PATH . '/templates/errors/404.php';
             return;
         }
