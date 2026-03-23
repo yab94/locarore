@@ -2,7 +2,7 @@
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="text-xl font-bold text-brand-700 tracking-tight">
-            <?= \Rore\Presentation\Template\Html::e(\Rore\Infrastructure\Config\SettingsStore::get('site.name')) ?>
+            <?= \Rore\Presentation\Template\Html::e($settings->get('site.name')) ?>
         </a>
 
         <!-- Catégories principales -->

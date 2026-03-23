@@ -4,15 +4,22 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Security\CsrfTokenManager;
+use Rore\Infrastructure\Config\SettingsStore;
 
 abstract class Controller
 {
     public function __construct(
         private readonly SessionStorageInterface $session,
-        private readonly CsrfTokenManager        $csrfTokenManager,
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly SettingsStore $settings,
     ) {}
+
+    protected function setting(string $key, array $vars = []): string
+    {
+        return $this->settings->get($key, $vars);
+    }
 
     protected function requestMethod(): string
     {
@@ -45,6 +52,8 @@ abstract class Controller
         $data['csrfToken'] = $this->csrfTokenManager->token();
         // Compteur panier (pour le header)
         $data['cartItemCount'] = $this->getCartItemCount();
+        // Accès aux settings dans toutes les vues
+        $data['settings'] = $this->settings;
 
         extract($data);
 
@@ -150,7 +159,7 @@ abstract class Controller
             http_response_code(405);
             exit('Method Not Allowed');
         }
-        $posted = $this->inputString(CsrfTokenManager::postKey());
+        $posted = $this->inputString($this->csrfTokenManager->postKey());
         if (!$this->csrfTokenManager->validate($posted)) {
             http_response_code(419);
             exit('Token CSRF invalide.');

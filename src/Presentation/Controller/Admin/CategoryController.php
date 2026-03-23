@@ -8,7 +8,8 @@ use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
-use Rore\Infrastructure\Security\CsrfTokenManager;
+use Rore\Infrastructure\Config\SettingsStore;
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 
 class CategoryController extends AdminController
@@ -19,9 +20,10 @@ class CategoryController extends AdminController
         private readonly UpdateCategoryUseCase   $updateCategoryUseCase,
         private readonly ToggleCategoryUseCase   $toggleCategoryUseCase,
         SessionStorageInterface                  $session,
-        CsrfTokenManager                         $csrfTokenManager,
+        CsrfTokenManagerInterface                $csrfTokenManager,
+        SettingsStore                            $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager);
+        parent::__construct($session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

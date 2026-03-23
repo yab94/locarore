@@ -9,7 +9,8 @@ use Rore\Application\Reservation\ConfirmReservationUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Security\CsrfTokenManager;
+use Rore\Infrastructure\Config\SettingsStore;
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 
@@ -23,9 +24,10 @@ class ReservationController extends AdminController
         private readonly ConfirmReservationUseCase  $confirmReservationUseCase,
         private readonly CancelReservationUseCase   $cancelReservationUseCase,
         SessionStorageInterface                     $session,
-        CsrfTokenManager                            $csrfTokenManager,
+        CsrfTokenManagerInterface                   $csrfTokenManager,
+        SettingsStore                               $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager);
+        parent::__construct($session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

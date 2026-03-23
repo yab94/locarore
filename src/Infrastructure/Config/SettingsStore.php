@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Config;
 
-use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
+use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 
-/**
- * Façade statique d'accès aux paramètres CMS.
- * Conserve une instance unique du repository (pattern identique à l'ancien helper).
- */
 final class SettingsStore
 {
-    private static ?MySqlSettingsRepository $repo = null;
+    public function __construct(
+        private readonly SettingsRepositoryInterface $repo,
+    ) {}
 
     /**
      * Retourne la valeur brute d'une clé de paramètre.
@@ -20,12 +18,9 @@ final class SettingsStore
      *
      * @param array<string,string> $vars
      */
-    public static function get(string $key, array $vars = []): string
+    public function get(string $key, array $vars = []): string
     {
-        if (self::$repo === null) {
-            self::$repo = new MySqlSettingsRepository();
-        }
-        $setting = self::$repo->findByKey($key);
+        $setting = $this->repo->findByKey($key);
         $value   = $setting?->getValue() ?? '';
 
         foreach ($vars as $k => $v) {

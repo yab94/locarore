@@ -42,7 +42,7 @@
                     <dd>
                         <?php
                         $status = $reservation->getStatus();
-                        $statusLabel = \Rore\Infrastructure\Config\SettingsStore::get('reservation.status.label.' . $status);
+                        $statusLabel = $settings->get('reservation.status.label.' . $status);
                         $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
                         ?>
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">

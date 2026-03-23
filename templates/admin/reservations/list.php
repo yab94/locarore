@@ -9,7 +9,7 @@
         'cancelled' => 'Annulées',
     ];
     foreach ($statusLabelsFallback as $val => $fallbackLabel):
-        $label = \Rore\Infrastructure\Config\SettingsStore::get('reservation.status.filter.' . $val);
+        $label = $settings->get('reservation.status.filter.' . $val);
         $label = $label !== '' ? $label : $fallbackLabel;
     ?>
         <a href="/admin/reservations?status=<?= \Rore\Presentation\Template\Html::e((string) $val) ?>"
@@ -51,7 +51,7 @@
                     <td class="px-6 py-4 text-center">
                         <?php
                         $status = $r->getStatus();
-                        $statusLabel = \Rore\Infrastructure\Config\SettingsStore::get('reservation.status.label.' . $status);
+                        $statusLabel = $settings->get('reservation.status.label.' . $status);
                         $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
                         ?>
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">

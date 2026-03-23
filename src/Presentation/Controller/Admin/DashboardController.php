@@ -6,7 +6,8 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Reservation\GetReservationsUseCase;
-use Rore\Infrastructure\Security\CsrfTokenManager;
+use Rore\Infrastructure\Config\SettingsStore;
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
@@ -17,9 +18,10 @@ class DashboardController extends AdminController
         private readonly MySqlProductRepository  $productRepo,
         private readonly GetReservationsUseCase  $getReservationsUseCase,
         SessionStorageInterface                  $session,
-        CsrfTokenManager                         $csrfTokenManager,
+        CsrfTokenManagerInterface                $csrfTokenManager,
+        SettingsStore                            $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager);
+        parent::__construct($session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

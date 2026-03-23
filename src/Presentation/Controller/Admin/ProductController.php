@@ -10,7 +10,8 @@ use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Security\CsrfTokenManager;
+use Rore\Infrastructure\Config\SettingsStore;
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
@@ -27,9 +28,10 @@ class ProductController extends AdminController
         private readonly UploadProductPhotoUseCase  $uploadProductPhotoUseCase,
         private readonly DeleteProductPhotoUseCase  $deleteProductPhotoUseCase,
         SessionStorageInterface                     $session,
-        CsrfTokenManager                            $csrfTokenManager,
+        CsrfTokenManagerInterface                   $csrfTokenManager,
+        SettingsStore                               $settings,
     ) {
-        parent::__construct($session, $csrfTokenManager);
+        parent::__construct($session, $csrfTokenManager, $settings);
     }
 
     public function index(): void

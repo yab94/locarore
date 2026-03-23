@@ -110,7 +110,7 @@
                 Réserver →
             </a>
             <p class="text-xs text-gray-400 mt-3 text-center">
-                <?= \Rore\Presentation\Template\Html::e(\Rore\Infrastructure\Config\SettingsStore::get('cart.footer_note')) ?>
+                <?= \Rore\Presentation\Template\Html::e($settings->get('cart.footer_note')) ?>
             </p>
         </div>
     </div>

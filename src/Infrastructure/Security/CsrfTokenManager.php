@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Security;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 
 /**
@@ -12,7 +13,7 @@ use Rore\Application\Storage\SessionStorageInterface;
  * - token()    : génère ou récupère le token de la session courante
  * - validate() : vérifie la correspondance session ↔ token fourni (timing-safe)
  */
-final class CsrfTokenManager
+final class CsrfTokenManager implements CsrfTokenManagerInterface
 {
     private const SESSION_KEY = 'csrf_token';
     private const POST_KEY    = '_csrf';
@@ -45,7 +46,7 @@ final class CsrfTokenManager
         );
     }
 
-    public static function postKey(): string
+    public function postKey(): string
     {
         return self::POST_KEY;
     }
