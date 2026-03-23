@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
+use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Infrastructure\Security\CsrfTokenManager;
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 
 class SettingsController extends AdminController
 {
     public function __construct(
         private readonly MySqlSettingsRepository $repo,
+        SessionStorageInterface                  $session,
+        CsrfTokenManager                         $csrfTokenManager,
     ) {
-        parent::__construct();
+        parent::__construct($session, $csrfTokenManager);
     }
 
     public function index(): void

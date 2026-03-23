@@ -9,6 +9,8 @@ use Rore\Application\Cart\CartSession;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
+use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Infrastructure\Security\CsrfTokenManager;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Controller\Controller;
@@ -25,7 +27,11 @@ class CartController extends Controller
         private readonly AddToCartUseCase        $addToCartUseCase,
         private readonly RemoveFromCartUseCase   $removeFromCartUseCase,
         private readonly CheckoutUseCase         $checkoutUseCase,
-    ) {}
+        SessionStorageInterface                  $session,
+        CsrfTokenManager                         $csrfTokenManager,
+    ) {
+        parent::__construct($session, $csrfTokenManager);
+    }
 
     public function index(): void
     {

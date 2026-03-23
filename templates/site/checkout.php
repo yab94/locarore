@@ -6,7 +6,7 @@
     </p>
 
     <form method="post" action="/panier/checkout" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
-        <?= \Rore\Presentation\Security\CsrfField::render() ?>
+        <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>

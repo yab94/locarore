@@ -64,7 +64,7 @@
             <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
                 <p class="text-sm font-semibold text-yellow-800 mb-3">📅 Choisissez vos dates avant d'ajouter au panier</p>
                 <form method="post" action="/panier/dates" class="flex flex-col sm:flex-row gap-3">
-                    <?= \Rore\Presentation\Security\CsrfField::render() ?>
+                    <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                     <input type="date" name="start_date" required
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
                            min="<?= date('Y-m-d') ?>">
@@ -89,7 +89,7 @@
                 </div>
                 <form id="edit-dates-form" method="post" action="/panier/dates"
                       class="hidden flex-col sm:flex-row gap-3 flex">
-                    <?= \Rore\Presentation\Security\CsrfField::render() ?>
+                    <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                     <input type="date" name="start_date" required
                            value="<?= htmlspecialchars($cart['start_date']) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
@@ -112,7 +112,7 @@
                 </div>
             <?php else: ?>
                 <form method="post" action="/panier/ajouter">
-                    <?= \Rore\Presentation\Security\CsrfField::render() ?>
+                    <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                     <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
                     <input type="hidden" name="redirect" value="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
                     <div class="flex items-center gap-3 mb-4">

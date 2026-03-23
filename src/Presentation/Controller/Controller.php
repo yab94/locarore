@@ -4,10 +4,16 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
+use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Security\CsrfTokenManager;
 
 abstract class Controller
 {
+    public function __construct(
+        private readonly SessionStorageInterface $session,
+        private readonly CsrfTokenManager        $csrfTokenManager,
+    ) {}
+
     protected function requestMethod(): string
     {
         return (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET');
@@ -15,17 +21,17 @@ abstract class Controller
 
     protected function sessionGet(string $key, mixed $default = null): mixed
     {
-        return $_SESSION[$key] ?? $default;
+        return $this->session->get($key, $default);
     }
 
     protected function sessionSet(string $key, mixed $value): void
     {
-        $_SESSION[$key] = $value;
+        $this->session->set($key, $value);
     }
 
     protected function sessionUnset(string $key): void
     {
-        unset($_SESSION[$key]);
+        $this->session->remove($key);
     }
 
     protected function render(
@@ -35,6 +41,10 @@ abstract class Controller
     ): void {
         // Injecte les flash messages dans chaque vue
         $data['flash'] = $this->getFlash();
+        // CSRF token pour les formulaires
+        $data['csrfToken'] = $this->csrfTokenManager->token();
+        // Compteur panier (pour le header)
+        $data['cartItemCount'] = $this->getCartItemCount();
 
         extract($data);
 
@@ -45,6 +55,24 @@ abstract class Controller
         require BASE_PATH . '/templates/' . $layout . '.php';
     }
 
+    private function getCartItemCount(): int
+    {
+        $cart = $this->sessionGet('rore_cart', []);
+        if (!is_array($cart)) {
+            return 0;
+        }
+        $items = $cart['items'] ?? [];
+        if (!is_array($items)) {
+            return 0;
+        }
+
+        $sum = 0;
+        foreach ($items as $qty) {
+            $sum += (int) $qty;
+        }
+        return $sum;
+    }
+
     protected function redirect(string $url): never
     {
         header('Location: ' . $url);
@@ -53,14 +81,19 @@ abstract class Controller
 
     protected function flash(string $type, string $message): void
     {
-        $_SESSION['flash'][$type] = $message;
+        $flash = $this->sessionGet('flash', []);
+        if (!is_array($flash)) {
+            $flash = [];
+        }
+        $flash[$type] = $message;
+        $this->sessionSet('flash', $flash);
     }
 
     protected function getFlash(): array
     {
-        $flash = $_SESSION['flash'] ?? [];
-        unset($_SESSION['flash']);
-        return $flash;
+        $flash = $this->sessionGet('flash', []);
+        $this->sessionUnset('flash');
+        return is_array($flash) ? $flash : [];
     }
 
     protected function input(string $key, mixed $default = ''): mixed
@@ -117,7 +150,8 @@ abstract class Controller
             http_response_code(405);
             exit('Method Not Allowed');
         }
-        if (!CsrfTokenManager::validate()) {
+        $posted = $this->inputString(CsrfTokenManager::postKey());
+        if (!$this->csrfTokenManager->validate($posted)) {
             http_response_code(419);
             exit('Token CSRF invalide.');
         }

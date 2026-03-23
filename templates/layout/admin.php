@@ -62,7 +62,7 @@
         </nav>
         <div class="px-4 pb-6">
             <form method="post" action="/admin/deconnexion">
-                <?= \Rore\Presentation\Security\CsrfField::render() ?>
+                <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                 <button type="submit"
                         class="w-full text-left px-3 py-2 rounded text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition">
                     Déconnexion

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
+use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
+use Rore\Infrastructure\Security\CsrfTokenManager;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 
 class CategoryController extends AdminController
@@ -16,8 +18,10 @@ class CategoryController extends AdminController
         private readonly CreateCategoryUseCase   $createCategoryUseCase,
         private readonly UpdateCategoryUseCase   $updateCategoryUseCase,
         private readonly ToggleCategoryUseCase   $toggleCategoryUseCase,
+        SessionStorageInterface                  $session,
+        CsrfTokenManager                         $csrfTokenManager,
     ) {
-        parent::__construct();
+        parent::__construct($session, $csrfTokenManager);
     }
 
     public function index(): void

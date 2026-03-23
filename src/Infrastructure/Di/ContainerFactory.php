@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Infrastructure\Di;
 
 use Rore\Application\Cart\CartSession;
+use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
@@ -16,6 +17,7 @@ use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 use Rore\Infrastructure\Storage\FileUploader;
+use Rore\Infrastructure\Storage\PhpSessionStorage;
 
 /**
  * Composition root : assemble le graphe d'objets de l'application.
@@ -53,8 +55,13 @@ final class ContainerFactory
         $c->bind(FileUploader::class,
             fn($c) => new FileUploader($config['upload']));
 
-        // ── Application : session singleton ─────────────────────────────
-        $c->instance(CartSession::class, CartSession::getInstance());
+        // ── Storage : Session ──────────────────────────────────────────
+        $c->bind(SessionStorageInterface::class,
+            fn($c) => new PhpSessionStorage());
+
+        // ── Application : session (via storage) ─────────────────────────
+        $c->bind(CartSession::class,
+            fn($c) => new CartSession($c->get(SessionStorageInterface::class)));
 
         return $c;
     }

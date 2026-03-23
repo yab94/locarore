@@ -5,7 +5,7 @@
     <form id="category-form" method="post"
           action="<?= $category ? '/admin/categories/' . $category->getId() . '/modifier' : '/admin/categories/creer' ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
-        <?= \Rore\Presentation\Security\CsrfField::render() ?>
+        <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
 
         <!-- Catégorie parente -->
         <div>

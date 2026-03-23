@@ -7,6 +7,8 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreatePackUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
+use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Infrastructure\Security\CsrfTokenManager;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
@@ -18,8 +20,10 @@ class PackController extends AdminController
         private readonly CreatePackUseCase      $createPackUseCase,
         private readonly UpdatePackUseCase      $updatePackUseCase,
         private readonly TogglePackUseCase      $togglePackUseCase,
+        SessionStorageInterface                 $session,
+        CsrfTokenManager                        $csrfTokenManager,
     ) {
-        parent::__construct();
+        parent::__construct($session, $csrfTokenManager);
     }
 
     public function index(): void

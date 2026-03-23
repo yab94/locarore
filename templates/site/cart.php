@@ -5,7 +5,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-lg mx-auto text-center">
         <p class="text-lg text-gray-700 mb-6">Commencez par choisir vos dates de location</p>
         <form method="post" action="/panier/dates" class="space-y-4">
-            <?= \Rore\Presentation\Security\CsrfField::render() ?>
+            <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -42,7 +42,7 @@
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center justify-between">
         <span class="text-sm text-green-800">📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?></span>
         <form method="post" action="/panier/dates">
-            <?= \Rore\Presentation\Security\CsrfField::render() ?>
+            <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
             <input type="hidden" name="start_date" value="">
             <input type="hidden" name="end_date" value="">
             <button type="submit" class="text-xs text-red-500 hover:underline"
@@ -76,7 +76,7 @@
                         </p>
                     </div>
                     <form method="post" action="/panier/supprimer">
-                        <?= \Rore\Presentation\Security\CsrfField::render() ?>
+                        <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                         <input type="hidden" name="product_id" value="<?= $p->getId() ?>">
                         <button type="submit" class="text-red-400 hover:text-red-600 text-sm transition"
                                 data-confirm="Retirer ce produit du panier ?">

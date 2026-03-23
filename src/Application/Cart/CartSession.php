@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart;
 
+use Rore\Application\Storage\SessionStorageInterface;
+
 /**
  * Gestion du panier en session.
  *
@@ -18,33 +20,30 @@ class CartSession
 {
     private const KEY = 'rore_cart';
 
-    private static ?self $instance = null;
-
-    private function __construct() {}
-
-    public static function getInstance(): self
-    {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
+    public function __construct(
+        private readonly SessionStorageInterface $session,
+    ) {}
 
     // --- Dates -----------------------------------------------------------
 
     public function hasDates(): bool
     {
-        return isset($_SESSION[self::KEY]['start_date'], $_SESSION[self::KEY]['end_date']);
+        $cart = $this->getCart();
+        return isset($cart['start_date'], $cart['end_date']);
     }
 
     public function getStartDate(): ?string
     {
-        return $_SESSION[self::KEY]['start_date'] ?? null;
+        $cart = $this->getCart();
+        $v = $cart['start_date'] ?? null;
+        return is_string($v) ? $v : null;
     }
 
     public function getEndDate(): ?string
     {
-        return $_SESSION[self::KEY]['end_date'] ?? null;
+        $cart = $this->getCart();
+        $v = $cart['end_date'] ?? null;
+        return is_string($v) ? $v : null;
     }
 
     /**
@@ -62,15 +61,16 @@ class CartSession
             && !empty($this->getItems())
         ) {
             // Les dates changent avec un panier non vide → on vide le panier
-            $_SESSION[self::KEY] = [];
+            $this->setCart([]);
         }
 
-        $_SESSION[self::KEY]['start_date'] = $startDate;
-        $_SESSION[self::KEY]['end_date']   = $endDate;
-
-        if (!isset($_SESSION[self::KEY]['items'])) {
-            $_SESSION[self::KEY]['items'] = [];
+        $cart = $this->getCart();
+        $cart['start_date'] = $startDate;
+        $cart['end_date']   = $endDate;
+        if (!isset($cart['items']) || !is_array($cart['items'])) {
+            $cart['items'] = [];
         }
+        $this->setCart($cart);
     }
 
     // --- Items -----------------------------------------------------------
@@ -78,21 +78,27 @@ class CartSession
     /** @return array<int, int>  [productId => quantity] */
     public function getItems(): array
     {
-        return $_SESSION[self::KEY]['items'] ?? [];
+        $cart = $this->getCart();
+        $items = $cart['items'] ?? [];
+        return is_array($items) ? $items : [];
     }
 
     public function addItem(int $productId, int $quantity): void
     {
         $items = $this->getItems();
         $items[$productId] = ($items[$productId] ?? 0) + $quantity;
-        $_SESSION[self::KEY]['items'] = $items;
+        $cart = $this->getCart();
+        $cart['items'] = $items;
+        $this->setCart($cart);
     }
 
     public function removeItem(int $productId): void
     {
         $items = $this->getItems();
         unset($items[$productId]);
-        $_SESSION[self::KEY]['items'] = $items;
+        $cart = $this->getCart();
+        $cart['items'] = $items;
+        $this->setCart($cart);
     }
 
     public function isEmpty(): bool
@@ -109,6 +115,19 @@ class CartSession
 
     public function clear(): void
     {
-        $_SESSION[self::KEY] = [];
+        $this->setCart([]);
+    }
+
+    /** @return array<string, mixed> */
+    private function getCart(): array
+    {
+        $cart = $this->session->get(self::KEY, []);
+        return is_array($cart) ? $cart : [];
+    }
+
+    /** @param array<string, mixed> $cart */
+    private function setCart(array $cart): void
+    {
+        $this->session->set(self::KEY, $cart);
     }
 }

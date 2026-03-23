@@ -40,7 +40,7 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= \Rore\Presentation\Template\Html::e(\Rore\Infrastructure\Config\SettingsStore::get('home.featured_title')) ?></h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($featured as $product): ?>
-            <?php include BASE_PATH . '/templates/site/partials/product-card.php'; ?>
+            <?php include BASE_PATH . '/templates/partials/product-card.php'; ?>
         <?php endforeach; ?>
     </div>
 </section>

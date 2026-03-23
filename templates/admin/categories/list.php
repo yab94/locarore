@@ -32,7 +32,7 @@
                            class="text-brand-600 hover:underline text-sm">Modifier</a>
                         <form method="post" action="/admin/categories/<?= $cat->getId() ?>/toggle"
                               class="inline">
-                            <?= \Rore\Presentation\Security\CsrfField::render() ?>
+                            <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                             <button type="submit" class="text-gray-500 hover:text-gray-800 text-sm transition">
                                 <?= $cat->isActive() ? 'Désactiver' : 'Activer' ?>
                             </button>

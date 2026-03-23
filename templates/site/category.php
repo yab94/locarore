@@ -58,7 +58,7 @@
         <?php
         $productContextPath = \Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($category, $allCategories);
         foreach ($products as $product): ?>
-            <?php include BASE_PATH . '/templates/site/partials/product-card.php'; ?>
+            <?php include BASE_PATH . '/templates/partials/product-card.php'; ?>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>

@@ -124,14 +124,14 @@
         // Helper local : bouton POST
         $btn = fn(string $action, string $label, string $cls, ?string $confirm = null) =>
             '<form method="post" action="/admin/reservations/' . $id . '/' . $action . '">'
-            . \Rore\Presentation\Security\CsrfField::render()
+            . (require BASE_PATH . '/templates/partials/csrf.php')
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '"'
             . ($confirm ? ' data-confirm="' . htmlspecialchars($confirm) . '"' : '') . '>'
             . $label . '</button></form>';
         // Bouton vers statut via /statut (champ caché)
         $btnStatus = fn(string $target, string $label, string $cls) =>
             '<form method="post" action="/admin/reservations/' . $id . '/statut">'
-            . \Rore\Presentation\Security\CsrfField::render()
+            . (require BASE_PATH . '/templates/partials/csrf.php')
             . '<input type="hidden" name="status" value="' . $target . '">'
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '">'
             . $label . '</button></form>';
