@@ -7,16 +7,15 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
 
 class CategoryController extends AdminController
 {
     public function __construct(
         private readonly MySqlCategoryRepository $repo,
-        private readonly SlugUniquenessChecker   $slugChecker,
+        private readonly CreateCategoryUseCase   $createCategoryUseCase,
+        private readonly UpdateCategoryUseCase   $updateCategoryUseCase,
+        private readonly ToggleCategoryUseCase   $toggleCategoryUseCase,
     ) {
         parent::__construct();
     }
@@ -42,7 +41,7 @@ class CategoryController extends AdminController
     {
         $this->requirePost();
         try {
-            (new CreateCategoryUseCase($this->repo, $this->slugChecker))->execute(
+            $this->createCategoryUseCase->execute(
                 name:             trim($_POST['name'] ?? ''),
                 descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
                 description:      trim($_POST['description'] ?? '') ?: null,
@@ -73,7 +72,7 @@ class CategoryController extends AdminController
     {
         $this->requirePost();
         try {
-            (new UpdateCategoryUseCase($this->repo, $this->slugChecker))->execute(
+            $this->updateCategoryUseCase->execute(
                 id:               (int) $id,
                 name:             trim($_POST['name'] ?? ''),
                 descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
@@ -92,7 +91,7 @@ class CategoryController extends AdminController
     {
         $this->requirePost();
         try {
-            (new ToggleCategoryUseCase($this->repo))->execute((int) $id);
+            $this->toggleCategoryUseCase->execute((int) $id);
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }

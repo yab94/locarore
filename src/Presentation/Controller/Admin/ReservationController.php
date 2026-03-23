@@ -8,7 +8,6 @@ use Rore\Application\Reservation\CancelReservationUseCase;
 use Rore\Application\Reservation\ConfirmReservationUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
-use Rore\Domain\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 
@@ -17,6 +16,10 @@ class ReservationController extends AdminController
     public function __construct(
         private readonly MySqlReservationRepository $repo,
         private readonly MySqlProductRepository     $productRepo,
+        private readonly GetReservationsUseCase     $getReservationsUseCase,
+        private readonly SetReservationStatusUseCase $setReservationStatusUseCase,
+        private readonly ConfirmReservationUseCase  $confirmReservationUseCase,
+        private readonly CancelReservationUseCase   $cancelReservationUseCase,
     ) {
         parent::__construct();
     }
@@ -24,8 +27,9 @@ class ReservationController extends AdminController
     public function index(): void
     {
         $status       = $_GET['status'] ?? 'all';
-        $getUseCase   = new GetReservationsUseCase($this->repo);
-        $reservations = $status === 'all' ? $getUseCase->all() : $getUseCase->byStatus($status);
+        $reservations = $status === 'all'
+            ? $this->getReservationsUseCase->all()
+            : $this->getReservationsUseCase->byStatus($status);
 
         $this->render('admin/reservations/list', [
             'title'        => 'Réservations',
@@ -58,7 +62,7 @@ class ReservationController extends AdminController
     {
         $this->requirePost();
         try {
-            (new SetReservationStatusUseCase($this->repo))->execute((int) $id, 'quoted');
+            $this->setReservationStatusUseCase->execute((int) $id, 'quoted');
             $this->flash('success', 'Devis marqué comme envoyé.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
@@ -71,7 +75,7 @@ class ReservationController extends AdminController
         $this->requirePost();
         $newStatus = trim($_POST['status'] ?? '');
         try {
-            (new SetReservationStatusUseCase($this->repo))->execute((int) $id, $newStatus);
+            $this->setReservationStatusUseCase->execute((int) $id, $newStatus);
             $this->flash('success', 'Statut mis à jour.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
@@ -83,9 +87,7 @@ class ReservationController extends AdminController
     {
         $this->requirePost();
         try {
-            $availability = new AvailabilityService($this->repo);
-            (new ConfirmReservationUseCase($this->repo, $this->productRepo, $availability))
-                ->execute((int) $id);
+            $this->confirmReservationUseCase->execute((int) $id);
             $this->flash('success', 'Réservation confirmée.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
@@ -97,7 +99,7 @@ class ReservationController extends AdminController
     {
         $this->requirePost();
         try {
-            (new CancelReservationUseCase($this->repo))->execute((int) $id);
+            $this->cancelReservationUseCase->execute((int) $id);
             $this->flash('success', 'Réservation annulée.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());

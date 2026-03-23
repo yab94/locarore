@@ -9,12 +9,9 @@ use Rore\Application\Catalog\DeleteProductPhotoUseCase;
 use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Infrastructure\Storage\FileUploader;
 
 class ProductController extends AdminController
 {
@@ -22,8 +19,11 @@ class ProductController extends AdminController
         private readonly MySqlProductRepository     $productRepo,
         private readonly MySqlCategoryRepository    $categoryRepo,
         private readonly MySqlReservationRepository $reservationRepo,
-        private readonly SlugUniquenessChecker      $slugChecker,
-        private readonly FileUploader               $uploader,
+        private readonly CreateProductUseCase       $createProductUseCase,
+        private readonly UpdateProductUseCase       $updateProductUseCase,
+        private readonly ToggleProductUseCase       $toggleProductUseCase,
+        private readonly UploadProductPhotoUseCase  $uploadProductPhotoUseCase,
+        private readonly DeleteProductPhotoUseCase  $deleteProductPhotoUseCase,
     ) {
         parent::__construct();
     }
@@ -49,7 +49,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $productId = (new CreateProductUseCase($this->productRepo, $this->slugChecker))->execute(
+            $productId = $this->createProductUseCase->execute(
                 categoryId:       (int) ($_POST['category_id'] ?? 0),
                 name:             trim($_POST['name'] ?? ''),
                 description:      trim($_POST['description'] ?? '') ?: null,
@@ -94,7 +94,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            (new UpdateProductUseCase($this->productRepo, $this->slugChecker))->execute(
+            $this->updateProductUseCase->execute(
                 id:               (int) $id,
                 categoryId:       (int) ($_POST['category_id'] ?? 0),
                 name:             trim($_POST['name'] ?? ''),
@@ -118,7 +118,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            (new ToggleProductUseCase($this->productRepo))->execute((int) $id);
+            $this->toggleProductUseCase->execute((int) $id);
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
@@ -129,8 +129,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            (new UploadProductPhotoUseCase($this->productRepo, $this->uploader))
-                ->execute((int) $id, $_FILES['photo']);
+            $this->uploadProductPhotoUseCase->execute((int) $id, $_FILES['photo']);
             $this->flash('success', 'Photo ajoutée.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
@@ -144,7 +143,7 @@ class ProductController extends AdminController
         try {
             $photo     = $this->productRepo->findPhotoById((int) $photoId);
             $productId = $photo?->getProductId();
-            (new DeleteProductPhotoUseCase($this->productRepo))->execute((int) $photoId);
+            $this->deleteProductPhotoUseCase->execute((int) $photoId);
             $this->flash('success', 'Photo supprimée.');
             if ($productId) {
                 $this->redirect('/admin/produits/' . $productId . '/modifier');
@@ -157,7 +156,7 @@ class ProductController extends AdminController
 
     private function handlePhotoUploads(int $productId, array $filesArray): void
     {
-        $useCase = new UploadProductPhotoUseCase($this->productRepo, $this->uploader);
+        $useCase = $this->uploadProductPhotoUseCase;
 
         $count = count($filesArray['name']);
         for ($i = 0; $i < $count; $i++) {

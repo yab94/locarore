@@ -7,14 +7,13 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 
 class DashboardController extends AdminController
 {
     public function __construct(
-        private readonly MySqlCategoryRepository    $categoryRepo,
-        private readonly MySqlProductRepository     $productRepo,
-        private readonly MySqlReservationRepository $reservationRepo,
+        private readonly MySqlCategoryRepository $categoryRepo,
+        private readonly MySqlProductRepository  $productRepo,
+        private readonly GetReservationsUseCase  $getReservationsUseCase,
     ) {
         parent::__construct();
     }
@@ -23,8 +22,7 @@ class DashboardController extends AdminController
     {
         $categories = $this->categoryRepo->findAll();
         $products   = $this->productRepo->findAll();
-        $getUseCase = new GetReservationsUseCase($this->reservationRepo);
-        $pending    = $getUseCase->pending();
+        $pending    = $this->getReservationsUseCase->pending();
 
         $this->render('admin/dashboard', [
             'title'           => 'Tableau de bord — Admin',

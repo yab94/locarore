@@ -7,8 +7,6 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreatePackUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
@@ -17,7 +15,9 @@ class PackController extends AdminController
     public function __construct(
         private readonly MySqlPackRepository    $packRepo,
         private readonly MySqlProductRepository $productRepo,
-        private readonly SlugUniquenessChecker  $slugChecker,
+        private readonly CreatePackUseCase      $createPackUseCase,
+        private readonly UpdatePackUseCase      $updatePackUseCase,
+        private readonly TogglePackUseCase      $togglePackUseCase,
     ) {
         parent::__construct();
     }
@@ -44,7 +44,7 @@ class PackController extends AdminController
         $this->requirePost();
         try {
             $items = $this->parseItems();
-            (new CreatePackUseCase($this->packRepo, $this->slugChecker))->execute(
+            $this->createPackUseCase->execute(
                 name:        trim($_POST['name'] ?? ''),
                 description: trim($_POST['description'] ?? '') ?: null,
                 pricePerDay: (float) ($_POST['price_per_day'] ?? 0),
@@ -76,7 +76,7 @@ class PackController extends AdminController
         $this->requirePost();
         try {
             $items = $this->parseItems();
-            (new UpdatePackUseCase($this->packRepo, $this->slugChecker))->execute(
+            $this->updatePackUseCase->execute(
                 id:          (int) $id,
                 name:        trim($_POST['name'] ?? ''),
                 description: trim($_POST['description'] ?? '') ?: null,
@@ -95,7 +95,7 @@ class PackController extends AdminController
     {
         $this->requirePost();
         try {
-            (new TogglePackUseCase($this->packRepo))->execute((int) $id);
+            $this->togglePackUseCase->execute((int) $id);
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }

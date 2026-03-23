@@ -9,22 +9,22 @@ use Rore\Application\Cart\CartSession;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
-use Rore\Application\Reservation\CreateReservationUseCase;
-use Rore\Domain\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CartController extends Controller
 {
     public function __construct(
-        private readonly CartSession                $cart,
-        private readonly MySqlProductRepository     $productRepo,
-        private readonly MySqlCategoryRepository    $categoryRepo,
-        private readonly MySqlReservationRepository $reservationRepo,
-        private readonly PageMetaBuilder            $metaBuilder,
+        private readonly CartSession             $cart,
+        private readonly MySqlProductRepository $productRepo,
+        private readonly MySqlCategoryRepository $categoryRepo,
+        private readonly PageMetaBuilder         $metaBuilder,
+        private readonly SetCartDatesUseCase     $setCartDatesUseCase,
+        private readonly AddToCartUseCase        $addToCartUseCase,
+        private readonly RemoveFromCartUseCase   $removeFromCartUseCase,
+        private readonly CheckoutUseCase         $checkoutUseCase,
     ) {}
 
     public function index(): void
@@ -65,7 +65,7 @@ class CartController extends Controller
         }
 
         try {
-            (new SetCartDatesUseCase($this->cart))->execute(
+            $this->setCartDatesUseCase->execute(
                 startDate: $startDate,
                 endDate:   $endDate,
             );
@@ -81,9 +81,7 @@ class CartController extends Controller
     {
         $this->requirePost();
         try {
-            $availability = new AvailabilityService($this->reservationRepo);
-
-            (new AddToCartUseCase($this->cart, $this->productRepo, $availability))->execute(
+            $this->addToCartUseCase->execute(
                 productId: (int) ($_POST['product_id'] ?? 0),
                 quantity:  (int) ($_POST['quantity']   ?? 1),
             );
@@ -99,7 +97,7 @@ class CartController extends Controller
     public function remove(): void
     {
         $this->requirePost();
-        (new RemoveFromCartUseCase($this->cart))->execute((int) ($_POST['product_id'] ?? 0));
+        $this->removeFromCartUseCase->execute((int) ($_POST['product_id'] ?? 0));
         $this->redirect('/panier');
     }
 
@@ -119,12 +117,7 @@ class CartController extends Controller
     {
         $this->requirePost();
         try {
-            $useCase = new CheckoutUseCase(
-                $this->cart,
-                new CreateReservationUseCase($this->reservationRepo),
-            );
-
-            $reservationId = $useCase->execute(
+            $reservationId = $this->checkoutUseCase->execute(
                 customerName:    trim($_POST['customer_name']    ?? ''),
                 customerEmail:   trim($_POST['customer_email']   ?? ''),
                 customerPhone:   trim($_POST['customer_phone']   ?? '') ?: null,
