@@ -28,7 +28,7 @@ final class Slug
         return $this->value;
     }
 
-    private static function slugify(string $text): string
+    public static function slugify(string $text): string
     {
         $text = mb_strtolower($text, 'UTF-8');
         $text = strtr($text, [

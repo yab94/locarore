@@ -11,18 +11,7 @@ declare(strict_types=1);
  */
 function slugify(string $text): string
 {
-    $text = mb_strtolower($text, 'UTF-8');
-    $text = strtr($text, [
-        'é' => 'e', 'è' => 'e', 'ê' => 'e', 'ë' => 'e',
-        'à' => 'a', 'â' => 'a', 'ä' => 'a', 'á' => 'a',
-        'ô' => 'o', 'ö' => 'o', 'ó' => 'o',
-        'ù' => 'u', 'û' => 'u', 'ü' => 'u', 'ú' => 'u',
-        'î' => 'i', 'ï' => 'i', 'í' => 'i',
-        'ç' => 'c', 'ñ' => 'n',
-    ]);
-    $text = preg_replace('/[^a-z0-9\s\-]/', '', $text);
-    $text = preg_replace('/[\s\-]+/', '-', trim($text));
-    return $text;
+    return \Rore\Domain\Catalog\ValueObject\Slug::slugify($text);
 }
 
 /**

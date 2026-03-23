@@ -118,9 +118,22 @@ class ReservationController extends AdminController
 
         $reservations = $this->repo->findConfirmedOverlapping($start, $end);
 
+        // Charger les produits référencés dans les réservations (pour indicateur on-demand)
+        $productRepo = new MySqlProductRepository();
+        $products    = [];
+        foreach ($reservations as $r) {
+            foreach ($r->getItems() as $item) {
+                $pid = $item->getProductId();
+                if (!isset($products[$pid])) {
+                    $products[$pid] = $productRepo->findById($pid);
+                }
+            }
+        }
+
         $this->render('admin/reservations/calendar', [
             'title'        => 'Calendrier',
             'reservations' => $reservations,
+            'products'     => $products,
             'month'        => $month,
             'year'         => $year,
             'start'        => $start,

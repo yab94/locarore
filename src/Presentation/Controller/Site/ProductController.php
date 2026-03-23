@@ -47,10 +47,10 @@ class ProductController extends Controller
         $startDate   = $cart['start_date'] ?? null;
         $endDate     = $cart['end_date']   ?? null;
 
-        $availableQty = $product->getStock();
+        $availableQty = $product->getTotalStock();
         if ($startDate && $endDate) {
             $reserved     = $reservationRepo->countReservedQtyForProduct($product->getId(), $startDate, $endDate);
-            $availableQty = max(0, $product->getStock() - $reserved);
+            $availableQty = max(0, $product->getTotalStock() - $reserved);
         }
 
         $this->render('site/product', [

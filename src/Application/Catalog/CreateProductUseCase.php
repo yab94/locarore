@@ -23,8 +23,9 @@ class CreateProductUseCase
         ?string $description,
         int     $stock,
         float   $priceBase,
-        float   $priceExtraWe    = 0.0,
-        float   $priceExtraSem   = 15.0,
+        int     $stockOnDemand    = 0,
+        float   $priceExtraWeekend = 0.0,
+        float   $priceExtraWeekday = 15.0,
         array   $extraCategoryIds = [],
         ?string $customSlug       = null,
     ): int {
@@ -33,18 +34,19 @@ class CreateProductUseCase
                             : Slug::from($name)->getValue();
         
         $product = new Product(
-            id:           null,
-            categoryId:   $categoryId,
-            name:         $name,
-            slug:         $slug,
-            description:  $description,
-            stock:        $stock,
-            priceBase:    $priceBase,
-            priceExtraWe: $priceExtraWe,
-            priceExtraSem: $priceExtraSem,
-            isActive:     true,
-            createdAt:    $now,
-            updatedAt:    $now,
+            id:            null,
+            categoryId:    $categoryId,
+            name:          $name,
+            slug:          $slug,
+            description:   $description,
+            stock:         $stock,
+            stockOnDemand: $stockOnDemand,
+            priceBase:     $priceBase,
+            priceExtraWeekend:  $priceExtraWeekend,
+            priceExtraWeekday: $priceExtraWeekday,
+            isActive:      true,
+            createdAt:     $now,
+            updatedAt:     $now,
         );
 
         // Toutes les catégories (principale + extra)

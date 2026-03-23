@@ -32,7 +32,14 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 text-gray-500">—</td>
-                    <td class="px-6 py-4 text-right"><?= $p->getStock() ?></td>
+                    <td class="px-6 py-4 text-right">
+                        <?= $p->getStock() ?>
+                        <?php if ($p->getStockOnDemand() > 0): ?>
+                            <span class="text-xs text-amber-600 font-medium">
+                                +<?= $p->getStockOnDemand() ?> ⚒
+                            </span>
+                        <?php endif; ?>
+                    </td>
                     <td class="px-6 py-4 text-right"><?= number_format($p->getPriceBase(), 2, ',', ' ') ?> €</td>
                     <td class="px-6 py-4 text-center">
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium

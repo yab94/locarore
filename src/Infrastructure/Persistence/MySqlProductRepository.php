@@ -96,8 +96,8 @@ class MySqlProductRepository implements ProductRepositoryInterface
         if ($product->getId() === null) {
             $stmt = $this->pdo->prepare(
                 'INSERT INTO products
-                    (category_id, name, slug, description, stock, price_base, price_extra_we, price_extra_sem, is_active, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                    (category_id, name, slug, description, stock, stock_on_demand, price_base, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $product->getCategoryId(),
@@ -105,9 +105,10 @@ class MySqlProductRepository implements ProductRepositoryInterface
                 $product->getSlug(),
                 $product->getDescription(),
                 $product->getStock(),
+                $product->getStockOnDemand(),
                 $product->getPriceBase(),
-                $product->getPriceExtraWe(),
-                $product->getPriceExtraSem(),
+                $product->getPriceExtraWeekend(),
+                $product->getPriceExtraWeekday(),
                 (int) $product->isActive(),
                 $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 $product->getUpdatedAt()->format('Y-m-d H:i:s'),
@@ -117,7 +118,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
             $stmt = $this->pdo->prepare(
                 'UPDATE products
                     SET category_id = ?, name = ?, slug = ?, description = ?,
-                        stock = ?, price_base = ?, price_extra_we = ?, price_extra_sem = ?,
+                        stock = ?, stock_on_demand = ?, price_base = ?, price_extra_weekend = ?, price_extra_weekday = ?,
                         is_active = ?, updated_at = ?
                   WHERE id = ?'
             );
@@ -127,9 +128,10 @@ class MySqlProductRepository implements ProductRepositoryInterface
                 $product->getSlug(),
                 $product->getDescription(),
                 $product->getStock(),
+                $product->getStockOnDemand(),
                 $product->getPriceBase(),
-                $product->getPriceExtraWe(),
-                $product->getPriceExtraSem(),
+                $product->getPriceExtraWeekend(),
+                $product->getPriceExtraWeekday(),
                 (int) $product->isActive(),
                 $product->getUpdatedAt()->format('Y-m-d H:i:s'),
                 $product->getId(),
@@ -235,18 +237,19 @@ class MySqlProductRepository implements ProductRepositoryInterface
     private function hydrate(array $row): Product
     {
         return new Product(
-            id:           (int) $row['id'],
-            categoryId:   (int) $row['category_id'],
-            name:         $row['name'],
-            slug:         $row['slug'],
-            description:  $row['description'],
-            stock:        (int) $row['stock'],
-            priceBase:    (float) $row['price_base'],
-            priceExtraWe: (float) $row['price_extra_we'],
-            priceExtraSem: (float) $row['price_extra_sem'],
-            isActive:     (bool) $row['is_active'],
-            createdAt:    new \DateTimeImmutable($row['created_at']),
-            updatedAt:    new \DateTimeImmutable($row['updated_at']),
+            id:            (int) $row['id'],
+            categoryId:    (int) $row['category_id'],
+            name:          $row['name'],
+            slug:          $row['slug'],
+            description:   $row['description'],
+            stock:         (int) $row['stock'],
+            stockOnDemand: (int) ($row['stock_on_demand'] ?? 0),
+            priceBase:     (float) $row['price_base'],
+            priceExtraWeekend: (float) $row['price_extra_weekend'],
+            priceExtraWeekday: (float) $row['price_extra_weekday'],
+            isActive:      (bool) $row['is_active'],
+            createdAt:     new \DateTimeImmutable($row['created_at']),
+            updatedAt:     new \DateTimeImmutable($row['updated_at']),
         );
     }
 

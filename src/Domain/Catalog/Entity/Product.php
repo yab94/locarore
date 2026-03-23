@@ -19,9 +19,10 @@ class Product
         private string              $slug,
         private ?string             $description,
         private int                 $stock,
+        private int                 $stockOnDemand,   // unités fabricables à la commande
         private float               $priceBase,       // forfait de base (couvre 1-2 jours)
-        private float               $priceExtraWe,    // supplément/jour si WE (sam+dim, ≤4j)
-        private float               $priceExtraSem,   // supplément/jour sinon
+        private float               $priceExtraWeekend, // supplément/jour si WE (sam+dim, ≤4j)
+        private float               $priceExtraWeekday, // supplément/jour sinon
         private bool                $isActive,
         private \DateTimeImmutable  $createdAt,
         private \DateTimeImmutable  $updatedAt,
@@ -33,9 +34,12 @@ class Product
     public function getSlug(): string                  { return $this->slug; }
     public function getDescription(): ?string          { return $this->description; }
     public function getStock(): int                    { return $this->stock; }
+    public function getStockOnDemand(): int            { return $this->stockOnDemand; }
+    /** Stock physique + fabricable = capacité totale à disposer */
+    public function getTotalStock(): int               { return $this->stock + $this->stockOnDemand; }
     public function getPriceBase(): float              { return $this->priceBase; }
-    public function getPriceExtraWe(): float           { return $this->priceExtraWe; }
-    public function getPriceExtraSem(): float          { return $this->priceExtraSem; }
+    public function getPriceExtraWeekend(): float        { return $this->priceExtraWeekend; }
+    public function getPriceExtraWeekday(): float      { return $this->priceExtraWeekday; }
     public function isActive(): bool                   { return $this->isActive; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
@@ -44,7 +48,7 @@ class Product
      * Calcule le prix total pour une période.
      * - Forfait base couvre les 2 premiers jours.
      * - WE (0€/j supp) : contient sam+dim ET ≤ 4 jours.
-     * - SEM (priceExtraSem €/j supp) : sinon.
+     * - Weekday (priceExtraWeekday €/j supp) : sinon.
      */
     public function calculatePrice(\DateTimeImmutable|string $start, \DateTimeImmutable|string $end): float
     {
@@ -64,7 +68,7 @@ class Product
         }
 
         $isWeekend  = $hasSat && $hasSun && $days <= 4;
-        $extraRate  = $isWeekend ? $this->priceExtraWe : $this->priceExtraSem;
+        $extraRate  = $isWeekend ? $this->priceExtraWeekend : $this->priceExtraWeekday;
         $extraDays  = max(0, $days - 2);
 
         return $this->priceBase + ($extraDays * $extraRate);
@@ -81,9 +85,10 @@ class Product
     public function setSlug(string $slug): void        { $this->slug = $slug; }
     public function setDescription(?string $d): void   { $this->description = $d; }
     public function setStock(int $stock): void         { $this->stock = $stock; }
+    public function setStockOnDemand(int $s): void     { $this->stockOnDemand = $s; }
     public function setPriceBase(float $p): void       { $this->priceBase = $p; }
-    public function setPriceExtraWe(float $p): void    { $this->priceExtraWe = $p; }
-    public function setPriceExtraSem(float $p): void   { $this->priceExtraSem = $p; }
+    public function setPriceExtraWeekend(float $p): void  { $this->priceExtraWeekend = $p; }
+    public function setPriceExtraWeekday(float $p): void { $this->priceExtraWeekday = $p; }
     public function setIsActive(bool $active): void    { $this->isActive = $active; }
     public function toggle(): void                     { $this->isActive = !$this->isActive; }
     public function setUpdatedAt(\DateTimeImmutable $dt): void { $this->updatedAt = $dt; }

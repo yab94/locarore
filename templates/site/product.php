@@ -47,6 +47,11 @@
         <p class="text-2xl font-semibold text-brand-600 mb-4">
             à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
         </p>
+        <?php if ($product->getStockOnDemand() > 0): ?>
+            <p class="inline-flex items-center gap-1.5 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 mb-4">
+                ⚙ Fabrication à la demande disponible
+            </p>
+        <?php endif; ?>
 
         <?php if ($product->getDescription()): ?>
             <div class="text-gray-600 mb-6 leading-relaxed prose prose-sm max-w-none">
@@ -73,14 +78,28 @@
                 </form>
             </div>
         <?php else: ?>
-            <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-sm text-green-800 flex items-center justify-between">
-                <span>📅 Du <?= htmlspecialchars($cart['start_date']) ?> au <?= htmlspecialchars($cart['end_date']) ?></span>
-                <form method="post" action="/panier/dates">
-                    <input type="hidden" name="start_date" value="">
-                    <input type="hidden" name="end_date" value="">
-                    <button type="submit" class="ml-2 text-green-600 underline text-xs"
-                            data-confirm="Modifier les dates videra votre panier. Continuer ?">
+            <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6 text-sm text-green-800">
+                <div class="flex items-center justify-between mb-3">
+                    <span>📅 Du <?= htmlspecialchars($cart['start_date']) ?> au <?= htmlspecialchars($cart['end_date']) ?></span>
+                    <button type="button" onclick="document.getElementById('edit-dates-form').classList.toggle('hidden')"
+                            class="ml-2 text-green-600 underline text-xs">
                         Modifier
+                    </button>
+                </div>
+                <form id="edit-dates-form" method="post" action="/panier/dates"
+                      class="hidden flex-col sm:flex-row gap-3 flex">
+                    <input type="date" name="start_date" required
+                           value="<?= htmlspecialchars($cart['start_date']) ?>"
+                           class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
+                           min="<?= date('Y-m-d') ?>">
+                    <input type="date" name="end_date" required
+                           value="<?= htmlspecialchars($cart['end_date']) ?>"
+                           class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
+                           min="<?= date('Y-m-d') ?>">
+                    <input type="hidden" name="redirect" value="/produit/<?= e($product->getSlug()) ?>">
+                    <button type="submit"
+                            class="bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-800 transition">
+                        Valider
                     </button>
                 </form>
             </div>

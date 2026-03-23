@@ -20,8 +20,9 @@ class UpdateProductUseCase
         ?string $description,
         int     $stock,
         float   $priceBase,
-        float   $priceExtraWe    = 0.0,
-        float   $priceExtraSem   = 15.0,
+        int     $stockOnDemand    = 0,
+        float   $priceExtraWeekend = 0.0,
+        float   $priceExtraWeekday = 15.0,
         array   $extraCategoryIds = [],
         ?string $customSlug       = null,
     ): void {
@@ -38,9 +39,10 @@ class UpdateProductUseCase
         $product->setSlug($slug);
         $product->setDescription($description);
         $product->setStock($stock);
+        $product->setStockOnDemand($stockOnDemand);
         $product->setPriceBase($priceBase);
-        $product->setPriceExtraWe($priceExtraWe);
-        $product->setPriceExtraSem($priceExtraSem);
+        $product->setPriceExtraWeekend($priceExtraWeekend);
+        $product->setPriceExtraWeekday($priceExtraWeekday);
         $product->setUpdatedAt(new \DateTimeImmutable());
 
         $allCats = array_unique(array_merge([$categoryId], array_map('intval', $extraCategoryIds)));

@@ -53,8 +53,9 @@ class ProductController extends AdminController
                 description:      trim($_POST['description'] ?? '') ?: null,
                 stock:            (int) ($_POST['stock'] ?? 0),
                 priceBase:        (float) ($_POST['price_base'] ?? 80),
-                priceExtraWe:     (float) ($_POST['price_extra_we'] ?? 0),
-                priceExtraSem:    (float) ($_POST['price_extra_sem'] ?? 15),
+                stockOnDemand:    (int) ($_POST['stock_on_demand'] ?? 0),
+                priceExtraWeekend: (float) ($_POST['price_extra_weekend'] ?? 0),
+                priceExtraWeekday: (float) ($_POST['price_extra_weekday'] ?? 15),
                 extraCategoryIds: array_map('intval', $_POST['extra_category_ids'] ?? []),
                 customSlug:       trim($_POST['slug'] ?? '') ?: null,
             );
@@ -99,8 +100,9 @@ class ProductController extends AdminController
                 description:      trim($_POST['description'] ?? '') ?: null,
                 stock:            (int) ($_POST['stock'] ?? 0),
                 priceBase:        (float) ($_POST['price_base'] ?? 80),
-                priceExtraWe:     (float) ($_POST['price_extra_we'] ?? 0),
-                priceExtraSem:    (float) ($_POST['price_extra_sem'] ?? 15),
+                stockOnDemand:    (int) ($_POST['stock_on_demand'] ?? 0),
+                priceExtraWeekend: (float) ($_POST['price_extra_weekend'] ?? 0),
+                priceExtraWeekday: (float) ($_POST['price_extra_weekday'] ?? 15),
                 extraCategoryIds: array_map('intval', $_POST['extra_category_ids'] ?? []),
                 customSlug:       trim($_POST['slug'] ?? '') ?: null,
             );

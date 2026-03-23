@@ -61,13 +61,25 @@ $daysInMonth = (int) $end->format('j');
                 <span class="text-xs font-medium <?= $isToday ? 'text-blue-700' : 'text-gray-500' ?>">
                     <?= $day ?>
                 </span>
-                <?php foreach ($dayReservations as $r): ?>
+                <?php foreach ($dayReservations as $r):
+                    // Détecter si au moins un produit de cette résa utilise du stock à la demande
+                    $needsFabrication = false;
+                    foreach ($r->getItems() as $item) {
+                        $p = $products[$item->getProductId()] ?? null;
+                        if ($p && $p->getStockOnDemand() > 0) {
+                            $needsFabrication = true;
+                            break;
+                        }
+                    }
+                ?>
                     <a href="/admin/reservations/<?= $r->getId() ?>"
+                       title="<?= $needsFabrication ? '⚒ Fabrication à la demande requise — ' : '' ?><?= e($r->getCustomerName()) ?>"
                        class="block mt-0.5 px-1 py-0.5 rounded text-xs truncate
                            <?= $r->isConfirmed() ? 'bg-green-100 text-green-800' :
                               ($r->isQuoted()    ? 'bg-orange-100 text-orange-800' :
-                                                   'bg-yellow-100 text-yellow-800') ?>">
-                        <?= e($r->getCustomerName()) ?>
+                                                   'bg-yellow-100 text-yellow-800') ?>
+                           <?= $needsFabrication ? 'ring-1 ring-amber-400' : '' ?>">
+                        <?= $needsFabrication ? '🔨 ' : '' ?><?= e($r->getCustomerName()) ?>
                     </a>
                 <?php endforeach; ?>
             </div>
