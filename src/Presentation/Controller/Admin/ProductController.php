@@ -50,20 +50,21 @@ class ProductController extends AdminController
         $this->requirePost();
         try {
             $productId = $this->createProductUseCase->execute(
-                categoryId:       (int) ($_POST['category_id'] ?? 0),
-                name:             trim($_POST['name'] ?? ''),
-                description:      trim($_POST['description'] ?? '') ?: null,
-                stock:            (int) ($_POST['stock'] ?? 0),
-                priceBase:        (float) ($_POST['price_base'] ?? 80),
-                stockOnDemand:    (int) ($_POST['stock_on_demand'] ?? 0),
-                priceExtraWeekend: (float) ($_POST['price_extra_weekend'] ?? 0),
-                priceExtraWeekday: (float) ($_POST['price_extra_weekday'] ?? 15),
-                extraCategoryIds: array_map('intval', $_POST['extra_category_ids'] ?? []),
-                customSlug:       trim($_POST['slug'] ?? '') ?: null,
+                categoryId:       $this->inputInt('category_id'),
+                name:             $this->inputString('name'),
+                description:      $this->inputStringOrNull('description'),
+                stock:            $this->inputInt('stock'),
+                priceBase:        $this->inputFloat('price_base', 80.0),
+                stockOnDemand:    $this->inputInt('stock_on_demand'),
+                priceExtraWeekend: $this->inputFloat('price_extra_weekend', 0.0),
+                priceExtraWeekday: $this->inputFloat('price_extra_weekday', 15.0),
+                extraCategoryIds: array_map('intval', $this->inputArray('extra_category_ids', [])),
+                customSlug:       $this->inputStringOrNull('slug'),
             );
 
-            if (!empty($_FILES['photos']['name'][0])) {
-                $this->handlePhotoUploads($productId, $_FILES['photos']);
+            $photos = $this->file('photos');
+            if ($photos !== null && isset($photos['name']) && is_array($photos['name'])) {
+                $this->handlePhotoUploads($productId, $photos);
             }
 
             $this->flash('success', 'Produit créé avec succès.');
@@ -96,16 +97,16 @@ class ProductController extends AdminController
         try {
             $this->updateProductUseCase->execute(
                 id:               (int) $id,
-                categoryId:       (int) ($_POST['category_id'] ?? 0),
-                name:             trim($_POST['name'] ?? ''),
-                description:      trim($_POST['description'] ?? '') ?: null,
-                stock:            (int) ($_POST['stock'] ?? 0),
-                priceBase:        (float) ($_POST['price_base'] ?? 80),
-                stockOnDemand:    (int) ($_POST['stock_on_demand'] ?? 0),
-                priceExtraWeekend: (float) ($_POST['price_extra_weekend'] ?? 0),
-                priceExtraWeekday: (float) ($_POST['price_extra_weekday'] ?? 15),
-                extraCategoryIds: array_map('intval', $_POST['extra_category_ids'] ?? []),
-                customSlug:       trim($_POST['slug'] ?? '') ?: null,
+                categoryId:       $this->inputInt('category_id'),
+                name:             $this->inputString('name'),
+                description:      $this->inputStringOrNull('description'),
+                stock:            $this->inputInt('stock'),
+                priceBase:        $this->inputFloat('price_base', 80.0),
+                stockOnDemand:    $this->inputInt('stock_on_demand'),
+                priceExtraWeekend: $this->inputFloat('price_extra_weekend', 0.0),
+                priceExtraWeekday: $this->inputFloat('price_extra_weekday', 15.0),
+                extraCategoryIds: array_map('intval', $this->inputArray('extra_category_ids', [])),
+                customSlug:       $this->inputStringOrNull('slug'),
             );
             $this->flash('success', 'Produit mis à jour.');
         } catch (\Throwable $e) {
@@ -129,7 +130,11 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $this->uploadProductPhotoUseCase->execute((int) $id, $_FILES['photo']);
+            $file = $this->file('photo');
+            if ($file === null) {
+                throw new \RuntimeException('Aucun fichier envoyé.');
+            }
+            $this->uploadProductPhotoUseCase->execute((int) $id, $file);
             $this->flash('success', 'Photo ajoutée.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());

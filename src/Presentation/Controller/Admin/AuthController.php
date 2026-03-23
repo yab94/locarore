@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function login(): void
     {
-        if (!empty($_SESSION['admin_logged_in'])) {
+        if (!empty($this->sessionGet('admin_logged_in'))) {
             $this->redirect('/admin/dashboard');
         }
         $this->render('admin/login', ['title' => 'Administration']);
@@ -21,10 +21,10 @@ class AuthController extends Controller
         $this->requirePost();
 
         $config   = parse_ini_file(BASE_PATH . '/config/app.ini', true);
-        $password = $_POST['password'] ?? '';
+        $password = $this->inputString('password');
 
         if ($password === $config['admin']['password']) {
-            $_SESSION['admin_logged_in'] = true;
+            $this->sessionSet('admin_logged_in', true);
             $this->redirect('/admin/dashboard');
         }
 
@@ -34,7 +34,7 @@ class AuthController extends Controller
 
     public function logout(): void
     {
-        unset($_SESSION['admin_logged_in']);
+        $this->sessionUnset('admin_logged_in');
         $this->redirect('/admin');
     }
 }

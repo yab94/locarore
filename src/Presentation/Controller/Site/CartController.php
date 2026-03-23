@@ -52,10 +52,10 @@ class CartController extends Controller
     public function setDates(): void
     {
         $this->requirePost();
-        $redirect = $_POST['redirect'] ?? '/panier';
+        $redirect = $this->inputString('redirect', '/panier');
 
-        $startDate = trim($_POST['start_date'] ?? '');
-        $endDate   = trim($_POST['end_date']   ?? '');
+        $startDate = $this->inputString('start_date');
+        $endDate   = $this->inputString('end_date');
 
         // Dates vides = intention de réinitialiser le panier
         if ($startDate === '' || $endDate === '') {
@@ -82,22 +82,22 @@ class CartController extends Controller
         $this->requirePost();
         try {
             $this->addToCartUseCase->execute(
-                productId: (int) ($_POST['product_id'] ?? 0),
-                quantity:  (int) ($_POST['quantity']   ?? 1),
+                productId: $this->inputInt('product_id'),
+                quantity:  $this->inputInt('quantity', 1),
             );
             $this->flash('success', 'Produit ajouté au panier.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
 
-        $redirect = $_POST['redirect'] ?? '/panier';
+        $redirect = $this->inputString('redirect', '/panier');
         $this->redirect($redirect);
     }
 
     public function remove(): void
     {
         $this->requirePost();
-        $this->removeFromCartUseCase->execute((int) ($_POST['product_id'] ?? 0));
+        $this->removeFromCartUseCase->execute($this->inputInt('product_id'));
         $this->redirect('/panier');
     }
 
@@ -118,12 +118,12 @@ class CartController extends Controller
         $this->requirePost();
         try {
             $reservationId = $this->checkoutUseCase->execute(
-                customerName:    trim($_POST['customer_name']    ?? ''),
-                customerEmail:   trim($_POST['customer_email']   ?? ''),
-                customerPhone:   trim($_POST['customer_phone']   ?? '') ?: null,
-                customerAddress: trim($_POST['customer_address'] ?? '') ?: null,
-                eventAddress:    trim($_POST['event_address']    ?? '') ?: null,
-                notes:           trim($_POST['notes']            ?? '') ?: null,
+                customerName:    $this->inputString('customer_name'),
+                customerEmail:   $this->inputString('customer_email'),
+                customerPhone:   $this->inputStringOrNull('customer_phone'),
+                customerAddress: $this->inputStringOrNull('customer_address'),
+                eventAddress:    $this->inputStringOrNull('event_address'),
+                notes:           $this->inputStringOrNull('notes'),
             );
 
             $this->redirect('/panier/confirmation?id=' . $reservationId);
@@ -135,7 +135,7 @@ class CartController extends Controller
 
     public function confirmation(): void
     {
-        $id = (int) ($_GET['id'] ?? 0);
+        $id = $this->inputInt('id');
         $this->render('site/confirmation', [
             'meta'          => $this->metaBuilder->forConfirmation(),
             'reservationId' => $id,

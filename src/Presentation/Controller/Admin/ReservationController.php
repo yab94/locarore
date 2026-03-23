@@ -26,7 +26,7 @@ class ReservationController extends AdminController
 
     public function index(): void
     {
-        $status       = $_GET['status'] ?? 'all';
+        $status       = $this->inputString('status', 'all');
         $reservations = $status === 'all'
             ? $this->getReservationsUseCase->all()
             : $this->getReservationsUseCase->byStatus($status);
@@ -73,7 +73,7 @@ class ReservationController extends AdminController
     public function setStatus(string $id): void
     {
         $this->requirePost();
-        $newStatus = trim($_POST['status'] ?? '');
+        $newStatus = $this->inputString('status');
         try {
             $this->setReservationStatusUseCase->execute((int) $id, $newStatus);
             $this->flash('success', 'Statut mis à jour.');
@@ -109,8 +109,8 @@ class ReservationController extends AdminController
 
     public function calendar(): void
     {
-        $month = (int) ($_GET['month'] ?? date('n'));
-        $year  = (int) ($_GET['year']  ?? date('Y'));
+        $month = $this->inputInt('month', (int) date('n'));
+        $year  = $this->inputInt('year', (int) date('Y'));
 
         $start = new \DateTimeImmutable("$year-$month-01");
         $end   = $start->modify('last day of this month');

@@ -10,7 +10,7 @@ abstract class AdminController extends Controller
 {
     public function __construct()
     {
-        if (empty($_SESSION['admin_logged_in'])) {
+        if (empty($this->sessionGet('admin_logged_in'))) {
             $this->redirect('/admin');
         }
     }

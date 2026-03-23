@@ -42,11 +42,11 @@ class CategoryController extends AdminController
         $this->requirePost();
         try {
             $this->createCategoryUseCase->execute(
-                name:             trim($_POST['name'] ?? ''),
-                descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
-                description:      trim($_POST['description'] ?? '') ?: null,
-                parentId:         ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null,
-                customSlug:       trim($_POST['slug'] ?? '') ?: null,
+                name:             $this->inputString('name'),
+                descriptionShort: $this->inputStringOrNull('description_short'),
+                description:      $this->inputStringOrNull('description'),
+                parentId:         $this->inputString('parent_id') !== '' ? $this->inputInt('parent_id') : null,
+                customSlug:       $this->inputStringOrNull('slug'),
             );
             $this->flash('success', 'Catégorie créée avec succès.');
         } catch (\Throwable $e) {
@@ -74,11 +74,11 @@ class CategoryController extends AdminController
         try {
             $this->updateCategoryUseCase->execute(
                 id:               (int) $id,
-                name:             trim($_POST['name'] ?? ''),
-                descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
-                description:      trim($_POST['description'] ?? '') ?: null,
-                parentId:         ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null,
-                customSlug:       trim($_POST['slug'] ?? '') ?: null,
+                name:             $this->inputString('name'),
+                descriptionShort: $this->inputStringOrNull('description_short'),
+                description:      $this->inputStringOrNull('description'),
+                parentId:         $this->inputString('parent_id') !== '' ? $this->inputInt('parent_id') : null,
+                customSlug:       $this->inputStringOrNull('slug'),
             );
             $this->flash('success', 'Catégorie mise à jour.');
         } catch (\Throwable $e) {
