@@ -7,14 +7,6 @@ declare(strict_types=1);
  */
 
 /**
- * Convertit une chaîne en slug SEO-friendly (supporte les accents).
- */
-function slugify(string $text): string
-{
-    return \Rore\Domain\Catalog\ValueObject\Slug::slugify($text);
-}
-
-/**
  * Formate une date en français.
  */
 function formatDate(string|\DateTimeInterface $date, string $format = 'd/m/Y'): string
@@ -129,52 +121,21 @@ function se(string $key, array $vars = []): string
 }
 
 /**
- * Construit le chemin canonique d'une catégorie en remontant ses parents.
- * Ex : pour "Ballons" enfant de "Décoration" → "decoration/ballons"
- *
- * @param \Rore\Domain\Catalog\Entity\Category   $category
- * @param \Rore\Domain\Catalog\Entity\Category[] $allCategories  tableau indexé (ou non) de toutes les catégories
- * @return string  chemin sans slash initial ni final
+ * Génère ou récupère le token CSRF de la session.
  */
-function categoryCanonicalPath(object $category, array $allCategories): string
+function csrfToken(): string
 {
-    $byId = [];
-    foreach ($allCategories as $c) {
-        $byId[$c->getId()] = $c;
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
-
-    $segments = [$category->getSlug()];
-    $current  = $category;
-    while ($current->getParentId() !== null && isset($byId[$current->getParentId()])) {
-        $current    = $byId[$current->getParentId()];
-        array_unshift($segments, $current->getSlug());
-    }
-    return implode('/', $segments);
+    return $_SESSION['csrf_token'];
 }
 
 /**
- * Construit l'URL canonique d'un produit incluant son chemin catégorie.
- * Ex : "/produit/decoration/ballons/arc-lumineux"
- *
- * @param \Rore\Domain\Catalog\Entity\Product    $product
- * @param \Rore\Domain\Catalog\Entity\Category[] $allCategories
- * @param \Rore\Domain\Catalog\Entity\Category|null $category  catégorie principale déjà chargée (optionnel)
- * @return string  URL absolue
+ * Retourne un champ hidden contenant le token CSRF.
  */
-function productCanonicalUrl(object $product, array $allCategories, ?object $category = null): string
+function csrfField(): string
 {
-    if ($category === null) {
-        $byId     = [];
-        foreach ($allCategories as $c) {
-            $byId[$c->getId()] = $c;
-        }
-        $category = $byId[$product->getCategoryId()] ?? null;
-    }
-
-    if ($category === null) {
-        return '/produit/' . $product->getSlug();
-    }
-
-    return '/produit/' . categoryCanonicalPath($category, $allCategories) . '/' . $product->getSlug();
+    return '<input type="hidden" name="_csrf" value="' . e(csrfToken()) . '">';
 }
 

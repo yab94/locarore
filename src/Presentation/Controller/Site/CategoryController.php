@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Site;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CategoryController extends Controller
 {
@@ -38,13 +39,15 @@ class CategoryController extends Controller
         // Fil d'ariane : remonter les parents
         $breadcrumb = $this->buildBreadcrumb($category, $allCategories);
 
+        $meta = (new PageMetaBuilder())->forCategory($category, $breadcrumb);
+
         $this->render('site/category', [
-            'title'        => $category->getName() . ' — Locarore',
-            'category'     => $category,
-            'products'     => $products,
-            'children'     => array_values($children),
-            'breadcrumb'   => $breadcrumb,
-            'slugPath'     => $path,
+            'meta'          => $meta,
+            'category'      => $category,
+            'products'      => $products,
+            'children'      => array_values($children),
+            'breadcrumb'    => $breadcrumb,
+            'slugPath'      => $path,
             'allCategories' => $allCategories,
         ]);
     }

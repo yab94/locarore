@@ -52,5 +52,9 @@ abstract class Controller
             http_response_code(405);
             exit('Method Not Allowed');
         }
+        if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['_csrf'] ?? '')) {
+            http_response_code(419);
+            exit('Token CSRF invalide.');
+        }
     }
 }

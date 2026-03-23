@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Site;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Seo\PageMetaBuilder;
 
 class HomeController extends Controller
 {
@@ -18,8 +19,10 @@ class HomeController extends Controller
         $allProducts = (new MySqlProductRepository())->findAllActive();
         $featured    = array_slice($allProducts, 0, 6);
 
+        $meta = (new PageMetaBuilder())->forHome($categories);
+
         $this->render('site/home', [
-            'title'         => 'Locarore — Location de décoration',
+            'meta'          => $meta,
             'categories'    => $categories,
             'featured'      => $featured,
             'allCategories' => $categories,

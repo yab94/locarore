@@ -14,6 +14,7 @@ use Rore\Domain\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CartController extends Controller
 {
@@ -40,7 +41,7 @@ class CartController extends Controller
         $allCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
 
         $this->render('site/cart', [
-            'title'         => 'Mon panier — Locarore',
+            'meta'          => (new PageMetaBuilder())->forCart(),
             'cart'          => $this->cart,
             'cartProducts'  => $cartProducts,
             'allCategories' => $allCategories,
@@ -110,8 +111,8 @@ class CartController extends Controller
         }
 
         $this->render('site/checkout', [
-            'title' => 'Finaliser ma réservation — Locarore',
-            'cart'  => $this->cart,
+            'meta' => (new PageMetaBuilder())->forCheckout(),
+            'cart' => $this->cart,
         ]);
     }
 
@@ -145,7 +146,7 @@ class CartController extends Controller
     {
         $id = (int) ($_GET['id'] ?? 0);
         $this->render('site/confirmation', [
-            'title'         => 'Demande envoyée — Locarore',
+            'meta'          => (new PageMetaBuilder())->forConfirmation(),
             'reservationId' => $id,
         ]);
     }

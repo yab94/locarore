@@ -6,6 +6,7 @@
     </p>
 
     <form method="post" action="/panier/checkout" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
+        <?= csrfField() ?>
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>

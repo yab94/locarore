@@ -9,8 +9,10 @@ use Rore\Application\Catalog\DeleteProductPhotoUseCase;
 use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
+use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Infrastructure\Storage\FileUploader;
 
@@ -18,12 +20,18 @@ class ProductController extends AdminController
 {
     private MySqlProductRepository  $productRepo;
     private MySqlCategoryRepository $categoryRepo;
+    private SlugUniquenessChecker   $slugChecker;
 
     public function __construct()
     {
         parent::__construct();
         $this->productRepo  = new MySqlProductRepository();
         $this->categoryRepo = new MySqlCategoryRepository();
+        $this->slugChecker  = new SlugUniquenessChecker(
+            $this->categoryRepo,
+            $this->productRepo,
+            new MySqlPackRepository(),
+        );
     }
 
     public function index(): void
@@ -47,7 +55,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $productId = (new CreateProductUseCase($this->productRepo))->execute(
+            $productId = (new CreateProductUseCase($this->productRepo, $this->slugChecker))->execute(
                 categoryId:       (int) ($_POST['category_id'] ?? 0),
                 name:             trim($_POST['name'] ?? ''),
                 description:      trim($_POST['description'] ?? '') ?: null,
@@ -93,7 +101,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            (new UpdateProductUseCase($this->productRepo))->execute(
+            (new UpdateProductUseCase($this->productRepo, $this->slugChecker))->execute(
                 id:               (int) $id,
                 categoryId:       (int) ($_POST['category_id'] ?? 0),
                 name:             trim($_POST['name'] ?? ''),

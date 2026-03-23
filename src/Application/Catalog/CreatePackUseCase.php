@@ -8,11 +8,13 @@ use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
+use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 
 class CreatePackUseCase
 {
     public function __construct(
         private PackRepositoryInterface $packRepository,
+        private SlugUniquenessChecker   $slugChecker,
     ) {}
 
     /**
@@ -27,6 +29,10 @@ class CreatePackUseCase
     ): int {
         $now  = new \DateTimeImmutable();
         $slug = Slug::from($customSlug ?? $name)->getValue();
+
+        if ($this->slugChecker->isTaken($slug, 'pack')) {
+            throw new \DomainException("Le slug « $slug » est déjà utilisé.");
+        }
 
         $packItems = [];
         foreach ($items as $productId => $qty) {

@@ -3,9 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title ?? 'Locarore') ?></title>
-    <?php if (!empty($canonicalUrl)): ?>
-    <link rel="canonical" href="<?= e($canonicalUrl) ?>">
+    <?php $meta ??= new \Rore\Presentation\Seo\PageMeta(title: $title ?? 'Locarore'); ?>
+    <title><?= e($meta->title) ?></title>
+    <meta name="robots" content="<?= e($meta->robots) ?>">
+    <?php if ($meta->description !== ''): ?>
+    <meta name="description" content="<?= e($meta->description) ?>">
+    <?php endif; ?>
+    <?php if ($meta->keywords !== ''): ?>
+    <meta name="keywords" content="<?= e($meta->keywords) ?>">
+    <?php endif; ?>
+    <?php if ($meta->canonicalUrl !== null): ?>
+    <link rel="canonical" href="<?= e($meta->canonicalUrl) ?>">
     <?php endif; ?>
     <!-- Tailwind CDN (remplacer par /assets/css/app.css compilé en production) -->
     <script src="https://cdn.tailwindcss.com"></script>

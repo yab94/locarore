@@ -7,11 +7,13 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
+use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 
 class UpdatePackUseCase
 {
     public function __construct(
         private PackRepositoryInterface $packRepository,
+        private SlugUniquenessChecker   $slugChecker,
     ) {}
 
     /**
@@ -32,6 +34,10 @@ class UpdatePackUseCase
 
         $slug = $customSlug ? Slug::from($customSlug)->getValue()
                             : Slug::from($name)->getValue();
+
+        if ($this->slugChecker->isTaken($slug, 'pack', $id)) {
+            throw new \DomainException("Le slug « $slug » est déjà utilisé.");
+        }
 
         $pack->setName($name);
         $pack->setSlug($slug);

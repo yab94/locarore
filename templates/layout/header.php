@@ -16,7 +16,7 @@ $cart = \Rore\Application\Cart\CartSession::getInstance();
                 $headerCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
             }
             foreach ($headerCategories as $cat): ?>
-                <a href="/categorie/<?= e(categoryCanonicalPath($cat, $headerCategories)) ?>"
+                <a href="/categorie/<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($cat, $headerCategories)) ?>"
                    class="hover:text-brand-700 transition-colors">
                     <?= e($cat->getName()) ?>
                 </a>

@@ -51,6 +51,7 @@
                     </td>
                     <td class="px-6 py-4 text-center">
                         <form method="post" action="/admin/packs/<?= $pack->getId() ?>/toggle" class="inline">
+                            <?= csrfField() ?>
                             <button type="submit"
                                     class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $pack->isActive() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' ?> transition">
                                 <?= $pack->isActive() ? 'Actif' : 'Inactif' ?>

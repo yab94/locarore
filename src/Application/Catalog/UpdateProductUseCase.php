@@ -6,11 +6,13 @@ namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
+use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 
 class UpdateProductUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
+        private SlugUniquenessChecker      $slugChecker,
     ) {}
 
     public function execute(
@@ -33,6 +35,10 @@ class UpdateProductUseCase
 
         $slug = $customSlug ? Slug::from($customSlug)->getValue()
                             : Slug::from($name)->getValue();
+
+        if ($this->slugChecker->isTaken($slug, 'product', $id)) {
+            throw new \DomainException("Le slug « $slug » est déjà utilisé.");
+        }
 
         $product->setCategoryId($categoryId);
         $product->setName($name);

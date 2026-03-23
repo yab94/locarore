@@ -5,6 +5,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-lg mx-auto text-center">
         <p class="text-lg text-gray-700 mb-6">Commencez par choisir vos dates de location</p>
         <form method="post" action="/panier/dates" class="space-y-4">
+            <?= csrfField() ?>
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -41,6 +42,7 @@
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center justify-between">
         <span class="text-sm text-green-800">📅 <?= dateRangeLabel($cart->getStartDate(), $cart->getEndDate()) ?></span>
         <form method="post" action="/panier/dates">
+            <?= csrfField() ?>
             <input type="hidden" name="start_date" value="">
             <input type="hidden" name="end_date" value="">
             <button type="submit" class="text-xs text-red-500 hover:underline"
@@ -64,7 +66,7 @@
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-800 truncate">
-                            <a href="<?= e(productCanonicalUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
+                            <a href="<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
                                 <?= e($p->getName()) ?>
                             </a>
                         </h3>
@@ -74,6 +76,7 @@
                         </p>
                     </div>
                     <form method="post" action="/panier/supprimer">
+                        <?= csrfField() ?>
                         <input type="hidden" name="product_id" value="<?= $p->getId() ?>">
                         <button type="submit" class="text-red-400 hover:text-red-600 text-sm transition"
                                 data-confirm="Retirer ce produit du panier ?">

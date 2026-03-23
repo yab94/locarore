@@ -5,6 +5,7 @@
     <form id="pack-form" method="post"
           action="<?= $pack ? '/admin/packs/' . $pack->getId() . '/modifier' : '/admin/packs/creer' ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-6">
+        <?= csrfField() ?>
 
         <!-- Nom -->
         <div>

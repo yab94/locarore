@@ -7,16 +7,25 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
+use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
 
 class CategoryController extends AdminController
 {
     private MySqlCategoryRepository $repo;
+    private SlugUniquenessChecker   $slugChecker;
 
     public function __construct()
     {
         parent::__construct();
-        $this->repo = new MySqlCategoryRepository();
+        $this->repo        = new MySqlCategoryRepository();
+        $this->slugChecker = new SlugUniquenessChecker(
+            $this->repo,
+            new MySqlProductRepository(),
+            new MySqlPackRepository(),
+        );
     }
 
     public function index(): void
@@ -40,7 +49,7 @@ class CategoryController extends AdminController
     {
         $this->requirePost();
         try {
-            (new CreateCategoryUseCase($this->repo))->execute(
+            (new CreateCategoryUseCase($this->repo, $this->slugChecker))->execute(
                 name:             trim($_POST['name'] ?? ''),
                 descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
                 description:      trim($_POST['description'] ?? '') ?: null,
@@ -71,7 +80,7 @@ class CategoryController extends AdminController
     {
         $this->requirePost();
         try {
-            (new UpdateCategoryUseCase($this->repo))->execute(
+            (new UpdateCategoryUseCase($this->repo, $this->slugChecker))->execute(
                 id:               (int) $id,
                 name:             trim($_POST['name'] ?? ''),
                 descriptionShort: trim($_POST['description_short'] ?? '') ?: null,

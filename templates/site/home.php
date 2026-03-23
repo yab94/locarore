@@ -22,7 +22,7 @@
     <?php else: ?>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <?php foreach ($categories as $cat): ?>
-                <a href="/categorie/<?= e(categoryCanonicalPath($cat, $allCategories)) ?>"
+                <a href="/categorie/<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($cat, $allCategories)) ?>"
                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition text-center">
                     <h3 class="font-semibold text-gray-800"><?= e($cat->getName()) ?></h3>
                     <?php if ($cat->getDescriptionShort()): ?>

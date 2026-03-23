@@ -32,6 +32,7 @@
                            class="text-brand-600 hover:underline text-sm">Modifier</a>
                         <form method="post" action="/admin/categories/<?= $cat->getId() ?>/toggle"
                               class="inline">
+                            <?= csrfField() ?>
                             <button type="submit" class="text-gray-500 hover:text-gray-800 text-sm transition">
                                 <?= $cat->isActive() ? 'Désactiver' : 'Activer' ?>
                             </button>

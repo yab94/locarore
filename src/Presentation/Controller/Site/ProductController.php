@@ -8,6 +8,8 @@ use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Seo\CanonicalUrlResolver;
+use Rore\Presentation\Seo\PageMetaBuilder;
 
 class ProductController extends Controller
 {
@@ -53,15 +55,18 @@ class ProductController extends Controller
             $availableQty = max(0, $product->getTotalStock() - $reserved);
         }
 
+        $catChain     = array_slice($breadcrumb, 0, -1); // catégories sans le produit
+        $canonicalUrl = CanonicalUrlResolver::productUrl($product, $allCategories, $category);
+        $meta         = (new PageMetaBuilder())->forProduct($product, $category, $catChain, $canonicalUrl);
+
         $this->render('site/product', [
-            'title'         => $product->getName() . ' — Locarore',
+            'meta'          => $meta,
             'product'       => $product,
             'category'      => $category,
             'breadcrumb'    => $breadcrumb,
             'availableQty'  => $availableQty,
             'cart'          => $cart,
             'allCategories' => $allCategories,
-            'canonicalUrl'  => productCanonicalUrl($product, $allCategories, $category),
         ]);
     }
 

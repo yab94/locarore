@@ -7,6 +7,8 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreatePackUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
+use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
@@ -14,12 +16,18 @@ class PackController extends AdminController
 {
     private MySqlPackRepository    $packRepo;
     private MySqlProductRepository $productRepo;
+    private SlugUniquenessChecker  $slugChecker;
 
     public function __construct()
     {
         parent::__construct();
         $this->packRepo    = new MySqlPackRepository();
         $this->productRepo = new MySqlProductRepository();
+        $this->slugChecker = new SlugUniquenessChecker(
+            new MySqlCategoryRepository(),
+            $this->productRepo,
+            $this->packRepo,
+        );
     }
 
     public function index(): void
@@ -44,7 +52,7 @@ class PackController extends AdminController
         $this->requirePost();
         try {
             $items = $this->parseItems();
-            (new CreatePackUseCase($this->packRepo))->execute(
+            (new CreatePackUseCase($this->packRepo, $this->slugChecker))->execute(
                 name:        trim($_POST['name'] ?? ''),
                 description: trim($_POST['description'] ?? '') ?: null,
                 pricePerDay: (float) ($_POST['price_per_day'] ?? 0),
@@ -76,7 +84,7 @@ class PackController extends AdminController
         $this->requirePost();
         try {
             $items = $this->parseItems();
-            (new UpdatePackUseCase($this->packRepo))->execute(
+            (new UpdatePackUseCase($this->packRepo, $this->slugChecker))->execute(
                 id:          (int) $id,
                 name:        trim($_POST['name'] ?? ''),
                 description: trim($_POST['description'] ?? '') ?: null,

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title ?? 'Admin — Locarore') ?></title>
+    <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -61,6 +62,7 @@
         </nav>
         <div class="px-4 pb-6">
             <form method="post" action="/admin/deconnexion">
+                <?= csrfField() ?>
                 <button type="submit"
                         class="w-full text-left px-3 py-2 rounded text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition">
                     Déconnexion
