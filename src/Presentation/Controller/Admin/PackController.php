@@ -14,20 +14,12 @@ use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
 class PackController extends AdminController
 {
-    private MySqlPackRepository    $packRepo;
-    private MySqlProductRepository $productRepo;
-    private SlugUniquenessChecker  $slugChecker;
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly MySqlPackRepository    $packRepo,
+        private readonly MySqlProductRepository $productRepo,
+        private readonly SlugUniquenessChecker  $slugChecker,
+    ) {
         parent::__construct();
-        $this->packRepo    = new MySqlPackRepository();
-        $this->productRepo = new MySqlProductRepository();
-        $this->slugChecker = new SlugUniquenessChecker(
-            new MySqlCategoryRepository(),
-            $this->productRepo,
-            $this->packRepo,
-        );
     }
 
     public function index(): void

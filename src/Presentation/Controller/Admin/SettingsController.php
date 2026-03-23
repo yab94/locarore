@@ -8,12 +8,10 @@ use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 
 class SettingsController extends AdminController
 {
-    private MySqlSettingsRepository $repo;
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly MySqlSettingsRepository $repo,
+    ) {
         parent::__construct();
-        $this->repo = new MySqlSettingsRepository();
     }
 
     public function index(): void

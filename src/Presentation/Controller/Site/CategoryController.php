@@ -11,6 +11,12 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CategoryController extends Controller
 {
+    public function __construct(
+        private readonly MySqlCategoryRepository $categoryRepo,
+        private readonly MySqlProductRepository  $productRepo,
+        private readonly PageMetaBuilder         $metaBuilder,
+    ) {}
+
     /**
      * $path peut être "slug" ou "parent/enfant" (multi-segments via {path+})
      */
@@ -20,8 +26,7 @@ class CategoryController extends Controller
         $segments = explode('/', trim($path, '/'));
         $slug     = end($segments);
 
-        $categoryRepo = new MySqlCategoryRepository();
-        $category     = $categoryRepo->findBySlug($slug);
+        $category = $this->categoryRepo->findBySlug($slug);
 
         if (!$category || !$category->isActive()) {
             http_response_code(404);
@@ -29,17 +34,11 @@ class CategoryController extends Controller
             return;
         }
 
-        $productRepo = new MySqlProductRepository();
-        $products    = $productRepo->findActiveByCategorySlug($slug);
-
-        // Sous-catégories actives
-        $allCategories = $categoryRepo->findAllActive();
+        $products      = $this->productRepo->findActiveByCategorySlug($slug);
+        $allCategories = $this->categoryRepo->findAllActive();
         $children      = array_filter($allCategories, fn($c) => $c->getParentId() === $category->getId());
-
-        // Fil d'ariane : remonter les parents
-        $breadcrumb = $this->buildBreadcrumb($category, $allCategories);
-
-        $meta = (new PageMetaBuilder())->forCategory($category, $breadcrumb);
+        $breadcrumb    = $this->buildBreadcrumb($category, $allCategories);
+        $meta          = $this->metaBuilder->forCategory($category, $breadcrumb);
 
         $this->render('site/category', [
             'meta'          => $meta,

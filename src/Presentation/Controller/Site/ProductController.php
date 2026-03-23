@@ -13,18 +13,20 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 
 class ProductController extends Controller
 {
-    /**
-     * $path peut être "slug" ou "categorie/slug" (multi-segments via {path+})
-     */
+    public function __construct(
+        private readonly MySqlProductRepository     $productRepo,
+        private readonly MySqlCategoryRepository    $categoryRepo,
+        private readonly MySqlReservationRepository $reservationRepo,
+        private readonly PageMetaBuilder            $metaBuilder,
+    ) {}
+
     public function show(string $path): void
     {
-        // Le dernier segment est le slug du produit, les précédents sont les slugs de catégorie
         $segments    = explode('/', trim($path, '/'));
         $slug        = end($segments);
         $catSegments = array_slice($segments, 0, -1);
 
-        $productRepo = new MySqlProductRepository();
-        $product     = $productRepo->findBySlug($slug);
+        $product = $this->productRepo->findBySlug($slug);
 
         if (!$product || !$product->isActive()) {
             http_response_code(404);
@@ -32,15 +34,13 @@ class ProductController extends Controller
             return;
         }
 
-        $categoryRepo  = new MySqlCategoryRepository();
-        $allCategories = $categoryRepo->findAllActive();
+        $allCategories = $this->categoryRepo->findAllActive();
 
-        // Catégorie pour le fil d'ariane : déduite du dernier segment de l'URL
-        // (permet d'afficher le bon contexte quand on arrive via une URL non canonique)
+        // Catégorie pour le fil d'ariane
         $urlCatSlug = !empty($catSegments) ? end($catSegments) : null;
         $category   = $urlCatSlug
-            ? ($categoryRepo->findBySlug($urlCatSlug) ?? $categoryRepo->findById($product->getCategoryId()))
-            : $categoryRepo->findById($product->getCategoryId());
+            ? ($this->categoryRepo->findBySlug($urlCatSlug) ?? $this->categoryRepo->findById($product->getCategoryId()))
+            : $this->categoryRepo->findById($product->getCategoryId());
 
         // Fil d'ariane
         $breadcrumb = $category
@@ -48,22 +48,20 @@ class ProductController extends Controller
             : [];
         $breadcrumb[] = $product;   // Le produit lui-même en dernier
 
-        // Stock disponible (en tenant compte des réservations en cours)
-        $reservationRepo = new MySqlReservationRepository();
-        $cart        = $_SESSION['rore_cart'] ?? null;
-        $startDate   = $cart['start_date'] ?? null;
-        $endDate     = $cart['end_date']   ?? null;
+        $cart      = $_SESSION['rore_cart'] ?? null;
+        $startDate = $cart['start_date'] ?? null;
+        $endDate   = $cart['end_date']   ?? null;
 
         $availableQty = $product->getTotalStock();
         if ($startDate && $endDate) {
-            $reserved     = $reservationRepo->countReservedQtyForProduct($product->getId(), $startDate, $endDate);
+            $reserved     = $this->reservationRepo->countReservedQtyForProduct($product->getId(), $startDate, $endDate);
             $availableQty = max(0, $product->getTotalStock() - $reserved);
         }
 
-        $catChain     = array_slice($breadcrumb, 0, -1); // catégories sans le produit
-        $mainCategory = $categoryRepo->findById($product->getCategoryId());
+        $catChain     = array_slice($breadcrumb, 0, -1);
+        $mainCategory = $this->categoryRepo->findById($product->getCategoryId());
         $canonicalUrl = CanonicalUrlResolver::productUrl($product, $allCategories, $mainCategory);
-        $meta         = (new PageMetaBuilder())->forProduct($product, $category, $catChain, $canonicalUrl);
+        $meta         = $this->metaBuilder->forProduct($product, $category, $catChain, $canonicalUrl);
 
         $this->render('site/product', [
             'meta'          => $meta,

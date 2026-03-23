@@ -18,20 +18,14 @@ use Rore\Infrastructure\Storage\FileUploader;
 
 class ProductController extends AdminController
 {
-    private MySqlProductRepository  $productRepo;
-    private MySqlCategoryRepository $categoryRepo;
-    private SlugUniquenessChecker   $slugChecker;
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly MySqlProductRepository     $productRepo,
+        private readonly MySqlCategoryRepository    $categoryRepo,
+        private readonly MySqlReservationRepository $reservationRepo,
+        private readonly SlugUniquenessChecker      $slugChecker,
+        private readonly FileUploader               $uploader,
+    ) {
         parent::__construct();
-        $this->productRepo  = new MySqlProductRepository();
-        $this->categoryRepo = new MySqlCategoryRepository();
-        $this->slugChecker  = new SlugUniquenessChecker(
-            $this->categoryRepo,
-            $this->productRepo,
-            new MySqlPackRepository(),
-        );
     }
 
     public function index(): void
@@ -86,8 +80,7 @@ class ProductController extends AdminController
         if (!$product) {
             $this->redirect('/admin/produits');
         }
-        $reservationRepo = new MySqlReservationRepository();
-        $calendarEvents  = $reservationRepo->getReservedPeriodsByProduct($product->getId());
+        $calendarEvents = $this->reservationRepo->getReservedPeriodsByProduct($product->getId());
 
         $this->render('admin/products/form', [
             'title'          => 'Modifier le produit',
@@ -136,9 +129,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $config   = parse_ini_file(BASE_PATH . '/config/app.ini', true);
-            $uploader = new FileUploader($config['upload']);
-            (new UploadProductPhotoUseCase($this->productRepo, $uploader))
+            (new UploadProductPhotoUseCase($this->productRepo, $this->uploader))
                 ->execute((int) $id, $_FILES['photo']);
             $this->flash('success', 'Photo ajoutée.');
         } catch (\Throwable $e) {
@@ -166,9 +157,7 @@ class ProductController extends AdminController
 
     private function handlePhotoUploads(int $productId, array $filesArray): void
     {
-        $config   = parse_ini_file(BASE_PATH . '/config/app.ini', true);
-        $uploader = new FileUploader($config['upload']);
-        $useCase  = new UploadProductPhotoUseCase($this->productRepo, $uploader);
+        $useCase = new UploadProductPhotoUseCase($this->productRepo, $this->uploader);
 
         $count = count($filesArray['name']);
         for ($i = 0; $i < $count; $i++) {

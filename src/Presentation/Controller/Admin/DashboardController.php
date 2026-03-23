@@ -11,12 +11,20 @@ use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 
 class DashboardController extends AdminController
 {
+    public function __construct(
+        private readonly MySqlCategoryRepository    $categoryRepo,
+        private readonly MySqlProductRepository     $productRepo,
+        private readonly MySqlReservationRepository $reservationRepo,
+    ) {
+        parent::__construct();
+    }
+
     public function index(): void
     {
-        $categories   = (new MySqlCategoryRepository())->findAll();
-        $products     = (new MySqlProductRepository())->findAll();
-        $getUseCase   = new GetReservationsUseCase(new MySqlReservationRepository());
-        $pending      = $getUseCase->pending();
+        $categories = $this->categoryRepo->findAll();
+        $products   = $this->productRepo->findAll();
+        $getUseCase = new GetReservationsUseCase($this->reservationRepo);
+        $pending    = $getUseCase->pending();
 
         $this->render('admin/dashboard', [
             'title'           => 'Tableau de bord — Admin',

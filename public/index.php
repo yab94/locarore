@@ -23,8 +23,11 @@ $config = \Rore\Infrastructure\Config\Bootstrap::boot();
 // ─── Session ───────────────────────────────────────────────────────────────
 session_start();
 
+// ─── Conteneur DI ──────────────────────────────────────────────────────────
+$container = \Rore\Infrastructure\Di\ContainerFactory::create($config);
+
 // ─── Router ────────────────────────────────────────────────────────────────
-$router = new \Rore\Infrastructure\Http\Router();
+$router = new \Rore\Infrastructure\Http\Router($container);
 
 // == SITE PUBLIC ============================================================
 

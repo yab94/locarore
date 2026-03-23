@@ -11,6 +11,7 @@ use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
 use Rore\Application\Reservation\CreateReservationUseCase;
 use Rore\Domain\Reservation\Service\AvailabilityService;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Controller\Controller;
@@ -18,30 +19,30 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CartController extends Controller
 {
-    private CartSession $cart;
-
-    public function __construct()
-    {
-        $this->cart = CartSession::getInstance();
-    }
+    public function __construct(
+        private readonly CartSession                $cart,
+        private readonly MySqlProductRepository     $productRepo,
+        private readonly MySqlCategoryRepository    $categoryRepo,
+        private readonly MySqlReservationRepository $reservationRepo,
+        private readonly PageMetaBuilder            $metaBuilder,
+    ) {}
 
     public function index(): void
     {
-        $productRepo  = new MySqlProductRepository();
         $cartItems    = $this->cart->getItems();
         $cartProducts = [];
 
         foreach ($cartItems as $productId => $quantity) {
-            $product = $productRepo->findById((int) $productId);
+            $product = $this->productRepo->findById((int) $productId);
             if ($product) {
                 $cartProducts[] = ['product' => $product, 'quantity' => $quantity];
             }
         }
 
-        $allCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
+        $allCategories = $this->categoryRepo->findAllActive();
 
         $this->render('site/cart', [
-            'meta'          => (new PageMetaBuilder())->forCart(),
+            'meta'          => $this->metaBuilder->forCart(),
             'cart'          => $this->cart,
             'cartProducts'  => $cartProducts,
             'allCategories' => $allCategories,
@@ -80,11 +81,9 @@ class CartController extends Controller
     {
         $this->requirePost();
         try {
-            $productRepo  = new MySqlProductRepository();
-            $resvRepo     = new MySqlReservationRepository();
-            $availability = new AvailabilityService($resvRepo);
+            $availability = new AvailabilityService($this->reservationRepo);
 
-            (new AddToCartUseCase($this->cart, $productRepo, $availability))->execute(
+            (new AddToCartUseCase($this->cart, $this->productRepo, $availability))->execute(
                 productId: (int) ($_POST['product_id'] ?? 0),
                 quantity:  (int) ($_POST['quantity']   ?? 1),
             );
@@ -111,7 +110,7 @@ class CartController extends Controller
         }
 
         $this->render('site/checkout', [
-            'meta' => (new PageMetaBuilder())->forCheckout(),
+            'meta' => $this->metaBuilder->forCheckout(),
             'cart' => $this->cart,
         ]);
     }
@@ -120,10 +119,9 @@ class CartController extends Controller
     {
         $this->requirePost();
         try {
-            $resvRepo  = new MySqlReservationRepository();
-            $useCase   = new CheckoutUseCase(
+            $useCase = new CheckoutUseCase(
                 $this->cart,
-                new CreateReservationUseCase($resvRepo),
+                new CreateReservationUseCase($this->reservationRepo),
             );
 
             $reservationId = $useCase->execute(
@@ -146,7 +144,7 @@ class CartController extends Controller
     {
         $id = (int) ($_GET['id'] ?? 0);
         $this->render('site/confirmation', [
-            'meta'          => (new PageMetaBuilder())->forConfirmation(),
+            'meta'          => $this->metaBuilder->forConfirmation(),
             'reservationId' => $id,
         ]);
     }

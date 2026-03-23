@@ -11,15 +11,17 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 
 class HomeController extends Controller
 {
+    public function __construct(
+        private readonly MySqlCategoryRepository $categoryRepo,
+        private readonly MySqlProductRepository  $productRepo,
+        private readonly PageMetaBuilder         $metaBuilder,
+    ) {}
+
     public function index(): void
     {
-        $categories = (new MySqlCategoryRepository())->findAllActive();
-
-        // Charger les produits phare (max 6 actifs)
-        $allProducts = (new MySqlProductRepository())->findAllActive();
-        $featured    = array_slice($allProducts, 0, 6);
-
-        $meta = (new PageMetaBuilder())->forHome($categories);
+        $categories = $this->categoryRepo->findAllActive();
+        $featured   = array_slice($this->productRepo->findAllActive(), 0, 6);
+        $meta       = $this->metaBuilder->forHome($categories);
 
         $this->render('site/home', [
             'meta'          => $meta,

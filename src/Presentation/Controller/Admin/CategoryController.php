@@ -14,18 +14,11 @@ use Rore\Infrastructure\Persistence\MySqlPackRepository;
 
 class CategoryController extends AdminController
 {
-    private MySqlCategoryRepository $repo;
-    private SlugUniquenessChecker   $slugChecker;
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly MySqlCategoryRepository $repo,
+        private readonly SlugUniquenessChecker   $slugChecker,
+    ) {
         parent::__construct();
-        $this->repo        = new MySqlCategoryRepository();
-        $this->slugChecker = new SlugUniquenessChecker(
-            $this->repo,
-            new MySqlProductRepository(),
-            new MySqlPackRepository(),
-        );
     }
 
     public function index(): void

@@ -14,12 +14,11 @@ use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 
 class ReservationController extends AdminController
 {
-    private MySqlReservationRepository $repo;
-
-    public function __construct()
-    {
+    public function __construct(
+        private readonly MySqlReservationRepository $repo,
+        private readonly MySqlProductRepository     $productRepo,
+    ) {
         parent::__construct();
-        $this->repo = new MySqlReservationRepository();
     }
 
     public function index(): void
@@ -43,10 +42,9 @@ class ReservationController extends AdminController
         }
 
         // Charger les noms produits
-        $productRepo = new MySqlProductRepository();
-        $products    = [];
+        $products = [];
         foreach ($reservation->getItems() as $item) {
-            $products[$item->getProductId()] = $productRepo->findById($item->getProductId());
+            $products[$item->getProductId()] = $this->productRepo->findById($item->getProductId());
         }
 
         $this->render('admin/reservations/show', [
@@ -85,9 +83,8 @@ class ReservationController extends AdminController
     {
         $this->requirePost();
         try {
-            $productRepo = new MySqlProductRepository();
             $availability = new AvailabilityService($this->repo);
-            (new ConfirmReservationUseCase($this->repo, $productRepo, $availability))
+            (new ConfirmReservationUseCase($this->repo, $this->productRepo, $availability))
                 ->execute((int) $id);
             $this->flash('success', 'Réservation confirmée.');
         } catch (\Throwable $e) {
@@ -119,13 +116,12 @@ class ReservationController extends AdminController
         $reservations = $this->repo->findConfirmedOverlapping($start, $end);
 
         // Charger les produits référencés dans les réservations (pour indicateur on-demand)
-        $productRepo = new MySqlProductRepository();
-        $products    = [];
+        $products = [];
         foreach ($reservations as $r) {
             foreach ($r->getItems() as $item) {
                 $pid = $item->getProductId();
                 if (!isset($products[$pid])) {
-                    $products[$pid] = $productRepo->findById($pid);
+                    $products[$pid] = $this->productRepo->findById($pid);
                 }
             }
         }

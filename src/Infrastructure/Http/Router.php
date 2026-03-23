@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Http;
 
+use Rore\Infrastructure\Di\Container;
+
 class Router
 {
     /** @var array{method: string, path: string, handler: array}[] */
     private array $routes = [];
+
+    public function __construct(private readonly Container $container) {}
 
     public function get(string $path, array $handler): void
     {
@@ -39,7 +43,7 @@ class Router
             $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
             [$class, $action] = $route['handler'];
-            $controller = new $class();
+            $controller = $this->container->get($class);
             $controller->$action(...array_values($params));
             return;
         }
