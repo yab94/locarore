@@ -14,6 +14,7 @@ class Category
         private ?int                $parentId,
         private string              $name,
         private string              $slug,
+        private ?string             $descriptionShort,
         private ?string             $description,
         private bool                $isActive,
         private \DateTimeImmutable  $createdAt,
@@ -24,6 +25,7 @@ class Category
     public function getParentId(): ?int                { return $this->parentId; }
     public function getName(): string                  { return $this->name; }
     public function getSlug(): string                  { return $this->slug; }
+    public function getDescriptionShort(): ?string     { return $this->descriptionShort; }
     public function getDescription(): ?string          { return $this->description; }
     public function isActive(): bool                   { return $this->isActive; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
@@ -36,6 +38,7 @@ class Category
     public function setParentId(?int $id): void        { $this->parentId = $id; }
     public function setName(string $name): void        { $this->name = $name; }
     public function setSlug(string $slug): void        { $this->slug = $slug; }
+    public function setDescriptionShort(?string $d): void { $this->descriptionShort = $d; }
     public function setDescription(?string $d): void   { $this->description = $d; }
     public function setIsActive(bool $active): void    { $this->isActive = $active; }
     public function toggle(): void                     { $this->isActive = !$this->isActive; }

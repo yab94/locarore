@@ -16,7 +16,8 @@ class CreateCategoryUseCase
 
     public function execute(
         string  $name,
-        ?string $description,
+        ?string $descriptionShort = null,
+        ?string $description = null,
         ?int    $parentId    = null,
         ?string $customSlug  = null,
     ): void {
@@ -25,14 +26,15 @@ class CreateCategoryUseCase
                             : Slug::from($name)->getValue();
 
         $category = new Category(
-            id:          null,
-            parentId:    $parentId,
-            name:        $name,
-            slug:        $slug,
-            description: $description,
-            isActive:    true,
-            createdAt:   $now,
-            updatedAt:   $now,
+            id:               null,
+            parentId:         $parentId,
+            name:             $name,
+            slug:             $slug,
+            descriptionShort: $descriptionShort,
+            description:      $description,
+            isActive:         true,
+            createdAt:        $now,
+            updatedAt:        $now,
         );
 
         $this->categoryRepository->save($category);

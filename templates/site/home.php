@@ -10,7 +10,7 @@
 <?php $homeIntro = setting('home.intro'); ?>
 <?php if ($homeIntro): ?>
 <section class="mb-10 prose prose-sm max-w-none text-gray-700">
-    <?= nl2br(e($homeIntro)) ?>
+    <?= $homeIntro ?>
 </section>
 <?php endif; ?>
 
@@ -25,8 +25,8 @@
                 <a href="/categorie/<?= e(categoryCanonicalPath($cat, $allCategories)) ?>"
                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition text-center">
                     <h3 class="font-semibold text-gray-800"><?= e($cat->getName()) ?></h3>
-                    <?php if ($cat->getDescription()): ?>
-                        <p class="text-sm text-gray-500 mt-1 line-clamp-2"><?= e($cat->getDescription()) ?></p>
+                    <?php if ($cat->getDescriptionShort()): ?>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-2"><?= e($cat->getDescriptionShort()) ?></p>
                     <?php endif; ?>
                 </a>
             <?php endforeach; ?>

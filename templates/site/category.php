@@ -15,10 +15,8 @@
 
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><?= e($category->getName()) ?></h1>
-    <?php if ($category->getDescription()): ?>
-        <div class="text-gray-600 mt-2 prose prose-sm max-w-none">
-            <?= $category->getDescription() /* Markdown stocké — affiché brut, peut être rendu côté client */ ?>
-        </div>
+    <?php if ($category->getDescriptionShort()): ?>
+        <p class="text-gray-500 mt-2 text-base"><?= e($category->getDescriptionShort()) ?></p>
     <?php endif; ?>
 </div>
 
@@ -32,10 +30,20 @@
                class="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-600 hover:shadow-sm transition text-center">
                 <div class="text-2xl mb-2">🏷️</div>
                 <div class="text-sm font-medium text-gray-800"><?= e($child->getName()) ?></div>
+                <?php if ($child->getDescriptionShort()): ?>
+                    <div class="text-xs text-gray-500 mt-1 line-clamp-2"><?= e($child->getDescriptionShort()) ?></div>
+                <?php endif; ?>
             </a>
         <?php endforeach; ?>
     </div>
 </section>
+<?php endif; ?>
+
+<!-- Description longue -->
+<?php if ($category->getDescription()): ?>
+<div class="prose prose-sm max-w-none text-gray-700 mb-8">
+    <?= $category->getDescription() ?>
+</div>
 <?php endif; ?>
 
 <!-- Produits -->

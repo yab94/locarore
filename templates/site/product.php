@@ -55,7 +55,7 @@
 
         <?php if ($product->getDescription()): ?>
             <div class="text-gray-600 mb-6 leading-relaxed prose prose-sm max-w-none">
-                <?= nl2br(e($product->getDescription())) ?>
+                <?= $product->getDescription() ?>
             </div>
         <?php endif; ?>
 

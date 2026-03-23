@@ -155,6 +155,8 @@ $router->get('/admin/contenu',
     [\Rore\Presentation\Controller\Admin\SettingsController::class, 'index']);
 $router->post('/admin/contenu',
     [\Rore\Presentation\Controller\Admin\SettingsController::class, 'save']);
-
+// Pages statiques
+$router->get('/mentions-legales',
+    [\Rore\Presentation\Controller\Site\LegalController::class, 'mentions']);
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

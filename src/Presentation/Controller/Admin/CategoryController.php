@@ -41,10 +41,11 @@ class CategoryController extends AdminController
         $this->requirePost();
         try {
             (new CreateCategoryUseCase($this->repo))->execute(
-                name:        trim($_POST['name'] ?? ''),
-                description: trim($_POST['description'] ?? '') ?: null,
-                parentId:    ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null,
-                customSlug:  trim($_POST['slug'] ?? '') ?: null,
+                name:             trim($_POST['name'] ?? ''),
+                descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
+                description:      trim($_POST['description'] ?? '') ?: null,
+                parentId:         ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null,
+                customSlug:       trim($_POST['slug'] ?? '') ?: null,
             );
             $this->flash('success', 'Catégorie créée avec succès.');
         } catch (\Throwable $e) {
@@ -71,11 +72,12 @@ class CategoryController extends AdminController
         $this->requirePost();
         try {
             (new UpdateCategoryUseCase($this->repo))->execute(
-                id:          (int) $id,
-                name:        trim($_POST['name'] ?? ''),
-                description: trim($_POST['description'] ?? '') ?: null,
-                parentId:    ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null,
-                customSlug:  trim($_POST['slug'] ?? '') ?: null,
+                id:               (int) $id,
+                name:             trim($_POST['name'] ?? ''),
+                descriptionShort: trim($_POST['description_short'] ?? '') ?: null,
+                description:      trim($_POST['description'] ?? '') ?: null,
+                parentId:         ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null,
+                customSlug:       trim($_POST['slug'] ?? '') ?: null,
             );
             $this->flash('success', 'Catégorie mise à jour.');
         } catch (\Throwable $e) {

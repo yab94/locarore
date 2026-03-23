@@ -84,13 +84,14 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
     {
         if ($category->getId() === null) {
             $stmt = $this->pdo->prepare(
-                'INSERT INTO categories (parent_id, name, slug, description, is_active, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)'
+                'INSERT INTO categories (parent_id, name, slug, description_short, description, is_active, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $category->getParentId(),
                 $category->getName(),
                 $category->getSlug(),
+                $category->getDescriptionShort(),
                 $category->getDescription(),
                 (int) $category->isActive(),
                 $category->getCreatedAt()->format('Y-m-d H:i:s'),
@@ -99,13 +100,14 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
         } else {
             $stmt = $this->pdo->prepare(
                 'UPDATE categories
-                    SET parent_id = ?, name = ?, slug = ?, description = ?, is_active = ?, updated_at = ?
+                    SET parent_id = ?, name = ?, slug = ?, description_short = ?, description = ?, is_active = ?, updated_at = ?
                   WHERE id = ?'
             );
             $stmt->execute([
                 $category->getParentId(),
                 $category->getName(),
                 $category->getSlug(),
+                $category->getDescriptionShort(),
                 $category->getDescription(),
                 (int) $category->isActive(),
                 $category->getUpdatedAt()->format('Y-m-d H:i:s'),
@@ -122,14 +124,15 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
     private function hydrate(array $row): Category
     {
         return new Category(
-            id:          (int) $row['id'],
-            parentId:    isset($row['parent_id']) && $row['parent_id'] !== null ? (int) $row['parent_id'] : null,
-            name:        $row['name'],
-            slug:        $row['slug'],
-            description: $row['description'],
-            isActive:    (bool) $row['is_active'],
-            createdAt:   new \DateTimeImmutable($row['created_at']),
-            updatedAt:   new \DateTimeImmutable($row['updated_at']),
+            id:               (int) $row['id'],
+            parentId:         isset($row['parent_id']) && $row['parent_id'] !== null ? (int) $row['parent_id'] : null,
+            name:             $row['name'],
+            slug:             $row['slug'],
+            descriptionShort: $row['description_short'] ?? null,
+            description:      $row['description'],
+            isActive:         (bool) $row['is_active'],
+            createdAt:        new \DateTimeImmutable($row['created_at']),
+            updatedAt:        new \DateTimeImmutable($row['updated_at']),
         );
     }
 }

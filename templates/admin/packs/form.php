@@ -1,8 +1,8 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
 <div class="max-w-2xl">
-    <form method="post"
+    <form id="pack-form" method="post"
           action="<?= $pack ? '/admin/packs/' . $pack->getId() . '/modifier' : '/admin/packs/creer' ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-6">
 
@@ -33,9 +33,11 @@
         <!-- Description WYSIWYG -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea name="description" id="description"
-                      class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-            ><?= e($pack?->getDescription() ?? '') ?></textarea>
+            <input type="hidden" name="description" id="description-input"
+                   value="<?= e($pack?->getDescription() ?? '') ?>">
+            <div id="description-editor"
+                 class="border border-gray-300 rounded-b-lg bg-white"
+                 style="min-height:120px"><?= $pack?->getDescription() ?? '' ?></div>
         </div>
 
         <!-- Prix -->
@@ -155,11 +157,12 @@ document.getElementById('slug').addEventListener('input', function () {
     this.dataset.manual = '1';
 });
 
-new EasyMDE({
-    element: document.getElementById('description'),
-    spellChecker: false,
-    toolbar: ['bold', 'italic', 'heading', '|', 'unordered-list', 'ordered-list', '|', 'link', '|', 'preview'],
-    minHeight: '120px',
-    status: false,
+new Quill('#description-editor', {
+    theme: 'snow',
+    modules: { toolbar: [['bold','italic','underline'],[{'header':[2,3,false]}],[{'list':'ordered'},{'list':'bullet'}],['link'],['clean']] }
+});
+document.getElementById('pack-form').addEventListener('submit', function () {
+    document.getElementById('description-input').value =
+        document.querySelector('#description-editor .ql-editor').innerHTML;
 });
 </script>

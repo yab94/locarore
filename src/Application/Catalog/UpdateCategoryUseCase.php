@@ -16,7 +16,8 @@ class UpdateCategoryUseCase
     public function execute(
         int     $id,
         string  $name,
-        ?string $description,
+        ?string $descriptionShort = null,
+        ?string $description = null,
         ?int    $parentId   = null,
         ?string $customSlug = null,
     ): void {
@@ -30,6 +31,7 @@ class UpdateCategoryUseCase
 
         $category->setName($name);
         $category->setSlug($slug);
+        $category->setDescriptionShort($descriptionShort);
         $category->setDescription($description);
         $category->setParentId($parentId ?: null);
         $category->setUpdatedAt(new \DateTimeImmutable());

@@ -1,7 +1,7 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
-<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
-<form method="post" action="/admin/contenu" class="space-y-10">
+<form method="post" action="/admin/contenu" class="space-y-10" id="settings-form">
 
     <!-- ── Textes courts ─────────────────────────────────────────────── -->
     <div class="bg-white rounded-xl border border-gray-200 p-8">
@@ -20,6 +20,7 @@
             'general'     => '⚙ Général',
             'home'        => '🏠 Page d\'accueil',
             'reservation' => '📋 Réservation',
+            'legal'       => '⚖️ Légal',
         ];
         foreach ($groups as $group => $items): ?>
             <div class="mb-8">
@@ -46,22 +47,30 @@
         <?php endforeach; ?>
     </div>
 
-    <!-- ── Blocs riches (Markdown / WYSIWYG) ─────────────────────────── -->
+    <!-- ── Blocs riches (WYSIWYG) ────────────────────────────────────── -->
     <?php if (!empty($richtexts)): ?>
     <div class="bg-white rounded-xl border border-gray-200 p-8">
         <h2 class="text-lg font-semibold text-gray-800 mb-1">Blocs de contenu</h2>
-        <p class="text-sm text-gray-400 mb-6">Zones éditables affichées sur le site (Markdown).</p>
+        <p class="text-sm text-gray-400 mb-6">Zones éditables affichées sur le site.</p>
 
-        <?php foreach ($richtexts as $s): ?>
-            <div class="mb-8">
-                <label class="block text-sm font-medium text-gray-700 mb-1">
+        <?php foreach ($richtexts as $s):
+            $editorId = 'quill-' . e(str_replace('.', '-', $s->getKey()));
+            $inputId  = 'input-' . e(str_replace('.', '-', $s->getKey()));
+        ?>
+            <div class="mb-10">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
                     <?= e($s->getLabel()) ?>
                     <span class="text-xs text-gray-400 font-normal font-mono ml-2"><?= e($s->getKey()) ?></span>
                 </label>
-                <textarea name="settings[<?= e($s->getKey()) ?>]"
-                          id="richtext-<?= e(str_replace('.', '-', $s->getKey())) ?>"
-                          class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
-                ><?= e($s->getValue() ?? '') ?></textarea>
+                <!-- Champ caché soumis dans le formulaire -->
+                <input type="hidden"
+                       id="<?= $inputId ?>"
+                       name="settings[<?= e($s->getKey()) ?>]"
+                       value="<?= e($s->getValue() ?? '') ?>">
+                <!-- Zone éditeur Quill -->
+                <div id="<?= $editorId ?>"
+                     class="border border-gray-300 rounded-b-lg bg-white"
+                     style="min-height:180px"><?= $s->getValue() ?? '' ?></div>
             </div>
         <?php endforeach; ?>
     </div>
@@ -78,12 +87,34 @@
 </form>
 
 <script>
-document.querySelectorAll('[id^="richtext-"]').forEach(function (el) {
-    new EasyMDE({
-        element: el,
-        spellChecker: false,
-        toolbar: ['bold', 'italic', 'heading', '|', 'unordered-list', 'ordered-list', '|', 'link', '|', 'preview'],
-        minHeight: '150px',
+(function () {
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline'],
+        [{ 'header': [2, 3, false] }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        ['link'],
+        ['clean']
+    ];
+
+    var editors = [];
+
+    <?php foreach ($richtexts as $s):
+        $editorId = 'quill-' . str_replace('.', '-', $s->getKey());
+        $inputId  = 'input-' . str_replace('.', '-', $s->getKey());
+    ?>
+    (function () {
+        var q = new Quill('#<?= $editorId ?>', {
+            theme: 'snow',
+            modules: { toolbar: toolbarOptions }
+        });
+        editors.push({ quill: q, inputId: '<?= $inputId ?>' });
+    })();
+    <?php endforeach; ?>
+
+    document.getElementById('settings-form').addEventListener('submit', function () {
+        editors.forEach(function (e) {
+            document.getElementById(e.inputId).value = e.quill.root.innerHTML;
+        });
     });
-});
+})();
 </script>

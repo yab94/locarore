@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS `categories` (
     `parent_id`   INT UNSIGNED    NULL DEFAULT NULL,
     `name`        VARCHAR(100)    NOT NULL,
     `slug`        VARCHAR(120)    NOT NULL,
-    `description` TEXT            NULL,
+    `description_short` TEXT    NULL,
+    `description` LONGTEXT        NULL,
     `is_active`   TINYINT(1)      NOT NULL DEFAULT 1,
     `created_at`  DATETIME        NOT NULL,
     `updated_at`  DATETIME        NOT NULL,
@@ -187,5 +188,6 @@ INSERT IGNORE INTO `settings` (`key`, `value`, `label`, `type`, `group`) VALUES
 ('home.featured_title',    'Produits populaires',                              'Home — titre section populaires',  'text',     'home'),
 ('confirmation.title',     'Demande envoyée !',                                'Confirmation — titre',             'text',     'reservation'),
 ('confirmation.message',   'Nous vous contacterons par email pour confirmer la disponibilité.', 'Message après réservation', 'text', 'reservation'),
-('cart.footer_note',       'Votre demande sera confirmée par notre équipe.',   'Panier — note bas de récap',       'text',     'reservation');
+('cart.footer_note',       'Votre demande sera confirmée par notre équipe.',   'Panier — note bas de récap',       'text',     'reservation'),
+('mentions.content',       '<h2>Mentions légales</h2><p><strong>Raison sociale :</strong> Locarore SAS<br><strong>SIRET :</strong> 000 000 000 00000<br><strong>Siège social :</strong> 1 rue de la Fête, 75001 Paris<br><strong>Directeur de la publication :</strong> Prénom Nom<br><strong>Contact :</strong> contact@locarore.fr</p><h2>Hébergement</h2><p>Site hébergé par OVHcloud — 2 rue Kellermann, 59100 Roubaix.</p><h2>Données personnelles</h2><p>Conformément au RGPD, vous disposez d\'un droit d\'accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@locarore.fr.</p><h2>Cookies</h2><p>Ce site n\'utilise pas de cookies de traçage ou publicitaires.</p>', 'Mentions légales — contenu (WYSIWYG)', 'richtext', 'legal');
 
