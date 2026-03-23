@@ -5,10 +5,10 @@
         <span>›</span>
         <?php if (method_exists($crumb, 'getCategoryId')): ?>
             <!-- C'est le produit lui-même (dernier élément) -->
-            <span class="text-gray-800 font-medium"><?= e($crumb->getName()) ?></span>
+            <span class="text-gray-800 font-medium"><?= \Rore\Presentation\Template\Html::e($crumb->getName()) ?></span>
         <?php else: ?>
-            <a href="/categorie/<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($crumb, $allCategories)) ?>" class="hover:underline">
-                <?= e($crumb->getName()) ?>
+            <a href="/categorie/<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($crumb, $allCategories)) ?>" class="hover:underline">
+                <?= \Rore\Presentation\Template\Html::e($crumb->getName()) ?>
             </a>
         <?php endif; ?>
     <?php endforeach; ?>
@@ -23,8 +23,8 @@
             <div id="carousel" class="relative rounded-2xl overflow-hidden bg-gray-100">
                 <?php foreach ($photos as $i => $photo): ?>
                     <img data-slide="<?= $i ?>"
-                         src="<?= e($photo->getPublicPath()) ?>"
-                         alt="<?= e($product->getName()) ?>"
+                         src="<?= \Rore\Presentation\Template\Html::e($photo->getPublicPath()) ?>"
+                         alt="<?= \Rore\Presentation\Template\Html::e($product->getName()) ?>"
                          class="w-full h-96 object-cover <?= $i > 0 ? 'hidden' : '' ?>">
                 <?php endforeach; ?>
                 <?php if (count($photos) > 1): ?>
@@ -43,7 +43,7 @@
 
     <!-- Infos produit -->
     <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2"><?= e($product->getName()) ?></h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2"><?= \Rore\Presentation\Template\Html::e($product->getName()) ?></h1>
         <p class="text-2xl font-semibold text-brand-600 mb-4">
             à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
         </p>
@@ -64,14 +64,14 @@
             <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
                 <p class="text-sm font-semibold text-yellow-800 mb-3">📅 Choisissez vos dates avant d'ajouter au panier</p>
                 <form method="post" action="/panier/dates" class="flex flex-col sm:flex-row gap-3">
-                    <?= csrfField() ?>
+                    <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                     <input type="date" name="start_date" required
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
                            min="<?= date('Y-m-d') ?>">
                     <input type="date" name="end_date" required
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
                            min="<?= date('Y-m-d') ?>">
-                    <input type="hidden" name="redirect" value="<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
+                    <input type="hidden" name="redirect" value="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
                     <button type="submit"
                             class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 transition">
                         Valider
@@ -89,7 +89,7 @@
                 </div>
                 <form id="edit-dates-form" method="post" action="/panier/dates"
                       class="hidden flex-col sm:flex-row gap-3 flex">
-                    <?= csrfField() ?>
+                    <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                     <input type="date" name="start_date" required
                            value="<?= htmlspecialchars($cart['start_date']) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
@@ -98,7 +98,7 @@
                            value="<?= htmlspecialchars($cart['end_date']) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
-                    <input type="hidden" name="redirect" value="<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
+                    <input type="hidden" name="redirect" value="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
                     <button type="submit"
                             class="bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-800 transition">
                         Valider
@@ -112,9 +112,9 @@
                 </div>
             <?php else: ?>
                 <form method="post" action="/panier/ajouter">
-                    <?= csrfField() ?>
+                    <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                     <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
-                    <input type="hidden" name="redirect" value="<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
+                    <input type="hidden" name="redirect" value="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($product, $allCategories)) ?>">
                     <div class="flex items-center gap-3 mb-4">
                         <label class="text-sm font-medium text-gray-700">Quantité</label>
                         <input type="number" name="quantity" value="1" min="1"

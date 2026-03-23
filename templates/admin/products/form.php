@@ -8,7 +8,7 @@
         <form id="product-form" method="post"
               action="<?= $product ? '/admin/produits/' . $product->getId() . '/modifier' : '/admin/produits/creer' ?>"
               class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
-            <?= csrfField() ?>
+            <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
 
             <!-- Catégorie principale -->
             <div>
@@ -19,7 +19,7 @@
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat->getId() ?>"
                             <?= $product && $product->getCategoryId() === $cat->getId() ? 'selected' : '' ?>>
-                            <?= e($cat->getName()) ?>
+                            <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -38,7 +38,7 @@
                     foreach ($categories as $cat): ?>
                         <option value="<?= $cat->getId() ?>"
                             <?= in_array($cat->getId(), $currentCatIds) ? 'selected' : '' ?>>
-                            <?= e($cat->getName()) ?>
+                            <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -48,7 +48,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
                 <input type="text" name="name" id="name" required
-                       value="<?= e($product?->getName() ?? '') ?>"
+                       value="<?= \Rore\Presentation\Template\Html::e($product?->getName() ?? '') ?>"
                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
             </div>
 
@@ -61,7 +61,7 @@
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-gray-400">/produit/</span>
                     <input type="text" name="slug" id="slug"
-                           value="<?= e($product?->getSlug() ?? '') ?>"
+                           value="<?= \Rore\Presentation\Template\Html::e($product?->getSlug() ?? '') ?>"
                            placeholder="ex: vase-en-verre"
                            pattern="[a-z0-9\-]+"
                            title="Uniquement des lettres minuscules, chiffres et tirets"
@@ -74,7 +74,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <input type="hidden" name="description" id="description-input"
-                       value="<?= e($product?->getDescription() ?? '') ?>">
+                       value="<?= \Rore\Presentation\Template\Html::e($product?->getDescription() ?? '') ?>">
                 <div id="description-editor"
                      class="border border-gray-300 rounded-b-lg bg-white"
                      style="min-height:140px"><?= $product?->getDescription() ?? '' ?></div>
@@ -142,7 +142,7 @@
             <h3 class="font-semibold text-gray-700 mb-4">Ajouter une photo</h3>
             <form method="post" action="/admin/produits/<?= $product->getId() ?>/photo"
                   enctype="multipart/form-data" class="space-y-3">
-                <?= csrfField() ?>
+                <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                 <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required
                        class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
                 <button type="submit"
@@ -159,12 +159,12 @@
                 <div class="grid grid-cols-2 gap-3">
                     <?php foreach ($photos as $photo): ?>
                         <div class="relative group">
-                            <img src="<?= e($photo->getPublicPath()) ?>" alt=""
+                            <img src="<?= \Rore\Presentation\Template\Html::e($photo->getPublicPath()) ?>" alt=""
                                  class="w-full h-24 object-cover rounded-lg">
                             <form method="post"
                                   action="/admin/produits/photo/<?= $photo->getId() ?>/supprimer"
                                   class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/50 rounded-lg">
-                                <?= csrfField() ?>
+                                <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                                 <button type="submit"
                                         class="bg-red-600 text-white text-xs px-2 py-1 rounded"
                                         data-confirm="Supprimer cette photo ?">

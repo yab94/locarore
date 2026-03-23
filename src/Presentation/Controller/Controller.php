@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
+use Rore\Infrastructure\Security\CsrfTokenManager;
+
 abstract class Controller
 {
     protected function render(
@@ -52,7 +54,7 @@ abstract class Controller
             http_response_code(405);
             exit('Method Not Allowed');
         }
-        if (!hash_equals($_SESSION['csrf_token'] ?? '', $_POST['_csrf'] ?? '')) {
+        if (!CsrfTokenManager::validate()) {
             http_response_code(419);
             exit('Token CSRF invalide.');
         }

@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php $meta ??= new \Rore\Presentation\Seo\PageMeta(title: $title ?? 'Locarore'); ?>
-    <title><?= e($meta->title) ?></title>
-    <meta name="robots" content="<?= e($meta->robots) ?>">
+    <title><?= \Rore\Presentation\Template\Html::e($meta->title) ?></title>
+    <meta name="robots" content="<?= \Rore\Presentation\Template\Html::e($meta->robots) ?>">
     <?php if ($meta->description !== ''): ?>
-    <meta name="description" content="<?= e($meta->description) ?>">
+    <meta name="description" content="<?= \Rore\Presentation\Template\Html::e($meta->description) ?>">
     <?php endif; ?>
     <?php if ($meta->keywords !== ''): ?>
-    <meta name="keywords" content="<?= e($meta->keywords) ?>">
+    <meta name="keywords" content="<?= \Rore\Presentation\Template\Html::e($meta->keywords) ?>">
     <?php endif; ?>
     <?php if ($meta->canonicalUrl !== null): ?>
-    <link rel="canonical" href="<?= e($meta->canonicalUrl) ?>">
+    <link rel="canonical" href="<?= \Rore\Presentation\Template\Html::e($meta->canonicalUrl) ?>">
     <?php endif; ?>
     <!-- Tailwind CDN (remplacer par /assets/css/app.css compilé en production) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,7 +46,7 @@
                     ? 'bg-red-100 border border-red-300 text-red-800'
                     : 'bg-green-100 border border-green-300 text-green-800'; ?>
                 <div class="<?= $cls ?> rounded-lg px-4 py-3 mb-6 text-sm">
-                    <?= e($msg) ?>
+                    <?= \Rore\Presentation\Template\Html::e($msg) ?>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>

@@ -1,12 +1,12 @@
 <div class="max-w-lg mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Finaliser ma réservation</h1>
     <p class="text-gray-500 mb-8 text-sm">
-        📅 <?= dateRangeLabel($cart->getStartDate(), $cart->getEndDate()) ?>
+        📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?>
         — <?= $cart->getItemCount() ?> article(s)
     </p>
 
     <form method="post" action="/panier/checkout" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
-        <?= csrfField() ?>
+        <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>

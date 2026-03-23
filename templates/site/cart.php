@@ -5,7 +5,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-lg mx-auto text-center">
         <p class="text-lg text-gray-700 mb-6">Commencez par choisir vos dates de location</p>
         <form method="post" action="/panier/dates" class="space-y-4">
-            <?= csrfField() ?>
+            <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
                     <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -30,7 +30,7 @@
 <?php elseif ($cart->isEmpty()): ?>
     <!-- Panier vide (avec dates) -->
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-sm text-green-800">
-        📅 <?= dateRangeLabel($cart->getStartDate(), $cart->getEndDate()) ?>
+        📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?>
     </div>
     <div class="text-center py-16 text-gray-400">
         <p class="text-lg mb-4">Votre panier est vide.</p>
@@ -40,9 +40,9 @@
 <?php else: ?>
     <!-- Dates sélectionnées -->
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center justify-between">
-        <span class="text-sm text-green-800">📅 <?= dateRangeLabel($cart->getStartDate(), $cart->getEndDate()) ?></span>
+        <span class="text-sm text-green-800">📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?></span>
         <form method="post" action="/panier/dates">
-            <?= csrfField() ?>
+            <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
             <input type="hidden" name="start_date" value="">
             <input type="hidden" name="end_date" value="">
             <button type="submit" class="text-xs text-red-500 hover:underline"
@@ -59,15 +59,15 @@
                 <?php $p = $row['product']; $qty = $row['quantity']; ?>
                 <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
                     <?php if ($photo = $p->getMainPhoto()): ?>
-                        <img src="<?= e($photo->getPublicPath()) ?>" alt=""
+                        <img src="<?= \Rore\Presentation\Template\Html::e($photo->getPublicPath()) ?>" alt=""
                              class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
                     <?php else: ?>
                         <div class="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0"></div>
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-800 truncate">
-                            <a href="<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
-                                <?= e($p->getName()) ?>
+                            <a href="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
+                                <?= \Rore\Presentation\Template\Html::e($p->getName()) ?>
                             </a>
                         </h3>
                         <p class="text-sm text-gray-500">Quantité : <?= $qty ?></p>
@@ -76,7 +76,7 @@
                         </p>
                     </div>
                     <form method="post" action="/panier/supprimer">
-                        <?= csrfField() ?>
+                        <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                         <input type="hidden" name="product_id" value="<?= $p->getId() ?>">
                         <button type="submit" class="text-red-400 hover:text-red-600 text-sm transition"
                                 data-confirm="Retirer ce produit du panier ?">
@@ -92,7 +92,7 @@
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Récapitulatif</h2>
             <?php
             $total   = 0;
-            $nbJours = nbDays($cart->getStartDate(), $cart->getEndDate());
+            $nbJours = (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->nbDays();
             foreach ($cartProducts as $row) {
                 $total += $row['product']->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $row['quantity'];
             }
@@ -110,7 +110,7 @@
                 Réserver →
             </a>
             <p class="text-xs text-gray-400 mt-3 text-center">
-                <?= se('cart.footer_note') ?>
+                <?= \Rore\Infrastructure\Cms\SettingsStore::html('cart.footer_note') ?>
             </p>
         </div>
     </div>

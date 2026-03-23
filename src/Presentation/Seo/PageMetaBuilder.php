@@ -8,7 +8,7 @@ use Rore\Presentation\Seo\MetaFormatter;
 
 /**
  * Construit les métadonnées SEO (PageMeta) pour chaque type de page du site.
- * S'appuie sur MetaFormatter pour le formatage et sur setting() (lib/helpers.php).
+ * S'appuie sur MetaFormatter pour le formatage et sur \Rore\Infrastructure\Cms\SettingsStore::get() (lib/helpers.php).
  */
 final class PageMetaBuilder
 {
@@ -19,8 +19,8 @@ final class PageMetaBuilder
      */
     public function forHome(array $categories): PageMeta
     {
-        $siteName = setting('site.name');
-        $tagline  = setting('site.tagline');
+        $siteName = \Rore\Infrastructure\Cms\SettingsStore::get('site.name');
+        $tagline  = \Rore\Infrastructure\Cms\SettingsStore::get('site.tagline');
 
         $descParts = [$tagline];
         foreach (array_slice($categories, 0, 4) as $cat) {
@@ -50,7 +50,7 @@ final class PageMetaBuilder
     public function forCategory(object $category, array $breadcrumb): PageMeta
     {
         $titleParts   = array_map(fn($c) => $c->getName(), array_reverse($breadcrumb));
-        $titleParts[] = setting('site.name');
+        $titleParts[] = \Rore\Infrastructure\Cms\SettingsStore::get('site.name');
 
         $descParts = [];
         foreach ($breadcrumb as $crumb) {
@@ -62,10 +62,10 @@ final class PageMetaBuilder
             $descParts[] = $category->getDescription();
         }
         if (empty($descParts)) {
-            $descParts[] = $category->getName() . ' — ' . setting('site.tagline');
+            $descParts[] = $category->getName() . ' — ' . \Rore\Infrastructure\Cms\SettingsStore::get('site.tagline');
         }
 
-        $kw = ['location', setting('site.name')];
+        $kw = ['location', \Rore\Infrastructure\Cms\SettingsStore::get('site.name')];
         foreach ($breadcrumb as $crumb) {
             $kw[] = $crumb->getName();
         }
@@ -95,7 +95,7 @@ final class PageMetaBuilder
         foreach (array_reverse($catChain) as $crumb) {
             $titleParts[] = $crumb->getName();
         }
-        $titleParts[] = setting('site.name');
+        $titleParts[] = \Rore\Infrastructure\Cms\SettingsStore::get('site.name');
 
         $descParts = [];
         if ($product->getDescription()) {
@@ -109,10 +109,10 @@ final class PageMetaBuilder
         if (empty($descParts)) {
             $descParts[] = $product->getName()
                 . ($category ? ' — ' . $category->getName() : '')
-                . ' — ' . setting('site.tagline');
+                . ' — ' . \Rore\Infrastructure\Cms\SettingsStore::get('site.tagline');
         }
 
-        $kw = [$product->getName(), 'location', setting('site.name')];
+        $kw = [$product->getName(), 'location', \Rore\Infrastructure\Cms\SettingsStore::get('site.name')];
         foreach ($catChain as $crumb) {
             if (method_exists($crumb, 'getName')) {
                 $kw[] = $crumb->getName();
@@ -130,7 +130,7 @@ final class PageMetaBuilder
     public function forCart(): PageMeta
     {
         return new PageMeta(
-            title:  MetaFormatter::title('Mon panier', setting('site.name')),
+            title:  MetaFormatter::title('Mon panier', \Rore\Infrastructure\Cms\SettingsStore::get('site.name')),
             robots: 'noindex, follow',
         );
     }
@@ -138,7 +138,7 @@ final class PageMetaBuilder
     public function forCheckout(): PageMeta
     {
         return new PageMeta(
-            title:  MetaFormatter::title('Finaliser ma réservation', setting('site.name')),
+            title:  MetaFormatter::title('Finaliser ma réservation', \Rore\Infrastructure\Cms\SettingsStore::get('site.name')),
             robots: 'noindex, follow',
         );
     }
@@ -146,7 +146,7 @@ final class PageMetaBuilder
     public function forConfirmation(): PageMeta
     {
         return new PageMeta(
-            title:  MetaFormatter::title('Demande envoyée', setting('site.name')),
+            title:  MetaFormatter::title('Demande envoyée', \Rore\Infrastructure\Cms\SettingsStore::get('site.name')),
             robots: 'noindex, follow',
         );
     }

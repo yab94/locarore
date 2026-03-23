@@ -73,13 +73,13 @@ $daysInMonth = (int) $end->format('j');
                     }
                 ?>
                     <a href="/admin/reservations/<?= $r->getId() ?>"
-                       title="<?= $needsFabrication ? '⚒ Fabrication à la demande requise — ' : '' ?><?= e($r->getCustomerName()) ?>"
+                       title="<?= $needsFabrication ? '⚒ Fabrication à la demande requise — ' : '' ?><?= \Rore\Presentation\Template\Html::e($r->getCustomerName()) ?>"
                        class="block mt-0.5 px-1 py-0.5 rounded text-xs truncate
                            <?= $r->isConfirmed() ? 'bg-green-100 text-green-800' :
                               ($r->isQuoted()    ? 'bg-orange-100 text-orange-800' :
                                                    'bg-yellow-100 text-yellow-800') ?>
                            <?= $needsFabrication ? 'ring-1 ring-amber-400' : '' ?>">
-                        <?= $needsFabrication ? '🔨 ' : '' ?><?= e($r->getCustomerName()) ?>
+                        <?= $needsFabrication ? '🔨 ' : '' ?><?= \Rore\Presentation\Template\Html::e($r->getCustomerName()) ?>
                     </a>
                 <?php endforeach; ?>
             </div>

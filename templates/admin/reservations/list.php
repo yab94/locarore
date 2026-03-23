@@ -31,18 +31,18 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 text-gray-400"><?= $r->getId() ?></td>
                     <td class="px-6 py-4">
-                        <p class="font-medium text-gray-800"><?= e($r->getCustomerName()) ?></p>
-                        <p class="text-xs text-gray-400"><?= e($r->getCustomerEmail()) ?></p>
+                        <p class="font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($r->getCustomerName()) ?></p>
+                        <p class="text-xs text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCustomerEmail()) ?></p>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <?= e($r->getStartDate()->format('d/m/Y')) ?> → <?= e($r->getEndDate()->format('d/m/Y')) ?>
+                        <?= \Rore\Presentation\Template\Html::e($r->getStartDate()->format('d/m/Y')) ?> → <?= e($r->getEndDate()->format('d/m/Y')) ?>
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= statusBadgeClass($r->getStatus()) ?>">
-                            <?= statusLabel($r->getStatus()) ?>
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::badgeClass($r->getStatus()) ?>">
+                            <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::label($r->getStatus()) ?>
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-gray-400"><?= e($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>
+                    <td class="px-6 py-4 text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>
                     <td class="px-6 py-4 text-right">
                         <a href="/admin/reservations/<?= $r->getId() ?>"
                            class="text-brand-600 hover:underline">Voir</a>

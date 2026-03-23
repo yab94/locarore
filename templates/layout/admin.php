@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title ?? 'Admin — Locarore') ?></title>
+    <title><?= \Rore\Presentation\Template\Html::e($title ?? 'Admin — Locarore') ?></title>
     <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -62,7 +62,7 @@
         </nav>
         <div class="px-4 pb-6">
             <form method="post" action="/admin/deconnexion">
-                <?= csrfField() ?>
+                <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                 <button type="submit"
                         class="w-full text-left px-3 py-2 rounded text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition">
                     Déconnexion
@@ -74,7 +74,7 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white shadow-sm px-8 py-4">
-            <h1 class="text-xl font-semibold text-gray-800"><?= e($title ?? '') ?></h1>
+            <h1 class="text-xl font-semibold text-gray-800"><?= \Rore\Presentation\Template\Html::e($title ?? '') ?></h1>
         </header>
 
         <main class="flex-1 overflow-y-auto p-8">
@@ -85,7 +85,7 @@
                         ? 'bg-red-100 border border-red-300 text-red-800'
                         : 'bg-green-100 border border-green-300 text-green-800'; ?>
                     <div class="<?= $cls ?> rounded-lg px-4 py-3 mb-6 text-sm">
-                        <?= e($msg) ?>
+                        <?= \Rore\Presentation\Template\Html::e($msg) ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

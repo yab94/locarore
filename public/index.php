@@ -16,8 +16,6 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-// ─── Helpers ───────────────────────────────────────────────────────────────
-require BASE_PATH . '/lib/helpers.php';
 
 // ─── Variables d'environnement (.env) ───────────────────────────────────
 $envFile = BASE_PATH . '/.env';

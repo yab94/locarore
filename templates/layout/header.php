@@ -5,7 +5,7 @@ $cart = \Rore\Application\Cart\CartSession::getInstance();
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="text-xl font-bold text-brand-700 tracking-tight">
-            <?= se('site.name') ?>
+            <?= \Rore\Infrastructure\Cms\SettingsStore::html('site.name') ?>
         </a>
 
         <!-- Catégories principales -->
@@ -16,9 +16,9 @@ $cart = \Rore\Application\Cart\CartSession::getInstance();
                 $headerCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
             }
             foreach ($headerCategories as $cat): ?>
-                <a href="/categorie/<?= e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($cat, $headerCategories)) ?>"
+                <a href="/categorie/<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($cat, $headerCategories)) ?>"
                    class="hover:text-brand-700 transition-colors">
-                    <?= e($cat->getName()) ?>
+                    <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
                 </a>
             <?php endforeach; ?>
         </div>

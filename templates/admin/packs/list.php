@@ -30,8 +30,8 @@
                 <?php foreach ($packs as $pack): ?>
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4 font-medium text-gray-800">
-                        <?= e($pack->getName()) ?>
-                        <div class="text-xs text-gray-400 font-normal">/produit/<?= e($pack->getSlug()) ?></div>
+                        <?= \Rore\Presentation\Template\Html::e($pack->getName()) ?>
+                        <div class="text-xs text-gray-400 font-normal">/produit/<?= \Rore\Presentation\Template\Html::e($pack->getSlug()) ?></div>
                     </td>
                     <td class="px-6 py-4 text-gray-500">
                         <?php $items = $pack->getItems(); ?>
@@ -40,7 +40,7 @@
                         <?php else: ?>
                             <?php foreach ($items as $item): ?>
                                 <span class="inline-flex items-center gap-1 bg-gray-100 rounded px-2 py-0.5 text-xs mr-1 mb-1">
-                                    <?= e($products[$item->getProductId()]?->getName() ?? 'Produit #' . $item->getProductId()) ?>
+                                    <?= \Rore\Presentation\Template\Html::e($products[$item->getProductId()]?->getName() ?? 'Produit #' . $item->getProductId()) ?>
                                     × <?= $item->getQuantity() ?>
                                 </span>
                             <?php endforeach; ?>
@@ -51,7 +51,7 @@
                     </td>
                     <td class="px-6 py-4 text-center">
                         <form method="post" action="/admin/packs/<?= $pack->getId() ?>/toggle" class="inline">
-                            <?= csrfField() ?>
+                            <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
                             <button type="submit"
                                     class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $pack->isActive() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' ?> transition">
                                 <?= $pack->isActive() ? 'Actif' : 'Inactif' ?>

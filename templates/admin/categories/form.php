@@ -5,7 +5,7 @@
     <form id="category-form" method="post"
           action="<?= $category ? '/admin/categories/' . $category->getId() . '/modifier' : '/admin/categories/creer' ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
-        <?= csrfField() ?>
+        <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
 
         <!-- Catégorie parente -->
         <div>
@@ -18,7 +18,7 @@
                 ?>
                     <option value="<?= $cat->getId() ?>"
                         <?= ($category && $category->getParentId() === $cat->getId()) ? 'selected' : '' ?>>
-                        <?= e($cat->getName()) ?>
+                        <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
                     </option>
                 <?php endforeach; ?>
             </select>
@@ -28,7 +28,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
             <input type="text" name="name" id="name" required
-                   value="<?= e($category?->getName() ?? '') ?>"
+                   value="<?= \Rore\Presentation\Template\Html::e($category?->getName() ?? '') ?>"
                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
         </div>
 
@@ -41,7 +41,7 @@
             <div class="flex items-center gap-2">
                 <span class="text-sm text-gray-400">/categorie/</span>
                 <input type="text" name="slug" id="slug"
-                       value="<?= e($category?->getSlug() ?? '') ?>"
+                       value="<?= \Rore\Presentation\Template\Html::e($category?->getSlug() ?? '') ?>"
                        placeholder="ex: deco-florale"
                        pattern="[a-z0-9\-]+"
                        title="Uniquement des lettres minuscules, chiffres et tirets"
@@ -59,7 +59,7 @@
             <textarea name="description_short" rows="2"
                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600"
                       placeholder="Quelques mots pour décrire la catégorie..."
-            ><?= e($category?->getDescriptionShort() ?? '') ?></textarea>
+            ><?= \Rore\Presentation\Template\Html::e($category?->getDescriptionShort() ?? '') ?></textarea>
         </div>
 
         <!-- Description longue WYSIWYG -->
@@ -69,7 +69,7 @@
                 <span class="text-gray-400 font-normal text-xs ml-1">— affichée uniquement sur la page de la catégorie</span>
             </label>
             <input type="hidden" name="description" id="description-input"
-                   value="<?= e($category?->getDescription() ?? '') ?>">
+                   value="<?= \Rore\Presentation\Template\Html::e($category?->getDescription() ?? '') ?>">
             <div id="description-editor"
                  class="border border-gray-300 rounded-b-lg bg-white"
                  style="min-height:120px"><?= $category?->getDescription() ?? '' ?></div>
