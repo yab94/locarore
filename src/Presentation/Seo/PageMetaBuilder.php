@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
+use Rore\Domain\Catalog\Entity\Category;
+use Rore\Domain\Catalog\Entity\Product;
 use Rore\Presentation\Seo\MetaFormatter;
 
 /**
@@ -15,7 +17,7 @@ final class PageMetaBuilder
     /**
      * Page d'accueil.
      *
-     * @param object[] $categories  toutes les catégories actives
+     * @param Category[] $categories  toutes les catégories actives
      */
     public function forHome(array $categories): PageMeta
     {
@@ -44,10 +46,10 @@ final class PageMetaBuilder
     /**
      * Page de catégorie.
      *
-     * @param object   $category   catégorie courante
-     * @param object[] $breadcrumb chaîne racine → courante (incluse)
+     * @param Category   $category   catégorie courante
+     * @param Category[] $breadcrumb chaîne racine → courante (incluse)
      */
-    public function forCategory(object $category, array $breadcrumb): PageMeta
+    public function forCategory(Category $category, array $breadcrumb): PageMeta
     {
         $titleParts   = array_map(fn($c) => $c->getName(), array_reverse($breadcrumb));
         $titleParts[] = \Rore\Infrastructure\Config\SettingsStore::get('site.name');
@@ -80,15 +82,15 @@ final class PageMetaBuilder
     /**
      * Page produit.
      *
-     * @param object      $product      entité produit
-     * @param object|null $category     catégorie principale
-     * @param object[]    $catChain     chaîne racine → feuille (sans le produit)
-     * @param string|null $canonicalUrl URL canonique calculée par le controller
+     * @param Product      $product      entité produit
+     * @param Category|null $category     catégorie principale
+     * @param Category[]    $catChain     chaîne racine → feuille (sans le produit)
+     * @param string|null  $canonicalUrl URL canonique calculée par le controller
      */
     public function forProduct(
-        object  $product,
-        ?object $category,
-        array   $catChain,
+        Product  $product,
+        ?Category $category,
+        array     $catChain,
         ?string $canonicalUrl = null,
     ): PageMeta {
         $titleParts = [$product->getName()];

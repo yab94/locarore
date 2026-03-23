@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
+use Rore\Domain\Catalog\Entity\Category;
+use Rore\Domain\Catalog\Entity\Product;
+
 /**
  * Résout les URLs canoniques des entités du catalogue.
  * Méthodes pures, sans état, sans dépendances externes.
@@ -14,11 +17,11 @@ final class CanonicalUrlResolver
      * Construit le chemin canonique d'une catégorie en remontant ses parents.
      * Ex : pour "Ballons" enfant de "Décoration" → "decoration/ballons"
      *
-     * @param object   $category
-     * @param object[] $allCategories
+     * @param Category   $category
+     * @param Category[] $allCategories
      * @return string  chemin sans slash initial ni final
      */
-    public static function categoryPath(object $category, array $allCategories): string
+    public static function categoryPath(Category $category, array $allCategories): string
     {
         $byId = [];
         foreach ($allCategories as $c) {
@@ -38,12 +41,12 @@ final class CanonicalUrlResolver
      * Construit l'URL canonique d'un produit incluant son chemin catégorie.
      * Ex : "/produit/decoration/ballons/arc-lumineux"
      *
-     * @param object      $product
-     * @param object[]    $allCategories
-     * @param object|null $category  catégorie principale déjà chargée (optionnel)
+     * @param Product      $product
+     * @param Category[]   $allCategories
+     * @param Category|null $category  catégorie principale déjà chargée (optionnel)
      * @return string  URL absolue
      */
-    public static function productUrl(object $product, array $allCategories, ?object $category = null): string
+    public static function productUrl(Product $product, array $allCategories, ?Category $category = null): string
     {
         if ($category === null) {
             $byId = [];
