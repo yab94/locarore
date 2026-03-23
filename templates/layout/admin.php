@@ -42,6 +42,10 @@
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Produits
             </a>
+            <a href="/admin/packs"
+               class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
+                🎁 Packs
+            </a>
             <a href="/admin/reservations"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Réservations
@@ -50,9 +54,9 @@
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Calendrier
             </a>
-            <a href="/admin/packs"
+            <a href="/admin/contenu"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
-                🎁 Packs
+                ✏️ Contenu
             </a>
         </nav>
         <div class="px-4 pb-6">

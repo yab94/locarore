@@ -5,7 +5,7 @@ $cart = \Rore\Application\Cart\CartSession::getInstance();
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
         <a href="/" class="text-xl font-bold text-brand-700 tracking-tight">
-            Locarore
+            <?= se('site.name') ?>
         </a>
 
         <!-- Catégories principales -->

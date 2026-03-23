@@ -97,3 +97,34 @@ function statusBadgeClass(string $status): string
         default     => 'bg-gray-100 text-gray-800',
     };
 }
+
+/**
+ * Retourne la valeur d'une clé de paramètre CMS.
+ * Supporte l'interpolation de variables : setting('hero.title', ['name' => 'Locarore'])
+ * remplace {name} dans la valeur stockée.
+ */
+function setting(string $key, array $vars = []): string
+{
+    static $repo = null;
+    if ($repo === null) {
+        $repo = new \Rore\Infrastructure\Persistence\MySqlSettingsRepository();
+    }
+    $setting = $repo->findByKey($key);
+    $value   = $setting?->getValue() ?? '';
+
+    if ($vars) {
+        foreach ($vars as $k => $v) {
+            $value = str_replace('{' . $k . '}', (string) $v, $value);
+        }
+    }
+    return $value;
+}
+
+/**
+ * Comme setting() mais retourne la valeur échappée pour l'affichage HTML.
+ */
+function se(string $key, array $vars = []): string
+{
+    return e(setting($key, $vars));
+}
+

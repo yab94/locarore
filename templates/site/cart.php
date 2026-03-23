@@ -107,7 +107,7 @@
                 Réserver →
             </a>
             <p class="text-xs text-gray-400 mt-3 text-center">
-                Votre demande sera confirmée par notre équipe.
+                <?= se('cart.footer_note') ?>
             </p>
         </div>
     </div>

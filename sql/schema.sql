@@ -163,3 +163,29 @@ CREATE TABLE IF NOT EXISTS `pack_items` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- --------------------------------------------------------
+-- settings (mini CMS : clés de personnalisation + blocs éditables)
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `settings` (
+    `key`   VARCHAR(100)                    NOT NULL,
+    `value` LONGTEXT                        NULL,
+    `label` VARCHAR(200)                    NOT NULL,
+    `type`  ENUM('text','richtext')         NOT NULL DEFAULT 'text',
+    `group` VARCHAR(50)                     NOT NULL DEFAULT 'general',
+    PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT IGNORE INTO `settings` (`key`, `value`, `label`, `type`, `group`) VALUES
+('site.name',              'Locarore',                                         'Nom du site (logo)',               'text',     'general'),
+('site.tagline',           'Location de décoration événementielle',            'Slogan (footer)',                  'text',     'general'),
+('hero.title',             'Location de décoration événementielle',            'Hero — titre',                     'text',     'home'),
+('hero.subtitle',          'Lettres géantes, arches, vases lumineux et bien plus.', 'Hero — sous-titre',           'text',     'home'),
+('hero.cta',               'Découvrir le catalogue',                           'Hero — bouton CTA',                'text',     'home'),
+('home.intro',             '',                                                 'Home — bloc intro (Markdown)',     'richtext', 'home'),
+('home.categories_title',  'Nos catégories',                                   'Home — titre section catégories',  'text',     'home'),
+('home.featured_title',    'Produits populaires',                              'Home — titre section populaires',  'text',     'home'),
+('confirmation.title',     'Demande envoyée !',                                'Confirmation — titre',             'text',     'reservation'),
+('confirmation.message',   'Nous vous contacterons par email pour confirmer la disponibilité.', 'Message après réservation', 'text', 'reservation'),
+('cart.footer_note',       'Votre demande sera confirmée par notre équipe.',   'Panier — note bas de récap',       'text',     'reservation');
+

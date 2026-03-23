@@ -150,5 +150,11 @@ $router->post('/admin/reservations/{id}/statut',
 $router->post('/admin/reservations/{id}/annuler',
     [\Rore\Presentation\Controller\Admin\ReservationController::class, 'cancel']);
 
+// Contenu & paramètres CMS
+$router->get('/admin/contenu',
+    [\Rore\Presentation\Controller\Admin\SettingsController::class, 'index']);
+$router->post('/admin/contenu',
+    [\Rore\Presentation\Controller\Admin\SettingsController::class, 'save']);
+
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();
