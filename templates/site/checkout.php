@@ -6,7 +6,7 @@
     </p>
 
     <form method="post" action="/panier/checkout" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
-        <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
+        <?= \Rore\Presentation\Security\CsrfField::render() ?>
 
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>

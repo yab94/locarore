@@ -1,6 +1,6 @@
 <footer class="bg-white border-t mt-auto">
     <div class="container mx-auto px-4 max-w-6xl py-6 text-sm text-gray-500 text-center space-y-1">
-        <div>&copy; <?= date('Y') ?> <?= \Rore\Infrastructure\Cms\SettingsStore::html('site.name') ?> — <?= \Rore\Infrastructure\Cms\SettingsStore::html('site.tagline') ?></div>
+        <div>&copy; <?= date('Y') ?> <?= \Rore\Presentation\Template\Html::e(\Rore\Infrastructure\Config\SettingsStore::get('site.name')) ?> — <?= \Rore\Presentation\Template\Html::e(\Rore\Infrastructure\Config\SettingsStore::get('site.tagline')) ?></div>
         <div>
             <a href="/mentions-legales" class="hover:text-gray-700 hover:underline">Mentions légales</a>
         </div>

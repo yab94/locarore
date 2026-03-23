@@ -51,7 +51,7 @@
                         <a href="/admin/produits/<?= $p->getId() ?>/modifier"
                            class="text-brand-600 hover:underline">Modifier</a>
                         <form method="post" action="/admin/produits/<?= $p->getId() ?>/toggle" class="inline">
-                            <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
+                            <?= \Rore\Presentation\Security\CsrfField::render() ?>
                             <button type="submit" class="text-gray-500 hover:text-gray-800 transition">
                                 <?= $p->isActive() ? 'Désactiver' : 'Activer' ?>
                             </button>

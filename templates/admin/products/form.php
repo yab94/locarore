@@ -8,7 +8,7 @@
         <form id="product-form" method="post"
               action="<?= $product ? '/admin/produits/' . $product->getId() . '/modifier' : '/admin/produits/creer' ?>"
               class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
-            <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
+            <?= \Rore\Presentation\Security\CsrfField::render() ?>
 
             <!-- Catégorie principale -->
             <div>
@@ -142,7 +142,7 @@
             <h3 class="font-semibold text-gray-700 mb-4">Ajouter une photo</h3>
             <form method="post" action="/admin/produits/<?= $product->getId() ?>/photo"
                   enctype="multipart/form-data" class="space-y-3">
-                <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
+                <?= \Rore\Presentation\Security\CsrfField::render() ?>
                 <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required
                        class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
                 <button type="submit"
@@ -164,7 +164,7 @@
                             <form method="post"
                                   action="/admin/produits/photo/<?= $photo->getId() ?>/supprimer"
                                   class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/50 rounded-lg">
-                                <?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
+                                <?= \Rore\Presentation\Security\CsrfField::render() ?>
                                 <button type="submit"
                                         class="bg-red-600 text-white text-xs px-2 py-1 rounded"
                                         data-confirm="Supprimer cette photo ?">

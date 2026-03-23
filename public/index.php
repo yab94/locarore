@@ -17,28 +17,11 @@ spl_autoload_register(function (string $class): void {
 });
 
 
-// ─── Variables d'environnement (.env) ───────────────────────────────────
-$envFile = BASE_PATH . '/.env';
-if (file_exists($envFile)) {
-    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        if (str_starts_with(trim($line), '#') || !str_contains($line, '=')) continue;
-        [$k, $v] = explode('=', $line, 2);
-        $_ENV[trim($k)] = trim($v);
-        putenv(trim($k) . '=' . trim($v));
-    }
-}
-
-// ─── Config ───────────────────────────────────────────────────────────────
-// Charge app.ini puis résout les placeholders ${VAR} depuis l'environnement
-$iniRaw = file_get_contents(BASE_PATH . '/config/app.ini');
-$iniRaw = preg_replace_callback('/\$\{([^}]+)\}/', fn($m) => getenv($m[1]) ?: $m[0], $iniRaw);
-$config  = parse_ini_string($iniRaw, true);
+// ─── Bootstrap (env + config + db) ─────────────────────────────────────────
+$config = \Rore\Infrastructure\Config\Bootstrap::boot();
 
 // ─── Session ───────────────────────────────────────────────────────────────
 session_start();
-
-// ─── Base de données ───────────────────────────────────────────────────────
-\Rore\Infrastructure\Database\Connection::init($config['database']);
 
 // ─── Router ────────────────────────────────────────────────────────────────
 $router = new \Rore\Infrastructure\Http\Router();

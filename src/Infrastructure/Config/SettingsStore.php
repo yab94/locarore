@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Cms;
+namespace Rore\Infrastructure\Config;
 
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 
@@ -32,15 +32,5 @@ final class SettingsStore
             $value = str_replace('{' . $k . '}', (string) $v, $value);
         }
         return $value;
-    }
-
-    /**
-     * Retourne la valeur échappée pour l'affichage HTML.
-     *
-     * @param array<string,string> $vars
-     */
-    public static function html(string $key, array $vars = []): string
-    {
-        return htmlspecialchars(self::get($key, $vars), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 }

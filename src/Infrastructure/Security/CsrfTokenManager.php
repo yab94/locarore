@@ -31,11 +31,4 @@ final class CsrfTokenManager
             $_POST[self::POST_KEY]        ?? '',
         );
     }
-
-    public static function field(): string
-    {
-        return '<input type="hidden" name="' . self::POST_KEY . '" value="'
-            . htmlspecialchars(self::token(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
-            . '">';
-    }
 }

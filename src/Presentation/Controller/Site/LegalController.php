@@ -11,7 +11,7 @@ class LegalController extends Controller
     public function mentions(): void
     {
         $this->render('site/legal', [
-            'title' => 'Mentions légales — ' . \Rore\Infrastructure\Cms\SettingsStore::get('site.name'),
+            'title' => 'Mentions légales — ' . \Rore\Infrastructure\Config\SettingsStore::get('site.name'),
         ]);
     }
 }

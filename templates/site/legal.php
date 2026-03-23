@@ -1,7 +1,7 @@
 <div class="max-w-3xl mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Mentions légales</h1>
     <div class="prose prose-sm max-w-none text-gray-700 leading-relaxed">
-        <?= \Rore\Infrastructure\Cms\SettingsStore::get('mentions.content') ?>
+        <?= \Rore\Infrastructure\Config\SettingsStore::get('mentions.content') ?>
     </div>
     <div class="mt-10">
         <a href="/" class="text-brand-600 hover:underline text-sm">← Retour à l'accueil</a>

@@ -35,7 +35,7 @@
                         <p class="text-xs text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCustomerEmail()) ?></p>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <?= \Rore\Presentation\Template\Html::e($r->getStartDate()->format('d/m/Y')) ?> → <?= e($r->getEndDate()->format('d/m/Y')) ?>
+                        <?= \Rore\Presentation\Template\Html::e($r->getStartDate()->format('d/m/Y')) ?> → <?= \Rore\Presentation\Template\Html::e($r->getEndDate()->format('d/m/Y')) ?>
                     </td>
                     <td class="px-6 py-4 text-center">
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= \Rore\Presentation\Reservation\ReservationStatusPresenter::badgeClass($r->getStatus()) ?>">

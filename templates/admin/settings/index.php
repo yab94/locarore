@@ -2,7 +2,7 @@
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
 <form method="post" action="/admin/contenu" class="space-y-10" id="settings-form">
-<?= \Rore\Infrastructure\Security\CsrfTokenManager::field() ?>
+<?= \Rore\Presentation\Security\CsrfField::render() ?>
 
     <!-- ── Textes courts ─────────────────────────────────────────────── -->
     <div class="bg-white rounded-xl border border-gray-200 p-8">
