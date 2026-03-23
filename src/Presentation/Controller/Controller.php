@@ -75,7 +75,7 @@ abstract class Controller
 
     protected function inputStringOrNull(string $key): ?string
     {
-        $value = trim((string) $this->input($key, ''));
+        $value = $this->inputString($key, '');
         return $value !== '' ? $value : null;
     }
 
