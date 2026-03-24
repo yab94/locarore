@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <?php $meta ??= new \Rore\Presentation\Seo\PageMeta(title: $title ?? 'Locarore'); ?>
     <title><?= $html($meta->title) ?></title>
     <meta name="robots" content="<?= $html($meta->robots) ?>">
     <?php if ($meta->description !== ''): ?>

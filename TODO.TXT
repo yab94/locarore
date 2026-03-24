@@ -1,0 +1,2 @@
+- generation catalogue PDF en admin uniquement
+- formulaire de contact

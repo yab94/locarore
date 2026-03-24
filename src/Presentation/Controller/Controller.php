@@ -12,6 +12,7 @@ use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
+use Rore\Presentation\Seo\PageMeta;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
 
@@ -37,6 +38,8 @@ abstract class Controller
     ): void {
         // Injecte les flash messages dans chaque vue
         $data['flash'] = $this->getFlash();
+        // PageMeta par défaut si l'action n'en fournit pas
+        $data['meta'] ??= new PageMeta(title: $this->config->getStringParam('app.name'));
         // CSRF token pour les formulaires
         $data['csrfToken'] = $this->csrfTokenManager->token();
         // Compteur panier (pour le header)
