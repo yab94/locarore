@@ -34,7 +34,7 @@ foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
 
 if($config->getStringParam('app.env') === 'prod') {
     $request = $container->get(\Rore\Infrastructure\Http\HttpRequest::class);
-    if($request->server->getStringParam('HTTPS') === 'off') {
+    if(strpos($request->server->getStringParam('SCRIPT_URI'), 'https') !== 0) {
         $redirectUrl = 'https://' . $request->server->getStringParam('HTTP_HOST') . $request->server->getStringParam('REQUEST_URI');
         header('Location: ' . $redirectUrl, true, 301);
         exit;
