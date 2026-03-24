@@ -2,14 +2,10 @@
 
 declare(strict_types=1);
 
-// enable error display for development (disable in production!)
-ini_set('display_errors', '1');
-error_reporting(E_ALL);
-
-// ─── Constante racine ──────────────────────────────────────────────────────
+// ─── Constante racine ─────────────────────────────────────────────────────────
 define('BASE_PATH', dirname(__DIR__));
 
-// ─── Autoload (namespace Rore\ → src/) ─────────────────────────────────────
+// ─── Autoload (namespace Rore\ → src/) ───────────────────────────────────────
 spl_autoload_register(function (string $class): void {
     $prefix = 'Rore\\';
     if (strncmp($class, $prefix, strlen($prefix)) !== 0) return;
@@ -20,9 +16,11 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-
-// ─── Bootstrap (env + config) ──────────────────────────────────────────────
+// ─── Config (.env + app.ini) ──────────────────────────────────────────────────
 $config = \Rore\Infrastructure\Config\Config::load(BASE_PATH);
+
+// ─── Paramètres PHP selon l'environnement (section [php] de app.ini) ─────────
+(new \Rore\Infrastructure\Config\PhpRuntime($config))->boot();
 
 // ─── Session ───────────────────────────────────────────────────────────────
 session_start();
