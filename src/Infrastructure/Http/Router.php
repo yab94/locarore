@@ -24,18 +24,15 @@ class Router
     }
 
     /**
-     * Charge les routes depuis la section [routes] de la config.
+     * Enregistre les routes depuis un tableau indexé par méthode HTTP.
      *
-     * Format attendu dans app.ini :
-     *   GET[/path]  = Fully\Qualified\ClassName.methodName
-     *   POST[/path] = Fully\Qualified\ClassName.methodName
+     * Format attendu :
+     *   ['GET' => ['/path' => 'FQCN.method', ...], 'POST' => [...]]
+     *
+     * @param array<string, array<string, string>> $routes
      */
-    public function loadFromConfig(\Rore\Infrastructure\Config\Config $config): void
+    public function addRoutes(array $routes): void
     {
-        $routes = $config->getParam('routes');
-        if (!is_array($routes)) {
-            return;
-        }
         foreach (['GET', 'POST'] as $method) {
             foreach ($routes[$method] ?? [] as $path => $handler) {
                 [$class, $action] = explode('.', (string) $handler, 2);

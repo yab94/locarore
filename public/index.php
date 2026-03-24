@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-use Rore\Infrastructure\Config\Config;
-
 // enable error display for development (disable in production!)
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
@@ -30,11 +28,15 @@ $config = \Rore\Infrastructure\Config\Bootstrap::boot();
 session_start();
 
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
-$container = new \Rore\Infrastructure\Di\Container($config);
+$container = new \Rore\Infrastructure\Di\Container();
+$container->instance(\Rore\Infrastructure\Config\Config::class, $config);
+foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
+    $container->bind($abstract, fn($c) => $c->get($concrete));
+}
 
 // ─── Router ────────────────────────────────────────────────────────────────
 $router = new \Rore\Infrastructure\Http\Router($container);
-$router->loadFromConfig($config);
+$router->addRoutes($config->getArrayParam('routes') ?? []);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();
