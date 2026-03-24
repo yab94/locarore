@@ -8,12 +8,7 @@
 
         <!-- Catégories principales -->
         <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700 font-sans">
-            <?php
-            static $headerCategories = null;
-            if ($headerCategories === null) {
-                $headerCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
-            }
-            foreach ($headerCategories as $cat): ?>
+            <?php foreach ($headerCategories as $cat): ?>
                 <a href="<?= $html($urlResolver->categoryUrl($cat, $headerCategories)) ?>"
                    class="hover:text-brand-700 transition-colors">
                     <?= $html($cat->getName()) ?>

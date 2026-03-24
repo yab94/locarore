@@ -12,6 +12,7 @@ use Rore\Application\Catalog\UploadProductPhotoUseCase;
 use Rore\Application\Cart\CartSession;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
+use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -41,9 +42,10 @@ class ProductController extends AdminController
         SettingsServiceInterface                               $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
-        Html $html,
+        Html                                     $html,
+        CategoryRepositoryInterface                  $categoryRepository,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
     }
 
     public function index(): void

@@ -8,6 +8,7 @@ use Rore\Application\Cart\AddToCartUseCase;
 use Rore\Application\Cart\CartSession;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
+use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
@@ -41,8 +42,9 @@ class CartController extends Controller
         SettingsServiceInterface                 $settings,
         UrlResolver                              $urlResolver,
         Html                                     $html,
+        CategoryRepositoryInterface                  $categoryRepository,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
     }
 
     public function index(): void

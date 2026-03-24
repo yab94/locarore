@@ -17,6 +17,7 @@ use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
+use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class ProductController extends Controller
@@ -34,9 +35,10 @@ class ProductController extends Controller
         SettingsServiceInterface                               $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
-        Html $html,
+        Html                                     $html,
+        CategoryRepositoryInterface                  $categoryRepository,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
     }
 
     public function show(string $path): void
