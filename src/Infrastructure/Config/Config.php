@@ -13,7 +13,8 @@ final class Config extends AbstractTypedParams
     }
 
     /**
-     * Charge .env puis config/app.ini depuis la racine du projet.
+     * Charge .env, puis config/default.ini, puis config/{env}.ini par-dessus
+     * (deep merge section par section).
      *
      * @param string $basePath  chemin absolu vers la racine (BASE_PATH)
      */
@@ -32,15 +33,45 @@ final class Config extends AbstractTypedParams
             }
         }
 
-        // 2. Charger app.ini en résolvant les placeholders ${VAR}
-        $iniRaw = file_get_contents($basePath . '/config/app.ini');
-        $iniRaw = preg_replace_callback(
+        // 2. Déterminer l'environnement (tout inconnu → prod, sécurité par défaut)
+        $env = (getenv('APP_ENV') === 'dev') ? 'dev' : 'prod';
+
+        // 3. Charger default.ini puis {env}.ini (deep merge)
+        $data = self::parseIni($basePath . '/config/default.ini');
+        $envIni = $basePath . '/config/' . $env . '.ini';
+        if (file_exists($envIni)) {
+            $data = self::deepMerge($data, self::parseIni($envIni));
+        }
+
+        return new self($data);
+    }
+
+    private static function parseIni(string $file): array
+    {
+        $raw = file_get_contents($file);
+        $raw = preg_replace_callback(
             '/\$\{([^}]+)\}/',
             fn($m) => getenv($m[1]) ?: $m[0],
-            $iniRaw,
+            $raw,
         );
 
-        return new self(parse_ini_string($iniRaw, true));
+        return parse_ini_string($raw, true) ?: [];
+    }
+
+    /**
+     * Fusionne $override dans $base récursivement (section par section).
+     */
+    private static function deepMerge(array $base, array $override): array
+    {
+        foreach ($override as $key => $value) {
+            if (is_array($value) && isset($base[$key]) && is_array($base[$key])) {
+                $base[$key] = self::deepMerge($base[$key], $value);
+            } else {
+                $base[$key] = $value;
+            }
+        }
+
+        return $base;
     }
 
     public function getParam(string $path, mixed $default = null): mixed

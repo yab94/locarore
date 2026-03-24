@@ -1,8 +1,12 @@
 # Dépendances
 /vendor/
 
-# Uploads
-/public/assets/uploads/
+# Uploads (fichiers ignorés, mais la structure de dossiers est trackée via .gitkeep)
+/public/assets/uploads/*
+!/public/assets/uploads/.gitkeep
+!/public/assets/uploads/products/
+/public/assets/uploads/products/*
+!/public/assets/uploads/products/.gitkeep
 
 # Docker volumes
 /docker/mysql-data/
@@ -25,6 +29,6 @@ Thumbs.db
 *.swo
 
 # Environnement (les valeurs réelles ne se committent pas)
-.env
+.env*
 .env.local
 # .env.example est volontairement tracké (modèle sans valeurs sensibles)
