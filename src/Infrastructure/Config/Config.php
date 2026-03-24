@@ -84,41 +84,16 @@ final class Config extends AbstractTypedParams
 
     /**
      * Résout les références de config internes @{section.key} dans toutes les valeurs.
+     * NOTE: array_walk_recursive ne modifie pas les CLÉS d'arrays associatifs,
+     * donc on doit parcourir manuellement pour résoudre les clés de routes.
      */
     private static function resolveConfigReferences(array $data): array
     {
-        $maxIterations = 10; // Protection contre les références circulaires
+        $maxIterations = 10;
         
-        for ($i = 0; $i < $maxIterations; $i++) {
+        for ($iteration = 0; $iteration < $maxIterations; $iteration++) {
             $hasChanges = false;
-            
-            array_walk_recursive($data, function (&$value) use ($data, &$hasChanges) {
-                if (!is_string($value)) {
-                    return;
-                }
-                
-                $original = $value;
-                $value = preg_replace_callback(
-                    '/@\{([^}]+)\}/',
-                    function($m) use ($data) {
-                        $path = $m[1];
-                        $parts = explode('.', $path);
-                        
-                        // Tenter de résoudre section.key
-                        if (count($parts) === 2 && isset($data[$parts[0]][$parts[1]])) {
-                            return (string) $data[$parts[0]][$parts[1]];
-                        }
-                        
-                        // Sinon laisser tel quel
-                        return $m[0];
-                    },
-                    $value
-                );
-                
-                if ($value !== $original) {
-                    $hasChanges = true;
-                }
-            });
+            $data = self::resolveArrayRecursive($data, $data, $hasChanges);
             
             if (!$hasChanges) {
                 break;
@@ -126,6 +101,61 @@ final class Config extends AbstractTypedParams
         }
         
         return $data;
+    }
+    
+    /**
+     * Résout récursivement les références dans valeurs ET clés.
+     */
+    private static function resolveArrayRecursive(array $array, array $fullData, bool &$hasChanges): array
+    {
+        $result = [];
+        
+        foreach ($array as $key => $value) {
+            // Résoudre la clé
+            $resolvedKey = self::resolveString($key, $fullData, $hasChanges);
+            
+            // Résoudre la valeur
+            if (is_array($value)) {
+                $resolvedValue = self::resolveArrayRecursive($value, $fullData, $hasChanges);
+            } elseif (is_string($value)) {
+                $resolvedValue = self::resolveString($value, $fullData, $hasChanges);
+            } else {
+                $resolvedValue = $value;
+            }
+            
+            $result[$resolvedKey] = $resolvedValue;
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * Résout les références @{section.key} dans une string.
+     */
+    private static function resolveString(string $value, array $data, bool &$hasChanges): string
+    {
+        $original = $value;
+        
+        $resolved = preg_replace_callback(
+            '/@\{([^}]+)\}/',
+            function($m) use ($data) {
+                $path = $m[1];
+                $parts = explode('.', $path);
+                
+                if (count($parts) === 2 && isset($data[$parts[0]][$parts[1]])) {
+                    return (string) $data[$parts[0]][$parts[1]];
+                }
+                
+                return $m[0];
+            },
+            $value
+        );
+        
+        if ($resolved !== $original) {
+            $hasChanges = true;
+        }
+        
+        return $resolved;
     }
 
     public function isProduction(): bool
