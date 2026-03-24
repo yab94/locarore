@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreateProductUseCase;
 use Rore\Application\Catalog\DeleteProductPhotoUseCase;
 use Rore\Application\Catalog\ToggleProductUseCase;
+use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
 use Rore\Presentation\Seo\UrlResolver;
@@ -32,8 +33,9 @@ class ProductController extends AdminController
         private readonly CreateProductUseCase       $createProductUseCase,
         private readonly UpdateProductUseCase       $updateProductUseCase,
         private readonly ToggleProductUseCase       $toggleProductUseCase,
-        private readonly UploadProductPhotoUseCase  $uploadProductPhotoUseCase,
-        private readonly DeleteProductPhotoUseCase  $deleteProductPhotoUseCase,
+        private readonly UploadProductPhotoUseCase      $uploadProductPhotoUseCase,
+        private readonly DeleteProductPhotoUseCase       $deleteProductPhotoUseCase,
+        private readonly UpdatePhotoDescriptionUseCase   $updatePhotoDescriptionUseCase,
         RequestInterface                            $request,
         ResponseInterface                           $response,
         Config                                      $config,
@@ -182,14 +184,10 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $photo = $this->productRepo->findPhotoById((int) $photoId);
-            if (!$photo) {
-                throw new \RuntimeException('Photo introuvable.');
-            }
             $description = $this->request->body->getStringParam('description') ?? '';
-            $this->productRepo->updatePhotoDescription((int) $photoId, $description);
+            $productId   = $this->updatePhotoDescriptionUseCase->execute((int) $photoId, $description);
             $this->flash('success', 'Description mise à jour.');
-            $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $photo->getProductId()]));
+            $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }

@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
 use Rore\Application\Security\CsrfTokenManagerInterface;
+use Rore\Application\Settings\SaveSettingsUseCase;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
@@ -18,6 +19,7 @@ class SettingsController extends AdminController
 {
     public function __construct(
         private readonly MySqlSettingsRepository $repo,
+        private readonly SaveSettingsUseCase     $saveSettingsUseCase,
         RequestInterface                         $request,
         ResponseInterface                        $response,
         Config                                   $config,
@@ -50,9 +52,7 @@ class SettingsController extends AdminController
         $this->requirePost();
 
         $values = $this->request->body->getArrayParam('settings', []);
-        if (!empty($values)) {
-            $this->repo->saveValues($values);
-        }
+        $this->saveSettingsUseCase->execute($values);
 
         $this->flash('success', 'Contenu mis à jour.');
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));

@@ -14,4 +14,7 @@ interface SettingsRepositoryInterface
     public function findByKey(string $key): ?Setting;
 
     public function save(Setting $setting): void;
+
+    /** Sauvegarde en masse (tableau key => value) */
+    public function saveValues(array $keyValues): void;
 }

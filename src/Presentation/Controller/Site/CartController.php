@@ -13,6 +13,7 @@ use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
+use Rore\Application\Cart\RemovePackFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
 use Rore\Domain\Catalog\Service\PricingCalculator;
 use Rore\Application\Security\CsrfTokenManagerInterface;
@@ -35,8 +36,9 @@ class CartController extends SiteController
         private readonly SetCartDatesUseCase     $setCartDatesUseCase,
         private readonly AddToCartUseCase        $addToCartUseCase,
         private readonly AddPackToCartUseCase    $addPackToCartUseCase,
-        private readonly RemoveFromCartUseCase   $removeFromCartUseCase,
-        private readonly CheckoutUseCase         $checkoutUseCase,
+        private readonly RemoveFromCartUseCase      $removeFromCartUseCase,
+        private readonly RemovePackFromCartUseCase   $removePackFromCartUseCase,
+        private readonly CheckoutUseCase             $checkoutUseCase,
         private readonly PackRepositoryInterface $packRepo,
         private readonly PricingCalculator       $pricing,
         RequestInterface                         $request,
@@ -172,7 +174,7 @@ class CartController extends SiteController
     public function removePack(): void
     {
         $this->requirePost();
-        $this->cart->removePack($this->request->body->getIntParam('pack_id'));
+        $this->removePackFromCartUseCase->execute($this->request->body->getIntParam('pack_id'));
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
