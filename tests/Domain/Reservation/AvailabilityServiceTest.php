@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Rore\Domain\Catalog\Entity\Pack;
+use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
@@ -250,6 +252,223 @@ final class AvailabilityServiceTest
         Assert::false(
             $service->isAvailable($product, 8, $start, $end, $now),
             '8j 23h59 < 9j requis : doit être indisponible'
+        );
+    }
+
+    // ─── Tests de disponibilité des packs ────────────────────────────────
+
+    private function makePack(int $id = 1): Pack
+    {
+        $pack = new Pack(
+            id:                 $id,
+            name:               'Pack Test',
+            slug:               'pack-test',
+            description:        null,
+            pricePerDay:        100.0,
+            priceExtraWeekend:  0.0,
+            priceExtraWeekday:  0.0,
+            isActive:           true,
+            createdAt:          new \DateTimeImmutable('2025-01-01'),
+            updatedAt:          new \DateTimeImmutable('2025-01-01'),
+        );
+        // Pack contient : 2× produit 1 + 3× produit 2
+        $pack->setItems([
+            new PackItem(id: 1, packId: $id, productId: 1, quantity: 2),
+            new PackItem(id: 2, packId: $id, productId: 2, quantity: 3),
+        ]);
+        return $pack;
+    }
+
+    public function testPackIsAvailableWhenAllProductsAreAvailable(): void
+    {
+        $now   = new \DateTimeImmutable('2026-01-01 00:00:00');
+        $start = $now->modify('+10 days');
+        $end   = $start->modify('+1 day');
+
+        // Produit 1 : stock=5 (besoin de 2) → OK
+        $product1 = new Product(
+            id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        // Produit 2 : stock=10 (besoin de 3) → OK
+        $product2 = new Product(
+            id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $pack = $this->makePack();
+        $productsById = [1 => $product1, 2 => $product2];
+        $service = new AvailabilityService(new StubReservationRepository());
+
+        Assert::true(
+            $service->isPackAvailable($pack, $productsById, $start, $end, $now),
+            'Pack dispo : P1 a 5 (besoin 2) + P2 a 10 (besoin 3)'
+        );
+    }
+
+    public function testPackIsNotAvailableWhenOneProductHasInsufficientStock(): void
+    {
+        $now   = new \DateTimeImmutable('2026-01-01 00:00:00');
+        $start = $now->modify('+10 days');
+        $end   = $start->modify('+1 day');
+
+        // Produit 1 : stock=5 (besoin de 2) → OK
+        $product1 = new Product(
+            id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        // Produit 2 : stock=2 (besoin de 3) → INSUFFISANT
+        $product2 = new Product(
+            id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            stock: 2, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $pack = $this->makePack();
+        $productsById = [1 => $product1, 2 => $product2];
+        $service = new AvailabilityService(new StubReservationRepository());
+
+        Assert::false(
+            $service->isPackAvailable($pack, $productsById, $start, $end, $now),
+            'Pack indispo : P2 a stock=2 mais besoin de 3'
+        );
+    }
+
+    public function testPackIsNotAvailableWhenOneProductIsMissing(): void
+    {
+        $now   = new \DateTimeImmutable('2026-01-01 00:00:00');
+        $start = $now->modify('+10 days');
+        $end   = $start->modify('+1 day');
+
+        // Seulement produit 1, produit 2 manquant
+        $product1 = new Product(
+            id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $pack = $this->makePack();
+        $productsById = [1 => $product1]; // produit 2 manquant !
+        $service = new AvailabilityService(new StubReservationRepository());
+
+        Assert::false(
+            $service->isPackAvailable($pack, $productsById, $start, $end, $now),
+            'Pack indispo : produit 2 introuvable'
+        );
+    }
+
+    public function testPackIsNotAvailableWhenOneProductIsInactive(): void
+    {
+        $now   = new \DateTimeImmutable('2026-01-01 00:00:00');
+        $start = $now->modify('+10 days');
+        $end   = $start->modify('+1 day');
+
+        $product1 = new Product(
+            id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        // Produit 2 inactif
+        $product2 = new Product(
+            id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: false,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $pack = $this->makePack();
+        $productsById = [1 => $product1, 2 => $product2];
+        $service = new AvailabilityService(new StubReservationRepository());
+
+        Assert::false(
+            $service->isPackAvailable($pack, $productsById, $start, $end, $now),
+            'Pack indispo : produit 2 inactif'
+        );
+    }
+
+    public function testPackUsesOnDemandStockWhenNeeded(): void
+    {
+        $now   = new \DateTimeImmutable('2026-01-01 00:00:00');
+        $start = $now->modify('+10 days');
+        $end   = $start->modify('+1 day');
+
+        // Produit 1 : stock=1 (besoin 2) → doit utiliser 1 on-demand (délai 3j)
+        $product1 = new Product(
+            id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            stock: 1, stockOnDemand: 5, fabricationTimeDays: 3.0,
+            priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        // Produit 2 : stock suffisant
+        $product2 = new Product(
+            id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $pack = $this->makePack();
+        $productsById = [1 => $product1, 2 => $product2];
+        $service = new AvailabilityService(new StubReservationRepository());
+
+        Assert::true(
+            $service->isPackAvailable($pack, $productsById, $start, $end, $now),
+            'Pack dispo : P1 utilise 1 stock + 1 on-demand (délai 3j < 10j disponibles)'
+        );
+    }
+
+    public function testPackIsNotAvailableWhenLeadTimeInsufficient(): void
+    {
+        $now   = new \DateTimeImmutable('2026-01-01 00:00:00');
+        $start = $now->modify('+2 days'); // Seulement 2j de délai
+        $end   = $start->modify('+1 day');
+
+        // Produit 1 : stock=1 (besoin 2) → doit fabriquer 1 (délai 3j requis)
+        $product1 = new Product(
+            id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            stock: 1, stockOnDemand: 5, fabricationTimeDays: 3.0,
+            priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $product2 = new Product(
+            id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
+            priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
+            isActive: true,
+            createdAt: new \DateTimeImmutable(), updatedAt: new \DateTimeImmutable(),
+        );
+
+        $pack = $this->makePack();
+        $productsById = [1 => $product1, 2 => $product2];
+        $service = new AvailabilityService(new StubReservationRepository());
+
+        Assert::false(
+            $service->isPackAvailable($pack, $productsById, $start, $end, $now),
+            'Pack indispo : P1 besoin 1 on-demand × 3j = 3j requis, mais seulement 2j disponibles'
         );
     }
 }
