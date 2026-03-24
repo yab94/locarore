@@ -28,3 +28,14 @@
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
+
+<?php if (!empty($packs)): ?>
+<section class="mt-12">
+    <h2 class="text-lg font-semibold text-gray-700 mb-4">Packs incluant ces articles</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <?php foreach ($packs as $pack): ?>
+            <?php include 'partials/pack-card.php'; ?>
+        <?php endforeach; ?>
+    </div>
+</section>
+<?php endif; ?>

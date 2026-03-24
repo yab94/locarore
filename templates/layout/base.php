@@ -14,6 +14,7 @@
     <?php if ($meta->canonicalUrl !== null): ?>
     <link rel="canonical" href="<?= $html($meta->canonicalUrl) ?>">
     <?php endif; ?>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <!-- Polices Latyana Événements -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

@@ -44,6 +44,33 @@ class Pack
     public function setItems(array $items): void       { $this->items = $items; }
 
     /**
+     * Retourne l'ID du produit "principal" du pack :
+     * celui dont priceBase × quantity est le plus élevé.
+     * Sert à déterminer la catégorie canonique et la photo principale.
+     *
+     * @param array<int, Product> $productsById  [id => Product]
+     */
+    public function getMainProductId(array $productsById): ?int
+    {
+        $best      = null;
+        $bestScore = -1.0;
+
+        foreach ($this->items as $item) {
+            $product = $productsById[$item->getProductId()] ?? null;
+            if ($product === null) {
+                continue;
+            }
+            $score = $product->getPriceBase() * $item->getQuantity();
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best      = $item->getProductId();
+            }
+        }
+
+        return $best;
+    }
+
+    /**
      * Prix du pack pour un nombre de jours donné.
      */
     public function calculateTotal(int $nbDays): float

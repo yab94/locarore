@@ -48,7 +48,7 @@ class CartSession
         if (
             $currentStart !== null
             && ($currentStart !== $startDate || $currentEnd !== $endDate)
-            && !empty($this->getItems())
+            && (!empty($this->getItems()) || !empty($this->getPacks()))
         ) {
             // Les dates changent avec un panier non vide → on vide le panier
             $this->setCart([]);
@@ -93,12 +93,40 @@ class CartSession
 
     public function isEmpty(): bool
     {
-        return empty($this->getItems());
+        return empty($this->getItems()) && empty($this->getPacks());
     }
 
     public function getItemCount(): int
     {
         return array_sum($this->getItems());
+    }
+
+    // --- Packs -----------------------------------------------------------
+
+    /** @return array<int, int>  [packId => 1] */
+    public function getPacks(): array
+    {
+        $cart  = $this->getCart();
+        $packs = $cart['packs'] ?? [];
+        return is_array($packs) ? $packs : [];
+    }
+
+    public function addPack(int $packId): void
+    {
+        $packs = $this->getPacks();
+        $packs[$packId] = 1;
+        $cart = $this->getCart();
+        $cart['packs'] = $packs;
+        $this->setCart($cart);
+    }
+
+    public function removePack(int $packId): void
+    {
+        $packs = $this->getPacks();
+        unset($packs[$packId]);
+        $cart = $this->getCart();
+        $cart['packs'] = $packs;
+        $this->setCart($cart);
     }
 
     // --- Reset -----------------------------------------------------------

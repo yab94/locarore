@@ -14,6 +14,7 @@ use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
@@ -25,6 +26,7 @@ class TagController extends SiteController
         private readonly MySqlTagRepository      $tagRepo,
         private readonly MySqlProductRepository  $productRepo,
         private readonly MySqlCategoryRepository $categoryRepo,
+        private readonly PackRepositoryInterface $packRepo,
         private readonly PageMetaBuilder         $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
@@ -54,11 +56,20 @@ class TagController extends SiteController
         $allCategories = $this->categoryRepo->findAllActive();
         $meta          = $this->metaBuilder->forTag($tag);
 
+        $packs        = $this->packRepo->findActiveByTagSlug($slug);
+        $allProducts  = $this->productRepo->findAll();
+        $productsById = [];
+        foreach ($allProducts as $p) {
+            $productsById[$p->getId()] = $p;
+        }
+
         $this->render('site/tag', [
             'meta'          => $meta,
             'tag'           => $tag,
             'products'      => $products,
             'allCategories' => $allCategories,
+            'packs'         => $packs,
+            'productsById'  => $productsById,
         ]);
     }
 }

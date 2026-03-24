@@ -43,6 +43,7 @@ abstract class SiteController extends Controller
         string $layout = 'layout/base'
     ): void {
         $data['cartItemCount']    = $this->cart->getItemCount();
+        $data['cart']             = $this->cart;
         $data['headerCategories'] = $this->categoryRepository->findAllActive();
         parent::render($template, $data, $layout);
     }

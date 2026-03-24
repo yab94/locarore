@@ -40,9 +40,16 @@ class PackController extends AdminController
 
     public function index(): void
     {
+        $allProducts = $this->productRepo->findAll();
+        $productsById = [];
+        foreach ($allProducts as $p) {
+            $productsById[$p->getId()] = $p;
+        }
+
         $this->render('admin/packs/list', [
-            'title' => 'Packs',
-            'packs' => $this->packRepo->findAll(),
+            'title'    => 'Packs',
+            'packs'    => $this->packRepo->findAll(),
+            'products' => $productsById,
         ]);
     }
 

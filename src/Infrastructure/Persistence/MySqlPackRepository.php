@@ -32,6 +32,48 @@ class MySqlPackRepository implements PackRepositoryInterface
         return $this->loadItems($packs);
     }
 
+    public function findActiveByCategorySlug(string $slug): array
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT DISTINCT pk.*
+               FROM packs pk
+               JOIN pack_items pi ON pi.pack_id = pk.id
+               JOIN products p ON p.id = pi.product_id
+               JOIN categories c ON c.slug = ?
+              WHERE pk.is_active = 1
+                AND p.is_active  = 1
+                AND c.is_active  = 1
+                AND (
+                    p.category_id = c.id
+                    OR EXISTS (
+                        SELECT 1 FROM product_categories pc
+                        WHERE pc.product_id = p.id AND pc.category_id = c.id
+                    )
+                )
+              ORDER BY pk.name'
+        );
+        $stmt->execute([$slug]);
+        $packs = array_map([$this, 'hydrate'], $stmt->fetchAll());
+        return $this->loadItems($packs);
+    }
+
+    public function findActiveByTagSlug(string $slug): array
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT DISTINCT pk.*
+               FROM packs pk
+               JOIN pack_items pi ON pi.pack_id = pk.id
+               JOIN product_tags pt ON pt.product_id = pi.product_id
+               JOIN tags t ON t.id = pt.tag_id
+              WHERE pk.is_active = 1
+                AND t.slug = ?
+              ORDER BY pk.name'
+        );
+        $stmt->execute([$slug]);
+        $packs = array_map([$this, 'hydrate'], $stmt->fetchAll());
+        return $this->loadItems($packs);
+    }
+
     public function findById(int $id): ?Pack
     {
         $stmt = $this->connection->prepare('SELECT * FROM packs WHERE id = ?');

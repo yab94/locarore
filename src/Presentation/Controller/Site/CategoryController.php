@@ -8,6 +8,7 @@ use Rore\Application\Cart\CartSession;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
+use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -23,6 +24,7 @@ class CategoryController extends SiteController
     public function __construct(
         private readonly MySqlCategoryRepository $categoryRepo,
         private readonly MySqlProductRepository  $productRepo,
+        private readonly PackRepositoryInterface $packRepo,
         private readonly PageMetaBuilder         $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
@@ -56,6 +58,15 @@ class CategoryController extends SiteController
         }
 
         $products      = $this->productRepo->findActiveByCategorySlug($slug);
+        $packs         = $this->packRepo->findActiveByCategorySlug($slug);
+
+        // Produits indexés par id pour pack-card.php
+        $allProducts = $this->productRepo->findAll();
+        $productsById = [];
+        foreach ($allProducts as $p) {
+            $productsById[$p->getId()] = $p;
+        }
+
         $allCategories = $this->categoryRepo->findAllActive();
         $children      = array_filter($allCategories, fn($c) => $c->getParentId() === $category->getId());
         $breadcrumb    = $this->buildBreadcrumb($category, $allCategories);
@@ -65,6 +76,8 @@ class CategoryController extends SiteController
             'meta'          => $meta,
             'category'      => $category,
             'products'      => $products,
+            'packs'         => $packs,
+            'productsById'  => $productsById,
             'children'      => array_values($children),
             'breadcrumb'    => $breadcrumb,
             'slugPath'      => $path,

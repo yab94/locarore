@@ -51,9 +51,10 @@
             </button>
         </form>
     </div>
+    <?php $nbJours = (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->nbDays(); ?>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Liste produits -->
+        <!-- Liste produits + packs -->
         <div class="lg:col-span-2 space-y-4">
             <?php foreach ($cartProducts as $row): ?>
                 <?php $p = $row['product']; $qty = $row['quantity']; ?>
@@ -85,16 +86,48 @@
                     </form>
                 </div>
             <?php endforeach; ?>
+
+            <?php foreach ($cartPacks as $pack): ?>
+                <div class="bg-white rounded-xl border border-brand-200 p-4 flex items-center gap-4">
+                    <div class="w-20 h-20 bg-brand-50 rounded-lg flex-shrink-0 flex items-center justify-center">
+                        <span class="text-brand-600 text-xs font-semibold text-center leading-tight px-1">Pack</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-0.5">
+                            <span class="text-xs bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-2 py-0.5 font-medium">Pack</span>
+                            <h3 class="font-semibold text-gray-800 truncate">
+                                <a href="/packs/<?= $html($pack->getSlug()) ?>" class="hover:text-brand-700">
+                                    <?= $html($pack->getName()) ?>
+                                </a>
+                            </h3>
+                        </div>
+                        <p class="text-sm text-gray-500">
+                            <?= number_format($pack->calculateTotal($nbJours), 2, ',', ' ') ?> €
+                            <span class="text-gray-400">(<?= number_format($pack->getPricePerDay(), 0, ',', ' ') ?> € × <?= $nbJours ?> j.)</span>
+                        </p>
+                    </div>
+                    <form method="post" action="<?= $url('Site\Cart.removePack') ?>">
+                        <?= require 'partials/csrf.php' ?>
+                        <input type="hidden" name="pack_id" value="<?= $pack->getId() ?>">
+                        <button type="submit" class="text-red-400 hover:text-red-600 text-sm transition"
+                                data-confirm="Retirer ce pack du panier ?">
+                            ✕
+                        </button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
         </div>
 
         <!-- Récap -->
         <div class="bg-white rounded-xl border border-gray-200 p-6 h-fit">
             <h2 class="text-lg font-semibold text-gray-800 mb-4">Récapitulatif</h2>
             <?php
-            $total   = 0;
-            $nbJours = (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->nbDays();
+            $total = 0;
             foreach ($cartProducts as $row) {
                 $total += $row['product']->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $row['quantity'];
+            }
+            foreach ($cartPacks as $pack) {
+                $total += $pack->calculateTotal($nbJours);
             }
             ?>
             <div class="flex justify-between text-sm text-gray-600 mb-2">

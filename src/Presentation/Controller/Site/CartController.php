@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\AddToCartUseCase;
+use Rore\Application\Cart\AddPackToCartUseCase;
 use Rore\Application\Cart\CartSession;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
+use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
@@ -31,8 +33,10 @@ class CartController extends SiteController
         private readonly PageMetaBuilder         $metaBuilder,
         private readonly SetCartDatesUseCase     $setCartDatesUseCase,
         private readonly AddToCartUseCase        $addToCartUseCase,
+        private readonly AddPackToCartUseCase    $addPackToCartUseCase,
         private readonly RemoveFromCartUseCase   $removeFromCartUseCase,
         private readonly CheckoutUseCase         $checkoutUseCase,
+        private readonly PackRepositoryInterface $packRepo,
         RequestInterface                         $request,
         ResponseInterface                        $response,
         Config                                   $config,
@@ -58,12 +62,21 @@ class CartController extends SiteController
             }
         }
 
+        $cartPacks = [];
+        foreach ($this->cart->getPacks() as $packId => $_) {
+            $pack = $this->packRepo->findById((int) $packId);
+            if ($pack) {
+                $cartPacks[] = $pack;
+            }
+        }
+
         $allCategories = $this->categoryRepo->findAllActive();
 
         $this->render('site/cart', [
             'meta'          => $this->metaBuilder->forCart(),
             'cart'          => $this->cart,
             'cartProducts'  => $cartProducts,
+            'cartPacks'     => $cartPacks,
             'allCategories' => $allCategories,
         ]);
     }
@@ -113,10 +126,33 @@ class CartController extends SiteController
         $this->redirect($redirect);
     }
 
+    public function addPack(): void
+    {
+        $this->requirePost();
+        try {
+            $this->addPackToCartUseCase->execute(
+                packId: $this->request->body->getIntParam('pack_id'),
+            );
+            $this->flash('success', 'Pack ajouté au panier.');
+        } catch (\Throwable $e) {
+            $this->flash('error', $e->getMessage());
+        }
+
+        $redirect = $this->request->queryString->getStringParam('redirect', $this->urlResolver->resolve(self::class . '.index'));
+        $this->redirect($redirect);
+    }
+
     public function remove(): void
     {
         $this->requirePost();
         $this->removeFromCartUseCase->execute($this->request->body->getIntParam('product_id'));
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
+    }
+
+    public function removePack(): void
+    {
+        $this->requirePost();
+        $this->cart->removePack($this->request->body->getIntParam('pack_id'));
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 

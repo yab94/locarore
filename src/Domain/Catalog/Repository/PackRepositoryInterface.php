@@ -14,6 +14,12 @@ interface PackRepositoryInterface
     /** @return Pack[] */
     public function findAllActive(): array;
 
+    /** @return Pack[] packs actifs contenant au moins un produit de cette catégorie */
+    public function findActiveByCategorySlug(string $slug): array;
+
+    /** @return Pack[] packs actifs contenant au moins un produit avec ce tag */
+    public function findActiveByTagSlug(string $slug): array;
+
     public function findById(int $id): ?Pack;
 
     public function findBySlug(string $slug): ?Pack;
