@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\CartSession;
+use Rore\Application\Catalog\GetHomePageDataUseCase;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlTagRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
@@ -22,9 +20,7 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 class HomeController extends SiteController
 {
     public function __construct(
-        private readonly MySqlCategoryRepository $categoryRepo,
-        private readonly MySqlProductRepository  $productRepo,
-        private readonly MySqlTagRepository      $tagRepo,
+        private readonly GetHomePageDataUseCase  $getHomePageDataUseCase,
         private readonly PageMetaBuilder         $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
@@ -34,7 +30,7 @@ class HomeController extends SiteController
         SettingsServiceInterface                            $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
-        Html                                     $html,
+        HtmlHelper                                     $html,
         CategoryRepositoryInterface                  $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
@@ -42,9 +38,11 @@ class HomeController extends SiteController
 
     public function index(): void
     {
-        $categories = $this->categoryRepo->findAllActive();
-        $featured   = array_slice($this->productRepo->findAllActive(), 0, 6);
-        $tags       = $this->tagRepo->findAll();
+        $data       = $this->getHomePageDataUseCase->execute();
+        $categories = $data['categories'];
+        $products   = $data['products'];
+        $tags       = $data['tags'];
+        $featured   = array_slice($products, 0, 6);
         $meta       = $this->metaBuilder->forHome($categories);
 
         $this->render('site/home', [

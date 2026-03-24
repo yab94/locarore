@@ -4,4 +4,7 @@ Features
 - Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
 - Prendre des conseils SEO avec Claude voir ce qu'il pense du code
 - SettingsService devrait etre dans Domain je crois...
-- tous les services doivent etre suffixé service, revoir les nommages
+- Refactoriser les 2 derniers controllers admin (ProductController + ReservationController) pour architecture 100% stricte
+- gestion des variadics parameters avec la DI
+- faut il créer des interfaces pour distinguer et typer les DDD element UseCaseInterface par exemple, puis créer des règles de DI pour n'autoriser que certaines injections en fonction des couches DDD
+- CartSession n'as peut etre pas sa place dans application que fait il fans les usecase

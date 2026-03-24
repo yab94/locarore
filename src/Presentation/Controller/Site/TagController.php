@@ -5,17 +5,15 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\CartSession;
+use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
+use Rore\Application\Catalog\GetTagWithItemsUseCase;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlTagRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
@@ -23,11 +21,9 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 class TagController extends SiteController
 {
     public function __construct(
-        private readonly MySqlTagRepository      $tagRepo,
-        private readonly MySqlProductRepository  $productRepo,
-        private readonly MySqlCategoryRepository $categoryRepo,
-        private readonly PackRepositoryInterface $packRepo,
-        private readonly PageMetaBuilder         $metaBuilder,
+        private readonly GetTagWithItemsUseCase         $getTagWithItemsUseCase,
+        private readonly GetAllActiveCategoriesUseCase  $getAllActiveCategoriesUseCase,
+        private readonly PageMetaBuilder                $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
         Config                                   $config,
@@ -36,7 +32,7 @@ class TagController extends SiteController
         SettingsServiceInterface                 $settings,
         CartSession                              $cart,
         UrlResolver                              $urlResolver,
-        Html                                     $html,
+        HtmlHelper                                     $html,
         CategoryRepositoryInterface              $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
@@ -44,24 +40,21 @@ class TagController extends SiteController
 
     public function show(string $slug): void
     {
-        $tag = $this->tagRepo->findBySlug($slug);
+        $result = $this->getTagWithItemsUseCase->execute($slug);
 
-        if (!$tag) {
+        if ($result === null) {
             $this->response->setStatusCode(404);
             require 'errors/404.php';
             return;
         }
 
-        $products      = $this->productRepo->findActiveByTagSlug($slug);
-        $allCategories = $this->categoryRepo->findAllActive();
-        $meta          = $this->metaBuilder->forTag($tag);
+        $tag          = $result['tag'];
+        $products     = $result['products'];
+        $packs        = $result['packs'];
+        $productsById = $result['productsById'];
 
-        $packs        = $this->packRepo->findActiveByTagSlug($slug);
-        $allProducts  = $this->productRepo->findAll();
-        $productsById = [];
-        foreach ($allProducts as $p) {
-            $productsById[$p->getId()] = $p;
-        }
+        $allCategories = $this->getAllActiveCategoriesUseCase->execute();
+        $meta          = $this->metaBuilder->forTag($tag);
 
         $this->render('site/tag', [
             'meta'          => $meta,

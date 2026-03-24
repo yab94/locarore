@@ -10,7 +10,7 @@ use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -18,7 +18,7 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Domain\Catalog\Service\PricingCalculator;
+use Rore\Domain\Catalog\Service\PricingService;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 
@@ -28,7 +28,7 @@ class ReservationController extends AdminController
         private readonly MySqlReservationRepository $repo,
         private readonly MySqlProductRepository     $productRepo,
         private readonly MySqlPackRepository        $packRepo,
-        private readonly PricingCalculator          $pricing,
+        private readonly PricingService          $pricing,
         private readonly GetReservationsUseCase     $getReservationsUseCase,
         private readonly SetReservationStatusUseCase $setReservationStatusUseCase,
         private readonly ConfirmReservationUseCase  $confirmReservationUseCase,
@@ -40,7 +40,7 @@ class ReservationController extends AdminController
         CsrfTokenManagerInterface                   $csrfTokenManager,
         SettingsServiceInterface                               $settings,
         UrlResolver $urlResolver,
-        Html        $html,
+        HtmlHelper        $html,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
     }

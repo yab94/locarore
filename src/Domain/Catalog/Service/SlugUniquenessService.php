@@ -12,7 +12,7 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
  * Vérifie qu'un slug est unique sur l'ensemble du catalogue
  * (catégories, produits ET packs partagent le même espace d'URL).
  */
-class SlugUniquenessChecker
+final class SlugUniquenessService
 {
     public function __construct(
         private CategoryRepositoryInterface $categoryRepo,

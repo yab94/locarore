@@ -7,13 +7,13 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
+use Rore\Domain\Catalog\Service\SlugUniquenessService;
 
 class UpdateProductUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        private SlugUniquenessChecker      $slugChecker,
+        private SlugUniquenessService      $slugChecker,
         private TagRepositoryInterface     $tagRepository,
     ) {}
 

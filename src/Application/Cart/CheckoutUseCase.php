@@ -7,7 +7,7 @@ namespace Rore\Application\Cart;
 use Rore\Application\Reservation\CreateReservationUseCase;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Domain\Catalog\Service\PricingCalculator;
+use Rore\Domain\Catalog\Service\PricingService;
 
 class CheckoutUseCase
 {
@@ -16,7 +16,7 @@ class CheckoutUseCase
         private ProductRepositoryInterface $productRepository,
         private PackRepositoryInterface    $packRepository,
         private CreateReservationUseCase   $createReservation,
-        private PricingCalculator          $pricing,
+        private PricingService          $pricing,
     ) {}
 
     public function execute(

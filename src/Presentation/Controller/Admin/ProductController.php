@@ -11,7 +11,7 @@ use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -43,7 +43,7 @@ class ProductController extends AdminController
         CsrfTokenManagerInterface                   $csrfTokenManager,
         SettingsServiceInterface                               $settings,
         UrlResolver $urlResolver,
-        Html        $html,
+        HtmlHelper        $html,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
     }

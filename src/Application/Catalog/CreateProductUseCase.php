@@ -8,13 +8,13 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
+use Rore\Domain\Catalog\Service\SlugUniquenessService;
 
 class CreateProductUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        private SlugUniquenessChecker      $slugChecker,
+        private SlugUniquenessService      $slugChecker,
         private TagRepositoryInterface     $tagRepository,
     ) {}
 

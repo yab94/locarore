@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Catalog\CreatePackUseCase;
+use Rore\Application\Catalog\GetAllPacksWithPricingUseCase;
+use Rore\Application\Catalog\GetAllProductsUseCase;
+use Rore\Application\Catalog\GetPackByIdUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
-use Rore\Domain\Catalog\Service\PricingCalculator;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
+use Rore\Presentation\Template\HtmlHelper;
 
 class PackController extends AdminController
 {
     public function __construct(
-        private readonly MySqlPackRepository    $packRepo,
-        private readonly MySqlProductRepository $productRepo,
-        private readonly PricingCalculator      $pricingCalculator,
+        private readonly GetAllPacksWithPricingUseCase $getAllPacksWithPricingUseCase,
+        private readonly GetAllProductsUseCase         $getAllProductsUseCase,
+        private readonly GetPackByIdUseCase            $getPackByIdUseCase,
         private readonly CreatePackUseCase      $createPackUseCase,
         private readonly UpdatePackUseCase      $updatePackUseCase,
         private readonly TogglePackUseCase      $togglePackUseCase,
@@ -35,39 +35,20 @@ class PackController extends AdminController
         CsrfTokenManagerInterface               $csrfTokenManager,
         SettingsServiceInterface                           $settings,
         UrlResolver $urlResolver,
-        Html        $html,
+        HtmlHelper  $html,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
     }
 
     public function index(): void
     {
-        $allProducts = $this->productRepo->findAll();
-        $productsById = [];
-        foreach ($allProducts as $p) {
-            $productsById[$p->getId()] = $p;
-        }
-
-        $packs = $this->packRepo->findAll();
-        
-        // Calcul du prix "au détail" des produits pour chaque pack (base 1 jour)
-        $start = new \DateTimeImmutable('2026-01-01');
-        $end   = new \DateTimeImmutable('2026-01-01');
-        $packRetailPrices = [];
-        foreach ($packs as $pack) {
-            $packRetailPrices[$pack->getId()] = $this->pricingCalculator->calculateItemsTotal(
-                $pack,
-                $productsById,
-                $start,
-                $end
-            );
-        }
+        $data = $this->getAllPacksWithPricingUseCase->execute();
 
         $this->render('admin/packs/list', [
             'title'            => 'Packs',
-            'packs'            => $packs,
-            'products'         => $productsById,
-            'packRetailPrices' => $packRetailPrices,
+            'packs'            => $data['packs'],
+            'products'         => $data['products'],
+            'packRetailPrices' => $data['retailPrices'],
         ]);
     }
 
@@ -76,7 +57,7 @@ class PackController extends AdminController
         $this->render('admin/packs/form', [
             'title'    => 'Nouveau pack',
             'pack'     => null,
-            'products' => $this->productRepo->findAll(),
+            'products' => $this->getAllProductsUseCase->execute(),
         ]);
     }
 
@@ -103,14 +84,14 @@ class PackController extends AdminController
 
     public function edit(string $id): void
     {
-        $pack = $this->packRepo->findById((int) $id);
+        $pack = $this->getPackByIdUseCase->execute((int) $id);
         if (!$pack) {
             $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
         $this->render('admin/packs/form', [
             'title'    => 'Modifier le pack',
             'pack'     => $pack,
-            'products' => $this->productRepo->findAll(),
+            'products' => $this->getAllProductsUseCase->execute(),
         ]);
     }
 

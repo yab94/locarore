@@ -15,7 +15,7 @@ use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 
 /**
  * Base pour tous les contrôleurs du site public.
@@ -32,7 +32,7 @@ abstract class SiteController extends Controller
         SettingsServiceInterface             $settings,
         readonly CartSession                 $cart,
         UrlResolver                          $urlResolver,
-        Html                                 $html,
+        HtmlHelper                                 $html,
         readonly CategoryRepositoryInterface $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);

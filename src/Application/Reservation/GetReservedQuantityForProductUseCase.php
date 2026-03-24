@@ -1,0 +1,22 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Rore\Application\Reservation;
+
+use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+
+/**
+ * Récupère la quantité réservée pour un produit sur une période.
+ */
+final class GetReservedQuantityForProductUseCase
+{
+    public function __construct(
+        private readonly ReservationRepositoryInterface $reservationRepo,
+    ) {}
+
+    public function execute(int $productId, string $startDate, string $endDate): int
+    {
+        return $this->reservationRepo->countReservedQtyForProduct($productId, $startDate, $endDate);
+    }
+}

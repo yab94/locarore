@@ -6,13 +6,13 @@ namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
+use Rore\Domain\Catalog\Service\SlugUniquenessService;
 
 class UpdateCategoryUseCase
 {
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,
-        private SlugUniquenessChecker       $slugChecker,
+        private SlugUniquenessService       $slugChecker,
     ) {}
 
     public function execute(

@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Service\PricingCalculator;
+use Rore\Domain\Catalog\Service\PricingService;
 
 class ProductPriceTest
 {
-    private PricingCalculator $calc;
+    private PricingService $calc;
 
     public function setUp(): void
     {
-        $this->calc = new PricingCalculator();
+        $this->calc = new PricingService();
     }
     private function makeProduct(
         float $priceBase          = 80.0,

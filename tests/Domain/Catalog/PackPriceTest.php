@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Service\PricingCalculator;
+use Rore\Domain\Catalog\Service\PricingService;
 
 /**
  * Pack composé de 4× Produit A (20 €/base) + 6× Produit B (30 €/base).
@@ -17,11 +17,11 @@ use Rore\Domain\Catalog\Service\PricingCalculator;
  */
 class PackPriceTest
 {
-    private PricingCalculator $calc;
+    private PricingService $calc;
 
     public function setUp(): void
     {
-        $this->calc = new PricingCalculator();
+        $this->calc = new PricingService();
     }
     private const DATE_1J_START = '2025-06-02'; // lundi
     private const DATE_1J_END   = '2025-06-02'; // même jour → 1 jour

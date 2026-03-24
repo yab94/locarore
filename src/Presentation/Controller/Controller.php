@@ -12,7 +12,7 @@ use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMeta;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 
 abstract class Controller
 {
@@ -24,7 +24,7 @@ abstract class Controller
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly SettingsServiceInterface $settings,
         readonly UrlResolver $urlResolver,
-        readonly Html $html,
+        readonly HtmlHelper $html,
     ) {}
 
     protected function render(

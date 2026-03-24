@@ -13,7 +13,7 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 
 class RobotsController extends SiteController
 {
@@ -26,7 +26,7 @@ class RobotsController extends SiteController
         SettingsServiceInterface             $settings,
         CartSession                          $cart,
         UrlResolver                          $urlResolver,
-        Html                                 $html,
+        HtmlHelper                                 $html,
         CategoryRepositoryInterface          $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);

@@ -5,16 +5,15 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\CartSession;
+use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
+use Rore\Application\Catalog\GetCategoryWithItemsUseCase;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
@@ -22,10 +21,9 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 class CategoryController extends SiteController
 {
     public function __construct(
-        private readonly MySqlCategoryRepository $categoryRepo,
-        private readonly MySqlProductRepository  $productRepo,
-        private readonly PackRepositoryInterface $packRepo,
-        private readonly PageMetaBuilder         $metaBuilder,
+        private readonly GetCategoryWithItemsUseCase    $getCategoryWithItemsUseCase,
+        private readonly GetAllActiveCategoriesUseCase  $getAllActiveCategoriesUseCase,
+        private readonly PageMetaBuilder                $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
         Config                                   $config,
@@ -34,7 +32,7 @@ class CategoryController extends SiteController
         SettingsServiceInterface                            $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
-        Html                                     $html,
+        HtmlHelper                                     $html,
         CategoryRepositoryInterface                  $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
@@ -45,29 +43,20 @@ class CategoryController extends SiteController
      */
     public function show(string $path): void
     {
-        // Le dernier segment est le slug de la catégorie courante
-        $segments = explode('/', trim($path, '/'));
-        $slug     = end($segments);
+        $result = $this->getCategoryWithItemsUseCase->execute($path);
 
-        $category = $this->categoryRepo->findBySlug($slug);
-
-        if (!$category || !$category->isActive()) {
+        if ($result === null || !$result['category']->isActive()) {
             $this->response->setStatusCode(404);
             require 'errors/404.php';
             return;
         }
 
-        $products      = $this->productRepo->findActiveByCategorySlug($slug);
-        $packs         = $this->packRepo->findActiveByCategorySlug($slug);
+        $category     = $result['category'];
+        $products     = $result['products'];
+        $packs        = $result['packs'];
+        $productsById = $result['productsById'];
 
-        // Produits indexés par id pour pack-card.php
-        $allProducts = $this->productRepo->findAll();
-        $productsById = [];
-        foreach ($allProducts as $p) {
-            $productsById[$p->getId()] = $p;
-        }
-
-        $allCategories = $this->categoryRepo->findAllActive();
+        $allCategories = $this->getAllActiveCategoriesUseCase->execute();
         $children      = array_filter($allCategories, fn($c) => $c->getParentId() === $category->getId());
         $breadcrumb    = $this->buildBreadcrumb($category, $allCategories);
         $meta          = $this->metaBuilder->forCategory($category, $breadcrumb);

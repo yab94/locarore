@@ -25,6 +25,11 @@ final class StubReservationRepository implements ReservationRepositoryInterface
     public function findByCustomerEmail(string $email): array { return []; }
     public function getReservedPeriodsByProduct(int $productId): array { return []; }
 
+    public function countReservedQtyForProduct(int $productId, string $startDate, string $endDate): int 
+    { 
+        return 0; 
+    }
+
     public function findConfirmedOverlapping(
         \DateTimeImmutable $start,
         \DateTimeImmutable $end

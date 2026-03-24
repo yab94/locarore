@@ -12,7 +12,7 @@ use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 
 abstract class AdminController extends Controller
 {
@@ -24,7 +24,7 @@ abstract class AdminController extends Controller
         CsrfTokenManagerInterface $csrfTokenManager,
         SettingsServiceInterface  $settings,
         UrlResolver               $urlResolver,
-        Html                      $html,
+        HtmlHelper                      $html,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
         if (empty($this->session->get('admin_logged_in'))) {

@@ -5,22 +5,21 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\CartSession;
+use Rore\Application\Catalog\GetAllCatalogItemsUseCase;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 
 class SitemapController extends SiteController
 {
     public function __construct(
+        private readonly GetAllCatalogItemsUseCase $getAllCatalogItemsUseCase,
         RequestInterface                     $request,
         ResponseInterface                    $response,
         Config                               $config,
@@ -29,11 +28,8 @@ class SitemapController extends SiteController
         SettingsServiceInterface             $settings,
         CartSession                          $cart,
         UrlResolver                          $urlResolver,
-        Html                                 $html,
+        HtmlHelper                                 $html,
         CategoryRepositoryInterface          $categoryRepository,
-        private readonly ProductRepositoryInterface  $productRepo,
-        private readonly PackRepositoryInterface     $packRepo,
-        private readonly TagRepositoryInterface      $tagRepo,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
     }
@@ -42,10 +38,11 @@ class SitemapController extends SiteController
     {
         $baseUrl = $this->config->getStringParam('seo.site_url');
         
-        $categories = $this->categoryRepository->findAllActive();
-        $products   = $this->productRepo->findAllActive();
-        $packs      = $this->packRepo->findAllActive();
-        $tags       = $this->tagRepo->findAll();
+        $data       = $this->getAllCatalogItemsUseCase->execute();
+        $categories = $data['categories'];
+        $products   = $data['products'];
+        $packs      = $data['packs'];
+        $tags       = $data['tags'];
 
         $this->response->header('Content-Type', 'application/xml; charset=UTF-8');
         

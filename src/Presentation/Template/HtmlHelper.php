@@ -8,7 +8,7 @@ namespace Rore\Presentation\Template;
  * Encodeur HTML injectable dans les templates.
  * Utilisation : $html($value)  ou  $html->encode($value)
  */
-final class Html
+final class HtmlHelper
 {
     /**
      * Échappe une valeur pour un affichage sûr en HTML.

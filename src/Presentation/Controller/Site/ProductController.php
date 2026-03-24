@@ -5,27 +5,27 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\CartSession;
+use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
+use Rore\Application\Catalog\GetProductWithDetailsUseCase;
+use Rore\Application\Reservation\GetReservedQuantityForProductUseCase;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class ProductController extends SiteController
 {
     public function __construct(
-        private readonly MySqlProductRepository     $productRepo,
-        private readonly MySqlCategoryRepository    $categoryRepo,
-        private readonly MySqlReservationRepository $reservationRepo,
-        private readonly PageMetaBuilder            $metaBuilder,
+        private readonly GetProductWithDetailsUseCase           $getProductWithDetailsUseCase,
+        private readonly GetAllActiveCategoriesUseCase          $getAllActiveCategoriesUseCase,
+        private readonly GetReservedQuantityForProductUseCase   $getReservedQuantityForProductUseCase,
+        private readonly PageMetaBuilder                        $metaBuilder,
         RequestInterface                            $request,
         ResponseInterface                           $response,
         Config                                      $config,
@@ -34,7 +34,7 @@ class ProductController extends SiteController
         SettingsServiceInterface                               $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
-        Html                                     $html,
+        HtmlHelper                                     $html,
         CategoryRepositoryInterface                  $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
@@ -46,21 +46,20 @@ class ProductController extends SiteController
         $slug        = end($segments);
         $catSegments = array_slice($segments, 0, -1);
 
-        $product = $this->productRepo->findBySlug($slug);
+        $result = $this->getProductWithDetailsUseCase->execute($slug);
 
-        if (!$product || !$product->isActive()) {
+        if ($result === null || !$result['product']->isActive()) {
             $this->response->setStatusCode(404);
             require 'errors/404.php';
             return;
         }
 
-        $allCategories = $this->categoryRepo->findAllActive();
+        $product       = $result['product'];
+        $allCategories = $result['allCategories'];
 
         // Catégorie pour le fil d'ariane
         $urlCatSlug = !empty($catSegments) ? end($catSegments) : null;
-        $category   = $urlCatSlug
-            ? ($this->categoryRepo->findBySlug($urlCatSlug) ?? $this->categoryRepo->findById($product->getCategoryId()))
-            : $this->categoryRepo->findById($product->getCategoryId());
+        $category   = $this->findCategoryBySlugOrId($urlCatSlug, $product->getCategoryId(), $allCategories);
 
         // Fil d'ariane
         $breadcrumb = $category
@@ -74,12 +73,12 @@ class ProductController extends SiteController
 
         $availableQty = $product->getTotalStock();
         if ($startDate && $endDate) {
-            $reserved     = $this->reservationRepo->countReservedQtyForProduct($product->getId(), $startDate, $endDate);
+            $reserved     = $this->getReservedQuantityForProductUseCase->execute($product->getId(), $startDate, $endDate);
             $availableQty = max(0, $product->getTotalStock() - $reserved);
         }
 
         $catChain     = array_slice($breadcrumb, 0, -1);
-        $mainCategory = $this->categoryRepo->findById($product->getCategoryId());
+        $mainCategory = $this->findCategoryById($product->getCategoryId(), $allCategories);
         $canonicalUrl = $this->urlResolver->productUrl($product, $allCategories, $mainCategory);
         $meta         = $this->metaBuilder->forProduct($product, $category, $catChain, $canonicalUrl);
 
@@ -92,6 +91,28 @@ class ProductController extends SiteController
             'cart'          => $cart,
             'allCategories' => $allCategories,
         ]);
+    }
+
+    private function findCategoryById(int $categoryId, array $allCategories): ?\Rore\Domain\Catalog\Entity\Category
+    {
+        foreach ($allCategories as $cat) {
+            if ($cat->getId() === $categoryId) {
+                return $cat;
+            }
+        }
+        return null;
+    }
+
+    private function findCategoryBySlugOrId(?string $slug, int $fallbackId, array $allCategories): ?\Rore\Domain\Catalog\Entity\Category
+    {
+        if ($slug) {
+            foreach ($allCategories as $cat) {
+                if ($cat->getSlug() === $slug) {
+                    return $cat;
+                }
+            }
+        }
+        return $this->findCategoryById($fallbackId, $allCategories);
     }
 
     /**

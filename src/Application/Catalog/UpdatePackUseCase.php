@@ -7,13 +7,13 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
+use Rore\Domain\Catalog\Service\SlugUniquenessService;
 
 class UpdatePackUseCase
 {
     public function __construct(
         private PackRepositoryInterface $packRepository,
-        private SlugUniquenessChecker   $slugChecker,
+        private SlugUniquenessService   $slugChecker,
     ) {}
 
     /**

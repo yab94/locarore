@@ -28,6 +28,11 @@ interface ReservationRepositoryInterface
     ): array;
 
     /**
+     * Compte la quantité totale réservée pour un produit sur une période.
+     */
+    public function countReservedQtyForProduct(int $productId, string $startDate, string $endDate): int;
+
+    /**
      * Insère une nouvelle réservation et retourne son id.
      */
     public function save(Reservation $reservation): int;

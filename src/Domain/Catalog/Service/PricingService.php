@@ -16,7 +16,7 @@ use Rore\Domain\Catalog\Entity\Product;
  * - Week-end (sam+dim présents ET ≤ 4 jours) → supplément getPriceExtraWeekend() €/j au-delà de 2j.
  * - Sinon → supplément getPriceExtraWeekday() €/j au-delà de 2j.
  */
-final class PricingCalculator
+final class PricingService
 {
     public function calculate(
         PricableInterface             $item,

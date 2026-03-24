@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
+use Rore\Application\Catalog\GetAllCategoriesUseCase;
+use Rore\Application\Catalog\GetAllProductsUseCase;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\Html;
+use Rore\Presentation\Template\HtmlHelper;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 
 class DashboardController extends AdminController
 {
     public function __construct(
-        private readonly MySqlCategoryRepository $categoryRepo,
-        private readonly MySqlProductRepository  $productRepo,
+        private readonly GetAllCategoriesUseCase $getAllCategoriesUseCase,
+        private readonly GetAllProductsUseCase   $getAllProductsUseCase,
         private readonly GetReservationsUseCase  $getReservationsUseCase,
         RequestInterface                         $request,
         ResponseInterface                        $response,
@@ -29,15 +29,15 @@ class DashboardController extends AdminController
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsServiceInterface                            $settings,
         UrlResolver $urlResolver,
-        Html        $html,
+        HtmlHelper        $html,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
     }
 
     public function index(): void
     {
-        $categories = $this->categoryRepo->findAll();
-        $products   = $this->productRepo->findAll();
+        $categories = $this->getAllCategoriesUseCase->execute();
+        $products   = $this->getAllProductsUseCase->execute();
         $pending    = $this->getReservationsUseCase->pending();
 
         $this->render('admin/dashboard', [

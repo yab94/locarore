@@ -6,7 +6,7 @@ namespace Rore\Domain\Catalog\Entity;
 
 /**
  * Contrat commun aux entités tarifables (Product, Pack).
- * Permet au PricingCalculator de calculer un prix sans connaître
+ * Permet au PricingService de calculer un prix sans connaître
  * le type concret de l'entité.
  */
 interface PricableInterface
