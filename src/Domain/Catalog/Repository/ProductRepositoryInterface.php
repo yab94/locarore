@@ -18,6 +18,9 @@ interface ProductRepositoryInterface
     /** @return Product[] */
     public function findActiveByCategorySlug(string $slug): array;
 
+    /** @return Product[] */
+    public function findActiveByTagSlug(string $slug): array;
+
     public function findById(int $id): ?Product;
 
     public function findBySlug(string $slug): ?Product;
@@ -29,6 +32,8 @@ interface ProductRepositoryInterface
     public function savePhoto(ProductPhoto $photo): void;
 
     public function deletePhoto(int $photoId): void;
+
+    public function updatePhotoDescription(int $photoId, string $description): void;
 
     public function findPhotoById(int $photoId): ?ProductPhoto;
 

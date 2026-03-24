@@ -18,7 +18,7 @@ class UploadProductPhotoUseCase
     /**
      * @param array $file  Entrée $_FILES
      */
-    public function execute(int $productId, array $file): void
+    public function execute(int $productId, array $file, string $description = ''): void
     {
         $product = $this->productRepository->findById($productId);
         if ($product === null) {
@@ -31,11 +31,12 @@ class UploadProductPhotoUseCase
         $filename = $this->fileUploader->upload($file);
 
         $photo = new ProductPhoto(
-            id:         null,
-            productId:  $productId,
-            filename:   $filename,
-            sortOrder:  $sortOrder,
-            createdAt:  new \DateTimeImmutable(),
+            id:          null,
+            productId:   $productId,
+            filename:    $filename,
+            sortOrder:   $sortOrder,
+            createdAt:   new \DateTimeImmutable(),
+            description: $description !== '' ? $description : null,
         );
 
         $this->productRepository->savePhoto($photo);

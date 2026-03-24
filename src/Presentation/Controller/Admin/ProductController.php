@@ -20,6 +20,7 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Infrastructure\Persistence\MySqlTagRepository;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 
@@ -29,6 +30,7 @@ class ProductController extends AdminController
         private readonly MySqlProductRepository     $productRepo,
         private readonly MySqlCategoryRepository    $categoryRepo,
         private readonly MySqlReservationRepository $reservationRepo,
+        private readonly MySqlTagRepository         $tagRepo,
         private readonly CreateProductUseCase       $createProductUseCase,
         private readonly UpdateProductUseCase       $updateProductUseCase,
         private readonly ToggleProductUseCase       $toggleProductUseCase,
@@ -81,6 +83,7 @@ class ProductController extends AdminController
                 priceExtraWeekday: $this->request->body->getFloatParam('price_extra_weekday', 15.0),
                 extraCategoryIds: array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
                 customSlug:       $this->request->body->getStringParam('slug') ?: null,
+                tagNames:         array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
             );
 
             $this->flash('success', 'Produit créé avec succès.');
@@ -104,6 +107,7 @@ class ProductController extends AdminController
             'product'        => $product,
             'categories'     => $this->categoryRepo->findAll(),
             'calendarEvents' => $calendarEvents,
+            'productTags'    => $this->tagRepo->findByProductId($product->getId()),
         ]);
     }
 
@@ -124,6 +128,7 @@ class ProductController extends AdminController
                 priceExtraWeekday: $this->request->body->getFloatParam('price_extra_weekday', 15.0),
                 extraCategoryIds: array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
                 customSlug:       $this->request->body->getStringParam('slug') ?: null,
+                tagNames:         array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
             );
             $this->flash('success', 'Produit mis à jour.');
         } catch (\Throwable $e) {
@@ -151,7 +156,8 @@ class ProductController extends AdminController
             if ($file === null) {
                 throw new \RuntimeException('Aucun fichier envoyé.');
             }
-            $this->uploadProductPhotoUseCase->execute((int) $id, $file);
+            $description = $this->request->body->getStringParam('photo_description') ?? '';
+            $this->uploadProductPhotoUseCase->execute((int) $id, $file, $description);
             $this->flash('success', 'Photo ajoutée.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
@@ -170,6 +176,24 @@ class ProductController extends AdminController
             if ($productId) {
                 $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));
             }
+        } catch (\Throwable $e) {
+            $this->flash('error', $e->getMessage());
+        }
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
+    }
+
+    public function updatePhotoDescription(string $photoId): void
+    {
+        $this->requirePost();
+        try {
+            $photo = $this->productRepo->findPhotoById((int) $photoId);
+            if (!$photo) {
+                throw new \RuntimeException('Photo introuvable.');
+            }
+            $description = $this->request->body->getStringParam('description') ?? '';
+            $this->productRepo->updatePhotoDescription((int) $photoId, $description);
+            $this->flash('success', 'Description mise à jour.');
+            $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $photo->getProductId()]));
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }

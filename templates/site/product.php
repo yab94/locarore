@@ -22,9 +22,11 @@
         <?php if (!empty($photos)): ?>
             <div id="carousel" class="relative rounded-2xl overflow-hidden bg-gray-100">
                 <?php foreach ($photos as $i => $photo): ?>
+                    <?php $photoAlt = $html($photo->getDescription() ?: $product->getName()); ?>
                     <img data-slide="<?= $i ?>"
                          src="<?= $html($photo->getPublicPath()) ?>"
-                         alt="<?= $html($product->getName()) ?>"
+                         alt="<?= $photoAlt ?>"
+                         title="<?= $photoAlt ?>"
                          class="w-full h-96 object-cover <?= $i > 0 ? 'hidden' : '' ?>">
                 <?php endforeach; ?>
                 <?php if (count($photos) > 1): ?>
@@ -54,8 +56,20 @@
         <?php endif; ?>
 
         <?php if ($product->getDescription()): ?>
-            <div class="text-gray-600 mb-6 leading-relaxed prose prose-sm max-w-none">
+            <div class="text-gray-600 mb-4 leading-relaxed prose prose-sm max-w-none">
                 <?= $product->getDescription() ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Tags -->
+        <?php if (!empty($product->getTags())): ?>
+            <div class="flex flex-wrap gap-2 mb-6">
+                <?php foreach ($product->getTags() as $tag): ?>
+                    <a href="<?= $config->getStringParam('seo.tags_base_url'); ?>/<?= $html($tag->getSlug()) ?>"
+                       class="inline-flex items-center gap-1 bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-xs font-medium hover:bg-brand-50 hover:text-brand-700 transition">
+                        🏷️ <?= $html($tag->getName()) ?>
+                    </a>
+                <?php endforeach; ?>
             </div>
         <?php endif; ?>
 

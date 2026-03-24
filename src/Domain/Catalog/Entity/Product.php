@@ -12,6 +12,9 @@ class Product
     /** @var int[] IDs de toutes les catégories (primaire incluse) */
     private array $categoryIds = [];
 
+    /** @var Tag[] */
+    private array $tags = [];
+
     public function __construct(
         private ?int                $id,
         private int                 $categoryId,   // catégorie principale (URL, breadcrumb)
@@ -81,6 +84,8 @@ class Product
     /** @return ProductPhoto[] */
     public function getPhotos(): array                 { return $this->photos; }
     public function getMainPhoto(): ?ProductPhoto      { return $this->photos[0] ?? null; }
+    /** @return Tag[] */
+    public function getTags(): array                   { return $this->tags; }
 
     public function setCategoryId(int $id): void       { $this->categoryId = $id; }
     public function setName(string $name): void        { $this->name = $name; }
@@ -100,4 +105,6 @@ class Product
     public function setPhotos(array $photos): void     { $this->photos = $photos; }
     /** @param int[] $ids */
     public function setCategoryIds(array $ids): void   { $this->categoryIds = $ids; }
+    /** @param Tag[] $tags */
+    public function setTags(array $tags): void         { $this->tags = $tags; }
 }

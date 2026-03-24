@@ -5,8 +5,10 @@ $_productUrl = isset($productContextPath)
 ?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
     <?php if ($photo = $product->getMainPhoto()): ?>
+        <?php $photoAlt = $html($photo->getDescription() ?: $product->getName()); ?>
         <img src="<?= $html($photo->getPublicPath()) ?>"
-             alt="<?= $html($product->getName()) ?>"
+             alt="<?= $photoAlt ?>"
+             title="<?= $photoAlt ?>"
              class="w-full h-48 object-cover">
     <?php else: ?>
         <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">

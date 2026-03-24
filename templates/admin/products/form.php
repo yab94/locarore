@@ -131,6 +131,19 @@
                 </div>
             </div>
 
+            <!-- Tags -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Tags
+                    <span class="text-gray-400 font-normal text-xs ml-1">— séparés par virgules</span>
+                </label>
+                <input type="text" name="tags"
+                       value="<?= $html(implode(', ', array_map(fn($t) => $t->getName(), $productTags ?? []))) ?>"
+                       placeholder="ex: Mariage, Art de la table, Décoration"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+                <p class="text-xs text-gray-400 mt-1">Les tags sont créés automatiquement s'ils n'existent pas encore.</p>
+            </div>
+
             <div class="flex gap-3 pt-2">
                 <button type="submit"
                         class="bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-brand-700 transition text-sm">
@@ -154,6 +167,9 @@
                 <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                 <input type="file" name="photo" accept="<?= $config->getStringParam('upload.allowed_types') ?>" required
                        class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
+                <input type="text" name="photo_description"
+                       placeholder="Description de la photo (alt/title SEO)"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
                 <button type="submit"
                         class="w-full bg-gray-800 text-white text-sm font-medium py-2 rounded-lg hover:bg-gray-900 transition">
                     Uploader
@@ -165,21 +181,40 @@
         <?php if (!empty($photos)): ?>
             <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 class="font-semibold text-gray-700 mb-4">Photos (<?= count($photos) ?>)</h3>
-                <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-4">
                     <?php foreach ($photos as $photo): ?>
-                        <div class="relative group">
-                            <img src="<?= $html($photo->getPublicPath()) ?>" alt=""
-                                 class="w-full h-24 object-cover rounded-lg">
-                            <form method="post"
-                                  action="<?= $url('Admin\Product.deletePhoto', ['photoId' => $photo->getId()]) ?>"
-                                  class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/50 rounded-lg">
-                                <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
-                                <button type="submit"
-                                        class="bg-red-600 text-white text-xs px-2 py-1 rounded"
-                                        data-confirm="Supprimer cette photo ?">
-                                    Supprimer
-                                </button>
-                            </form>
+                        <div class="border border-gray-100 rounded-xl overflow-hidden">
+                            <div class="flex gap-3 p-3 items-start">
+                                <img src="<?= $html($photo->getPublicPath()) ?>"
+                                     alt="<?= $html($photo->getDescription() ?? '') ?>"
+                                     class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+                                <div class="flex-1 min-w-0 space-y-2">
+                                    <!-- Formulaire description -->
+                                    <form method="post"
+                                          action="<?= $url('Admin\Product.updatePhotoDescription', ['photoId' => $photo->getId()]) ?>"
+                                          class="flex gap-2">
+                                        <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
+                                        <input type="text" name="description"
+                                               value="<?= $html($photo->getDescription() ?? '') ?>"
+                                               placeholder="Description (alt/title SEO)..."
+                                               class="flex-1 border border-gray-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-brand-600">
+                                        <button type="submit"
+                                                class="bg-brand-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-brand-700 transition flex-shrink-0">
+                                            ✓
+                                        </button>
+                                    </form>
+                                    <!-- Formulaire suppression -->
+                                    <form method="post"
+                                          action="<?= $url('Admin\Product.deletePhoto', ['photoId' => $photo->getId()]) ?>">
+                                        <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
+                                        <button type="submit"
+                                                class="text-red-600 text-xs hover:underline"
+                                                data-confirm="Supprimer cette photo ?">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>

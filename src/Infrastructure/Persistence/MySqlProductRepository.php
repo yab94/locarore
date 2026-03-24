@@ -7,6 +7,7 @@ namespace Rore\Infrastructure\Persistence;
 use Rore\Infrastructure\Database\Connection;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
+use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 
 class MySqlProductRepository implements ProductRepositoryInterface
@@ -23,6 +24,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
         $products = array_map([$this, 'hydrate'], $stmt->fetchAll());
         $this->loadPhotos($products);
         $this->loadCategoryIds($products);
+        $this->loadTags($products);
         return $products;
     }
 
@@ -33,6 +35,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
         $products = array_map([$this, 'hydrate'], $stmt->fetchAll());
         $this->loadPhotos($products);
         $this->loadCategoryIds($products);
+        $this->loadTags($products);
         return $products;
     }
 
@@ -61,6 +64,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
         $products = array_map([$this, 'hydrate'], $stmt->fetchAll());
         $this->loadPhotos($products);
         $this->loadCategoryIds($products);
+        $this->loadTags($products);
         return $products;
     }
 
@@ -74,6 +78,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
         $product = $this->hydrate($row);
         $product->setPhotos($this->findPhotosByProductId($id));
         $this->loadCategoryIds([$product]);
+        $this->loadTags([$product]);
         return $product;
     }
 
@@ -87,6 +92,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
         $product = $this->hydrate($row);
         $product->setPhotos($this->findPhotosByProductId($product->getId()));
         $this->loadCategoryIds([$product]);
+        $this->loadTags([$product]);
         return $product;
     }
 
@@ -162,12 +168,13 @@ class MySqlProductRepository implements ProductRepositoryInterface
     public function savePhoto(ProductPhoto $photo): void
     {
         $stmt = $this->connection->prepare(
-            'INSERT INTO product_photos (product_id, filename, sort_order, created_at) VALUES (?, ?, ?, ?)'
+            'INSERT INTO product_photos (product_id, filename, sort_order, description, created_at) VALUES (?, ?, ?, ?, ?)'
         );
         $stmt->execute([
             $photo->getProductId(),
             $photo->getFilename(),
             $photo->getSortOrder(),
+            $photo->getDescription(),
             $photo->getCreatedAt()->format('Y-m-d H:i:s'),
         ]);
     }
@@ -175,6 +182,14 @@ class MySqlProductRepository implements ProductRepositoryInterface
     public function deletePhoto(int $photoId): void
     {
         $this->connection->prepare('DELETE FROM product_photos WHERE id = ?')->execute([$photoId]);
+    }
+
+    public function updatePhotoDescription(int $photoId, string $description): void
+    {
+        $stmt = $this->connection->prepare(
+            'UPDATE product_photos SET description = ? WHERE id = ?'
+        );
+        $stmt->execute([$description !== '' ? $description : null, $photoId]);
     }
 
     public function findPhotoById(int $photoId): ?ProductPhoto
@@ -235,6 +250,50 @@ class MySqlProductRepository implements ProductRepositoryInterface
         }
     }
 
+    public function findActiveByTagSlug(string $slug): array
+    {
+        $stmt = $this->connection->prepare(
+            'SELECT DISTINCT p.*
+               FROM products p
+               JOIN product_tags pt ON pt.product_id = p.id
+               JOIN tags t ON t.id = pt.tag_id
+              WHERE p.is_active = 1
+                AND t.slug = ?
+              ORDER BY p.name'
+        );
+        $stmt->execute([$slug]);
+        $products = array_map([$this, 'hydrate'], $stmt->fetchAll());
+        $this->loadPhotos($products);
+        $this->loadCategoryIds($products);
+        $this->loadTags($products);
+        return $products;
+    }
+
+    /** @param Product[] $products */
+    private function loadTags(array $products): void
+    {
+        if (empty($products)) return;
+        $ids  = implode(',', array_map(fn($p) => $p->getId(), $products));
+        $stmt = $this->connection->query(
+            "SELECT pt.product_id, t.id, t.name, t.slug
+               FROM product_tags pt
+               JOIN tags t ON t.id = pt.tag_id
+              WHERE pt.product_id IN ($ids)
+              ORDER BY t.name"
+        );
+        $tagsByProduct = [];
+        foreach ($stmt->fetchAll() as $row) {
+            $tagsByProduct[(int) $row['product_id']][] = new Tag(
+                id:   (int) $row['id'],
+                name: $row['name'],
+                slug: $row['slug'],
+            );
+        }
+        foreach ($products as $product) {
+            $product->setTags($tagsByProduct[$product->getId()] ?? []);
+        }
+    }
+
     private function hydrate(array $row): Product
     {
         return new Product(
@@ -258,11 +317,12 @@ class MySqlProductRepository implements ProductRepositoryInterface
     private function hydratePhoto(array $row): ProductPhoto
     {
         return new ProductPhoto(
-            id:         (int) $row['id'],
-            productId:  (int) $row['product_id'],
-            filename:   $row['filename'],
-            sortOrder:  (int) $row['sort_order'],
-            createdAt:  new \DateTimeImmutable($row['created_at']),
+            id:          (int) $row['id'],
+            productId:   (int) $row['product_id'],
+            filename:    $row['filename'],
+            sortOrder:   (int) $row['sort_order'],
+            createdAt:   new \DateTimeImmutable($row['created_at']),
+            description: $row['description'] ?? null,
         );
     }
 }

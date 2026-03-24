@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 
@@ -13,6 +14,7 @@ class UpdateProductUseCase
     public function __construct(
         private ProductRepositoryInterface $productRepository,
         private SlugUniquenessChecker      $slugChecker,
+        private TagRepositoryInterface     $tagRepository,
     ) {}
 
     public function execute(
@@ -28,6 +30,7 @@ class UpdateProductUseCase
         float   $priceExtraWeekday = 15.0,
         array   $extraCategoryIds = [],
         ?string $customSlug       = null,
+        array   $tagNames         = [],
     ): void {
         $product = $this->productRepository->findById($id);
         if ($product === null) {
@@ -57,5 +60,8 @@ class UpdateProductUseCase
         $product->setCategoryIds($allCats);
 
         $this->productRepository->save($product);
+
+        // Synchroniser les tags
+        $this->tagRepository->syncForProduct($id, $tagNames);
     }
 }

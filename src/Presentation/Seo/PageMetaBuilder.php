@@ -7,6 +7,7 @@ namespace Rore\Presentation\Seo;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Domain\Catalog\Entity\Tag;
 
 /**
  * Construit les métadonnées SEO (PageMeta) pour chaque type de page du site.
@@ -155,6 +156,16 @@ final class PageMetaBuilder
         return new PageMeta(
             title:  $this->meta->title('Demande envoyée', $this->settings->get('site.name')),
             robots: 'noindex, follow',
+        );
+    }
+
+    public function forTag(Tag $tag): PageMeta
+    {
+        $siteName = $this->settings->get('site.name');
+        return new PageMeta(
+            title:       $this->meta->title($tag->getName(), $siteName),
+            description: 'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
+            keywords:    implode(', ', ['location', $tag->getName(), $siteName]),
         );
     }
 }

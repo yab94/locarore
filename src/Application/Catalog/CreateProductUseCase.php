@@ -6,6 +6,7 @@ namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Domain\Catalog\Service\SlugUniquenessChecker;
 
@@ -14,10 +15,12 @@ class CreateProductUseCase
     public function __construct(
         private ProductRepositoryInterface $productRepository,
         private SlugUniquenessChecker      $slugChecker,
+        private TagRepositoryInterface     $tagRepository,
     ) {}
 
     /**
      * @param int[] $extraCategoryIds IDs des catégories supplémentaires
+     * @param string[] $tagNames Noms des tags (créés à la volée si inexistants)
      */
     public function execute(
         int     $categoryId,
@@ -31,6 +34,7 @@ class CreateProductUseCase
         float   $priceExtraWeekday = 15.0,
         array   $extraCategoryIds = [],
         ?string $customSlug       = null,
+        array   $tagNames         = [],
     ): int {
         $now  = new \DateTimeImmutable();
         $slug = $customSlug ? Slug::from($customSlug)->getValue()
@@ -61,6 +65,11 @@ class CreateProductUseCase
         $allCats = array_unique(array_merge([$categoryId], array_map('intval', $extraCategoryIds)));
         $product->setCategoryIds($allCats);
 
-        return $this->productRepository->save($product);
+        $id = $this->productRepository->save($product);
+
+        // Synchroniser les tags (créés à la volée si nécessaire)
+        $this->tagRepository->syncForProduct($id, $tagNames);
+
+        return $id;
     }
 }

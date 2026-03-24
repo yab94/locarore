@@ -20,40 +20,46 @@ use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
-class HomeController extends Controller
+class TagController extends Controller
 {
     public function __construct(
-        private readonly MySqlCategoryRepository $categoryRepo,
-        private readonly MySqlProductRepository  $productRepo,
         private readonly MySqlTagRepository      $tagRepo,
+        private readonly MySqlProductRepository  $productRepo,
+        private readonly MySqlCategoryRepository $categoryRepo,
         private readonly PageMetaBuilder         $metaBuilder,
         RequestInterface                         $request,
         ResponseInterface                        $response,
         Config                                   $config,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                            $settings,
+        SettingsServiceInterface                 $settings,
         CartSession                              $cart,
-        UrlResolver $urlResolver,
+        UrlResolver                              $urlResolver,
         Html                                     $html,
-        CategoryRepositoryInterface                  $categoryRepository,
+        CategoryRepositoryInterface              $categoryRepository,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
     }
 
-    public function index(): void
+    public function show(string $slug): void
     {
-        $categories = $this->categoryRepo->findAllActive();
-        $featured   = array_slice($this->productRepo->findAllActive(), 0, 6);
-        $tags       = $this->tagRepo->findAll();
-        $meta       = $this->metaBuilder->forHome($categories);
+        $tag = $this->tagRepo->findBySlug($slug);
 
-        $this->render('site/home', [
+        if (!$tag) {
+            $this->response->setStatusCode(404);
+            require BASE_PATH . '/templates/errors/404.php';
+            return;
+        }
+
+        $products      = $this->productRepo->findActiveByTagSlug($slug);
+        $allCategories = $this->categoryRepo->findAllActive();
+        $meta          = $this->metaBuilder->forTag($tag);
+
+        $this->render('site/tag', [
             'meta'          => $meta,
-            'categories'    => $categories,
-            'featured'      => $featured,
-            'tags'          => $tags,
-            'allCategories' => $categories,
+            'tag'           => $tag,
+            'products'      => $products,
+            'allCategories' => $allCategories,
         ]);
     }
 }

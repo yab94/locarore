@@ -71,11 +71,12 @@ CREATE TABLE IF NOT EXISTS `product_categories` (
 -- product_photos
 -- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `product_photos` (
-    `id`         INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `product_id` INT UNSIGNED NOT NULL,
-    `filename`   VARCHAR(255) NOT NULL,
-    `sort_order` INT          NOT NULL DEFAULT 0,
-    `created_at` DATETIME     NOT NULL,
+    `id`          INT UNSIGNED  NOT NULL AUTO_INCREMENT,
+    `product_id`  INT UNSIGNED  NOT NULL,
+    `filename`    VARCHAR(255)  NOT NULL,
+    `sort_order`  INT           NOT NULL DEFAULT 0,
+    `description` VARCHAR(255)  NULL DEFAULT NULL,
+    `created_at`  DATETIME      NOT NULL,
     PRIMARY KEY (`id`),
     KEY `idx_photos_product` (`product_id`),
     CONSTRAINT `fk_photos_product`
@@ -202,4 +203,3 @@ INSERT IGNORE INTO `settings` (`key`, `value`, `label`, `type`, `group`) VALUES
 ('reservation.status.filter.cancelled', 'Annulée',      'Réservations — filtre “cancelled” (label)',   'text', 'reservation'),
 
 ('mentions.content',       '<h2>Mentions légales</h2><p><strong>Raison sociale :</strong> Locarore SAS<br><strong>SIRET :</strong> 000 000 000 00000<br><strong>Siège social :</strong> 1 rue de la Fête, 75001 Paris<br><strong>Directeur de la publication :</strong> Prénom Nom<br><strong>Contact :</strong> contact@locarore.fr</p><h2>Hébergement</h2><p>Site hébergé par OVHcloud — 2 rue Kellermann, 59100 Roubaix.</p><h2>Données personnelles</h2><p>Conformément au RGPD, vous disposez d\'un droit d\'accès, de rectification et de suppression de vos données. Pour exercer ce droit, contactez-nous à contact@locarore.fr.</p><h2>Cookies</h2><p>Ce site n\'utilise pas de cookies de traçage ou publicitaires.</p>', 'Mentions légales — contenu (WYSIWYG)', 'richtext', 'legal');
-
