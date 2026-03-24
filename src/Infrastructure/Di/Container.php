@@ -27,6 +27,7 @@ final class Container
 
     public function __construct(Config $config) {
         $this->instance(Config::class, $config);
+
         foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
             $this->bind($abstract, fn($c) => $c->get($concrete));
         }
