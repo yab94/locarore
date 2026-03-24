@@ -48,6 +48,9 @@ final class Config extends AbstractTypedParams
             $data = self::deepMerge($data, self::parseIni($envIni));
         }
 
+        // 4. Résoudre les références de config internes (${section.key})
+        $data = self::resolveConfigReferences($data);
+
         return new self($data);
     }
 
@@ -77,6 +80,52 @@ final class Config extends AbstractTypedParams
         }
 
         return $base;
+    }
+
+    /**
+     * Résout les références de config internes @{section.key} dans toutes les valeurs.
+     */
+    private static function resolveConfigReferences(array $data): array
+    {
+        $maxIterations = 10; // Protection contre les références circulaires
+        
+        for ($i = 0; $i < $maxIterations; $i++) {
+            $hasChanges = false;
+            
+            array_walk_recursive($data, function (&$value) use ($data, &$hasChanges) {
+                if (!is_string($value)) {
+                    return;
+                }
+                
+                $original = $value;
+                $value = preg_replace_callback(
+                    '/@\{([^}]+)\}/',
+                    function($m) use ($data) {
+                        $path = $m[1];
+                        $parts = explode('.', $path);
+                        
+                        // Tenter de résoudre section.key
+                        if (count($parts) === 2 && isset($data[$parts[0]][$parts[1]])) {
+                            return (string) $data[$parts[0]][$parts[1]];
+                        }
+                        
+                        // Sinon laisser tel quel
+                        return $m[0];
+                    },
+                    $value
+                );
+                
+                if ($value !== $original) {
+                    $hasChanges = true;
+                }
+            });
+            
+            if (!$hasChanges) {
+                break;
+            }
+        }
+        
+        return $data;
     }
 
     public function isProduction(): bool
