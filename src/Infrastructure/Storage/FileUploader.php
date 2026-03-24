@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Storage;
 
+use Rore\Infrastructure\Config\Config;
+
 class FileUploader
 {
     private string $uploadDir;
     private int    $maxSize;
     private array  $allowedTypes;
 
-    public function __construct(array $config)
+    public function __construct(Config $config)
     {
-        $this->uploadDir    = BASE_PATH . '/public' . $config['upload_path'];
-        $this->maxSize      = (int) $config['max_size'];
-        $this->allowedTypes = array_map('trim', explode(',', $config['allowed_types']));
+        $this->uploadDir    = BASE_PATH . '/public' . $config->getStringParam('upload.upload_path');
+        $this->maxSize      = (int) $config->getStringParam('upload.max_size');
+        $this->allowedTypes = array_map('trim', explode(',', $config->getStringParam('upload.allowed_types')));
 
-        if (!is_dir($this->uploadDir)) {
-            mkdir($this->uploadDir, 0755, true);
-        }
+         // Crée le dossier d'upload s'il n'existe pas
+         if (!is_dir($this->uploadDir)) {
+             mkdir($this->uploadDir, 0755, true);
+         }
     }
 
     /**

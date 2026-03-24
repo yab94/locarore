@@ -6,6 +6,7 @@ namespace Rore\Infrastructure\Di;
 
 use ReflectionClass;
 use ReflectionNamedType;
+use Rore\Infrastructure\Config\Config;
 use RuntimeException;
 
 /**
@@ -23,6 +24,13 @@ final class Container
 
     /** @var array<string, callable> Factories déclarées explicitement */
     private array $bindings = [];
+
+    public function __construct(Config $config) {
+        $this->instance(Config::class, $config);
+        foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
+            $this->bind($abstract, fn($c) => $c->get($concrete));
+        }
+    }
 
     /**
      * Déclare une factory pour un type donné.
