@@ -75,11 +75,6 @@ class ProductController extends AdminController
                 customSlug:       $this->request->body->getStringParam('slug') ?: null,
             );
 
-            $photos = $this->request->file('photos');
-            if ($photos !== null && isset($photos['name']) && is_array($photos['name'])) {
-                $this->handlePhotoUploads($productId, $photos);
-            }
-
             $this->flash('success', 'Produit créé avec succès.');
             $this->redirect('/admin/produits/' . $productId . '/modifier');
         } catch (\Throwable $e) {
@@ -171,23 +166,5 @@ class ProductController extends AdminController
             $this->flash('error', $e->getMessage());
         }
         $this->redirect('/admin/produits');
-    }
-
-    private function handlePhotoUploads(int $productId, array $filesArray): void
-    {
-        $useCase = $this->uploadProductPhotoUseCase;
-
-        $count = count($filesArray['name']);
-        for ($i = 0; $i < $count; $i++) {
-            if ($filesArray['error'][$i] !== UPLOAD_ERR_OK) continue;
-            $file = [
-                'name'     => $filesArray['name'][$i],
-                'type'     => $filesArray['type'][$i],
-                'tmp_name' => $filesArray['tmp_name'][$i],
-                'error'    => $filesArray['error'][$i],
-                'size'     => $filesArray['size'][$i],
-            ];
-            $useCase->execute($productId, $file);
-        }
     }
 }

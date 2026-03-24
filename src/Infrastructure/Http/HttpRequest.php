@@ -11,7 +11,8 @@ final class HttpRequest implements RequestInterface
 {
     public ArrayTypedParams $queryString { get => new ArrayTypedParams($_GET); }
     public ArrayTypedParams $body { get => new ArrayTypedParams($_POST); }
-    public ArrayTypedParams $server { get => new ArrayTypedParams($_POST); }
+    public ArrayTypedParams $server { get => new ArrayTypedParams($_SERVER); }
+    public ArrayTypedParams $files { get => new ArrayTypedParams($_FILES); }
     public string $method { get => (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'); }
 
     public function file(string $key): ?array

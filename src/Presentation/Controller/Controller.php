@@ -88,7 +88,7 @@ abstract class Controller
 
     protected function requirePost(): void
     {
-        if ($this->request->method() !== 'POST') {
+        if ($this->request->method !== 'POST') {
             $this->response->setStatusCode(405);
             $this->response->write('Method Not Allowed');
             exit;

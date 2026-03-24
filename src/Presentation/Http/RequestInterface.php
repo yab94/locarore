@@ -12,6 +12,6 @@ interface RequestInterface
     public ArrayTypedParams $queryString {  get; }
     public ArrayTypedParams $body {  get; }
     public ArrayTypedParams $server {  get; }
+    public ArrayTypedParams $files {  get; }
 
-    public function file(string $key): ?array;
 }
