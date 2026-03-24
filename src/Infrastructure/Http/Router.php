@@ -23,6 +23,27 @@ class Router
         $this->routes[] = ['method' => 'POST', 'path' => $path, 'handler' => $handler];
     }
 
+    /**
+     * Charge les routes depuis la section [routes] de la config.
+     *
+     * Format attendu dans app.ini :
+     *   GET[/path]  = Fully\Qualified\ClassName.methodName
+     *   POST[/path] = Fully\Qualified\ClassName.methodName
+     */
+    public function loadFromConfig(\Rore\Infrastructure\Config\Config $config): void
+    {
+        $routes = $config->getParam('routes');
+        if (!is_array($routes)) {
+            return;
+        }
+        foreach (['GET', 'POST'] as $method) {
+            foreach ($routes[$method] ?? [] as $path => $handler) {
+                [$class, $action] = explode('.', (string) $handler, 2);
+                $this->routes[] = ['method' => $method, 'path' => $path, 'handler' => [$class, $action]];
+            }
+        }
+    }
+
     public function dispatch(): void
     {
         $method = $_SERVER['REQUEST_METHOD'];
