@@ -69,7 +69,7 @@ class SitemapController extends SiteController
         
         // Packs
         foreach ($packs as $pack) {
-            $url = $baseUrl . '/packs/' . $pack->getSlug();
+            $url = $baseUrl . $this->config->getStringParam('seo.packs_base_url') . '/' . $pack->getSlug();
             echo '<url><loc>' . htmlspecialchars($url) . '</loc><priority>0.7</priority></url>';
         }
         

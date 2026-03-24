@@ -21,7 +21,8 @@
                 <tr>
                     <th class="px-6 py-3 text-left">Nom</th>
                     <th class="px-6 py-3 text-left">Composition</th>
-                    <th class="px-6 py-3 text-right">Prix/jour</th>
+                    <th class="px-6 py-3 text-right">Prix pack</th>
+                    <th class="px-6 py-3 text-right">Prix détail</th>
                     <th class="px-6 py-3 text-center">Statut</th>
                     <th class="px-6 py-3 text-right">Actions</th>
                 </tr>
@@ -48,6 +49,21 @@
                     </td>
                     <td class="px-6 py-4 text-right font-semibold text-brand-600">
                         <?= number_format($pack->getPricePerDay(), 2, ',', ' ') ?> €
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <?php 
+                        $retailPrice = $packRetailPrices[$pack->getId()] ?? 0;
+                        $packPrice = $pack->getPricePerDay();
+                        $diff = $retailPrice > 0 ? (($packPrice - $retailPrice) / $retailPrice) * 100 : 0;
+                        $diffSign = $diff > 0 ? '+' : '';
+                        $diffColor = $diff < 0 ? 'text-green-600' : ($diff > 0 ? 'text-red-600' : 'text-gray-500');
+                        ?>
+                        <div class="text-gray-600"><?= number_format($retailPrice, 2, ',', ' ') ?> €</div>
+                        <?php if ($retailPrice > 0): ?>
+                            <div class="text-xs <?= $diffColor ?> font-medium">
+                                <?= $diffSign ?><?= number_format($diff, 0) ?>%
+                            </div>
+                        <?php endif; ?>
                     </td>
                     <td class="px-6 py-4 text-center">
                         <form method="post" action="<?= $url('Admin\Pack.toggle', ['id' => $pack->getId()]) ?>" class="inline">

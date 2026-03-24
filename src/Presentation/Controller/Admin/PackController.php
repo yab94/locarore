@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Catalog\CreatePackUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
+use Rore\Domain\Catalog\Service\PricingCalculator;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
 use Rore\Application\Security\CsrfTokenManagerInterface;
@@ -23,6 +24,7 @@ class PackController extends AdminController
     public function __construct(
         private readonly MySqlPackRepository    $packRepo,
         private readonly MySqlProductRepository $productRepo,
+        private readonly PricingCalculator      $pricingCalculator,
         private readonly CreatePackUseCase      $createPackUseCase,
         private readonly UpdatePackUseCase      $updatePackUseCase,
         private readonly TogglePackUseCase      $togglePackUseCase,
@@ -46,10 +48,26 @@ class PackController extends AdminController
             $productsById[$p->getId()] = $p;
         }
 
+        $packs = $this->packRepo->findAll();
+        
+        // Calcul du prix "au détail" des produits pour chaque pack (base 1 jour)
+        $start = new \DateTimeImmutable('2026-01-01');
+        $end   = new \DateTimeImmutable('2026-01-01');
+        $packRetailPrices = [];
+        foreach ($packs as $pack) {
+            $packRetailPrices[$pack->getId()] = $this->pricingCalculator->calculateItemsTotal(
+                $pack,
+                $productsById,
+                $start,
+                $end
+            );
+        }
+
         $this->render('admin/packs/list', [
-            'title'    => 'Packs',
-            'packs'    => $this->packRepo->findAll(),
-            'products' => $productsById,
+            'title'            => 'Packs',
+            'packs'            => $packs,
+            'products'         => $productsById,
+            'packRetailPrices' => $packRetailPrices,
         ]);
     }
 

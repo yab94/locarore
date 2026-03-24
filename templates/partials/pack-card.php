@@ -5,7 +5,7 @@
 $_mainProductId = $pack->getMainProductId($productsById);
 $_mainProduct   = $_mainProductId ? ($productsById[$_mainProductId] ?? null) : null;
 $_mainPhoto     = $_mainProduct?->getMainPhoto();
-$_packUrl       = '/packs/' . $pack->getSlug();
+$_packUrl       = $config->getStringParam('seo.packs_base_url') . '/' . $pack->getSlug();
 ?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
     <?php if ($_mainPhoto): ?>
