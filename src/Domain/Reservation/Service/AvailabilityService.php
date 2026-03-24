@@ -119,4 +119,35 @@ class AvailabilityService
         $requiredSeconds = (float) $onDemandNeeded * ($unitDays * 86400);
         return $secondsRemaining >= $requiredSeconds;
     }
+
+    /**
+     * Vérifie si tous les produits d'un pack sont disponibles pour les dates demandées.
+     * 
+     * @param \Rore\Domain\Catalog\Entity\Pack $pack
+     * @param Product[] $productsById  Tableau indexé par product_id
+     * @param \DateTimeImmutable $start
+     * @param \DateTimeImmutable $end
+     * @param \DateTimeImmutable|null $now
+     * @return bool
+     */
+    public function isPackAvailable(
+        \Rore\Domain\Catalog\Entity\Pack $pack,
+        array $productsById,
+        \DateTimeImmutable $start,
+        \DateTimeImmutable $end,
+        ?\DateTimeImmutable $now = null,
+    ): bool {
+        foreach ($pack->getItems() as $item) {
+            $product = $productsById[$item->getProductId()] ?? null;
+            if ($product === null || !$product->isActive()) {
+                return false;
+            }
+            
+            if (!$this->isAvailable($product, $item->getQuantity(), $start, $end, $now)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
 }

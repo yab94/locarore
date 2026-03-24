@@ -6,9 +6,9 @@ Features
 - SettingsService devrait etre dans Domain je crois...
 - tous les services doivent etre suffixé service, revoir les nommages
 
--etonné que AvailibilityService ne teste que des products et pas des packs
+✅ etonné que AvailibilityService ne teste que des products et pas des packs
 
 Tests
-- Tester qu'un pack n'est pas dispo si un seul produit pas dispo
+✅ Tester qu'un pack n'est pas dispo si un seul produit pas dispo
 
 
