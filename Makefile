@@ -33,3 +33,6 @@ db-schema:
 
 mep-ovh:
 	docker compose exec php lftp ${FTP_LOGIN}:${FTP_PASSWORD}@${FTP_HOST}:/ -e "mirror -e -R -x .env -x .git* -x sql* -x docker* . /locarore ; quit"
+
+php:
+	docker compose exec php bash

@@ -27,7 +27,7 @@ final class Bootstrap
     {
         self::loadEnv();
         $config = new Config(self::loadIni());
-        Connection::init($config->section('database'));
+        Connection::init($config->getArrayParam('database'));
 
         return $config;
     }

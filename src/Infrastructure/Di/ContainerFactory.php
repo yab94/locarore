@@ -65,7 +65,7 @@ final class ContainerFactory
 
         // ── Infrastructure scalaire (config-dépendante) ─────────────────
         $c->bind(FileUploader::class,
-            fn($c) => new FileUploader($config->section('upload')));
+            fn($c) => new FileUploader($config->getArrayParam('upload')));
 
         // ── Storage : Session ──────────────────────────────────────────
         $c->bind(SessionStorageInterface::class,
