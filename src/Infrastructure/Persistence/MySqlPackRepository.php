@@ -4,30 +4,29 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
+use Rore\Infrastructure\Database\Connection;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
 
 class MySqlPackRepository implements PackRepositoryInterface
 {
-    private \PDO $pdo;
 
-    public function __construct()
+
+    public function __construct(private readonly Connection $connection)
     {
-        $this->pdo = Connection::get();
     }
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM packs ORDER BY name');
+        $stmt = $this->connection->query('SELECT * FROM packs ORDER BY name');
         $packs = array_map([$this, 'hydrate'], $stmt->fetchAll());
         return $this->loadItems($packs);
     }
 
     public function findAllActive(): array
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM packs WHERE is_active = 1 ORDER BY name');
+        $stmt = $this->connection->prepare('SELECT * FROM packs WHERE is_active = 1 ORDER BY name');
         $stmt->execute();
         $packs = array_map([$this, 'hydrate'], $stmt->fetchAll());
         return $this->loadItems($packs);
@@ -35,7 +34,7 @@ class MySqlPackRepository implements PackRepositoryInterface
 
     public function findById(int $id): ?Pack
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM packs WHERE id = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM packs WHERE id = ?');
         $stmt->execute([$id]);
         $row = $stmt->fetch();
         if (!$row) return null;
@@ -47,7 +46,7 @@ class MySqlPackRepository implements PackRepositoryInterface
 
     public function findBySlug(string $slug): ?Pack
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM packs WHERE slug = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM packs WHERE slug = ?');
         $stmt->execute([$slug]);
         $row = $stmt->fetch();
         if (!$row) return null;
@@ -60,7 +59,7 @@ class MySqlPackRepository implements PackRepositoryInterface
     public function save(Pack $pack): int
     {
         if ($pack->getId() === null) {
-            $stmt = $this->pdo->prepare(
+            $stmt = $this->connection->prepare(
                 'INSERT INTO packs (name, slug, description, price_per_day, is_active, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, ?, ?)'
             );
@@ -73,9 +72,9 @@ class MySqlPackRepository implements PackRepositoryInterface
                 $pack->getCreatedAt()->format('Y-m-d H:i:s'),
                 $pack->getUpdatedAt()->format('Y-m-d H:i:s'),
             ]);
-            $id = (int) $this->pdo->lastInsertId();
+            $id = (int) $this->connection->lastInsertId();
         } else {
-            $stmt = $this->pdo->prepare(
+            $stmt = $this->connection->prepare(
                 'UPDATE packs
                     SET name = ?, slug = ?, description = ?, price_per_day = ?, is_active = ?, updated_at = ?
                   WHERE id = ?'
@@ -93,8 +92,8 @@ class MySqlPackRepository implements PackRepositoryInterface
         }
 
         // Sync pack_items
-        $this->pdo->prepare('DELETE FROM pack_items WHERE pack_id = ?')->execute([$id]);
-        $stmt = $this->pdo->prepare(
+        $this->connection->prepare('DELETE FROM pack_items WHERE pack_id = ?')->execute([$id]);
+        $stmt = $this->connection->prepare(
             'INSERT INTO pack_items (pack_id, product_id, quantity) VALUES (?, ?, ?)'
         );
         foreach ($pack->getItems() as $item) {
@@ -106,7 +105,7 @@ class MySqlPackRepository implements PackRepositoryInterface
 
     public function delete(int $id): void
     {
-        $this->pdo->prepare('DELETE FROM packs WHERE id = ?')->execute([$id]);
+        $this->connection->prepare('DELETE FROM packs WHERE id = ?')->execute([$id]);
     }
 
     // --- Private helpers -------------------------------------------------
@@ -117,7 +116,7 @@ class MySqlPackRepository implements PackRepositoryInterface
         if (empty($packs)) return $packs;
 
         $ids = implode(',', array_map(fn($p) => $p->getId(), $packs));
-        $stmt = $this->pdo->query(
+        $stmt = $this->connection->query(
             "SELECT * FROM pack_items WHERE pack_id IN ($ids) ORDER BY pack_id, id"
         );
 
@@ -135,7 +134,7 @@ class MySqlPackRepository implements PackRepositoryInterface
 
     private function fetchItems(int $packId): array
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM pack_items WHERE pack_id = ? ORDER BY id');
+        $stmt = $this->connection->prepare('SELECT * FROM pack_items WHERE pack_id = ? ORDER BY id');
         $stmt->execute([$packId]);
         return array_map([$this, 'hydrateItem'], $stmt->fetchAll());
     }

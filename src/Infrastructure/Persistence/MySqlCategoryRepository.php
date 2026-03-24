@@ -4,28 +4,27 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
+use Rore\Infrastructure\Database\Connection;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
 
 class MySqlCategoryRepository implements CategoryRepositoryInterface
 {
-    private \PDO $pdo;
 
-    public function __construct()
+
+    public function __construct(private readonly Connection $connection)
     {
-        $this->pdo = Connection::get();
     }
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM categories ORDER BY name');
+        $stmt = $this->connection->query('SELECT * FROM categories ORDER BY name');
         return array_map([$this, 'hydrate'], $stmt->fetchAll());
     }
 
     public function findAllActive(): array
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM categories WHERE is_active = 1 ORDER BY name');
+        $stmt = $this->connection->prepare('SELECT * FROM categories WHERE is_active = 1 ORDER BY name');
         $stmt->execute();
         return array_map([$this, 'hydrate'], $stmt->fetchAll());
     }
@@ -36,7 +35,7 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
      */
     public function findRootsWithChildren(): array
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'SELECT * FROM categories WHERE is_active = 1 ORDER BY parent_id IS NOT NULL, name'
         );
         $stmt->execute();
@@ -66,7 +65,7 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
 
     public function findById(int $id): ?Category
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM categories WHERE id = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM categories WHERE id = ?');
         $stmt->execute([$id]);
         $row = $stmt->fetch();
         return $row ? $this->hydrate($row) : null;
@@ -74,7 +73,7 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
 
     public function findBySlug(string $slug): ?Category
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM categories WHERE slug = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM categories WHERE slug = ?');
         $stmt->execute([$slug]);
         $row = $stmt->fetch();
         return $row ? $this->hydrate($row) : null;
@@ -83,7 +82,7 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
     public function save(Category $category): void
     {
         if ($category->getId() === null) {
-            $stmt = $this->pdo->prepare(
+            $stmt = $this->connection->prepare(
                 'INSERT INTO categories (parent_id, name, slug, description_short, description, is_active, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
             );
@@ -98,7 +97,7 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
                 $category->getUpdatedAt()->format('Y-m-d H:i:s'),
             ]);
         } else {
-            $stmt = $this->pdo->prepare(
+            $stmt = $this->connection->prepare(
                 'UPDATE categories
                     SET parent_id = ?, name = ?, slug = ?, description_short = ?, description = ?, is_active = ?, updated_at = ?
                   WHERE id = ?'
@@ -118,7 +117,7 @@ class MySqlCategoryRepository implements CategoryRepositoryInterface
 
     public function delete(int $id): void
     {
-        $this->pdo->prepare('DELETE FROM categories WHERE id = ?')->execute([$id]);
+        $this->connection->prepare('DELETE FROM categories WHERE id = ?')->execute([$id]);
     }
 
     private function hydrate(array $row): Category

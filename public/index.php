@@ -21,8 +21,8 @@ spl_autoload_register(function (string $class): void {
 });
 
 
-// ─── Bootstrap (env + config + db) ─────────────────────────────────────────
-$config = \Rore\Infrastructure\Config\Bootstrap::boot();
+// ─── Bootstrap (env + config) ──────────────────────────────────────────────
+$config = \Rore\Infrastructure\Config\Config::load(BASE_PATH);
 
 // ─── Session ───────────────────────────────────────────────────────────────
 session_start();

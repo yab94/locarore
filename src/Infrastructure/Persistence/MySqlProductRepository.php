@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
+use Rore\Infrastructure\Database\Connection;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
 
 class MySqlProductRepository implements ProductRepositoryInterface
 {
-    private \PDO $pdo;
 
-    public function __construct()
+
+    public function __construct(private readonly Connection $connection)
     {
-        $this->pdo = Connection::get();
     }
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM products ORDER BY name');
+        $stmt = $this->connection->query('SELECT * FROM products ORDER BY name');
         $products = array_map([$this, 'hydrate'], $stmt->fetchAll());
         $this->loadPhotos($products);
         $this->loadCategoryIds($products);
@@ -29,7 +28,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
 
     public function findAllActive(): array
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM products WHERE is_active = 1 ORDER BY name');
+        $stmt = $this->connection->prepare('SELECT * FROM products WHERE is_active = 1 ORDER BY name');
         $stmt->execute();
         $products = array_map([$this, 'hydrate'], $stmt->fetchAll());
         $this->loadPhotos($products);
@@ -43,7 +42,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
      */
     public function findActiveByCategorySlug(string $slug): array
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'SELECT DISTINCT p.*
                FROM products p
                JOIN categories c ON c.slug = ?
@@ -67,7 +66,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
 
     public function findById(int $id): ?Product
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM products WHERE id = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM products WHERE id = ?');
         $stmt->execute([$id]);
         $row = $stmt->fetch();
         if (!$row) return null;
@@ -80,7 +79,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
 
     public function findBySlug(string $slug): ?Product
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM products WHERE slug = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM products WHERE slug = ?');
         $stmt->execute([$slug]);
         $row = $stmt->fetch();
         if (!$row) return null;
@@ -94,7 +93,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
     public function save(Product $product): int
     {
         if ($product->getId() === null) {
-            $stmt = $this->pdo->prepare(
+            $stmt = $this->connection->prepare(
                 'INSERT INTO products
                     (category_id, name, slug, description, stock, stock_on_demand, fabrication_time_days, price_base, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
@@ -114,9 +113,9 @@ class MySqlProductRepository implements ProductRepositoryInterface
                 $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 $product->getUpdatedAt()->format('Y-m-d H:i:s'),
             ]);
-            $id = (int) $this->pdo->lastInsertId();
+            $id = (int) $this->connection->lastInsertId();
         } else {
-            $stmt = $this->pdo->prepare(
+            $stmt = $this->connection->prepare(
                 'UPDATE products
                     SET category_id = ?, name = ?, slug = ?, description = ?,
                         stock = ?, stock_on_demand = ?, fabrication_time_days = ?, price_base = ?, price_extra_weekend = ?, price_extra_weekday = ?,
@@ -146,8 +145,8 @@ class MySqlProductRepository implements ProductRepositoryInterface
         if (!in_array($product->getCategoryId(), $categoryIds)) {
             $categoryIds[] = $product->getCategoryId();
         }
-        $this->pdo->prepare('DELETE FROM product_categories WHERE product_id = ?')->execute([$id]);
-        $stmt = $this->pdo->prepare('INSERT INTO product_categories (product_id, category_id) VALUES (?, ?)');
+        $this->connection->prepare('DELETE FROM product_categories WHERE product_id = ?')->execute([$id]);
+        $stmt = $this->connection->prepare('INSERT INTO product_categories (product_id, category_id) VALUES (?, ?)');
         foreach (array_unique($categoryIds) as $catId) {
             $stmt->execute([$id, (int) $catId]);
         }
@@ -157,12 +156,12 @@ class MySqlProductRepository implements ProductRepositoryInterface
 
     public function delete(int $id): void
     {
-        $this->pdo->prepare('DELETE FROM products WHERE id = ?')->execute([$id]);
+        $this->connection->prepare('DELETE FROM products WHERE id = ?')->execute([$id]);
     }
 
     public function savePhoto(ProductPhoto $photo): void
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'INSERT INTO product_photos (product_id, filename, sort_order, created_at) VALUES (?, ?, ?, ?)'
         );
         $stmt->execute([
@@ -175,12 +174,12 @@ class MySqlProductRepository implements ProductRepositoryInterface
 
     public function deletePhoto(int $photoId): void
     {
-        $this->pdo->prepare('DELETE FROM product_photos WHERE id = ?')->execute([$photoId]);
+        $this->connection->prepare('DELETE FROM product_photos WHERE id = ?')->execute([$photoId]);
     }
 
     public function findPhotoById(int $photoId): ?ProductPhoto
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM product_photos WHERE id = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM product_photos WHERE id = ?');
         $stmt->execute([$photoId]);
         $row = $stmt->fetch();
         return $row ? $this->hydratePhoto($row) : null;
@@ -188,7 +187,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
 
     public function findPhotosByProductId(int $productId): array
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'SELECT * FROM product_photos WHERE product_id = ? ORDER BY sort_order ASC'
         );
         $stmt->execute([$productId]);
@@ -202,7 +201,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
     {
         if (empty($products)) return;
         $ids = implode(',', array_map(fn($p) => $p->getId(), $products));
-        $stmt = $this->pdo->query(
+        $stmt = $this->connection->query(
             "SELECT * FROM product_photos WHERE product_id IN ($ids) ORDER BY sort_order ASC"
         );
         $photosByProduct = [];
@@ -219,7 +218,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
     {
         if (empty($products)) return;
         $ids = implode(',', array_map(fn($p) => $p->getId(), $products));
-        $stmt = $this->pdo->query(
+        $stmt = $this->connection->query(
             "SELECT product_id, category_id FROM product_categories WHERE product_id IN ($ids)"
         );
         $catsByProduct = [];

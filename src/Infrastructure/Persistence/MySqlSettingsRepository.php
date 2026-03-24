@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
+use Rore\Infrastructure\Database\Connection;
 use Rore\Domain\Settings\Entity\Setting;
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
 
 class MySqlSettingsRepository implements SettingsRepositoryInterface
 {
     /** Cache statique — chargé une seule fois par requête */
     private static ?array $cache = null;
 
-    private \PDO $pdo;
 
-    public function __construct()
+
+    public function __construct(private readonly Connection $connection)
     {
-        $this->pdo = Connection::get();
     }
 
     /** @return Setting[] indexés par clé */
@@ -27,7 +26,7 @@ class MySqlSettingsRepository implements SettingsRepositoryInterface
             return self::$cache;
         }
 
-        $stmt = $this->pdo->query('SELECT * FROM settings ORDER BY `group`, `key`');
+        $stmt = $this->connection->query('SELECT * FROM settings ORDER BY `group`, `key`');
         self::$cache = [];
         foreach ($stmt->fetchAll() as $row) {
             self::$cache[$row['key']] = $this->hydrate($row);
@@ -42,7 +41,7 @@ class MySqlSettingsRepository implements SettingsRepositoryInterface
 
     public function save(Setting $setting): void
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'INSERT INTO settings (`key`, `value`, `label`, `type`, `group`)
              VALUES (?, ?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE `value` = VALUES(`value`)'
@@ -61,7 +60,7 @@ class MySqlSettingsRepository implements SettingsRepositoryInterface
     /** Sauvegarde en masse (tableau key => value) */
     public function saveValues(array $keyValues): void
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'UPDATE settings SET `value` = ? WHERE `key` = ?'
         );
         foreach ($keyValues as $key => $value) {

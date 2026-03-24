@@ -4,30 +4,29 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
+use Rore\Infrastructure\Database\Connection;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
 
 class MySqlReservationRepository implements ReservationRepositoryInterface
 {
-    private \PDO $pdo;
 
-    public function __construct()
+
+    public function __construct(private readonly Connection $connection)
     {
-        $this->pdo = Connection::get();
     }
 
     public function findAll(): array
     {
-        $stmt = $this->pdo->query('SELECT * FROM reservations ORDER BY created_at DESC');
+        $stmt = $this->connection->query('SELECT * FROM reservations ORDER BY created_at DESC');
         $reservations = array_map([$this, 'hydrate'], $stmt->fetchAll());
         return $this->loadItems($reservations);
     }
 
     public function findById(int $id): ?Reservation
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM reservations WHERE id = ?');
+        $stmt = $this->connection->prepare('SELECT * FROM reservations WHERE id = ?');
         $stmt->execute([$id]);
         $row = $stmt->fetch();
         if (!$row) return null;
@@ -39,7 +38,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
     public function findByStatus(string $status): array
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'SELECT * FROM reservations WHERE status = ? ORDER BY created_at DESC'
         );
         $stmt->execute([$status]);
@@ -51,7 +50,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
         \DateTimeImmutable $start,
         \DateTimeImmutable $end
     ): array {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             "SELECT * FROM reservations
               WHERE status IN ('confirmed','quoted')
                 AND start_date <= ?
@@ -67,7 +66,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
     public function save(Reservation $reservation): int
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'INSERT INTO reservations
                 (customer_name, customer_email, customer_phone, customer_address, event_address,
                  start_date, end_date, status, notes, created_at, updated_at)
@@ -87,7 +86,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
             $reservation->getUpdatedAt()->format('Y-m-d H:i:s'),
         ]);
 
-        $id = (int) $this->pdo->lastInsertId();
+        $id = (int) $this->connection->lastInsertId();
 
         foreach ($reservation->getItems() as $item) {
             $this->insertItem($id, $item);
@@ -98,7 +97,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
     public function update(Reservation $reservation): void
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'UPDATE reservations
                 SET status = ?, notes = ?, updated_at = ?
               WHERE id = ?'
@@ -115,7 +114,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
     private function insertItem(int $reservationId, ReservationItem $item): void
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'INSERT INTO reservation_items (reservation_id, product_id, pack_id, quantity, unit_price_snapshot)
              VALUES (?, ?, ?, ?, ?)'
         );
@@ -134,7 +133,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
         if (empty($reservations)) return $reservations;
 
         $ids = implode(',', array_map(fn($r) => $r->getId(), $reservations));
-        $stmt = $this->pdo->query(
+        $stmt = $this->connection->query(
             "SELECT * FROM reservation_items WHERE reservation_id IN ($ids)"
         );
 
@@ -152,7 +151,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
     private function fetchItems(int $reservationId): array
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             'SELECT * FROM reservation_items WHERE reservation_id = ?'
         );
         $stmt->execute([$reservationId]);
@@ -182,7 +181,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
      */
     public function countReservedQtyForProduct(int $productId, string $startDate, string $endDate): int
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             "SELECT COALESCE(SUM(ri.quantity), 0)
              FROM reservation_items ri
              JOIN reservations r ON r.id = ri.reservation_id
@@ -200,7 +199,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
      */
     public function getReservedPeriodsByProduct(int $productId): array
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = $this->connection->prepare(
             "SELECT r.start_date, r.end_date, r.status, ri.quantity
              FROM reservation_items ri
              JOIN reservations r ON r.id = ri.reservation_id
