@@ -24,18 +24,11 @@ use Rore\Presentation\Template\HtmlHelper;
 abstract class SiteController extends Controller
 {
     public function __construct(
-        RequestInterface                     $request,
-        ResponseInterface                    $response,
-        Config                               $config,
-        SessionStorageInterface              $session,
-        CsrfTokenManagerInterface            $csrfTokenManager,
-        SettingsServiceInterface             $settings,
         readonly CartSession                 $cart,
-        UrlResolver                          $urlResolver,
-        HtmlHelper                                 $html,
         readonly CategoryRepositoryInterface $categoryRepository,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
+        parent::__construct(...$parentDeps);
     }
 
     protected function render(

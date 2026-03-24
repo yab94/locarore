@@ -4,40 +4,19 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Cart\CartSession;
-use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetProductWithDetailsUseCase;
 use Rore\Application\Reservation\GetReservedQuantityForProductUseCase;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class ProductController extends SiteController
 {
     public function __construct(
         private readonly GetProductWithDetailsUseCase           $getProductWithDetailsUseCase,
-        private readonly GetAllActiveCategoriesUseCase          $getAllActiveCategoriesUseCase,
         private readonly GetReservedQuantityForProductUseCase   $getReservedQuantityForProductUseCase,
         private readonly PageMetaBuilder                        $metaBuilder,
-        RequestInterface                            $request,
-        ResponseInterface                           $response,
-        Config                                      $config,
-        SessionStorageInterface                     $session,
-        CsrfTokenManagerInterface                   $csrfTokenManager,
-        SettingsServiceInterface                               $settings,
-        CartSession                              $cart,
-        UrlResolver $urlResolver,
-        HtmlHelper                                     $html,
-        CategoryRepositoryInterface                  $categoryRepository,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
+        parent::__construct(...$parentDeps);
     }
 
     public function show(string $path): void

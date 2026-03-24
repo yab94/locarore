@@ -6,15 +6,7 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Catalog\GetAllCategoriesUseCase;
 use Rore\Application\Catalog\GetAllProductsUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Reservation\GetReservationsUseCase;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
 
 class DashboardController extends AdminController
 {
@@ -22,16 +14,9 @@ class DashboardController extends AdminController
         private readonly GetAllCategoriesUseCase $getAllCategoriesUseCase,
         private readonly GetAllProductsUseCase   $getAllProductsUseCase,
         private readonly GetReservationsUseCase  $getReservationsUseCase,
-        RequestInterface                         $request,
-        ResponseInterface                        $response,
-        Config                                   $config,
-        SessionStorageInterface                  $session,
-        CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                            $settings,
-        UrlResolver $urlResolver,
-        HtmlHelper        $html,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void

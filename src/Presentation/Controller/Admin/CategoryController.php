@@ -6,17 +6,9 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Catalog\GetAllCategoriesUseCase;
 use Rore\Application\Catalog\GetCategoryByIdUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
 
 class CategoryController extends AdminController
 {
@@ -26,16 +18,9 @@ class CategoryController extends AdminController
         private readonly CreateCategoryUseCase   $createCategoryUseCase,
         private readonly UpdateCategoryUseCase   $updateCategoryUseCase,
         private readonly ToggleCategoryUseCase   $toggleCategoryUseCase,
-        RequestInterface                         $request,
-        ResponseInterface                        $response,
-        Config                                   $config,
-        SessionStorageInterface                  $session,
-        CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                            $settings,
-        UrlResolver $urlResolver,
-        HtmlHelper        $html,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void

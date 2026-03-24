@@ -4,18 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Cart\CartSession;
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetTagWithItemsUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class TagController extends SiteController
@@ -24,18 +14,9 @@ class TagController extends SiteController
         private readonly GetTagWithItemsUseCase         $getTagWithItemsUseCase,
         private readonly GetAllActiveCategoriesUseCase  $getAllActiveCategoriesUseCase,
         private readonly PageMetaBuilder                $metaBuilder,
-        RequestInterface                         $request,
-        ResponseInterface                        $response,
-        Config                                   $config,
-        SessionStorageInterface                  $session,
-        CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                 $settings,
-        CartSession                              $cart,
-        UrlResolver                              $urlResolver,
-        HtmlHelper                                     $html,
-        CategoryRepositoryInterface              $categoryRepository,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
+        parent::__construct(...$parentDeps);
     }
 
     public function show(string $slug): void

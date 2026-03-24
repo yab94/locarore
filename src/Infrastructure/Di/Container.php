@@ -100,21 +100,10 @@ final class Container
         foreach ($constructor->getParameters() as $param) {
             $type = $param->getType();
 
-            // Paramètre variadic : résoudre les deps du parent
+            // Paramètre variadic : résoudre TOUTES les deps de la chaîne d'héritage
             if ($param->isVariadic()) {
-                $parentClass = $ref->getParentClass();
-                
-                if ($parentClass && $parentClass->getConstructor()) {
-                    foreach ($parentClass->getConstructor()->getParameters() as $parentParam) {
-                        $parentType = $parentParam->getType();
-                        
-                        if ($parentType instanceof ReflectionNamedType && !$parentType->isBuiltin()) {
-                            $args[] = $this->get($parentType->getName());
-                        } elseif ($parentParam->isDefaultValueAvailable()) {
-                            $args[] = $parentParam->getDefaultValue();
-                        }
-                    }
-                }
+                $parentArgs = $this->resolveParentDependencies($ref);
+                array_push($args, ...$parentArgs);
                 continue;
             }
 
@@ -134,4 +123,47 @@ final class Container
         /** @var T */
         return $ref->newInstanceArgs($args);
     }
-}
+
+    /**
+     * Résout récursivement toutes les dépendances de la chaîne d'héritage.
+     * Remonte de parent en parent jusqu'à ne plus avoir de constructeur.
+     *
+     * @return array Liste des instances résolues pour tous les parents (parent direct → ancêtres)
+     */
+    private function resolveParentDependencies(ReflectionClass $childClass): array
+    {
+        $allDeps = [];
+        $current = $childClass;
+
+        // Remonter la chaîne d'héritage
+        while ($parent = $current->getParentClass()) {
+            $constructor = $parent->getConstructor();
+            
+            if (!$constructor) {
+                break;
+            }
+
+            $parentDeps = [];
+            foreach ($constructor->getParameters() as $param) {
+                // Ne pas résoudre les variadics du parent (sinon récursion infinie)
+                if ($param->isVariadic()) {
+                    break;
+                }
+
+                $type = $param->getType();
+                
+                if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                    $parentDeps[] = $this->get($type->getName());
+                } elseif ($param->isDefaultValueAvailable()) {
+                    $parentDeps[] = $param->getDefaultValue();
+                }
+            }
+
+            // Ajouter les deps de ce niveau à la fin (ordre parent direct → ancêtres)
+            array_push($allDeps, ...$parentDeps);
+            
+            $current = $parent;
+        }
+
+        return $allDeps;
+    }}

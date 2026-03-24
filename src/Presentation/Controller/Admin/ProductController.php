@@ -10,18 +10,10 @@ use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
 
 class ProductController extends AdminController
 {
@@ -36,16 +28,9 @@ class ProductController extends AdminController
         private readonly UploadProductPhotoUseCase      $uploadProductPhotoUseCase,
         private readonly DeleteProductPhotoUseCase       $deleteProductPhotoUseCase,
         private readonly UpdatePhotoDescriptionUseCase   $updatePhotoDescriptionUseCase,
-        RequestInterface                            $request,
-        ResponseInterface                           $response,
-        Config                                      $config,
-        SessionStorageInterface                     $session,
-        CsrfTokenManagerInterface                   $csrfTokenManager,
-        SettingsServiceInterface                               $settings,
-        UrlResolver $urlResolver,
-        HtmlHelper        $html,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void

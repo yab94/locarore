@@ -10,14 +10,6 @@ use Rore\Application\Catalog\GetAllProductsUseCase;
 use Rore\Application\Catalog\GetPackByIdUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
-use Rore\Presentation\Template\HtmlHelper;
 
 class PackController extends AdminController
 {
@@ -28,16 +20,9 @@ class PackController extends AdminController
         private readonly CreatePackUseCase      $createPackUseCase,
         private readonly UpdatePackUseCase      $updatePackUseCase,
         private readonly TogglePackUseCase      $togglePackUseCase,
-        RequestInterface                        $request,
-        ResponseInterface                       $response,
-        Config                                   $config,
-        SessionStorageInterface                 $session,
-        CsrfTokenManagerInterface               $csrfTokenManager,
-        SettingsServiceInterface                           $settings,
-        UrlResolver $urlResolver,
-        HtmlHelper  $html,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void

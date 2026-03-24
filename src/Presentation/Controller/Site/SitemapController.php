@@ -4,34 +4,15 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Cart\CartSession;
 use Rore\Application\Catalog\GetAllCatalogItemsUseCase;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
 
 class SitemapController extends SiteController
 {
     public function __construct(
         private readonly GetAllCatalogItemsUseCase $getAllCatalogItemsUseCase,
-        RequestInterface                     $request,
-        ResponseInterface                    $response,
-        Config                               $config,
-        SessionStorageInterface              $session,
-        CsrfTokenManagerInterface            $csrfTokenManager,
-        SettingsServiceInterface             $settings,
-        CartSession                          $cart,
-        UrlResolver                          $urlResolver,
-        HtmlHelper                                 $html,
-        CategoryRepositoryInterface          $categoryRepository,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void

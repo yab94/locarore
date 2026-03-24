@@ -6,27 +6,16 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\AddToCartUseCase;
 use Rore\Application\Cart\AddPackToCartUseCase;
-use Rore\Application\Cart\CartSession;
 use Rore\Application\Cart\GetCartDataUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\RemovePackFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class CartController extends SiteController
 {
     public function __construct(
-        CartSession                              $cart,
         private readonly GetCartDataUseCase      $getCartDataUseCase,
         private readonly PageMetaBuilder         $metaBuilder,
         private readonly SetCartDatesUseCase     $setCartDatesUseCase,
@@ -35,23 +24,19 @@ class CartController extends SiteController
         private readonly RemoveFromCartUseCase      $removeFromCartUseCase,
         private readonly RemovePackFromCartUseCase   $removePackFromCartUseCase,
         private readonly CheckoutUseCase             $checkoutUseCase,
-        RequestInterface                         $request,
-        ResponseInterface                        $response,
-        Config                                   $config,
-        SessionStorageInterface                  $session,
-        CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                 $settings,
-        UrlResolver                              $urlResolver,
-        HtmlHelper                                     $html,
-        CategoryRepositoryInterface                  $categoryRepository,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html, $categoryRepository);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void
     {
-        $startDate = $this->cart->hasDates() ? $this->cart->getStartDate() : null;
-        $endDate   = $this->cart->hasDates() ? $this->cart->getEndDate() : null;
+        $startDate = $this->cart->hasDates() 
+            ? new \DateTimeImmutable($this->cart->getStartDate()) 
+            : null;
+        $endDate = $this->cart->hasDates() 
+            ? new \DateTimeImmutable($this->cart->getEndDate()) 
+            : null;
 
         $data = $this->getCartDataUseCase->execute(
             $this->cart->getItems(),

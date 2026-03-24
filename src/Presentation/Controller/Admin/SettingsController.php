@@ -5,31 +5,16 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Settings\GetAllSettingsUseCase;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SaveSettingsUseCase;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
 
 class SettingsController extends AdminController
 {
     public function __construct(
         private readonly GetAllSettingsUseCase   $getAllSettingsUseCase,
         private readonly SaveSettingsUseCase     $saveSettingsUseCase,
-        RequestInterface                         $request,
-        ResponseInterface                        $response,
-        Config                                   $config,
-        SessionStorageInterface                  $session,
-        CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                            $settings,
-        UrlResolver $urlResolver,
-        HtmlHelper        $html,
+        ...$parentDeps
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $urlResolver, $html);
+        parent::__construct(...$parentDeps);
     }
 
     public function index(): void
