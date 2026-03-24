@@ -15,6 +15,10 @@
     <?php if ($meta->canonicalUrl !== null): ?>
     <link rel="canonical" href="<?= \Rore\Presentation\Template\Html::e($meta->canonicalUrl) ?>">
     <?php endif; ?>
+    <!-- Polices Latyana Événements -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Tailwind CDN (remplacer par /assets/css/app.css compilé en production) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -23,18 +27,26 @@
                 extend: {
                     colors: {
                         brand: {
-                            50:  '#eef2ff',
-                            100: '#e0e7ff',
-                            600: '#4f46e5',
-                            700: '#4338ca',
+                            50:  '#fff0f4',
+                            100: '#ffd6e2',
+                            600: '#ff0a52',
+                            700: '#d40047',
                         }
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        serif: ['Roboto Slab', 'ui-serif', 'Georgia', 'serif'],
                     }
                 }
             }
         }
     </script>
+    <style>
+        h1, h2, h3, h4 { font-family: 'Roboto Slab', serif; }
+        body { color: #3a3a3a; }
+    </style>
 </head>
-<body class="h-full bg-gray-50 flex flex-col">
+<body class="h-full bg-gray-50 flex flex-col font-sans antialiased">
 
     <?php require BASE_PATH . '/templates/layout/header.php'; ?>
 

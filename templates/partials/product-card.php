@@ -14,14 +14,14 @@ $_productUrl = isset($productContextPath)
         </div>
     <?php endif; ?>
     <div class="p-4">
-        <h3 class="font-semibold text-gray-800 mb-1"><?= \Rore\Presentation\Template\Html::e($product->getName()) ?></h3>
+        <h3 class="font-semibold text-gray-900 mb-1" style="font-family:'Roboto Slab',serif"><?= \Rore\Presentation\Template\Html::e($product->getName()) ?></h3>
         <p class="text-sm text-gray-500 mb-3 line-clamp-2"><?= \Rore\Presentation\Template\Html::e($product->getDescription() ?? '') ?></p>
         <div class="flex items-center justify-between">
-            <span class="text-brand-700 font-bold">
+            <span class="text-brand-600 font-bold text-sm">
                 à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
             </span>
             <a href="<?= \Rore\Presentation\Template\Html::e($_productUrl) ?>"
-               class="text-sm bg-brand-600 text-white px-3 py-1.5 rounded-lg hover:bg-brand-700 transition">
+               class="text-sm bg-brand-600 text-white px-3 py-1.5 rounded-full hover:bg-brand-700 transition font-medium">
                 Voir
             </a>
         </div>

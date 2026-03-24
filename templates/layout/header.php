@@ -1,4 +1,4 @@
-<header class="bg-white shadow-sm">
+<header class="bg-white shadow-sm border-b-2 border-brand-600">
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
         <img src="/assets/images/logo-latyana-evenements.png" alt="<?= \Rore\Presentation\Template\Html::e($settings->get('site.name')) ?> logo" class="h-8 w-auto" />
@@ -7,7 +7,7 @@
         </a>
 
         <!-- Catégories principales -->
-        <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
+        <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700 font-sans">
             <?php
             static $headerCategories = null;
             if ($headerCategories === null) {
