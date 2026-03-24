@@ -11,6 +11,7 @@ final class HttpRequest implements RequestInterface
 {
     public ArrayTypedParams $queryString { get => new ArrayTypedParams($_GET); }
     public ArrayTypedParams $body { get => new ArrayTypedParams($_POST); }
+    public ArrayTypedParams $server { get => new ArrayTypedParams($_POST); }
     public string $method { get => (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'); }
 
     public function file(string $key): ?array
@@ -27,10 +28,5 @@ final class HttpRequest implements RequestInterface
 
         // Multiple files upload (name[] syntax)
         return (!empty($f['name'][0])) ? $f : null;
-    }
-
-    public function server(string $key, mixed $default = null): mixed
-    {
-        return $_SERVER[$key] ?? $default;
     }
 }
