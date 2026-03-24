@@ -24,7 +24,9 @@ final class Container
     /** @var array<string, callable> Factories déclarées explicitement */
     private array $bindings = [];
 
-    // Pas de constructeur : toute la configuration passe par bind() et instance().
+    public function __construct() {
+        $this->instances[Container::class] = $this;
+    }
 
     /**
      * Déclare une factory pour un type donné.

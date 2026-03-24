@@ -15,7 +15,14 @@ class Router
     public function __construct(
         private readonly Container $container,
         private readonly Config    $config,
-    ) {}
+        private readonly HttpRequest    $request,
+        private readonly HttpResponse    $response,
+    ) {
+        if($config->getStringParam('app.env') === $config->getStringParam('seo.force_https') && strpos($request->server->getStringParam('SCRIPT_URI'), 'https') !== 0) {
+            $response->redirect('https://' . $request->server->getStringParam('HTTP_HOST') . $request->server->getStringParam('REQUEST_URI'), 301);
+             exit; 
+        }
+    }
 
     public function get(string $path, array $handler): void
     {
