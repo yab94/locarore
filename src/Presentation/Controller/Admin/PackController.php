@@ -57,11 +57,11 @@ class PackController extends AdminController
         try {
             $items = $this->parseItems();
             $this->createPackUseCase->execute(
-                name:        $this->request->inputString('name'),
-                description: $this->request->inputStringOrNull('description'),
-                pricePerDay: $this->request->inputFloat('price_per_day'),
+                name:        $this->request->body->getStringParam('name'),
+                description: $this->request->body->getStringParam('description') ?: null,
+                pricePerDay: $this->request->body->getFloatParam('price_per_day'),
                 items:       $items,
-                customSlug:  $this->request->inputStringOrNull('slug'),
+                customSlug:  $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Pack créé.');
         } catch (\Throwable $e) {
@@ -90,11 +90,11 @@ class PackController extends AdminController
             $items = $this->parseItems();
             $this->updatePackUseCase->execute(
                 id:          (int) $id,
-                name:        $this->request->inputString('name'),
-                description: $this->request->inputStringOrNull('description'),
-                pricePerDay: $this->request->inputFloat('price_per_day'),
+                name:        $this->request->body->getStringParam('name'),
+                description: $this->request->body->getStringParam('description') ?: null,
+                pricePerDay: $this->request->body->getFloatParam('price_per_day'),
                 items:       $items,
-                customSlug:  $this->request->inputStringOrNull('slug'),
+                customSlug:  $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Pack mis à jour.');
         } catch (\Throwable $e) {
@@ -118,8 +118,8 @@ class PackController extends AdminController
     private function parseItems(): array
     {
         $items = [];
-        $productIds = $this->request->inputArray('item_product_id');
-        $quantities = $this->request->inputArray('item_quantity');
+        $productIds = $this->request->body->getArrayParam('item_product_id');
+        $quantities = $this->request->body->getArrayParam('item_quantity');
         foreach ($productIds as $i => $pid) {
             $pid = (int) $pid;
             $qty = (int) ($quantities[$i] ?? 0);

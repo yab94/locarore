@@ -54,11 +54,11 @@ class CategoryController extends AdminController
         $this->requirePost();
         try {
             $this->createCategoryUseCase->execute(
-                name:             $this->request->inputString('name'),
-                descriptionShort: $this->request->inputStringOrNull('description_short'),
-                description:      $this->request->inputStringOrNull('description'),
-                parentId:         $this->request->inputString('parent_id') !== '' ? $this->request->inputInt('parent_id') : null,
-                customSlug:       $this->request->inputStringOrNull('slug'),
+                name:             $this->request->body->getStringParam('name'),
+                descriptionShort: $this->request->body->getStringParam('description_short') ?: null,
+                description:      $this->request->body->getStringParam('description') ?: null,
+                parentId:         $this->request->body->getStringParam('parent_id') !== '' ? $this->request->body->getIntParam('parent_id') : null,
+                customSlug:       $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Catégorie créée avec succès.');
         } catch (\Throwable $e) {
@@ -86,11 +86,11 @@ class CategoryController extends AdminController
         try {
             $this->updateCategoryUseCase->execute(
                 id:               (int) $id,
-                name:             $this->request->inputString('name'),
-                descriptionShort: $this->request->inputStringOrNull('description_short'),
-                description:      $this->request->inputStringOrNull('description'),
-                parentId:         $this->request->inputString('parent_id') !== '' ? $this->request->inputInt('parent_id') : null,
-                customSlug:       $this->request->inputStringOrNull('slug'),
+                name:             $this->request->body->getStringParam('name'),
+                descriptionShort: $this->request->body->getStringParam('description_short') ?: null,
+                description:      $this->request->body->getStringParam('description') ?: null,
+                parentId:         $this->request->body->getStringParam('parent_id') !== '' ? $this->request->body->getIntParam('parent_id') : null,
+                customSlug:       $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Catégorie mise à jour.');
         } catch (\Throwable $e) {

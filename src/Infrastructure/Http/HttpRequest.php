@@ -17,58 +17,6 @@ final class HttpRequest implements RequestInterface
         return (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET');
     }
 
-    public function query(string $key, mixed $default = null): mixed
-    {
-        return $_GET[$key] ?? $default;
-    }
-
-    public function post(string $key, mixed $default = null): mixed
-    {
-        return $_POST[$key] ?? $default;
-    }
-
-    public function input(string $key, mixed $default = null): mixed
-    {
-        return $_POST[$key] ?? $_GET[$key] ?? $default;
-    }
-
-    public function inputString(string $key, string $default = ''): string
-    {
-        return trim((string) $this->input($key, $default));
-    }
-
-    public function inputStringOrNull(string $key): ?string
-    {
-        $value = $this->inputString($key, '');
-        return $value != '' ? $value : null;
-    }
-
-    public function inputInt(string $key, int $default = 0): int
-    {
-        return (int) $this->input($key, $default);
-    }
-
-    public function inputFloat(string $key, float $default = 0.0): float
-    {
-        return (float) $this->input($key, $default);
-    }
-
-    public function inputArray(string $key, array $default = []): array
-    {
-        $value = $this->input($key, $default);
-        return is_array($value) ? $value : $default;
-    }
-
-    public function queryParams(): array
-    {
-        return is_array($_GET) ? $_GET : [];
-    }
-
-    public function postParams(): array
-    {
-        return is_array($_POST) ? $_POST : [];
-    }
-
     public function file(string $key): ?array
     {
         $f = $_FILES[$key] ?? null;

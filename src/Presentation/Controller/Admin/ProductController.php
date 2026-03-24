@@ -62,17 +62,17 @@ class ProductController extends AdminController
         $this->requirePost();
         try {
             $productId = $this->createProductUseCase->execute(
-                categoryId:       $this->request->inputInt('category_id'),
-                name:             $this->request->inputString('name'),
-                description:      $this->request->inputStringOrNull('description'),
-                stock:            $this->request->inputInt('stock'),
-                priceBase:        $this->request->inputFloat('price_base', 80.0),
-                stockOnDemand:    $this->request->inputInt('stock_on_demand'),
-                fabricationTimeDays: $this->request->inputFloat('fabrication_time_days', 0.0),
-                priceExtraWeekend: $this->request->inputFloat('price_extra_weekend', 0.0),
-                priceExtraWeekday: $this->request->inputFloat('price_extra_weekday', 15.0),
-                extraCategoryIds: array_map('intval', $this->request->inputArray('extra_category_ids', [])),
-                customSlug:       $this->request->inputStringOrNull('slug'),
+                categoryId:       $this->request->body->getIntParam('category_id'),
+                name:             $this->request->body->getStringParam('name'),
+                description:      $this->request->body->getStringParam('description') ?: null,
+                stock:            $this->request->body->getIntParam('stock'),
+                priceBase:        $this->request->body->getFloatParam('price_base', 80.0),
+                stockOnDemand:    $this->request->body->getIntParam('stock_on_demand'),
+                fabricationTimeDays: $this->request->body->getFloatParam('fabrication_time_days', 0.0),
+                priceExtraWeekend: $this->request->body->getFloatParam('price_extra_weekend', 0.0),
+                priceExtraWeekday: $this->request->body->getFloatParam('price_extra_weekday', 15.0),
+                extraCategoryIds: array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
+                customSlug:       $this->request->body->getStringParam('slug') ?: null,
             );
 
             $photos = $this->request->file('photos');
@@ -110,17 +110,17 @@ class ProductController extends AdminController
         try {
             $this->updateProductUseCase->execute(
                 id:               (int) $id,
-                categoryId:       $this->request->inputInt('category_id'),
-                name:             $this->request->inputString('name'),
-                description:      $this->request->inputStringOrNull('description'),
-                stock:            $this->request->inputInt('stock'),
-                priceBase:        $this->request->inputFloat('price_base', 80.0),
-                stockOnDemand:    $this->request->inputInt('stock_on_demand'),
-                fabricationTimeDays: $this->request->inputFloat('fabrication_time_days', 0.0),
-                priceExtraWeekend: $this->request->inputFloat('price_extra_weekend', 0.0),
-                priceExtraWeekday: $this->request->inputFloat('price_extra_weekday', 15.0),
-                extraCategoryIds: array_map('intval', $this->request->inputArray('extra_category_ids', [])),
-                customSlug:       $this->request->inputStringOrNull('slug'),
+                categoryId:       $this->request->body->getIntParam('category_id'),
+                name:             $this->request->body->getStringParam('name'),
+                description:      $this->request->body->getStringParam('description') ?: null,
+                stock:            $this->request->body->getIntParam('stock'),
+                priceBase:        $this->request->body->getFloatParam('price_base', 80.0),
+                stockOnDemand:    $this->request->body->getIntParam('stock_on_demand'),
+                fabricationTimeDays: $this->request->body->getFloatParam('fabrication_time_days', 0.0),
+                priceExtraWeekend: $this->request->body->getFloatParam('price_extra_weekend', 0.0),
+                priceExtraWeekday: $this->request->body->getFloatParam('price_extra_weekday', 15.0),
+                extraCategoryIds: array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
+                customSlug:       $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Produit mis à jour.');
         } catch (\Throwable $e) {

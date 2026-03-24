@@ -93,7 +93,7 @@ abstract class Controller
             $this->response->write('Method Not Allowed');
             exit;
         }
-        $posted = $this->request->inputString($this->csrfTokenManager->postKey());
+        $posted = $this->request->body->getStringParam($this->csrfTokenManager->postKey());
         if (!$this->csrfTokenManager->validate($posted)) {
             $this->response->setStatusCode(419);
             $this->response->write('Token CSRF invalide.');
