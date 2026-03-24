@@ -85,7 +85,7 @@ class PackController extends SiteController
             'productsById'  => $productsById,
             'mainProduct'   => $mainProduct,
             'mainCategory'  => $mainCategory,
-            'breadcrumb'    => $breadcrumb,
+            'breadcrumb'    => [ ...$breadcrumb, $pack ],
             'allCategories' => $allCategories,
         ]);
     }

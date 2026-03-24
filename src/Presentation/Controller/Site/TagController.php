@@ -66,6 +66,7 @@ class TagController extends SiteController
         $this->render('site/tag', [
             'meta'          => $meta,
             'tag'           => $tag,
+            'breadcrumb'    => [$tag],
             'products'      => $products,
             'allCategories' => $allCategories,
             'packs'         => $packs,

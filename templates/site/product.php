@@ -1,18 +1,4 @@
-<!-- Fil d'ariane -->
-<nav class="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-1">
-    <a href="/" class="hover:underline">Accueil</a>
-    <?php foreach ($breadcrumb as $crumb): ?>
-        <span>›</span>
-        <?php if (method_exists($crumb, 'getCategoryId')): ?>
-            <!-- C'est le produit lui-même (dernier élément) -->
-            <span class="text-gray-800 font-medium"><?= $html($crumb->getName()) ?></span>
-        <?php else: ?>
-            <a href="<?= $html($urlResolver->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
-                <?= $html($crumb->getName()) ?>
-            </a>
-        <?php endif; ?>
-    <?php endforeach; ?>
-</nav>
+<?php require 'partials/breadcrumb.php'; ?>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 

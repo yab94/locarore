@@ -1,15 +1,4 @@
-<!-- Fil d'ariane -->
-<nav class="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-1">
-    <a href="/" class="hover:underline">Accueil</a>
-    <?php foreach ($breadcrumb as $crumb): ?>
-        <span>›</span>
-        <a href="<?= $html($urlResolver->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
-            <?= $html($crumb->getName()) ?>
-        </a>
-    <?php endforeach; ?>
-    <span>›</span>
-    <span class="text-gray-800 font-medium"><?= $html($pack->getName()) ?></span>
-</nav>
+<?php require 'partials/breadcrumb.php'; ?>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 

@@ -1,9 +1,7 @@
-<!-- Fil d'ariane -->
-<nav class="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-1">
-    <a href="/" class="hover:underline">Accueil</a>
-    <span>›</span>
-    <span class="text-gray-800 font-medium"><?= $html($tag->getName()) ?></span>
-</nav>
+<?php 
+$breadcrumb = [$tag];
+require 'partials/breadcrumb.php';
+?>
 
 <div class="mb-8">
     <div class="flex items-center gap-3 mb-1">
