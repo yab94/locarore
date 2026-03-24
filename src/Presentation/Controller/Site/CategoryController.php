@@ -14,12 +14,11 @@ use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
-class CategoryController extends Controller
+class CategoryController extends SiteController
 {
     public function __construct(
         private readonly MySqlCategoryRepository $categoryRepo,

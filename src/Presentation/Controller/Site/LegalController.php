@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Presentation\Controller\Controller;
-
-class LegalController extends Controller
+class LegalController extends SiteController
 {
     public function mentions(): void
     {

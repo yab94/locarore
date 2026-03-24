@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
-use Rore\Application\Cart\CartSession;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
@@ -25,10 +23,8 @@ abstract class Controller
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly SettingsServiceInterface $settings,
-        readonly CartSession $cart,
         readonly UrlResolver $urlResolver,
         readonly Html $html,
-        readonly CategoryRepositoryInterface $categoryRepository,
     ) {}
 
     protected function render(
@@ -42,15 +38,12 @@ abstract class Controller
         $data['meta'] ??= new PageMeta(title: $this->config->getStringParam('app.name'));
         // CSRF token pour les formulaires
         $data['csrfToken'] = $this->csrfTokenManager->token();
-        // Compteur panier (pour le header)
-        $data['cartItemCount'] = $this->cart->getItemCount();
         // Accès aux settings dans toutes les vues
         $data['settings']      = $this->settings;
         $data['config']        = $this->config;
         $data['urlResolver']      = $this->urlResolver;
         $data['url']              = $this->urlResolver; // alias court invokable : $url('Admin\Category.edit', [...])
         $data['html']             = $this->html;
-        $data['headerCategories'] = $this->categoryRepository->findAllActive();
 
         extract($data);
 

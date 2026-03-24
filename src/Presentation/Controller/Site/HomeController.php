@@ -15,12 +15,11 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
-class HomeController extends Controller
+class HomeController extends SiteController
 {
     public function __construct(
         private readonly MySqlCategoryRepository $categoryRepo,

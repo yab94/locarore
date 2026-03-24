@@ -12,7 +12,6 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
@@ -20,7 +19,7 @@ use Rore\Presentation\Template\Html;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
-class ProductController extends Controller
+class ProductController extends SiteController
 {
     public function __construct(
         private readonly MySqlProductRepository     $productRepo,

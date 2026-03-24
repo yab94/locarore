@@ -18,12 +18,11 @@ use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
-class CartController extends Controller
+class CartController extends SiteController
 {
     public function __construct(
         CartSession                              $cart,
