@@ -55,6 +55,6 @@ class SettingsController extends AdminController
         }
 
         $this->flash('success', 'Contenu mis à jour.');
-        $this->redirect('/admin/contenu');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 }

@@ -71,14 +71,14 @@ class PackController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/packs');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function edit(string $id): void
     {
         $pack = $this->packRepo->findById((int) $id);
         if (!$pack) {
-            $this->redirect('/admin/packs');
+            $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
         $this->render('admin/packs/form', [
             'title'    => 'Modifier le pack',
@@ -104,7 +104,7 @@ class PackController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/packs');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function toggle(string $id): void
@@ -115,7 +115,7 @@ class PackController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/packs');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     /** @return array<int,int> [productId => quantity] */

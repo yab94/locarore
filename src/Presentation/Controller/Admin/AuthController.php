@@ -11,7 +11,7 @@ class AuthController extends Controller
     public function login(): void
     {
         if (!empty($this->session->get('admin_logged_in'))) {
-            $this->redirect('/admin/dashboard');
+            $this->redirect($this->urlResolver->resolve(DashboardController::class . '.index'));
         }
         $this->render('admin/login', ['title' => 'Administration']);
     }
@@ -25,16 +25,16 @@ class AuthController extends Controller
 
         if ($password === $expected) {
             $this->session->set('admin_logged_in', true);
-            $this->redirect('/admin/dashboard');
+            $this->redirect($this->urlResolver->resolve(DashboardController::class . '.index'));
         }
 
         $this->flash('error', 'Mot de passe incorrect.');
-        $this->redirect('/admin');
+        $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
     }
 
     public function logout(): void
     {
         $this->session->remove('admin_logged_in');
-        $this->redirect('/admin');
+        $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
     }
 }

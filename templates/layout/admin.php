@@ -28,40 +28,40 @@
     <!-- Sidebar -->
     <aside class="w-56 bg-gray-900 text-white flex flex-col min-h-screen">
         <div class="px-6 py-5 text-lg font-bold border-b border-gray-700">
-            <a href="/admin/dashboard" class="text-white hover:text-gray-300">Locarore Admin</a>
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\DashboardController::class . '.index') ?>" class="text-white hover:text-gray-300">Locarore Admin</a>
         </div>
         <nav class="flex-1 px-4 py-6 space-y-1 text-sm">
-            <a href="/admin/dashboard"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\DashboardController::class . '.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Tableau de bord
             </a>
-            <a href="/admin/categories"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\CategoryController::class . '.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Catégories
             </a>
-            <a href="/admin/produits"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ProductController::class . '.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Produits
             </a>
-            <a href="/admin/packs"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 🎁 Packs
             </a>
-            <a href="/admin/reservations"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Réservations
             </a>
-            <a href="/admin/reservations/calendrier"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.calendar') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Calendrier
             </a>
-            <a href="/admin/contenu"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\SettingsController::class . '.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 ✏️ Contenu
             </a>
         </nav>
         <div class="px-4 pb-6">
-            <form method="post" action="/admin/deconnexion">
+            <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\AuthController::class . '.logout') ?>">
                 <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                 <button type="submit"
                         class="w-full text-left px-3 py-2 rounded text-sm text-gray-400 hover:bg-gray-700 hover:text-white transition">

@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between mb-6">
     <div></div>
-    <a href="/admin/produits/creer"
+    <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ProductController::class . '.create') ?>"
        class="bg-brand-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-brand-700 transition">
         + Nouveau produit
     </a>
@@ -48,9 +48,9 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right space-x-3">
-                        <a href="/admin/produits/<?= $p->getId() ?>/modifier"
+                        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ProductController::class . '.edit', ['id' => $p->getId()]) ?>"
                            class="text-brand-600 hover:underline">Modifier</a>
-                        <form method="post" action="/admin/produits/<?= $p->getId() ?>/toggle" class="inline">
+                        <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ProductController::class . '.toggle', ['id' => $p->getId()]) ?>" class="inline">
                             <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                             <button type="submit" class="text-gray-500 hover:text-gray-800 transition">
                                 <?= $p->isActive() ? 'Désactiver' : 'Activer' ?>

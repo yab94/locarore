@@ -1,7 +1,7 @@
 <div class="max-w-sm mx-auto mt-20">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Administration</h1>
-        <form method="post" action="/admin/connexion" class="space-y-4">
+        <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\AuthController::class . '.processLogin') ?>" class="space-y-4">
             <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>

@@ -1,6 +1,6 @@
 <div class="flex justify-between items-center mb-6">
     <p class="text-sm text-gray-500"><?= count($packs) ?> pack(s)</p>
-    <a href="/admin/packs/creer"
+    <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.create') ?>"
        class="bg-brand-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-brand-700 transition">
         + Nouveau pack
     </a>
@@ -10,7 +10,7 @@
     <div class="text-center py-16 text-gray-400">
         <p class="text-5xl mb-4">🎁</p>
         <p>Aucun pack créé pour l'instant.</p>
-        <a href="/admin/packs/creer" class="mt-4 inline-block text-brand-600 hover:underline text-sm">
+        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.create') ?>" class="mt-4 inline-block text-brand-600 hover:underline text-sm">
             Créer le premier pack
         </a>
     </div>
@@ -50,7 +50,7 @@
                         <?= number_format($pack->getPricePerDay(), 2, ',', ' ') ?> €
                     </td>
                     <td class="px-6 py-4 text-center">
-                        <form method="post" action="/admin/packs/<?= $pack->getId() ?>/toggle" class="inline">
+                        <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.toggle', ['id' => $pack->getId()]) ?>" class="inline">
                             <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                             <button type="submit"
                                     class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $pack->isActive() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' ?> transition">
@@ -59,7 +59,7 @@
                         </form>
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <a href="/admin/packs/<?= $pack->getId() ?>/modifier"
+                        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.edit', ['id' => $pack->getId()]) ?>"
                            class="text-brand-600 hover:underline text-sm">Modifier</a>
                     </td>
                 </tr>

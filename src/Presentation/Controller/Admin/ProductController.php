@@ -80,10 +80,10 @@ class ProductController extends AdminController
             );
 
             $this->flash('success', 'Produit créé avec succès.');
-            $this->redirect('/admin/produits/' . $productId . '/modifier');
+            $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
-            $this->redirect('/admin/produits/creer');
+            $this->redirect($this->urlResolver->resolve(self::class . '.create'));
         }
     }
 
@@ -91,7 +91,7 @@ class ProductController extends AdminController
     {
         $product = $this->productRepo->findById((int) $id);
         if (!$product) {
-            $this->redirect('/admin/produits');
+            $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
         $calendarEvents = $this->reservationRepo->getReservedPeriodsByProduct($product->getId());
 
@@ -125,7 +125,7 @@ class ProductController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/produits/' . $id . '/modifier');
+        $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $id]));
     }
 
     public function toggle(string $id): void
@@ -136,7 +136,7 @@ class ProductController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/produits');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function uploadPhoto(string $id): void
@@ -152,7 +152,7 @@ class ProductController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/produits/' . $id . '/modifier');
+        $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $id]));
     }
 
     public function deletePhoto(string $photoId): void
@@ -164,11 +164,11 @@ class ProductController extends AdminController
             $this->deleteProductPhotoUseCase->execute((int) $photoId);
             $this->flash('success', 'Photo supprimée.');
             if ($productId) {
-                $this->redirect('/admin/produits/' . $productId . '/modifier');
+                $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));
             }
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/produits');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 }

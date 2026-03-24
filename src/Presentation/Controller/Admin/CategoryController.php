@@ -68,14 +68,14 @@ class CategoryController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/categories');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function edit(string $id): void
     {
         $category = $this->repo->findById((int) $id);
         if (!$category) {
-            $this->redirect('/admin/categories');
+            $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
         $this->render('admin/categories/form', [
             'title'      => 'Modifier la catégorie',
@@ -100,7 +100,7 @@ class CategoryController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/categories');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function toggle(string $id): void
@@ -111,6 +111,6 @@ class CategoryController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/categories');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 }

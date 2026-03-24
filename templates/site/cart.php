@@ -4,7 +4,7 @@
     <!-- Étape 1 : Choisir les dates -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 max-w-lg mx-auto text-center">
         <p class="text-lg text-gray-700 mb-6">Commencez par choisir vos dates de location</p>
-        <form method="post" action="/panier/dates" class="space-y-4">
+        <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.setDates') ?>" class="space-y-4">
             <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="flex-1">
@@ -41,7 +41,7 @@
     <!-- Dates sélectionnées -->
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center justify-between">
         <span class="text-sm text-green-800">📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?></span>
-        <form method="post" action="/panier/dates">
+        <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.setDates') ?>">
             <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
             <input type="hidden" name="start_date" value="">
             <input type="hidden" name="end_date" value="">
@@ -75,7 +75,7 @@
                             <?= number_format($p->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $qty, 2, ',', ' ') ?> €
                         </p>
                     </div>
-                    <form method="post" action="/panier/supprimer">
+                    <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.remove') ?>">
                         <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                         <input type="hidden" name="product_id" value="<?= $p->getId() ?>">
                         <button type="submit" class="text-red-400 hover:text-red-600 text-sm transition"
@@ -105,7 +105,7 @@
                 <span>Total estimé</span>
                 <span class="font-bold text-gray-900"><?= number_format($total, 2, ',', ' ') ?> €</span>
             </div>
-            <a href="/panier/checkout"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.checkout') ?>"
                class="block w-full bg-brand-600 text-white text-center font-semibold py-3 rounded-xl hover:bg-brand-700 transition">
                 Réserver →
             </a>

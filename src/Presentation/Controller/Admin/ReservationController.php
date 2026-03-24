@@ -58,7 +58,7 @@ class ReservationController extends AdminController
     {
         $reservation = $this->repo->findById((int) $id);
         if (!$reservation) {
-            $this->redirect('/admin/reservations');
+            $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
 
         // Charger les noms produits
@@ -83,7 +83,7 @@ class ReservationController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/reservations/' . $id);
+        $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
     public function setStatus(string $id): void
@@ -96,7 +96,7 @@ class ReservationController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/reservations/' . $id);
+        $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
     public function confirm(string $id): void
@@ -108,7 +108,7 @@ class ReservationController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/reservations/' . $id);
+        $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
     public function cancel(string $id): void
@@ -120,7 +120,7 @@ class ReservationController extends AdminController
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
-        $this->redirect('/admin/reservations/' . $id);
+        $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
     public function calendar(): void

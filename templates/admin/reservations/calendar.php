@@ -26,14 +26,14 @@ $daysInMonth = (int) $end->format('j');
 ?>
 
 <div class="flex items-center justify-between mb-6">
-    <a href="/admin/reservations/calendrier?month=<?= $prevMonth ?>&year=<?= $prevYear ?>"
+    <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.calendar') ?>?month=<?= $prevMonth ?>&year=<?= $prevYear ?>"
        class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">
         ← <?= $monthNames[$prevMonth] ?>
     </a>
     <h2 class="text-lg font-semibold text-gray-800">
         <?= $monthNames[$month] ?> <?= $year ?>
     </h2>
-    <a href="/admin/reservations/calendrier?month=<?= $nextMonth ?>&year=<?= $nextYear ?>"
+    <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.calendar') ?>?month=<?= $nextMonth ?>&year=<?= $nextYear ?>"
        class="px-3 py-1.5 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">
         <?= $monthNames[$nextMonth] ?> →
     </a>
@@ -72,7 +72,7 @@ $daysInMonth = (int) $end->format('j');
                         }
                     }
                 ?>
-                    <a href="/admin/reservations/<?= $r->getId() ?>"
+                    <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.show', ['id' => $r->getId()]) ?>"
                        title="<?= $needsFabrication ? '⚒ Fabrication à la demande requise — ' : '' ?><?= \Rore\Presentation\Template\Html::e($r->getCustomerName()) ?>"
                        class="block mt-0.5 px-1 py-0.5 rounded text-xs truncate
                            <?= $r->isConfirmed() ? 'bg-green-100 text-green-800' :

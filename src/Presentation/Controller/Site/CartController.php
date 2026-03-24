@@ -68,7 +68,7 @@ class CartController extends Controller
     public function setDates(): void
     {
         $this->requirePost();
-        $redirect = $this->request->body->getStringParam('redirect', '/panier');
+        $redirect = $this->request->body->getStringParam('redirect', $this->urlResolver->resolve(self::class . '.index'));
 
         $startDate = $this->request->body->getStringParam('start_date');
         $endDate   = $this->request->body->getStringParam('end_date');
@@ -76,7 +76,7 @@ class CartController extends Controller
         // Dates vides = intention de réinitialiser le panier
         if ($startDate === '' || $endDate === '') {
             $this->cart->clear();
-            $this->redirect('/panier');
+            $this->redirect($this->urlResolver->resolve(self::class . '.index'));
             return;
         }
 
@@ -88,7 +88,7 @@ class CartController extends Controller
             $this->flash('success', 'Dates enregistrées.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
-            $redirect = '/panier';
+            $redirect = $this->urlResolver->resolve(self::class . '.index');
         }
         $this->redirect($redirect);
     }
@@ -106,7 +106,7 @@ class CartController extends Controller
             $this->flash('error', $e->getMessage());
         }
 
-        $redirect = $this->request->queryString->getStringParam('redirect', '/panier');
+        $redirect = $this->request->queryString->getStringParam('redirect', $this->urlResolver->resolve(self::class . '.index'));
         $this->redirect($redirect);
     }
 
@@ -114,13 +114,13 @@ class CartController extends Controller
     {
         $this->requirePost();
         $this->removeFromCartUseCase->execute($this->request->body->getIntParam('product_id'));
-        $this->redirect('/panier');
+        $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function checkout(): void
     {
         if (!$this->cart->hasDates() || $this->cart->isEmpty()) {
-            $this->redirect('/panier');
+            $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
 
         $this->render('site/checkout', [
@@ -142,10 +142,10 @@ class CartController extends Controller
                 notes:           $this->request->body->getStringParam('notes') ?: null,
             );
 
-            $this->redirect('/panier/confirmation?id=' . $reservationId);
+            $this->redirect($this->urlResolver->resolve(self::class . '.confirmation') . '?id=' . $reservationId);
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
-            $this->redirect('/panier/checkout');
+            $this->redirect($this->urlResolver->resolve(self::class . '.checkout'));
         }
     }
 

@@ -5,7 +5,7 @@
         — <?= $cart->getItemCount() ?> article(s)
     </p>
 
-    <form method="post" action="/panier/checkout" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
+    <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.processCheckout') ?>" class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
         <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
 
         <div>

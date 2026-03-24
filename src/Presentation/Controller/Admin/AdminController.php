@@ -28,7 +28,7 @@ abstract class AdminController extends Controller
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver);
         if (empty($this->session->get('admin_logged_in'))) {
-            $this->redirect('/admin');
+            $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
         }
     }
 

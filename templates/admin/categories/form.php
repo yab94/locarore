@@ -3,7 +3,7 @@
 
 <div class="max-w-xl">
     <form id="category-form" method="post"
-          action="<?= $category ? '/admin/categories/' . $category->getId() . '/modifier' : '/admin/categories/creer' ?>"
+          action="<?= $category ? $urlResolver->resolve(\Rore\Presentation\Controller\Admin\CategoryController::class . '.update', ['id' => $category->getId()]) : $urlResolver->resolve(\Rore\Presentation\Controller\Admin\CategoryController::class . '.store') ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
         <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
 
@@ -80,7 +80,7 @@
                     class="bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-brand-700 transition text-sm">
                 <?= $category ? 'Enregistrer' : 'Créer' ?>
             </button>
-            <a href="/admin/categories"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\CategoryController::class . '.index') ?>"
                class="px-6 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 transition">
                 Annuler
             </a>

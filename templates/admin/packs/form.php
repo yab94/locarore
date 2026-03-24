@@ -3,7 +3,7 @@
 
 <div class="max-w-2xl">
     <form id="pack-form" method="post"
-          action="<?= $pack ? '/admin/packs/' . $pack->getId() . '/modifier' : '/admin/packs/creer' ?>"
+          action="<?= $pack ? $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.update', ['id' => $pack->getId()]) : $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.store') ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-6">
         <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
 
@@ -109,7 +109,7 @@
                     class="bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-brand-700 transition text-sm">
                 <?= $pack ? 'Enregistrer' : 'Créer le pack' ?>
             </button>
-            <a href="/admin/packs"
+            <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\PackController::class . '.index') ?>"
                class="px-6 py-2.5 rounded-lg border border-gray-300 text-sm text-gray-700 hover:bg-gray-50 transition">
                 Annuler
             </a>

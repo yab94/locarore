@@ -12,7 +12,7 @@
         $label = $settings->get('reservation.status.filter.' . $val);
         $label = $label !== '' ? $label : $fallbackLabel;
     ?>
-        <a href="/admin/reservations?status=<?= \Rore\Presentation\Template\Html::e((string) $val) ?>"
+        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>?status=<?= \Rore\Presentation\Template\Html::e((string) $val) ?>"
            class="px-3 py-1.5 rounded-lg text-sm font-medium border transition
                <?= ($currentStatus ?? 'all') === $val
                    ? 'bg-brand-600 text-white border-brand-600'
@@ -60,7 +60,7 @@
                     </td>
                     <td class="px-6 py-4 text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>
                     <td class="px-6 py-4 text-right">
-                        <a href="/admin/reservations/<?= $r->getId() ?>"
+                        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.show', ['id' => $r->getId()]) ?>"
                            class="text-brand-600 hover:underline">Voir</a>
                     </td>
                 </tr>

@@ -126,16 +126,22 @@
         <?php
         $s  = $reservation->getStatus();
         $id = $reservation->getId();
+        $_rc = \Rore\Presentation\Controller\Admin\ReservationController::class;
+        // Pré-résolution des URLs d'action
+        $_urlDevis     = $urlResolver->resolve($_rc . '.quote',     ['id' => $id]);
+        $_urlConfirmer = $urlResolver->resolve($_rc . '.confirm',   ['id' => $id]);
+        $_urlAnnuler   = $urlResolver->resolve($_rc . '.cancel',    ['id' => $id]);
+        $_urlStatut    = $urlResolver->resolve($_rc . '.setStatus', ['id' => $id]);
         // Helper local : bouton POST
-        $btn = fn(string $action, string $label, string $cls, ?string $confirm = null) =>
-            '<form method="post" action="/admin/reservations/' . $id . '/' . $action . '">'
+        $btn = fn(string $url, string $label, string $cls, ?string $confirm = null) =>
+            '<form method="post" action="' . $url . '">'
             . (require BASE_PATH . '/templates/partials/csrf.php')
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '"'
             . ($confirm ? ' data-confirm="' . htmlspecialchars($confirm) . '"' : '') . '>'
             . $label . '</button></form>';
-        // Bouton vers statut via /statut (champ caché)
+        // Bouton vers statut via setStatus (champ caché)
         $btnStatus = fn(string $target, string $label, string $cls) =>
-            '<form method="post" action="/admin/reservations/' . $id . '/statut">'
+            '<form method="post" action="' . $_urlStatut . '">'
             . (require BASE_PATH . '/templates/partials/csrf.php')
             . '<input type="hidden" name="status" value="' . $target . '">'
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '">'
@@ -143,12 +149,12 @@
         ?>
 
         <?php if ($s === 'pending'): ?>
-            <?= $btn('devis',     '📄 Envoyer un devis', 'bg-orange-500 text-white hover:bg-orange-600') ?>
-            <?= $btn('confirmer', '✓ Confirmer',          'bg-green-600 text-white hover:bg-green-700') ?>
+            <?= $btn($_urlDevis,     '📄 Envoyer un devis', 'bg-orange-500 text-white hover:bg-orange-600') ?>
+            <?= $btn($_urlConfirmer, '✓ Confirmer',          'bg-green-600 text-white hover:bg-green-700') ?>
         <?php endif; ?>
 
         <?php if ($s === 'quoted'): ?>
-            <?= $btn('confirmer', '✓ Confirmer',                    'bg-green-600 text-white hover:bg-green-700') ?>
+            <?= $btn($_urlConfirmer, '✓ Confirmer',                    'bg-green-600 text-white hover:bg-green-700') ?>
             <?= $btnStatus('pending', '↩ Remettre en attente',     'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
         <?php endif; ?>
 
@@ -162,10 +168,10 @@
         <?php endif; ?>
 
         <?php if ($s !== 'cancelled'): ?>
-            <?= $btn('annuler', '✕ Annuler', 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100', 'Annuler cette réservation ?') ?>
+            <?= $btn($_urlAnnuler, '✕ Annuler', 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100', 'Annuler cette réservation ?') ?>
         <?php endif; ?>
 
-        <a href="/admin/reservations"
+        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>"
            class="block w-full text-center py-3 rounded-xl border border-gray-300 text-sm text-gray-600 hover:bg-gray-50 transition">
             ← Retour
         </a>
