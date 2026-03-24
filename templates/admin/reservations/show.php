@@ -45,7 +45,7 @@
                         $statusLabel = $settings->get('reservation.status.label.' . $status);
                         $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
                         ?>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require 'partials/reservation-status-class.php'; })() ?>">
                             <?= $html($statusLabel) ?>
                         </span>
                     </dd>
@@ -134,14 +134,14 @@
         // Helper local : bouton POST
         $btn = fn(string $url, string $label, string $cls, ?string $confirm = null) =>
             '<form method="post" action="' . $url . '">'
-            . (require BASE_PATH . '/templates/partials/csrf.php')
+            . (require 'partials/csrf.php')
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '"'
             . ($confirm ? ' data-confirm="' . htmlspecialchars($confirm) . '"' : '') . '>'
             . $label . '</button></form>';
         // Bouton vers statut via setStatus (champ caché)
         $btnStatus = fn(string $target, string $label, string $cls) =>
             '<form method="post" action="' . $_urlStatut . '">'
-            . (require BASE_PATH . '/templates/partials/csrf.php')
+            . (require 'partials/csrf.php')
             . '<input type="hidden" name="status" value="' . $target . '">'
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '">'
             . $label . '</button></form>';

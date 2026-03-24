@@ -2,7 +2,7 @@
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Administration</h1>
         <form method="post" action="<?= $url('Admin\Auth.processLogin') ?>" class="space-y-4">
-            <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
+            <?= require 'partials/csrf.php' ?>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
                 <input type="password" name="password" required autofocus

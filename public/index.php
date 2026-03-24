@@ -33,7 +33,7 @@ foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
 }
 
 // ─── Router ────────────────────────────────────────────────────────────────
-$router = new \Rore\Infrastructure\Http\Router($container);
+$router = new \Rore\Infrastructure\Http\Router($container, $config);
 $router->addRoutes($config->getArrayParam('routes') ?? []);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────

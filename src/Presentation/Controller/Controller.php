@@ -48,10 +48,10 @@ abstract class Controller
         extract($data);
 
         ob_start();
-        require BASE_PATH . '/templates/' . $template . '.php';
+        require $template . '.php';
         $content = ob_get_clean();
 
-        require BASE_PATH . '/templates/' . $layout . '.php';
+        require $layout . '.php';
     }
 
     protected function redirect(string $url): never

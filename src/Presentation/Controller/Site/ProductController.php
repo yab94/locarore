@@ -50,7 +50,7 @@ class ProductController extends SiteController
 
         if (!$product || !$product->isActive()) {
             $this->response->setStatusCode(404);
-            require BASE_PATH . '/templates/errors/404.php';
+            require 'errors/404.php';
             return;
         }
 

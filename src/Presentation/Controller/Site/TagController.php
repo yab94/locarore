@@ -46,7 +46,7 @@ class TagController extends SiteController
 
         if (!$tag) {
             $this->response->setStatusCode(404);
-            require BASE_PATH . '/templates/errors/404.php';
+            require 'errors/404.php';
             return;
         }
 

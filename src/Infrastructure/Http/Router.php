@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Http;
 
+use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Di\Container;
 
 class Router
@@ -11,7 +12,10 @@ class Router
     /** @var array{method: string, path: string, handler: array}[] */
     private array $routes = [];
 
-    public function __construct(private readonly Container $container) {}
+    public function __construct(
+        private readonly Container $container,
+        private readonly Config    $config,
+    ) {}
 
     public function get(string $path, array $handler): void
     {
@@ -43,6 +47,15 @@ class Router
 
     public function dispatch(): void
     {
+        try {
+            $this->doDispatch();
+        } catch (\Throwable $e) {
+            $this->handleError($e);
+        }
+    }
+
+    private function doDispatch(): void
+    {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri    = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
         $uri    = rtrim($uri, '/') ?: '/';
@@ -67,7 +80,19 @@ class Router
         }
 
         http_response_code(404);
-        require BASE_PATH . '/templates/errors/404.php';
+        require 'errors/404.php';
+    }
+
+    private function handleError(\Throwable $e): void
+    {
+        http_response_code(500);
+
+        $isDev        = $this->config->getStringParam('app.env', 'prod') === 'dev';
+        $errorMessage = $isDev
+            ? $e::class . ': ' . $e->getMessage() . "\n\n" . $e->getTraceAsString()
+            : null;
+
+        require 'errors/500.php';
     }
 
     private function compile(string $path): string

@@ -24,7 +24,7 @@
 <?php else: ?>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($products as $product): ?>
-            <?php include BASE_PATH . '/templates/partials/product-card.php'; ?>
+            <?php include 'partials/product-card.php'; ?>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>

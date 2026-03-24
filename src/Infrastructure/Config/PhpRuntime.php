@@ -21,7 +21,11 @@ final class PhpRuntime
         }
 
         foreach ($settings as $directive => $value) {
-            ini_set((string) $directive, (string) $value);
+            if ($directive === 'include_path') {
+                set_include_path($value . PATH_SEPARATOR . get_include_path());
+            } else {
+                ini_set((string) $directive, (string) $value);
+            }
         }
     }
 }

@@ -33,7 +33,12 @@ final class Config extends AbstractTypedParams
             }
         }
 
-        // 2. Déterminer l'environnement (tout inconnu → prod, sécurité par défaut)
+        // 2. Exposer BASE_PATH comme variable d'environnement
+        //    afin que ${BASE_PATH} soit utilisable comme placeholder dans les ini
+        putenv('BASE_PATH=' . $basePath);
+        $_ENV['BASE_PATH'] = $basePath;
+
+        // 3. Déterminer l'environnement (tout inconnu → prod, sécurité par défaut)
         $env = (getenv('APP_ENV') === 'dev') ? 'dev' : 'prod';
 
         // 3. Charger default.ini puis {env}.ini (deep merge)

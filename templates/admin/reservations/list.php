@@ -54,7 +54,7 @@
                         $statusLabel = $settings->get('reservation.status.label.' . $status);
                         $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
                         ?>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require 'partials/reservation-status-class.php'; })() ?>">
                             <?= $html($statusLabel) ?>
                         </span>
                     </td>

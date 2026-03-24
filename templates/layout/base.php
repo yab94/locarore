@@ -47,7 +47,7 @@
 </head>
 <body class="h-full bg-gray-50 flex flex-col font-sans antialiased">
 
-    <?php require BASE_PATH . '/templates/layout/header.php'; ?>
+    <?php require 'layout/header.php'; ?>
 
     <main class="flex-1 container mx-auto px-4 py-8 max-w-6xl">
 
@@ -66,7 +66,7 @@
 
     </main>
 
-    <?php require BASE_PATH . '/templates/layout/footer.php'; ?>
+    <?php require 'layout/footer.php'; ?>
 
     <script src="/assets/js/app.js"></script>
 </body>

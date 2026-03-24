@@ -5,7 +5,7 @@
     <form id="pack-form" method="post"
           action="<?= $pack ? $url('Admin\Pack.update', ['id' => $pack->getId()]) : $url('Admin\Pack.store') ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-6">
-        <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
+        <?= require 'partials/csrf.php' ?>
 
         <!-- Nom -->
         <div>
