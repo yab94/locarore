@@ -18,32 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Tailwind CDN (remplacer par /assets/css/app.css compilé en production) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50:  '#fff0f4',
-                            100: '#ffd6e2',
-                            600: '#ff0a52',
-                            700: '#d40047',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        serif: ['Roboto Slab', 'ui-serif', 'Georgia', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        h1, h2, h3, h4 { font-family: 'Roboto Slab', serif; }
-        body { color: #3a3a3a; }
-    </style>
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body class="h-full bg-gray-50 flex flex-col font-sans antialiased">
 

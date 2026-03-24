@@ -5,23 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $html($title ?? 'Admin — Locarore') ?></title>
     <meta name="robots" content="noindex, nofollow">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50:  '#fff0f4',
-                            100: '#ffd6e2',
-                            600: '#ff0a52',
-                            700: '#d40047',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body class="h-full bg-gray-100 flex">
 

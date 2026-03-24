@@ -35,6 +35,15 @@ services:
     networks:
       - locarore
 
+  node:
+    image: node:lts-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    profiles:
+      - tools
+
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     depends_on:
@@ -50,6 +59,7 @@ services:
 
 volumes:
   mysql_data:
+  node_modules:
 
 networks:
   locarore:

@@ -1,5 +1,6 @@
 # Dépendances
 /vendor/
+/node_modules/
 
 # Uploads (fichiers ignorés, mais la structure de dossiers est trackée via .gitkeep)
 /public/assets/uploads/*
