@@ -1,6 +1,7 @@
 <header class="bg-white shadow-sm">
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
+        <img src="/assets/images/logo-latyana-evenements.png" alt="<?= \Rore\Presentation\Template\Html::e($settings->get('site.name')) ?> logo" class="h-8 w-auto" />
         <a href="/" class="text-xl font-bold text-brand-700 tracking-tight">
             <?= \Rore\Presentation\Template\Html::e($settings->get('site.name')) ?>
         </a>
