@@ -20,7 +20,7 @@ class Router
     ) {
         if($config->getStringParam('app.env') === $config->getStringParam('seo.force_https') && strpos($request->server->getStringParam('SCRIPT_URI'), 'https') !== 0) {
             $response->redirect('https://' . $request->server->getStringParam('HTTP_HOST') . $request->server->getStringParam('REQUEST_URI'), 301);
-             exit; 
+            exit(); 
         }
     }
 
