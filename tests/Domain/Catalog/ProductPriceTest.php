@@ -102,6 +102,54 @@ class ProductPriceTest
         Assert::equals(100.0, $p->calculatePrice('2026-06-06', '2026-06-08'));
     }
 
+    // ── Sam seul ou dim seul ≠ forfait WE ────────────────────────────────
+
+    public function testSaturdayAloneIsNotWeekend(): void
+    {
+        $p = $this->makeProduct(priceExtraWeekend: 0.0, priceExtraWeekday: 15.0);
+        // Jeu-Sam 2026-06-04/06 : 3 jours, sam présent mais dim absent → weekday
+        // extraDays = 1 × 15 = 15 → 95
+        Assert::equals(95.0, $p->calculatePrice('2026-06-04', '2026-06-06'));
+    }
+
+    public function testSundayAloneIsNotWeekend(): void
+    {
+        $p = $this->makeProduct(priceExtraWeekend: 0.0, priceExtraWeekday: 15.0);
+        // Dim-Mar 2026-06-07/09 : 3 jours, dim présent mais sam absent → weekday
+        // extraDays = 1 × 15 = 15 → 95
+        Assert::equals(95.0, $p->calculatePrice('2026-06-07', '2026-06-09'));
+    }
+
+    // ── > 4 jours avec priceExtraWeekend > 0 ─────────────────────────────
+
+    public function testFiveDaysWithSatSunUsesWeekdayRateNotWeekendRate(): void
+    {
+        $p = $this->makeProduct(priceExtraWeekend: 50.0, priceExtraWeekday: 15.0);
+        // Mer-Dim 2026-06-03/07 : 5 jours, sam+dim inclus MAIS >4j → weekday
+        // extraDays = 3 × 15 = 45 → 80 + 45 = 125  (pas 50€ de WE)
+        Assert::equals(125.0, $p->calculatePrice('2026-06-03', '2026-06-07'));
+    }
+
+    // ── > 4 jours sans aucun WE ──────────────────────────────────────────
+
+    public function testSevenDaysWeekdayOnly(): void
+    {
+        $p = $this->makeProduct(priceExtraWeekday: 10.0);
+        // Lun-Dim 2026-06-01/07 : 7 jours, sam+dim présents MAIS >4j → weekday
+        // extraDays = 5 × 10 = 50 → 80 + 50 = 130
+        Assert::equals(130.0, $p->calculatePrice('2026-06-01', '2026-06-07'));
+    }
+
+    // ── 4 jours sans sam+dim → weekday ───────────────────────────────────
+
+    public function testFourDaysNoWeekendUsesWeekdayRate(): void
+    {
+        $p = $this->makeProduct(priceExtraWeekend: 0.0, priceExtraWeekday: 15.0);
+        // Lun-Jeu 2026-06-01/04 : 4 jours, aucun sam/dim → weekday
+        // extraDays = 2 × 15 = 30 → 80 + 30 = 110
+        Assert::equals(110.0, $p->calculatePrice('2026-06-01', '2026-06-04'));
+    }
+
     // ── Accepte string ou DateTimeImmutable ──────────────────────────────
 
     public function testAcceptsDateTimeImmutable(): void
