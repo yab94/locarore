@@ -13,7 +13,7 @@ class AuthController extends Controller
         if (!empty($this->session->get('admin_logged_in'))) {
             $this->redirect($this->urlResolver->resolve(DashboardController::class . '.index'));
         }
-        $this->render('admin/login', ['title' => 'Administration']);
+        $this->render('admin/login', ['title' => 'Administration'], 'layout/admin');
     }
 
     public function processLogin(): void

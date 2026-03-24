@@ -14,7 +14,7 @@ class FileUploader
 
     public function __construct(Config $config)
     {
-        $this->uploadDir    = BASE_PATH . '/public' . $config->getStringParam('upload.upload_path');
+        $this->uploadDir    = $config->getParam('app.root_dir') . '/public' . $config->getStringParam('upload.upload_path');
         $this->maxSize      = (int) $config->getStringParam('upload.max_size');
         $this->allowedTypes = array_map('trim', explode(',', $config->getStringParam('upload.allowed_types')));
 
