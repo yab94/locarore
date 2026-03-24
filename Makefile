@@ -36,3 +36,9 @@ mep-ovh:
 
 php:
 	docker compose exec php bash
+
+test:
+	docker compose exec php php tests/run.php
+
+test-file:
+	docker compose exec php php tests/run.php $(FILE)

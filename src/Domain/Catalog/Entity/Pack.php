@@ -42,4 +42,39 @@ class Pack
 
     /** @param PackItem[] $items */
     public function setItems(array $items): void       { $this->items = $items; }
+
+    /**
+     * Prix du pack pour un nombre de jours donné.
+     */
+    public function calculateTotal(int $nbDays): float
+    {
+        return $this->pricePerDay * max(1, $nbDays);
+    }
+
+    /**
+     * Prix théorique des articles au détail (quantité × prix unitaire du produit
+     * sur la même période). Permet d'afficher la « valeur » et l'économie réalisée.
+     *
+     * @param Product[] $products Tous les produits du pack (dans n'importe quel ordre)
+     */
+    public function calculateItemsTotal(
+        array $products,
+        \DateTimeImmutable|string $start,
+        \DateTimeImmutable|string $end,
+    ): float {
+        $byId = [];
+        foreach ($products as $product) {
+            $byId[$product->getId()] = $product;
+        }
+
+        $total = 0.0;
+        foreach ($this->items as $item) {
+            $product = $byId[$item->getProductId()] ?? null;
+            if ($product !== null) {
+                $total += $item->getQuantity() * $product->calculatePrice($start, $end);
+            }
+        }
+
+        return $total;
+    }
 }
