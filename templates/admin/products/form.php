@@ -152,7 +152,7 @@
             <form method="post" action="/admin/produits/<?= $product->getId() ?>/photo"
                   enctype="multipart/form-data" class="space-y-3">
                 <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
-                <input type="file" name="photo" accept="image/jpeg,image/png,image/webp" required
+                <input type="file" name="photo" accept="<?= $config->getStringParam('upload.allowed_types') ?>" required
                        class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
                 <button type="submit"
                         class="w-full bg-gray-800 text-white text-sm font-medium py-2 rounded-lg hover:bg-gray-900 transition">
