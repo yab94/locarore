@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
-use Rore\Domain\Catalog\Service\PricingCalculator;
-
 class Product implements PricableInterface
 {
     /** @var ProductPhoto[] */
@@ -53,15 +51,6 @@ class Product implements PricableInterface
 
     /** Implémente PricableInterface : alias de getPriceBase() pour le service de calcul. */
     public function getBasePrice(): float { return $this->priceBase; }
-
-    /**
-     * Calcule le prix total pour une période.
-     * Délègue au PricingCalculator (source de vérité unique).
-     */
-    public function calculatePrice(\DateTimeImmutable|string $start, \DateTimeImmutable|string $end): float
-    {
-        return (new PricingCalculator())->calculate($this, $start, $end);
-    }
 
     /** @return int[] */
     public function getCategoryIds(): array            { return $this->categoryIds ?: [$this->categoryId]; }

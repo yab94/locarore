@@ -18,6 +18,7 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Domain\Catalog\Service\PricingCalculator;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 
@@ -27,6 +28,7 @@ class ReservationController extends AdminController
         private readonly MySqlReservationRepository $repo,
         private readonly MySqlProductRepository     $productRepo,
         private readonly MySqlPackRepository        $packRepo,
+        private readonly PricingCalculator          $pricing,
         private readonly GetReservationsUseCase     $getReservationsUseCase,
         private readonly SetReservationStatusUseCase $setReservationStatusUseCase,
         private readonly ConfirmReservationUseCase  $confirmReservationUseCase,
@@ -65,23 +67,33 @@ class ReservationController extends AdminController
         }
 
         // Charger les noms produits
-        $products = [];
-        $packs    = [];
+        $products             = [];
+        $packs                = [];
+        $productCurrentPrices = [];
         foreach ($reservation->getItems() as $item) {
             if ($item->getPackId() !== null) {
                 $pack = $this->packRepo->findById($item->getPackId());
                 if ($pack) $packs[$pack->getId()] = $pack;
             } else {
-                $products[$item->getProductId()] = $this->productRepo->findById($item->getProductId());
+                $product = $this->productRepo->findById($item->getProductId());
+                $products[$item->getProductId()] = $product;
+                if ($product) {
+                    $productCurrentPrices[$item->getProductId()] = $this->pricing->calculate(
+                        $product,
+                        $reservation->getStartDate(),
+                        $reservation->getEndDate(),
+                    );
+                }
             }
         }
 
         $this->render('admin/reservations/show', [
-            'title'       => 'Réservation #' . $id,
-            'reservation' => $reservation,
-            'products'    => $products,
-            'packs'       => $packs,
-            'dateRange'   => new DateRange($reservation->getStartDate(), $reservation->getEndDate()),
+            'title'                => 'Réservation #' . $id,
+            'reservation'          => $reservation,
+            'products'             => $products,
+            'packs'                => $packs,
+            'productCurrentPrices' => $productCurrentPrices,
+            'dateRange'            => new DateRange($reservation->getStartDate(), $reservation->getEndDate()),
         ]);
     }
 

@@ -14,6 +14,7 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
+use Rore\Domain\Catalog\Service\PricingCalculator;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -37,6 +38,7 @@ class CartController extends SiteController
         private readonly RemoveFromCartUseCase   $removeFromCartUseCase,
         private readonly CheckoutUseCase         $checkoutUseCase,
         private readonly PackRepositoryInterface $packRepo,
+        private readonly PricingCalculator       $pricing,
         RequestInterface                         $request,
         ResponseInterface                        $response,
         Config                                   $config,
@@ -54,19 +56,35 @@ class CartController extends SiteController
     {
         $cartItems    = $this->cart->getItems();
         $cartProducts = [];
+        $productPrices = [];
 
         foreach ($cartItems as $productId => $quantity) {
             $product = $this->productRepo->findById((int) $productId);
             if ($product) {
                 $cartProducts[] = ['product' => $product, 'quantity' => $quantity];
+                if ($this->cart->hasDates()) {
+                    $productPrices[$product->getId()] = $this->pricing->calculate(
+                        $product,
+                        $this->cart->getStartDate(),
+                        $this->cart->getEndDate(),
+                    );
+                }
             }
         }
 
-        $cartPacks = [];
+        $cartPacks  = [];
+        $packPrices = [];
         foreach ($this->cart->getPacks() as $packId => $_) {
             $pack = $this->packRepo->findById((int) $packId);
             if ($pack) {
                 $cartPacks[] = $pack;
+                if ($this->cart->hasDates()) {
+                    $packPrices[$pack->getId()] = $this->pricing->calculate(
+                        $pack,
+                        $this->cart->getStartDate(),
+                        $this->cart->getEndDate(),
+                    );
+                }
             }
         }
 
@@ -77,6 +95,8 @@ class CartController extends SiteController
             'cart'          => $this->cart,
             'cartProducts'  => $cartProducts,
             'cartPacks'     => $cartPacks,
+            'productPrices' => $productPrices,
+            'packPrices'    => $packPrices,
             'allCategories' => $allCategories,
         ]);
     }

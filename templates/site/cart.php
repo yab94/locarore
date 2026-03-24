@@ -73,7 +73,7 @@
                         </h3>
                         <p class="text-sm text-gray-500">Quantité : <?= $qty ?></p>
                         <p class="text-sm text-gray-500">
-                            <?= number_format($p->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $qty, 2, ',', ' ') ?> €
+                            <?= number_format(($productPrices[$p->getId()] ?? 0) * $qty, 2, ',', ' ') ?> €
                         </p>
                     </div>
                     <form method="post" action="<?= $url('Site\Cart.remove') ?>">
@@ -124,10 +124,10 @@
             <?php
             $total = 0;
             foreach ($cartProducts as $row) {
-                $total += $row['product']->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $row['quantity'];
+                $total += ($productPrices[$row['product']->getId()] ?? 0) * $row['quantity'];
             }
             foreach ($cartPacks as $pack) {
-                $total += $pack->calculatePrice($cart->getStartDate(), $cart->getEndDate());
+                $total += $packPrices[$pack->getId()] ?? 0;
             }
             ?>
             <div class="flex justify-between text-sm text-gray-600 mb-2">

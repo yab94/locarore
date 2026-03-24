@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Rore\Domain\Catalog\Service;
 
 use Rore\Domain\Catalog\Entity\PricableInterface;
+use Rore\Domain\Catalog\Entity\Pack;
+use Rore\Domain\Catalog\Entity\Product;
 
 /**
  * Service de domaine : calcul du prix d'une entité tarifable pour une période.
@@ -41,5 +43,33 @@ final class PricingCalculator
         $extraDays = max(0, $days - 2);
 
         return $item->getBasePrice() + ($extraDays * $extraRate);
+    }
+
+    /**
+     * Prix théorique des articles d'un pack au détail (quantité × prix unitaire).
+     * Permet d'afficher la « valeur » et l'économie réalisée.
+     *
+     * @param Product[] $products Tous les produits du pack (dans n'importe quel ordre)
+     */
+    public function calculateItemsTotal(
+        Pack                      $pack,
+        array                     $products,
+        \DateTimeImmutable|string $start,
+        \DateTimeImmutable|string $end,
+    ): float {
+        $byId = [];
+        foreach ($products as $product) {
+            $byId[$product->getId()] = $product;
+        }
+
+        $total = 0.0;
+        foreach ($pack->getItems() as $item) {
+            $product = $byId[$item->getProductId()] ?? null;
+            if ($product !== null) {
+                $total += $item->getQuantity() * $this->calculate($product, $start, $end);
+            }
+        }
+
+        return $total;
     }
 }

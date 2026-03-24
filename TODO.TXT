@@ -1,14 +1,23 @@
 Features
 - generation catalogue PDF en admin uniquement
 - formulaire de contact
-- Il faudra centraliser la logique commune de calcul du prix des packs et produis en faisant un service de calcul avec la logique qui prend en param une interface qui aurait les champs price communs aux deux Entity ou alors faire que le sdeux hérite d'un AbstractPricable qui aurait les 3 champs et l alogique de calcul et les eux en héritent, qu'en penses-tu ?
 - Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
 - Prendre des conseils SEO avec Claude voir ce qu'il pense du code
 - Controller pour le sitemap SEO
 - Controller pour le robots.txt SEO
 - Controller pour le humans.txt SEO
 - Title trop long 60 chars limiter a X parents SEO
+- vérifier que les entity n'ont pas de logique métier (creer ou enrichir des services plutot)
+- SettingsService devrait etre dans Domain je crois...
 
 Tests
 - Tester que la même logiqe WE + 4 jours etc s'appliquent aux packs
 - Tester qu'un pack n'est pas dispo si un seul produit pas dispo
+
+
+
+
+En cours
+
+---- Il faudra centraliser la logique commune de calcul du prix des packs et produis en faisant un service de calcul avec la logique qui prend en param une interface qui aurait les champs price communs aux deux Entity ou alors faire que le sdeux hérite d'un AbstractPricable qui aurait les 3 champs et l alogique de calcul et les eux en héritent, qu'en penses-tu ?
+- les tests doivent tester le service pricing et pas les entity pack et product pour le calcul des prix

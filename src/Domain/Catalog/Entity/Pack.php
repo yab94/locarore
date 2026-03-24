@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
-use Rore\Domain\Catalog\Service\PricingCalculator;
-
 class Pack implements PricableInterface
 {
     /** @var PackItem[] */
@@ -80,50 +78,4 @@ class Pack implements PricableInterface
 
     /** Implémente PricableInterface : alias de getPricePerDay() pour le service de calcul. */
     public function getBasePrice(): float { return $this->pricePerDay; }
-
-    /**
-     * Prix du pack pour une période donnée.
-     * Délègue au PricingCalculator (source de vérité unique).
-     */
-    public function calculatePrice(\DateTimeImmutable|string $start, \DateTimeImmutable|string $end): float
-    {
-        return (new PricingCalculator())->calculate($this, $start, $end);
-    }
-
-    /**
-     * @deprecated Utiliser calculatePrice(start, end)
-     */
-    public function calculateTotal(int $nbDays): float
-    {
-        $start = new \DateTimeImmutable('today');
-        $end   = $start->modify('+' . ($nbDays - 1) . ' days');
-        return $this->calculatePrice($start, $end);
-    }
-
-    /**
-     * Prix théorique des articles au détail (quantité × prix unitaire du produit
-     * sur la même période). Permet d'afficher la « valeur » et l'économie réalisée.
-     *
-     * @param Product[] $products Tous les produits du pack (dans n'importe quel ordre)
-     */
-    public function calculateItemsTotal(
-        array $products,
-        \DateTimeImmutable|string $start,
-        \DateTimeImmutable|string $end,
-    ): float {
-        $byId = [];
-        foreach ($products as $product) {
-            $byId[$product->getId()] = $product;
-        }
-
-        $total = 0.0;
-        foreach ($this->items as $item) {
-            $product = $byId[$item->getProductId()] ?? null;
-            if ($product !== null) {
-                $total += $item->getQuantity() * $product->calculatePrice($start, $end);
-            }
-        }
-
-        return $total;
-    }
 }

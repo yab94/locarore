@@ -80,7 +80,7 @@
                         if ($item->getPackId() !== null) continue; // packs traités en dessous
                         $p            = $products[$item->getProductId()] ?? null;
                         $snapshot     = $item->getUnitPriceSnapshot();
-                        $currentPrice = $p ? $p->calculatePrice($reservation->getStartDate(), $reservation->getEndDate()) : null;
+                        $currentPrice = $productCurrentPrices[$item->getProductId()] ?? null;
                         $totalSnap    = $snapshot !== null ? $snapshot * $item->getQuantity() : null;
                         $totalCurrent = $currentPrice !== null ? $currentPrice * $item->getQuantity() : null;
                         if ($totalSnap    !== null) $grandTotalSnapshot += $totalSnap;

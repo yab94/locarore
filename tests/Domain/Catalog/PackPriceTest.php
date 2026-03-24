@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Domain\Catalog\Service\PricingCalculator;
 
 /**
  * Pack composé de 4× Produit A (20 €/base) + 6× Produit B (30 €/base).
@@ -16,6 +17,12 @@ use Rore\Domain\Catalog\Entity\Product;
  */
 class PackPriceTest
 {
+    private PricingCalculator $calc;
+
+    public function setUp(): void
+    {
+        $this->calc = new PricingCalculator();
+    }
     private const DATE_1J_START = '2025-06-02'; // lundi
     private const DATE_1J_END   = '2025-06-02'; // même jour → 1 jour
     private const DATE_2J_END   = '2025-06-03'; // mardi   → 2 jours
@@ -121,7 +128,8 @@ class PackPriceTest
 
     public function testCalculateTotalForOneDay(): void
     {
-        Assert::equals(50.0, $this->makePack()->calculateTotal(1));
+        // 1 jour (lundi) → forfait base uniquement
+        Assert::equals(50.0, $this->calc->calculate($this->makePack(), '2025-06-02', '2025-06-02'));
     }
 
     public function testCalculateTotalForFiveDaysWithExtraWeekday(): void
@@ -129,27 +137,27 @@ class PackPriceTest
         // pricePerDay=50 (forfait base 2j) + priceExtraWeekday=40
         // 5j → 3 jours au-delà du forfait → 50 + (3 × 40) = 170
         $pack = $this->makePack(pricePerDay: 50.0, priceExtraWeekday: 40.0);
-        Assert::equals(170.0, $pack->calculatePrice('2025-06-02', '2025-06-06')); // lun → ven
+        Assert::equals(170.0, $this->calc->calculate($pack, '2025-06-02', '2025-06-06')); // lun → ven
     }
 
     public function testCalculateTotalNoExtraIfWithinTwoDays(): void
     {
         // Forfait base couvre les 2 premiers jours, pas de supplément
         $pack = $this->makePack(pricePerDay: 50.0, priceExtraWeekday: 40.0);
-        Assert::equals(50.0, $pack->calculatePrice('2025-06-02', '2025-06-03')); // 2 jours
+        Assert::equals(50.0, $this->calc->calculate($pack, '2025-06-02', '2025-06-03')); // 2 jours
     }
 
     public function testCalculateTotalNbDaysZeroFallsBackToOneDay(): void
     {
-        // nbDays ≤ 0 → on facture au minimum 1 jour
-        Assert::equals(50.0, $this->makePack()->calculateTotal(0));
+        // 1 jour minimum même si passé comme même date
+        Assert::equals(50.0, $this->calc->calculate($this->makePack(), '2025-06-02', '2025-06-02'));
     }
 
     public function testWeekendRateAppliedWhenSatAndSunAndLessThanFourDays(): void
     {
         // sam+dim dans ≤4j → supplément weekend (ici 10€/j, 0 extra day → total=50)
         $pack = $this->makePack(pricePerDay: 50.0, priceExtraWeekend: 10.0, priceExtraWeekday: 40.0);
-        Assert::equals(50.0, $pack->calculatePrice('2025-06-07', '2025-06-08')); // sam+dim = 2j ≤4j
+        Assert::equals(50.0, $this->calc->calculate($pack, '2025-06-07', '2025-06-08')); // sam+dim = 2j ≤4j
     }
 
     public function testWeekdayRateAppliedWhenMoreThanFourDays(): void
@@ -157,7 +165,7 @@ class PackPriceTest
         // sam+dim présents mais 5j > 4j → tarif weekday
         $pack = $this->makePack(pricePerDay: 50.0, priceExtraWeekend: 10.0, priceExtraWeekday: 40.0);
         // mer 04 → dim 08 = 5 jours, contient sam+dim mais >4j → extraRate=40
-        Assert::equals(50.0 + (3 * 40.0), $pack->calculatePrice('2025-06-04', '2025-06-08'));
+        Assert::equals(50.0 + (3 * 40.0), $this->calc->calculate($pack, '2025-06-04', '2025-06-08'));
     }
 
     // ── Total théorique au détail ─────────────────────────────────────────
@@ -165,7 +173,8 @@ class PackPriceTest
     public function testCalculateItemsTotalForOneDayRental(): void
     {
         // 4 × 20 + 6 × 30 = 260
-        $total = $this->makePack()->calculateItemsTotal(
+        $total = $this->calc->calculateItemsTotal(
+            $this->makePack(),
             [$this->makeProductA(), $this->makeProductB()],
             self::DATE_1J_START,
             self::DATE_1J_END,
@@ -176,7 +185,8 @@ class PackPriceTest
     public function testCalculateItemsTotalSameForTwoDaysNoBeyondBase(): void
     {
         // Le forfait base couvre 1-2 jours, donc même résultat sur 2 jours
-        $total = $this->makePack()->calculateItemsTotal(
+        $total = $this->calc->calculateItemsTotal(
+            $this->makePack(),
             [$this->makeProductA(), $this->makeProductB()],
             self::DATE_1J_START,
             self::DATE_2J_END,
@@ -188,8 +198,9 @@ class PackPriceTest
     {
         // Le pack offre un tarif avantageux vs la somme au détail
         $pack       = $this->makePack();
-        $packPrice  = $pack->calculateTotal(1);   // 50 €
-        $itemsTotal = $pack->calculateItemsTotal(
+        $packPrice  = $this->calc->calculate($pack, self::DATE_1J_START, self::DATE_1J_END); // 50 €
+        $itemsTotal = $this->calc->calculateItemsTotal(
+            $pack,
             [$this->makeProductA(), $this->makeProductB()],
             self::DATE_1J_START,
             self::DATE_1J_END,

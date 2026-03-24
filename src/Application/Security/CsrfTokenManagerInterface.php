@@ -10,11 +10,6 @@ namespace Rore\Application\Security;
 interface CsrfTokenManagerInterface
 {
     public function token(): string;
-
     public function validate(string $postedToken): bool;
-
-    /**
-     * Nom du champ POST qui transporte le token CSRF.
-     */
     public function postKey(): string;
 }
