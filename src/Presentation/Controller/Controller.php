@@ -12,6 +12,7 @@ use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\UrlResolver;
+use Rore\Presentation\Template\Html;
 
 abstract class Controller
 {
@@ -38,9 +39,10 @@ abstract class Controller
         // Compteur panier (pour le header)
         $data['cartItemCount'] = $this->cart->getItemCount();
         // Accès aux settings dans toutes les vues
-        $data['settings'] = $this->settings;
-        $data['config'] = $this->config;
-        $data['urlResolver'] = $this->urlResolver;
+        $data['settings']      = $this->settings;
+        $data['config']        = $this->config;
+        $data['urlResolver']   = $this->urlResolver;
+        $data['html']          = new Html();
 
         extract($data);
 

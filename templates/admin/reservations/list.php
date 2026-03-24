@@ -12,12 +12,12 @@
         $label = $settings->get('reservation.status.filter.' . $val);
         $label = $label !== '' ? $label : $fallbackLabel;
     ?>
-        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>?status=<?= \Rore\Presentation\Template\Html::e((string) $val) ?>"
+        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>?status=<?= $html((string) $val) ?>"
            class="px-3 py-1.5 rounded-lg text-sm font-medium border transition
                <?= ($currentStatus ?? 'all') === $val
                    ? 'bg-brand-600 text-white border-brand-600'
                    : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50' ?>">
-            <?= \Rore\Presentation\Template\Html::e($label) ?>
+            <?= $html($label) ?>
         </a>
     <?php endforeach; ?>
 </div>
@@ -42,11 +42,11 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 text-gray-400"><?= $r->getId() ?></td>
                     <td class="px-6 py-4">
-                        <p class="font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($r->getCustomerName()) ?></p>
-                        <p class="text-xs text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCustomerEmail()) ?></p>
+                        <p class="font-medium text-gray-800"><?= $html($r->getCustomerName()) ?></p>
+                        <p class="text-xs text-gray-400"><?= $html($r->getCustomerEmail()) ?></p>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <?= \Rore\Presentation\Template\Html::e($r->getStartDate()->format('d/m/Y')) ?> → <?= \Rore\Presentation\Template\Html::e($r->getEndDate()->format('d/m/Y')) ?>
+                        <?= $html($r->getStartDate()->format('d/m/Y')) ?> → <?= $html($r->getEndDate()->format('d/m/Y')) ?>
                     </td>
                     <td class="px-6 py-4 text-center">
                         <?php
@@ -55,10 +55,10 @@
                         $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
                         ?>
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">
-                            <?= \Rore\Presentation\Template\Html::e($statusLabel) ?>
+                            <?= $html($statusLabel) ?>
                         </span>
                     </td>
-                    <td class="px-6 py-4 text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>
+                    <td class="px-6 py-4 text-gray-400"><?= $html($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>
                     <td class="px-6 py-4 text-right">
                         <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.show', ['id' => $r->getId()]) ?>"
                            class="text-brand-600 hover:underline">Voir</a>

@@ -33,9 +33,9 @@
         <tbody class="divide-y divide-gray-100">
             <?php foreach ($pendingList as $r): ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-3"><?= \Rore\Presentation\Template\Html::e($r->getCustomerName()) ?></td>
-                    <td class="px-6 py-3"><?= \Rore\Presentation\Template\Html::e($r->getStartDate()->format('d/m/Y')) ?> → <?= \Rore\Presentation\Template\Html::e($r->getEndDate()->format('d/m/Y')) ?></td>
-                    <td class="px-6 py-3 text-gray-400"><?= \Rore\Presentation\Template\Html::e($r->getCreatedAt()->format('d/m/Y')) ?></td>
+                    <td class="px-6 py-3"><?= $html($r->getCustomerName()) ?></td>
+                    <td class="px-6 py-3"><?= $html($r->getStartDate()->format('d/m/Y')) ?> → <?= $html($r->getEndDate()->format('d/m/Y')) ?></td>
+                    <td class="px-6 py-3 text-gray-400"><?= $html($r->getCreatedAt()->format('d/m/Y')) ?></td>
                     <td class="px-6 py-3">
                         <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.show', ['id' => $r->getId()]) ?>" class="text-brand-600 hover:underline">Voir</a>
                     </td>

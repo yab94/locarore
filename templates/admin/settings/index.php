@@ -26,19 +26,19 @@
         foreach ($groups as $group => $items): ?>
             <div class="mb-8">
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-4 border-b pb-2">
-                    <?= \Rore\Presentation\Template\Html::e($groupLabels[$group] ?? $group) ?>
+                    <?= $html($groupLabels[$group] ?? $group) ?>
                 </h3>
                 <div class="space-y-4">
                     <?php foreach ($items as $s): ?>
                         <div class="grid grid-cols-3 gap-4 items-start">
                             <label class="text-sm font-medium text-gray-700 pt-2">
-                                <?= \Rore\Presentation\Template\Html::e($s->getLabel()) ?>
-                                <span class="block text-xs text-gray-400 font-normal font-mono"><?= \Rore\Presentation\Template\Html::e($s->getKey()) ?></span>
+                                <?= $html($s->getLabel()) ?>
+                                <span class="block text-xs text-gray-400 font-normal font-mono"><?= $html($s->getKey()) ?></span>
                             </label>
                             <div class="col-span-2">
                                 <input type="text"
-                                       name="settings[<?= \Rore\Presentation\Template\Html::e($s->getKey()) ?>]"
-                                       value="<?= \Rore\Presentation\Template\Html::e($s->getValue() ?? '') ?>"
+                                       name="settings[<?= $html($s->getKey()) ?>]"
+                                       value="<?= $html($s->getValue() ?? '') ?>"
                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
                             </div>
                         </div>
@@ -55,19 +55,19 @@
         <p class="text-sm text-gray-400 mb-6">Zones éditables affichées sur le site.</p>
 
         <?php foreach ($richtexts as $s):
-            $editorId = 'quill-' . \Rore\Presentation\Template\Html::e(str_replace('.', '-', $s->getKey()));
-            $inputId  = 'input-' . \Rore\Presentation\Template\Html::e(str_replace('.', '-', $s->getKey()));
+            $editorId = 'quill-' . $html(str_replace('.', '-', $s->getKey()));
+            $inputId  = 'input-' . $html(str_replace('.', '-', $s->getKey()));
         ?>
             <div class="mb-10">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                    <?= \Rore\Presentation\Template\Html::e($s->getLabel()) ?>
-                    <span class="text-xs text-gray-400 font-normal font-mono ml-2"><?= \Rore\Presentation\Template\Html::e($s->getKey()) ?></span>
+                    <?= $html($s->getLabel()) ?>
+                    <span class="text-xs text-gray-400 font-normal font-mono ml-2"><?= $html($s->getKey()) ?></span>
                 </label>
                 <!-- Champ caché soumis dans le formulaire -->
                 <input type="hidden"
                        id="<?= $inputId ?>"
-                       name="settings[<?= \Rore\Presentation\Template\Html::e($s->getKey()) ?>]"
-                       value="<?= \Rore\Presentation\Template\Html::e($s->getValue() ?? '') ?>">
+                       name="settings[<?= $html($s->getKey()) ?>]"
+                       value="<?= $html($s->getValue() ?? '') ?>">
                 <!-- Zone éditeur Quill -->
                 <div id="<?= $editorId ?>"
                      class="border border-gray-300 rounded-b-lg bg-white"

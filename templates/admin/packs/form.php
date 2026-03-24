@@ -11,7 +11,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Nom du pack *</label>
             <input type="text" name="name" id="name" required
-                   value="<?= \Rore\Presentation\Template\Html::e($pack?->getName() ?? '') ?>"
+                   value="<?= $html($pack?->getName() ?? '') ?>"
                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
         </div>
 
@@ -24,7 +24,7 @@
             <div class="flex items-center gap-2">
                 <span class="text-sm text-gray-400">/pack/</span>
                 <input type="text" name="slug" id="slug"
-                       value="<?= \Rore\Presentation\Template\Html::e($pack?->getSlug() ?? '') ?>"
+                       value="<?= $html($pack?->getSlug() ?? '') ?>"
                        placeholder="ex: pack-mariage-boheme"
                        pattern="[a-z0-9\-]+"
                        class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
@@ -35,7 +35,7 @@
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <input type="hidden" name="description" id="description-input"
-                   value="<?= \Rore\Presentation\Template\Html::e($pack?->getDescription() ?? '') ?>">
+                   value="<?= $html($pack?->getDescription() ?? '') ?>">
             <div id="description-editor"
                  class="border border-gray-300 rounded-b-lg bg-white"
                  style="min-height:120px"><?= $pack?->getDescription() ?? '' ?></div>
@@ -67,7 +67,7 @@
                                 class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
                             <option value="">— Choisir un produit —</option>
                             <?php foreach ($products as $prod): ?>
-                                <option value="<?= $prod->getId() ?>"><?= \Rore\Presentation\Template\Html::e($prod->getName()) ?></option>
+                                <option value="<?= $prod->getId() ?>"><?= $html($prod->getName()) ?></option>
                             <?php endforeach; ?>
                         </select>
                         <input type="number" name="item_quantity[]" min="1" value="1"
@@ -84,7 +84,7 @@
                             <?php foreach ($products as $prod): ?>
                                 <option value="<?= $prod->getId() ?>"
                                     <?= $prod->getId() === $item->getProductId() ? 'selected' : '' ?>>
-                                    <?= \Rore\Presentation\Template\Html::e($prod->getName()) ?>
+                                    <?= $html($prod->getName()) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -124,7 +124,7 @@
                 class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
             <option value="">— Choisir un produit —</option>
             <?php foreach ($products as $prod): ?>
-                <option value="<?= $prod->getId() ?>"><?= \Rore\Presentation\Template\Html::e($prod->getName()) ?></option>
+                <option value="<?= $prod->getId() ?>"><?= $html($prod->getName()) ?></option>
             <?php endforeach; ?>
         </select>
         <input type="number" name="item_quantity[]" min="1" value="1"

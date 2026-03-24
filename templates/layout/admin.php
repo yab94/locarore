@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= \Rore\Presentation\Template\Html::e($title ?? 'Admin — Locarore') ?></title>
+    <title><?= $html($title ?? 'Admin — Locarore') ?></title>
     <meta name="robots" content="noindex, nofollow">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -74,7 +74,7 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white shadow-sm px-8 py-4">
-            <h1 class="text-xl font-semibold text-gray-800"><?= \Rore\Presentation\Template\Html::e($title ?? '') ?></h1>
+            <h1 class="text-xl font-semibold text-gray-800"><?= $html($title ?? '') ?></h1>
         </header>
 
         <main class="flex-1 overflow-y-auto p-8">
@@ -85,7 +85,7 @@
                         ? 'bg-red-100 border border-red-300 text-red-800'
                         : 'bg-green-100 border border-green-300 text-green-800'; ?>
                     <div class="<?= $cls ?> rounded-lg px-4 py-3 mb-6 text-sm">
-                        <?= \Rore\Presentation\Template\Html::e($msg) ?>
+                        <?= $html($msg) ?>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>

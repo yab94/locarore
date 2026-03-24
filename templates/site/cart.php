@@ -59,15 +59,15 @@
                 <?php $p = $row['product']; $qty = $row['quantity']; ?>
                 <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
                     <?php if ($photo = $p->getMainPhoto()): ?>
-                        <img src="<?= \Rore\Presentation\Template\Html::e($photo->getPublicPath()) ?>" alt=""
+                        <img src="<?= $html($photo->getPublicPath()) ?>" alt=""
                              class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
                     <?php else: ?>
                         <div class="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0"></div>
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-800 truncate">
-                            <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
-                                <?= \Rore\Presentation\Template\Html::e($p->getName()) ?>
+                            <a href="<?= $html($urlResolver->productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
+                                <?= $html($p->getName()) ?>
                             </a>
                         </h3>
                         <p class="text-sm text-gray-500">Quantité : <?= $qty ?></p>
@@ -110,7 +110,7 @@
                 Réserver →
             </a>
             <p class="text-xs text-gray-400 mt-3 text-center">
-                <?= \Rore\Presentation\Template\Html::e($settings->get('cart.footer_note')) ?>
+                <?= $html($settings->get('cart.footer_note')) ?>
             </p>
         </div>
     </div>

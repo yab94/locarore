@@ -7,28 +7,28 @@
             <dl class="grid grid-cols-2 gap-4 text-sm">
                 <div>
                     <dt class="text-gray-500">Nom</dt>
-                    <dd class="font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($reservation->getCustomerName()) ?></dd>
+                    <dd class="font-medium text-gray-800"><?= $html($reservation->getCustomerName()) ?></dd>
                 </div>
                 <div>
                     <dt class="text-gray-500">Email</dt>
-                    <dd class="font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($reservation->getCustomerEmail()) ?></dd>
+                    <dd class="font-medium text-gray-800"><?= $html($reservation->getCustomerEmail()) ?></dd>
                 </div>
                 <?php if ($reservation->getCustomerPhone()): ?>
                 <div>
                     <dt class="text-gray-500">Téléphone</dt>
-                    <dd class="font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($reservation->getCustomerPhone()) ?></dd>
+                    <dd class="font-medium text-gray-800"><?= $html($reservation->getCustomerPhone()) ?></dd>
                 </div>
                 <?php endif; ?>
                 <?php if ($reservation->getCustomerAddress()): ?>
                 <div class="col-span-2">
                     <dt class="text-gray-500">Adresse client</dt>
-                    <dd class="font-medium text-gray-800"><?= nl2br(\Rore\Presentation\Template\Html::e($reservation->getCustomerAddress())) ?></dd>
+                    <dd class="font-medium text-gray-800"><?= nl2br($html($reservation->getCustomerAddress())) ?></dd>
                 </div>
                 <?php endif; ?>
                 <?php if ($reservation->getEventAddress()): ?>
                 <div class="col-span-2">
                     <dt class="text-gray-500">Adresse de l'événement</dt>
-                    <dd class="font-medium text-gray-800"><?= nl2br(\Rore\Presentation\Template\Html::e($reservation->getEventAddress())) ?></dd>
+                    <dd class="font-medium text-gray-800"><?= nl2br($html($reservation->getEventAddress())) ?></dd>
                 </div>
                 <?php endif; ?>
                 <div>
@@ -46,7 +46,7 @@
                         $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
                         ?>
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= (function() use ($status) { return require BASE_PATH . '/templates/partials/reservation-status-class.php'; })() ?>">
-                            <?= \Rore\Presentation\Template\Html::e($statusLabel) ?>
+                            <?= $html($statusLabel) ?>
                         </span>
                     </dd>
                 </div>
@@ -54,7 +54,7 @@
 
             <?php if ($reservation->getNotes()): ?>
                 <div class="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-                    <?= nl2br(\Rore\Presentation\Template\Html::e($reservation->getNotes())) ?>
+                    <?= nl2br($html($reservation->getNotes())) ?>
                 </div>
             <?php endif; ?>
         </div>
@@ -88,7 +88,7 @@
                     ?>
                         <tr>
                             <td class="py-3">
-                                <?= $p ? \Rore\Presentation\Template\Html::e($p->getName()) : 'Produit #' . $item->getProductId() ?>
+                                <?= $p ? $html($p->getName()) : 'Produit #' . $item->getProductId() ?>
                             </td>
                             <td class="py-3 text-right"><?= $item->getQuantity() ?></td>
                             <td class="py-3 text-right font-medium">

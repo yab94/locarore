@@ -4,19 +4,19 @@
     <?php foreach ($breadcrumb as $crumb): ?>
         <span>›</span>
         <?php if ($crumb->getId() !== $category->getId()): ?>
-            <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
-                <?= \Rore\Presentation\Template\Html::e($crumb->getName()) ?>
+            <a href="<?= $html($urlResolver->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
+                <?= $html($crumb->getName()) ?>
             </a>
         <?php else: ?>
-            <span class="text-gray-800 font-medium"><?= \Rore\Presentation\Template\Html::e($crumb->getName()) ?></span>
+            <span class="text-gray-800 font-medium"><?= $html($crumb->getName()) ?></span>
         <?php endif; ?>
     <?php endforeach; ?>
 </nav>
 
 <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900"><?= \Rore\Presentation\Template\Html::e($category->getName()) ?></h1>
+    <h1 class="text-3xl font-bold text-gray-900"><?= $html($category->getName()) ?></h1>
     <?php if ($category->getDescriptionShort()): ?>
-        <p class="text-gray-500 mt-2 text-base"><?= \Rore\Presentation\Template\Html::e($category->getDescriptionShort()) ?></p>
+        <p class="text-gray-500 mt-2 text-base"><?= $html($category->getDescriptionShort()) ?></p>
     <?php endif; ?>
 </div>
 
@@ -26,12 +26,12 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Sous-catégories</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <?php foreach ($children as $child): ?>
-            <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->categoryUrl($child, $allCategories)) ?>"
+            <a href="<?= $html($urlResolver->categoryUrl($child, $allCategories)) ?>"
                class="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-600 hover:shadow-sm transition text-center">
                 <div class="text-2xl mb-2">🏷️</div>
-                <div class="text-sm font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($child->getName()) ?></div>
+                <div class="text-sm font-medium text-gray-800"><?= $html($child->getName()) ?></div>
                 <?php if ($child->getDescriptionShort()): ?>
-                    <div class="text-xs text-gray-500 mt-1 line-clamp-2"><?= \Rore\Presentation\Template\Html::e($child->getDescriptionShort()) ?></div>
+                    <div class="text-xs text-gray-500 mt-1 line-clamp-2"><?= $html($child->getDescriptionShort()) ?></div>
                 <?php endif; ?>
             </a>
         <?php endforeach; ?>

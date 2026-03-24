@@ -1,9 +1,9 @@
 <header class="bg-white shadow-sm border-b-2 border-brand-600">
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
-        <img src="/assets/images/logo-latyana-evenements.png" alt="<?= \Rore\Presentation\Template\Html::e($settings->get('site.name')) ?> logo" class="h-8 w-auto" />
+        <img src="/assets/images/logo-latyana-evenements.png" alt="<?= $html($settings->get('site.name')) ?> logo" class="h-8 w-auto" />
         <a href="/" class="text-xl font-bold text-brand-700 tracking-tight">
-            <?= \Rore\Presentation\Template\Html::e($settings->get('site.name')) ?>
+            <?= $html($settings->get('site.name')) ?>
         </a>
 
         <!-- Catégories principales -->
@@ -14,9 +14,9 @@
                 $headerCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
             }
             foreach ($headerCategories as $cat): ?>
-                <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->categoryUrl($cat, $headerCategories)) ?>"
+                <a href="<?= $html($urlResolver->categoryUrl($cat, $headerCategories)) ?>"
                    class="hover:text-brand-700 transition-colors">
-                    <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
+                    <?= $html($cat->getName()) ?>
                 </a>
             <?php endforeach; ?>
         </div>

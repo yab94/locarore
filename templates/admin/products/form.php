@@ -19,7 +19,7 @@
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat->getId() ?>"
                             <?= $product && $product->getCategoryId() === $cat->getId() ? 'selected' : '' ?>>
-                            <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
+                            <?= $html($cat->getName()) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -38,7 +38,7 @@
                     foreach ($categories as $cat): ?>
                         <option value="<?= $cat->getId() ?>"
                             <?= in_array($cat->getId(), $currentCatIds) ? 'selected' : '' ?>>
-                            <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
+                            <?= $html($cat->getName()) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
@@ -48,7 +48,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
                 <input type="text" name="name" id="name" required
-                       value="<?= \Rore\Presentation\Template\Html::e($product?->getName() ?? '') ?>"
+                       value="<?= $html($product?->getName() ?? '') ?>"
                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
             </div>
 
@@ -61,7 +61,7 @@
                 <div class="flex items-center gap-2">
                     <span class="text-sm text-gray-400"><?= $config->getStringParam('seo.products_base_url'); ?>/</span>
                     <input type="text" name="slug" id="slug"
-                           value="<?= \Rore\Presentation\Template\Html::e($product?->getSlug() ?? '') ?>"
+                           value="<?= $html($product?->getSlug() ?? '') ?>"
                            placeholder="ex: vase-en-verre"
                            pattern="[a-z0-9\-]+"
                            title="Uniquement des lettres minuscules, chiffres et tirets"
@@ -74,7 +74,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <input type="hidden" name="description" id="description-input"
-                       value="<?= \Rore\Presentation\Template\Html::e($product?->getDescription() ?? '') ?>">
+                       value="<?= $html($product?->getDescription() ?? '') ?>">
                 <div id="description-editor"
                      class="border border-gray-300 rounded-b-lg bg-white"
                      style="min-height:140px"><?= $product?->getDescription() ?? '' ?></div>
@@ -168,7 +168,7 @@
                 <div class="grid grid-cols-2 gap-3">
                     <?php foreach ($photos as $photo): ?>
                         <div class="relative group">
-                            <img src="<?= \Rore\Presentation\Template\Html::e($photo->getPublicPath()) ?>" alt=""
+                            <img src="<?= $html($photo->getPublicPath()) ?>" alt=""
                                  class="w-full h-24 object-cover rounded-lg">
                             <form method="post"
                                   action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ProductController::class . '.deletePhoto', ['photoId' => $photo->getId()]) ?>"

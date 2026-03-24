@@ -19,8 +19,8 @@
         <tbody class="divide-y divide-gray-100">
             <?php foreach ($categories as $cat): ?>
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($cat->getName()) ?></td>
-                    <td class="px-6 py-4 text-gray-400 font-mono text-xs"><?= \Rore\Presentation\Template\Html::e($cat->getSlug()) ?></td>
+                    <td class="px-6 py-4 font-medium text-gray-800"><?= $html($cat->getName()) ?></td>
+                    <td class="px-6 py-4 text-gray-400 font-mono text-xs"><?= $html($cat->getSlug()) ?></td>
                     <td class="px-6 py-4 text-center">
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
                             <?= $cat->isActive() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">

@@ -24,11 +24,11 @@
                     <td class="px-6 py-4 font-medium text-gray-800">
                         <div class="flex items-center gap-3">
                             <?php if ($photo = $p->getMainPhoto()): ?>
-                                <img src="<?= \Rore\Presentation\Template\Html::e($photo->getPublicPath()) ?>" class="w-10 h-10 object-cover rounded">
+                                <img src="<?= $html($photo->getPublicPath()) ?>" class="w-10 h-10 object-cover rounded">
                             <?php else: ?>
                                 <div class="w-10 h-10 bg-gray-100 rounded"></div>
                             <?php endif; ?>
-                            <?= \Rore\Presentation\Template\Html::e($p->getName()) ?>
+                            <?= $html($p->getName()) ?>
                         </div>
                     </td>
                     <td class="px-6 py-4 text-gray-500">—</td>
