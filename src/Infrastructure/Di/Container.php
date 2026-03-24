@@ -100,6 +100,24 @@ final class Container
         foreach ($constructor->getParameters() as $param) {
             $type = $param->getType();
 
+            // Paramètre variadic : résoudre les deps du parent
+            if ($param->isVariadic()) {
+                $parentClass = $ref->getParentClass();
+                
+                if ($parentClass && $parentClass->getConstructor()) {
+                    foreach ($parentClass->getConstructor()->getParameters() as $parentParam) {
+                        $parentType = $parentParam->getType();
+                        
+                        if ($parentType instanceof ReflectionNamedType && !$parentType->isBuiltin()) {
+                            $args[] = $this->get($parentType->getName());
+                        } elseif ($parentParam->isDefaultValueAvailable()) {
+                            $args[] = $parentParam->getDefaultValue();
+                        }
+                    }
+                }
+                continue;
+            }
+
             if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 $args[] = $this->get($type->getName());
             } elseif ($param->isDefaultValueAvailable()) {
