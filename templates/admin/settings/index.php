@@ -1,7 +1,7 @@
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
-<form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\SettingsController::class . '.index') ?>" class="space-y-10" id="settings-form">
+<form method="post" action="<?= $url('Admin\Settings.index') ?>" class="space-y-10" id="settings-form">
 <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
 
     <!-- ── Textes courts ─────────────────────────────────────────────── -->

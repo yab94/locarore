@@ -19,7 +19,7 @@
 <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
         <h2 class="font-semibold text-gray-800">Demandes en attente</h2>
-        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>?status=pending" class="text-sm text-brand-600 hover:underline">Voir tout</a>
+        <a href="<?= $url('Admin\Reservation.index') ?>?status=pending" class="text-sm text-brand-600 hover:underline">Voir tout</a>
     </div>
     <table class="w-full text-sm">
         <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
@@ -37,7 +37,7 @@
                     <td class="px-6 py-3"><?= $html($r->getStartDate()->format('d/m/Y')) ?> → <?= $html($r->getEndDate()->format('d/m/Y')) ?></td>
                     <td class="px-6 py-3 text-gray-400"><?= $html($r->getCreatedAt()->format('d/m/Y')) ?></td>
                     <td class="px-6 py-3">
-                        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.show', ['id' => $r->getId()]) ?>" class="text-brand-600 hover:underline">Voir</a>
+                        <a href="<?= $url('Admin\Reservation.show', ['id' => $r->getId()]) ?>" class="text-brand-600 hover:underline">Voir</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -126,12 +126,11 @@
         <?php
         $s  = $reservation->getStatus();
         $id = $reservation->getId();
-        $_rc = \Rore\Presentation\Controller\Admin\ReservationController::class;
         // Pré-résolution des URLs d'action
-        $_urlDevis     = $urlResolver->resolve($_rc . '.quote',     ['id' => $id]);
-        $_urlConfirmer = $urlResolver->resolve($_rc . '.confirm',   ['id' => $id]);
-        $_urlAnnuler   = $urlResolver->resolve($_rc . '.cancel',    ['id' => $id]);
-        $_urlStatut    = $urlResolver->resolve($_rc . '.setStatus', ['id' => $id]);
+        $_urlDevis     = $url('Admin\Reservation.quote',     ['id' => $id]);
+        $_urlConfirmer = $url('Admin\Reservation.confirm',   ['id' => $id]);
+        $_urlAnnuler   = $url('Admin\Reservation.cancel',    ['id' => $id]);
+        $_urlStatut    = $url('Admin\Reservation.setStatus', ['id' => $id]);
         // Helper local : bouton POST
         $btn = fn(string $url, string $label, string $cls, ?string $confirm = null) =>
             '<form method="post" action="' . $url . '">'
@@ -171,7 +170,7 @@
             <?= $btn($_urlAnnuler, '✕ Annuler', 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100', 'Annuler cette réservation ?') ?>
         <?php endif; ?>
 
-        <a href="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Admin\ReservationController::class . '.index') ?>"
+        <a href="<?= $url('Admin\Reservation.index') ?>"
            class="block w-full text-center py-3 rounded-xl border border-gray-300 text-sm text-gray-600 hover:bg-gray-50 transition">
             ← Retour
         </a>

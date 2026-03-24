@@ -14,7 +14,15 @@ use Rore\Infrastructure\Config\Config;
  */
 final class UrlResolver
 {
-    /** @var array<string, string>  "FQCN.method" → path pattern (GET prioritaire) */
+    private const FQCN_PREFIX = 'Rore\\Presentation\\Controller\\';
+
+    /**
+     * Double index :
+     *   "FQCN.method"         → path pattern  (ex: resolve() avec ::class)
+     *   "Admin\Category.edit" → path pattern  (ex: $url() alias court)
+     *
+     * @var array<string, string>
+     */
     private array $handlerToPath = [];
 
     public function __construct(private readonly Config $config)
@@ -23,12 +31,11 @@ final class UrlResolver
     }
 
     /**
-     * Résout l'URL d'un handler controller sous la forme "FQCN.method".
-     * Les placeholders du pattern ({id}, {path+}…) sont substitués par $params.
+     * Résout l'URL d'un handler.
      *
-     * Exemple :
-     *   $urlResolver->resolve('Rore\...\CategoryController.edit', ['id' => 42])
-     *   → "/admin/categories/42/modifier"
+     * Accepte deux formes :
+     *   - FQCN complète : "Rore\...\CategoryController.edit"
+     *   - Alias court   : "Admin\Category.edit"
      *
      * @param array<string, string|int> $params
      * @throws \InvalidArgumentException si le handler est introuvable
@@ -48,6 +55,16 @@ final class UrlResolver
     }
 
     /**
+     * Raccourci invokable pour les templates : $url('Admin\Category.edit', [...])
+     *
+     * @param array<string, string|int> $params
+     */
+    public function __invoke(string $handler, array $params = []): string
+    {
+        return $this->resolve($handler, $params);
+    }
+
+    /**
      * Construit l'index handler → path depuis config.routes.
      * GET est prioritaire sur POST : si le même handler existe en GET et POST,
      * on retient le GET (pertinent pour générer des liens).
@@ -61,9 +78,34 @@ final class UrlResolver
         // POST en premier, GET écrase (GET prioritaire)
         foreach (['POST', 'GET'] as $method) {
             foreach ($routes[$method] ?? [] as $path => $handler) {
-                $this->handlerToPath[(string) $handler] = $path;
+                $fqcn = (string) $handler;
+                $this->handlerToPath[$fqcn] = $path;
+                // Indexation alias court : "Admin\Category.edit"
+                $short = $this->shortAlias($fqcn);
+                if ($short !== null) {
+                    $this->handlerToPath[$short] = $path;
+                }
             }
         }
+    }
+
+    /**
+     * Convertit un handler FQCN en alias court, ou retourne null si le
+     * handler n'appartient pas au préfixe contrôleur attendu.
+     *
+     * Exemples :
+     *   "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
+     *   "Rore\Presentation\Controller\Site\CartController.index"     → "Site\Cart.index"
+     */
+    private function shortAlias(string $handler): ?string
+    {
+        if (!str_starts_with($handler, self::FQCN_PREFIX)) {
+            return null;
+        }
+        // "Admin\CategoryController.edit"
+        $short = substr($handler, strlen(self::FQCN_PREFIX));
+        // Supprime "Controller" juste avant le ".method"
+        return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
     }
 
     /**

@@ -63,7 +63,7 @@
         <?php if (!$cart || empty($cart['start_date'])): ?>
             <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
                 <p class="text-sm font-semibold text-yellow-800 mb-3">📅 Choisissez vos dates avant d'ajouter au panier</p>
-                <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.setDates') ?>" class="flex flex-col sm:flex-row gap-3">
+                <form method="post" action="<?= $url('Site\Cart.setDates') ?>" class="flex flex-col sm:flex-row gap-3">
                     <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                     <input type="date" name="start_date" required
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
@@ -87,7 +87,7 @@
                         Modifier
                     </button>
                 </div>
-                <form id="edit-dates-form" method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.setDates') ?>"
+                <form id="edit-dates-form" method="post" action="<?= $url('Site\Cart.setDates') ?>"
                       class="hidden flex-col sm:flex-row gap-3 flex">
                     <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                     <input type="date" name="start_date" required
@@ -111,7 +111,7 @@
                     Stock épuisé sur cette période.
                 </div>
             <?php else: ?>
-                <form method="post" action="<?= $urlResolver->resolve(\Rore\Presentation\Controller\Site\CartController::class . '.add') ?>">
+                <form method="post" action="<?= $url('Site\Cart.add') ?>">
                     <?= require BASE_PATH . '/templates/partials/csrf.php' ?>
                     <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
                     <input type="hidden" name="redirect" value="<?= $html($urlResolver->productUrl($product, $allCategories)) ?>">

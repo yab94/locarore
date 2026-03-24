@@ -43,6 +43,7 @@ abstract class Controller
         $data['settings']      = $this->settings;
         $data['config']        = $this->config;
         $data['urlResolver']   = $this->urlResolver;
+        $data['url']           = $this->urlResolver; // alias court invokable : $url('Admin\Category.edit', [...])
         $data['html']          = $this->html;
 
         extract($data);

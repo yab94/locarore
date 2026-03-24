@@ -39,7 +39,8 @@ class CartController extends Controller
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
         SettingsServiceInterface                 $settings,
-        UrlResolver                     $urlResolver,
+        UrlResolver                              $urlResolver,
+        Html                                     $html,
     ) {
         parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html);
     }
