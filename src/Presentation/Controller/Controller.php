@@ -35,6 +35,7 @@ abstract class Controller
         $data['cartItemCount'] = $this->getCartItemCount();
         // Accès aux settings dans toutes les vues
         $data['settings'] = $this->settings;
+        $data['config'] = $this->config;
 
         extract($data);
 

@@ -74,7 +74,7 @@ class ProductController extends Controller
 
         $catChain     = array_slice($breadcrumb, 0, -1);
         $mainCategory = $this->categoryRepo->findById($product->getCategoryId());
-        $canonicalUrl = CanonicalUrlResolver::productUrl($product, $allCategories, $mainCategory);
+        $canonicalUrl = CanonicalUrlResolver::productUrl($this->config, $product, $allCategories, $mainCategory);
         $meta         = $this->metaBuilder->forProduct($product, $category, $catChain, $canonicalUrl);
 
         $this->render('site/product', [

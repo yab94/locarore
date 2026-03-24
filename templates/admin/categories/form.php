@@ -39,7 +39,7 @@
                 <span class="text-gray-400 font-normal text-xs ml-1">— généré automatiquement si vide</span>
             </label>
             <div class="flex items-center gap-2">
-                <span class="text-sm text-gray-400">/categorie/</span>
+                <span class="text-sm text-gray-400"><?= $config->getStringParam('seo.categories_base_url'); ?>/</span>
                 <input type="text" name="slug" id="slug"
                        value="<?= \Rore\Presentation\Template\Html::e($category?->getSlug() ?? '') ?>"
                        placeholder="ex: deco-florale"

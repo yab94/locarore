@@ -59,7 +59,7 @@
                     <span class="text-gray-400 font-normal text-xs ml-1">— généré automatiquement si vide</span>
                 </label>
                 <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-400">/produit/</span>
+                    <span class="text-sm text-gray-400"><?= $config->getStringParam('seo.products_base_url'); ?>/</span>
                     <input type="text" name="slug" id="slug"
                            value="<?= \Rore\Presentation\Template\Html::e($product?->getSlug() ?? '') ?>"
                            placeholder="ex: vase-en-verre"

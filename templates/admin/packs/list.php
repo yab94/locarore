@@ -31,7 +31,7 @@
                 <tr class="hover:bg-gray-50 transition">
                     <td class="px-6 py-4 font-medium text-gray-800">
                         <?= \Rore\Presentation\Template\Html::e($pack->getName()) ?>
-                        <div class="text-xs text-gray-400 font-normal">/produit/<?= \Rore\Presentation\Template\Html::e($pack->getSlug()) ?></div>
+                        <div class="text-xs text-gray-400 font-normal"><?= $config->getStringParam('seo.products_base_url'); ?>/<?= \Rore\Presentation\Template\Html::e($pack->getSlug()) ?></div>
                     </td>
                     <td class="px-6 py-4 text-gray-500">
                         <?php $items = $pack->getItems(); ?>

@@ -66,7 +66,7 @@
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-800 truncate">
-                            <a href="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
+                            <a href="<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($config, $p, $allCategories)) ?>" class="hover:text-brand-700">
                                 <?= \Rore\Presentation\Template\Html::e($p->getName()) ?>
                             </a>
                         </h3>

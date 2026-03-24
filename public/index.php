@@ -38,12 +38,10 @@ $router = new \Rore\Infrastructure\Http\Router($container);
 $router->get('/',
     [\Rore\Presentation\Controller\Site\HomeController::class, 'index']);
 
-// Catégories arborescentes : /categorie/parent  ou  /categorie/parent/enfant
-$router->get('/categorie/{path+}',
+$router->get($config->getStringParam('seo.categories_base_url') . '/{path+}',
     [\Rore\Presentation\Controller\Site\CategoryController::class, 'show']);
 
-// Produits arborescents : /produit/slug  ou  /produit/cat/slug
-$router->get('/produit/{path+}',
+$router->get($config->getStringParam('seo.products_base_url') . '/{path+}',
     [\Rore\Presentation\Controller\Site\ProductController::class, 'show']);
 
 // Panier

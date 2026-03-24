@@ -6,6 +6,7 @@ namespace Rore\Presentation\Seo;
 
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Infrastructure\Config\Config;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.
@@ -37,16 +38,7 @@ final class CanonicalUrlResolver
         return implode('/', $segments);
     }
 
-    /**
-     * Construit l'URL canonique d'un produit incluant son chemin catégorie.
-     * Ex : "/produit/decoration/ballons/arc-lumineux"
-     *
-     * @param Product      $product
-     * @param Category[]   $allCategories
-     * @param Category|null $category  catégorie principale déjà chargée (optionnel)
-     * @return string  URL absolue
-     */
-    public static function productUrl(Product $product, array $allCategories, ?Category $category = null): string
+    public static function productUrl(Config $config, Product $product, array $allCategories, ?Category $category = null): string
     {
         if ($category === null) {
             $byId = [];
@@ -57,9 +49,9 @@ final class CanonicalUrlResolver
         }
 
         if ($category === null) {
-            return '/produit/' . $product->getSlug();
+            return $config->getStringParam('seo.products_base_url') . '/' . $product->getSlug();
         }
 
-        return '/produit/' . self::categoryPath($category, $allCategories) . '/' . $product->getSlug();
+        return $config->getStringParam('seo.products_base_url') . '/' . self::categoryPath($category, $allCategories) . '/' . $product->getSlug();
     }
 }
