@@ -16,6 +16,7 @@ class CreateReservationUseCase
 
     /**
      * @param array<int, int>   $items        [productId => quantity]
+     * @param array<int, float> $packSnapshots [packId => totalPrice]
      * @param array<int, float> $priceSnapshots [productId => unitPrice]
      */
     public function execute(
@@ -27,6 +28,7 @@ class CreateReservationUseCase
         string  $startDate,
         string  $endDate,
         array   $items,
+        array   $packs          = [],
         ?string $notes          = null,
         array   $priceSnapshots = [],
     ): int {
@@ -55,6 +57,16 @@ class CreateReservationUseCase
                 productId:         (int) $productId,
                 quantity:          (int) $quantity,
                 unitPriceSnapshot: $priceSnapshots[$productId] ?? null,
+            );
+        }
+        foreach ($packs as $packId => $totalPrice) {
+            $reservationItems[] = new ReservationItem(
+                id:                null,
+                reservationId:     0,
+                productId:         null,
+                quantity:          1,
+                packId:            (int) $packId,
+                unitPriceSnapshot: (float) $totalPrice,
             );
         }
         $reservation->setItems($reservationItems);

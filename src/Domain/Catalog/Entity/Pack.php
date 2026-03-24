@@ -15,6 +15,8 @@ class Pack
         private string              $slug,
         private ?string             $description,
         private float               $pricePerDay,
+        private float               $priceExtraWeekend,
+        private float               $priceExtraWeekday,
         private bool                $isActive,
         private \DateTimeImmutable  $createdAt,
         private \DateTimeImmutable  $updatedAt,
@@ -25,6 +27,8 @@ class Pack
     public function getSlug(): string                  { return $this->slug; }
     public function getDescription(): ?string          { return $this->description; }
     public function getPricePerDay(): float            { return $this->pricePerDay; }
+    public function getPriceExtraWeekend(): float      { return $this->priceExtraWeekend; }
+    public function getPriceExtraWeekday(): float      { return $this->priceExtraWeekday; }
     public function isActive(): bool                   { return $this->isActive; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
@@ -36,6 +40,8 @@ class Pack
     public function setSlug(string $slug): void        { $this->slug = $slug; }
     public function setDescription(?string $d): void   { $this->description = $d; }
     public function setPricePerDay(float $p): void     { $this->pricePerDay = $p; }
+    public function setPriceExtraWeekend(float $p): void { $this->priceExtraWeekend = $p; }
+    public function setPriceExtraWeekday(float $p): void { $this->priceExtraWeekday = $p; }
     public function setIsActive(bool $active): void    { $this->isActive = $active; }
     public function toggle(): void                     { $this->isActive = !$this->isActive; }
     public function setUpdatedAt(\DateTimeImmutable $dt): void { $this->updatedAt = $dt; }
@@ -71,11 +77,43 @@ class Pack
     }
 
     /**
-     * Prix du pack pour un nombre de jours donné.
+     * Prix du pack pour une période donnée.
+     * Même logique que Product::calculatePrice() :
+     * - pricePerDay couvre les 2 premiers jours (forfait de base)
+     * - WE (sam+dim, ≤4j)  → supplément priceExtraWeekend €/j au-delà de 2j
+     * - Sinon               → supplément priceExtraWeekday  €/j au-delà de 2j
+     */
+    public function calculatePrice(\DateTimeImmutable|string $start, \DateTimeImmutable|string $end): float
+    {
+        if (is_string($start)) $start = new \DateTimeImmutable($start);
+        if (is_string($end))   $end   = new \DateTimeImmutable($end);
+        $days = max(1, (int) $start->diff($end)->days + 1);
+
+        $hasSat = false;
+        $hasSun = false;
+        $cur    = $start;
+        while ($cur <= $end) {
+            $dow = (int) $cur->format('N');
+            if ($dow === 6) $hasSat = true;
+            if ($dow === 7) $hasSun = true;
+            $cur = $cur->modify('+1 day');
+        }
+
+        $isWeekend = $hasSat && $hasSun && $days <= 4;
+        $extraRate = $isWeekend ? $this->priceExtraWeekend : $this->priceExtraWeekday;
+        $extraDays = max(0, $days - 2);
+
+        return $this->pricePerDay + ($extraDays * $extraRate);
+    }
+
+    /**
+     * @deprecated Utiliser calculatePrice(start, end)
      */
     public function calculateTotal(int $nbDays): float
     {
-        return $this->pricePerDay * max(1, $nbDays);
+        $start = new \DateTimeImmutable('today');
+        $end   = $start->modify('+' . ($nbDays - 1) . ' days');
+        return $this->calculatePrice($start, $end);
     }
 
     /**

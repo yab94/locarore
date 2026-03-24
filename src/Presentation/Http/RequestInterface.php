@@ -13,5 +13,4 @@ interface RequestInterface
     public ArrayTypedParams $body {  get; }
     public ArrayTypedParams $server {  get; }
     public ArrayTypedParams $files {  get; }
-
 }

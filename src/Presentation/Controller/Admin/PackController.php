@@ -68,11 +68,13 @@ class PackController extends AdminController
         try {
             $items = $this->parseItems();
             $this->createPackUseCase->execute(
-                name:        $this->request->body->getStringParam('name'),
-                description: $this->request->body->getStringParam('description') ?: null,
-                pricePerDay: $this->request->body->getFloatParam('price_per_day'),
-                items:       $items,
-                customSlug:  $this->request->body->getStringParam('slug') ?: null,
+                name:               $this->request->body->getStringParam('name'),
+                description:        $this->request->body->getStringParam('description') ?: null,
+                pricePerDay:        $this->request->body->getFloatParam('price_per_day'),
+                priceExtraWeekend:  $this->request->body->getFloatParam('price_extra_weekend'),
+                priceExtraWeekday:  $this->request->body->getFloatParam('price_extra_weekday'),
+                items:              $items,
+                customSlug:         $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Pack créé.');
         } catch (\Throwable $e) {
@@ -100,12 +102,14 @@ class PackController extends AdminController
         try {
             $items = $this->parseItems();
             $this->updatePackUseCase->execute(
-                id:          (int) $id,
-                name:        $this->request->body->getStringParam('name'),
-                description: $this->request->body->getStringParam('description') ?: null,
-                pricePerDay: $this->request->body->getFloatParam('price_per_day'),
-                items:       $items,
-                customSlug:  $this->request->body->getStringParam('slug') ?: null,
+                id:                 (int) $id,
+                name:               $this->request->body->getStringParam('name'),
+                description:        $this->request->body->getStringParam('description') ?: null,
+                pricePerDay:        $this->request->body->getFloatParam('price_per_day'),
+                priceExtraWeekend:  $this->request->body->getFloatParam('price_extra_weekend'),
+                priceExtraWeekday:  $this->request->body->getFloatParam('price_extra_weekday'),
+                items:              $items,
+                customSlug:         $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Pack mis à jour.');
         } catch (\Throwable $e) {

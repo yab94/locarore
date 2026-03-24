@@ -34,7 +34,7 @@
                 <div>
                     <dt class="text-gray-500">Dates</dt>
                     <dd class="font-medium text-gray-800">
-                        <?= (new \Rore\Domain\Shared\ValueObject\DateRange($reservation->getStartDate(), $reservation->getEndDate()))->label() ?>
+                        <?= $dateRange->label() ?>
                     </dd>
                 </div>
                 <div>
@@ -59,7 +59,7 @@
             <?php endif; ?>
         </div>
 
-        <!-- Produits réservés -->
+        <!-- Articles réservés -->
         <div class="bg-white rounded-xl border border-gray-200 p-6">
             <h2 class="font-semibold text-gray-700 mb-4">Articles</h2>
             <table class="w-full text-sm">
@@ -77,6 +77,7 @@
                     $grandTotalSnapshot = 0;
                     $grandTotalCurrent  = 0;
                     foreach ($reservation->getItems() as $item):
+                        if ($item->getPackId() !== null) continue; // packs traités en dessous
                         $p            = $products[$item->getProductId()] ?? null;
                         $snapshot     = $item->getUnitPriceSnapshot();
                         $currentPrice = $p ? $p->calculatePrice($reservation->getStartDate(), $reservation->getEndDate()) : null;
@@ -118,6 +119,41 @@
                 </tfoot>
             </table>
         </div>
+
+        <!-- Packs réservés -->
+        <?php
+        $packItems = array_filter($reservation->getItems(), fn($item) => $item->getPackId() !== null);
+        ?>
+        <?php if (!empty($packItems)): ?>
+        <div class="bg-white rounded-xl border border-brand-200 p-6">
+            <h2 class="font-semibold text-gray-700 mb-4">Packs</h2>
+            <table class="w-full text-sm">
+                <thead class="text-gray-500 text-xs uppercase border-b">
+                    <tr>
+                        <th class="pb-2 text-left">Pack</th>
+                        <th class="pb-2 text-right">Total capturé</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <?php foreach ($packItems as $item):
+                        $pack = $packs[$item->getPackId()] ?? null;
+                    ?>
+                        <tr>
+                            <td class="py-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-2 py-0.5 font-medium">Pack</span>
+                                    <?= $pack ? $html($pack->getName()) : 'Pack #' . $item->getPackId() ?>
+                                </div>
+                            </td>
+                            <td class="py-3 text-right font-semibold">
+                                <?= $item->getUnitPriceSnapshot() !== null ? number_format($item->getUnitPriceSnapshot(), 2, ',', ' ') . ' €' : '—' ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Actions -->

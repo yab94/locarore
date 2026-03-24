@@ -30,7 +30,7 @@
 <?php elseif ($cart->isEmpty()): ?>
     <!-- Panier vide (avec dates) -->
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-sm text-green-800">
-        📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?>
+        📅 <?= $cartDateRange->label() ?>
     </div>
     <div class="text-center py-16 text-gray-400">
         <p class="text-lg mb-4">Votre panier est vide.</p>
@@ -40,7 +40,7 @@
 <?php else: ?>
     <!-- Dates sélectionnées -->
     <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 flex items-center justify-between">
-        <span class="text-sm text-green-800">📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?></span>
+        <span class="text-sm text-green-800">📅 <?= $cartDateRange->label() ?></span>
         <form method="post" action="<?= $url('Site\Cart.setDates') ?>">
             <?= require 'partials/csrf.php' ?>
             <input type="hidden" name="start_date" value="">
@@ -51,7 +51,7 @@
             </button>
         </form>
     </div>
-    <?php $nbJours = (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->nbDays(); ?>
+    <?php $nbJours = $cartDateRange->nbDays(); ?>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Liste produits + packs -->
@@ -102,8 +102,8 @@
                             </h3>
                         </div>
                         <p class="text-sm text-gray-500">
-                            <?= number_format($pack->calculateTotal($nbJours), 2, ',', ' ') ?> €
-                            <span class="text-gray-400">(<?= number_format($pack->getPricePerDay(), 0, ',', ' ') ?> € × <?= $nbJours ?> j.)</span>
+                            <?= number_format($pack->calculatePrice($cart->getStartDate(), $cart->getEndDate()), 2, ',', ' ') ?> €
+                            <span class="text-gray-400">(base <?= number_format($pack->getPricePerDay(), 0, ',', ' ') ?> €)</span>
                         </p>
                     </div>
                     <form method="post" action="<?= $url('Site\Cart.removePack') ?>">
@@ -127,7 +127,7 @@
                 $total += $row['product']->calculatePrice($cart->getStartDate(), $cart->getEndDate()) * $row['quantity'];
             }
             foreach ($cartPacks as $pack) {
-                $total += $pack->calculateTotal($nbJours);
+                $total += $pack->calculatePrice($cart->getStartDate(), $cart->getEndDate());
             }
             ?>
             <div class="flex justify-between text-sm text-gray-600 mb-2">

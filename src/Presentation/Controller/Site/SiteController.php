@@ -9,6 +9,7 @@ use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
+use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
@@ -44,6 +45,9 @@ abstract class SiteController extends Controller
     ): void {
         $data['cartItemCount']    = $this->cart->getItemCount();
         $data['cart']             = $this->cart;
+        $data['cartDateRange']    = $this->cart->hasDates()
+            ? new DateRange($this->cart->getStartDate(), $this->cart->getEndDate())
+            : null;
         $data['headerCategories'] = $this->categoryRepository->findAllActive();
         parent::render($template, $data, $layout);
     }

@@ -8,12 +8,14 @@ use Rore\Application\Reservation\CancelReservationUseCase;
 use Rore\Application\Reservation\ConfirmReservationUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
+use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\Html;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Http\RequestInterface;
@@ -24,6 +26,7 @@ class ReservationController extends AdminController
     public function __construct(
         private readonly MySqlReservationRepository $repo,
         private readonly MySqlProductRepository     $productRepo,
+        private readonly MySqlPackRepository        $packRepo,
         private readonly GetReservationsUseCase     $getReservationsUseCase,
         private readonly SetReservationStatusUseCase $setReservationStatusUseCase,
         private readonly ConfirmReservationUseCase  $confirmReservationUseCase,
@@ -63,14 +66,22 @@ class ReservationController extends AdminController
 
         // Charger les noms produits
         $products = [];
+        $packs    = [];
         foreach ($reservation->getItems() as $item) {
-            $products[$item->getProductId()] = $this->productRepo->findById($item->getProductId());
+            if ($item->getPackId() !== null) {
+                $pack = $this->packRepo->findById($item->getPackId());
+                if ($pack) $packs[$pack->getId()] = $pack;
+            } else {
+                $products[$item->getProductId()] = $this->productRepo->findById($item->getProductId());
+            }
         }
 
         $this->render('admin/reservations/show', [
             'title'       => 'Réservation #' . $id,
             'reservation' => $reservation,
             'products'    => $products,
+            'packs'       => $packs,
+            'dateRange'   => new DateRange($reservation->getStartDate(), $reservation->getEndDate()),
         ]);
     }
 

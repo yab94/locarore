@@ -42,11 +42,25 @@
         </div>
 
         <!-- Prix -->
-        <div class="w-48">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Prix par jour (€) *</label>
-            <input type="number" name="price_per_day" min="0" step="0.01" required
-                   value="<?= number_format($pack?->getPricePerDay() ?? 0, 2, '.', '') ?>"
-                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+        <div class="flex flex-wrap gap-4">
+            <div class="w-48">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Prix par jour (€) *</label>
+                <input type="number" name="price_per_day" min="0" step="0.01" required
+                       value="<?= number_format($pack?->getPricePerDay() ?? 0, 2, '.', '') ?>"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+            </div>
+            <div class="w-56">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Supplément semaine (€/j au-delà de 2j)</label>
+                <input type="number" name="price_extra_weekday" min="0" step="0.01"
+                       value="<?= number_format($pack?->getPriceExtraWeekday() ?? 0, 2, '.', '') ?>"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+            </div>
+            <div class="w-56">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Supplément week-end (€/j au-delà de 2j)</label>
+                <input type="number" name="price_extra_weekend" min="0" step="0.01"
+                       value="<?= number_format($pack?->getPriceExtraWeekend() ?? 0, 2, '.', '') ?>"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+            </div>
         </div>
 
         <!-- Composition -->

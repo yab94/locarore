@@ -221,7 +221,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
         return new ReservationItem(
             id:                (int) $row['id'],
             reservationId:     (int) $row['reservation_id'],
-            productId:         (int) $row['product_id'],
+            productId:         isset($row['product_id']) && $row['product_id'] !== null ? (int) $row['product_id'] : null,
             quantity:          (int) $row['quantity'],
             packId:            isset($row['pack_id']) && $row['pack_id'] !== null ? (int) $row['pack_id'] : null,
             unitPriceSnapshot: isset($row['unit_price_snapshot']) && $row['unit_price_snapshot'] !== null

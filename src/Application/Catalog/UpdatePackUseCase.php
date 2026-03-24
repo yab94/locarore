@@ -24,6 +24,8 @@ class UpdatePackUseCase
         string  $name,
         ?string $description,
         float   $pricePerDay,
+        float   $priceExtraWeekend,
+        float   $priceExtraWeekday,
         array   $items,
         ?string $customSlug = null,
     ): void {
@@ -43,6 +45,8 @@ class UpdatePackUseCase
         $pack->setSlug($slug);
         $pack->setDescription($description);
         $pack->setPricePerDay($pricePerDay);
+        $pack->setPriceExtraWeekend($priceExtraWeekend);
+        $pack->setPriceExtraWeekday($priceExtraWeekday);
         $pack->setUpdatedAt(new \DateTimeImmutable());
 
         $packItems = [];

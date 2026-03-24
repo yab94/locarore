@@ -24,6 +24,8 @@ class CreatePackUseCase
         string  $name,
         ?string $description,
         float   $pricePerDay,
+        float   $priceExtraWeekend,
+        float   $priceExtraWeekday,
         array   $items,
         ?string $customSlug = null,
     ): int {
@@ -41,14 +43,16 @@ class CreatePackUseCase
         }
 
         $pack = new Pack(
-            id:          null,
-            name:        $name,
-            slug:        $slug,
-            description: $description,
-            pricePerDay: $pricePerDay,
-            isActive:    true,
-            createdAt:   $now,
-            updatedAt:   $now,
+            id:                null,
+            name:              $name,
+            slug:              $slug,
+            description:       $description,
+            pricePerDay:       $pricePerDay,
+            priceExtraWeekend: $priceExtraWeekend,
+            priceExtraWeekday: $priceExtraWeekday,
+            isActive:          true,
+            createdAt:         $now,
+            updatedAt:         $now,
         );
         $pack->setItems($packItems);
 

@@ -102,14 +102,16 @@ class MySqlPackRepository implements PackRepositoryInterface
     {
         if ($pack->getId() === null) {
             $stmt = $this->connection->prepare(
-                'INSERT INTO packs (name, slug, description, price_per_day, is_active, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?)'
+                'INSERT INTO packs (name, slug, description, price_per_day, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $pack->getName(),
                 $pack->getSlug(),
                 $pack->getDescription(),
                 $pack->getPricePerDay(),
+                $pack->getPriceExtraWeekend(),
+                $pack->getPriceExtraWeekday(),
                 (int) $pack->isActive(),
                 $pack->getCreatedAt()->format('Y-m-d H:i:s'),
                 $pack->getUpdatedAt()->format('Y-m-d H:i:s'),
@@ -118,7 +120,7 @@ class MySqlPackRepository implements PackRepositoryInterface
         } else {
             $stmt = $this->connection->prepare(
                 'UPDATE packs
-                    SET name = ?, slug = ?, description = ?, price_per_day = ?, is_active = ?, updated_at = ?
+                    SET name = ?, slug = ?, description = ?, price_per_day = ?, price_extra_weekend = ?, price_extra_weekday = ?, is_active = ?, updated_at = ?
                   WHERE id = ?'
             );
             $stmt->execute([
@@ -126,6 +128,8 @@ class MySqlPackRepository implements PackRepositoryInterface
                 $pack->getSlug(),
                 $pack->getDescription(),
                 $pack->getPricePerDay(),
+                $pack->getPriceExtraWeekend(),
+                $pack->getPriceExtraWeekday(),
                 (int) $pack->isActive(),
                 $pack->getUpdatedAt()->format('Y-m-d H:i:s'),
                 $pack->getId(),
@@ -184,14 +188,16 @@ class MySqlPackRepository implements PackRepositoryInterface
     private function hydrate(array $row): Pack
     {
         return new Pack(
-            id:          (int) $row['id'],
-            name:        $row['name'],
-            slug:        $row['slug'],
-            description: $row['description'],
-            pricePerDay: (float) $row['price_per_day'],
-            isActive:    (bool) $row['is_active'],
-            createdAt:   new \DateTimeImmutable($row['created_at']),
-            updatedAt:   new \DateTimeImmutable($row['updated_at']),
+            id:                 (int) $row['id'],
+            name:               $row['name'],
+            slug:               $row['slug'],
+            description:        $row['description'],
+            pricePerDay:        (float) $row['price_per_day'],
+            priceExtraWeekend:  (float) ($row['price_extra_weekend'] ?? 0),
+            priceExtraWeekday:  (float) ($row['price_extra_weekday'] ?? 0),
+            isActive:           (bool) $row['is_active'],
+            createdAt:          new \DateTimeImmutable($row['created_at']),
+            updatedAt:          new \DateTimeImmutable($row['updated_at']),
         );
     }
 

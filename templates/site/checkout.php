@@ -1,7 +1,7 @@
 <div class="max-w-lg mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Finaliser ma réservation</h1>
     <p class="text-gray-500 mb-8 text-sm">
-        📅 <?= (new \Rore\Domain\Shared\ValueObject\DateRange($cart->getStartDate(), $cart->getEndDate()))->label() ?>
+        📅 <?= $cartDateRange->label() ?>
         — <?= $cart->getItemCount() ?> article(s)
     </p>
 

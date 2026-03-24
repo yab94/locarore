@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Rore\Application\Cart;
 
 use Rore\Application\Reservation\CreateReservationUseCase;
+use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 
 class CheckoutUseCase
 {
     public function __construct(
         private CartSession              $cart,
-        private ProductRepositoryInterface $productRepository,
-        private CreateReservationUseCase $createReservation,
+        private ProductRepositoryInterface $productRepository,        private PackRepositoryInterface    $packRepository,        private CreateReservationUseCase $createReservation,
     ) {}
 
     public function execute(
@@ -42,6 +42,18 @@ class CheckoutUseCase
             }
         }
 
+        // Calculer le prix de chaque pack au moment du checkout
+        $packSnapshots = [];
+        foreach ($this->cart->getPacks() as $packId => $_) {
+            $pack = $this->packRepository->findById((int) $packId);
+            if ($pack && $pack->isActive()) {
+                $packSnapshots[(int) $packId] = $pack->calculatePrice(
+                    $this->cart->getStartDate(),
+                    $this->cart->getEndDate(),
+                );
+            }
+        }
+
         $reservationId = $this->createReservation->execute(
             customerName:    $customerName,
             customerEmail:   $customerEmail,
@@ -51,6 +63,7 @@ class CheckoutUseCase
             startDate:       $this->cart->getStartDate(),
             endDate:         $this->cart->getEndDate(),
             items:           $this->cart->getItems(),
+            packs:           $packSnapshots,
             notes:           $notes,
             priceSnapshots:  $priceSnapshots,
         );
