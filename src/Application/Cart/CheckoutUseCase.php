@@ -7,12 +7,16 @@ namespace Rore\Application\Cart;
 use Rore\Application\Reservation\CreateReservationUseCase;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Domain\Catalog\Service\PricingCalculator;
 
 class CheckoutUseCase
 {
     public function __construct(
-        private CartSession              $cart,
-        private ProductRepositoryInterface $productRepository,        private PackRepositoryInterface    $packRepository,        private CreateReservationUseCase $createReservation,
+        private CartSession                $cart,
+        private ProductRepositoryInterface $productRepository,
+        private PackRepositoryInterface    $packRepository,
+        private CreateReservationUseCase   $createReservation,
+        private PricingCalculator          $pricing,
     ) {}
 
     public function execute(
@@ -35,7 +39,8 @@ class CheckoutUseCase
         foreach ($this->cart->getItems() as $productId => $qty) {
             $product = $this->productRepository->findById((int) $productId);
             if ($product) {
-                $priceSnapshots[$productId] = $product->calculatePrice(
+                $priceSnapshots[$productId] = $this->pricing->calculate(
+                    $product,
                     $this->cart->getStartDate(),
                     $this->cart->getEndDate(),
                 );
@@ -47,7 +52,8 @@ class CheckoutUseCase
         foreach ($this->cart->getPacks() as $packId => $_) {
             $pack = $this->packRepository->findById((int) $packId);
             if ($pack && $pack->isActive()) {
-                $packSnapshots[(int) $packId] = $pack->calculatePrice(
+                $packSnapshots[(int) $packId] = $this->pricing->calculate(
+                    $pack,
                     $this->cart->getStartDate(),
                     $this->cart->getEndDate(),
                 );

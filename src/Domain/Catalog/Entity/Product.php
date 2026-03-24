@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
-class Product
+use Rore\Domain\Catalog\Service\PricingCalculator;
+
+class Product implements PricableInterface
 {
     /** @var ProductPhoto[] */
     private array $photos = [];
@@ -49,34 +51,16 @@ class Product
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
 
+    /** Implémente PricableInterface : alias de getPriceBase() pour le service de calcul. */
+    public function getBasePrice(): float { return $this->priceBase; }
+
     /**
      * Calcule le prix total pour une période.
-     * - Forfait base couvre les 2 premiers jours.
-     * - WE (0€/j supp) : contient sam+dim ET ≤ 4 jours.
-     * - Weekday (priceExtraWeekday €/j supp) : sinon.
+     * Délègue au PricingCalculator (source de vérité unique).
      */
     public function calculatePrice(\DateTimeImmutable|string $start, \DateTimeImmutable|string $end): float
     {
-        if (is_string($start)) $start = new \DateTimeImmutable($start);
-        if (is_string($end))   $end   = new \DateTimeImmutable($end);
-        $days = (int) $start->diff($end)->days + 1;
-        $days = max(1, $days);
-
-        $hasSat = false;
-        $hasSun = false;
-        $cur    = $start;
-        while ($cur <= $end) {
-            $dow = (int) $cur->format('N'); // 1=Lun … 7=Dim
-            if ($dow === 6) $hasSat = true;
-            if ($dow === 7) $hasSun = true;
-            $cur = $cur->modify('+1 day');
-        }
-
-        $isWeekend  = $hasSat && $hasSun && $days <= 4;
-        $extraRate  = $isWeekend ? $this->priceExtraWeekend : $this->priceExtraWeekday;
-        $extraDays  = max(0, $days - 2);
-
-        return $this->priceBase + ($extraDays * $extraRate);
+        return (new PricingCalculator())->calculate($this, $start, $end);
     }
 
     /** @return int[] */
