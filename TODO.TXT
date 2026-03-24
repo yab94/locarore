@@ -3,18 +3,17 @@ Features
 - formulaire de contact
 - Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
 - Prendre des conseils SEO avec Claude voir ce qu'il pense du code
-- Controller pour le sitemap SEO
-- Controller pour le robots.txt SEO
-- Controller pour le humans.txt SEO
-- Title trop long 60 chars limiter a X parents SEO
-- vérifier que les entity n'ont pas de logique métier (creer ou enrichir des services plutot)
-- SettingsService devrait etre dans Domain je crois...
 
-- clarifier les utilisations des controller/usecase/repo car par exemple removeProduct from cart utilise un usecase et removePack utilise le repo directement
+✅ Title trop long 60 chars limiter a X parents SEO
+✅ vérifier que les entity n'ont pas de logique métier (creer ou enrichir des services plutot)
+- SettingsService devrait etre dans Domain je crois...
+✅ SEO redirection https si on est en http (uniquement en env prod)
+✅ clarifier les utilisations des controller/usecase/repo car par exemple removeProduct from cart utilise un usecase et removePack utilise le repo directement
 - tous les services doivent etre suffixé service, revoir les nommages
 
+-etonné que AvailibilityService ne teste que des products et pas des packs
+
 Tests
-- Tester que la même logiqe WE + 4 jours etc s'appliquent aux packs
 - Tester qu'un pack n'est pas dispo si un seul produit pas dispo
 
 

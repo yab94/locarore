@@ -74,7 +74,7 @@
         <?php endif; ?>
 
         <!-- Encadré dates -->
-        <?php if (!$cart || empty($cart['start_date'])): ?>
+        <?php if (!$cart->hasDates()): ?>
             <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
                 <p class="text-sm font-semibold text-yellow-800 mb-3">📅 Choisissez vos dates avant d'ajouter au panier</p>
                 <form method="post" action="<?= $url('Site\Cart.setDates') ?>" class="flex flex-col sm:flex-row gap-3">
@@ -95,7 +95,7 @@
         <?php else: ?>
             <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6 text-sm text-green-800">
                 <div class="flex items-center justify-between mb-3">
-                    <span>📅 Du <?= htmlspecialchars($cart['start_date']) ?> au <?= htmlspecialchars($cart['end_date']) ?></span>
+                    <span>📅 Du <?= htmlspecialchars($cart->getStartDate()) ?> au <?= htmlspecialchars($cart->getEndDate()) ?></span>
                     <button type="button" onclick="document.getElementById('edit-dates-form').classList.toggle('hidden')"
                             class="ml-2 text-green-600 underline text-xs">
                         Modifier
@@ -105,11 +105,11 @@
                       class="hidden flex-col sm:flex-row gap-3 flex">
                     <?= require 'partials/csrf.php' ?>
                     <input type="date" name="start_date" required
-                           value="<?= htmlspecialchars($cart['start_date']) ?>"
+                           value="<?= htmlspecialchars($cart->getStartDate()) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
                     <input type="date" name="end_date" required
-                           value="<?= htmlspecialchars($cart['end_date']) ?>"
+                           value="<?= htmlspecialchars($cart->getEndDate()) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
                     <input type="hidden" name="redirect" value="<?= $html($urlResolver->productUrl($product, $allCategories)) ?>">

@@ -79,6 +79,11 @@ final class Config extends AbstractTypedParams
         return $base;
     }
 
+    public function isProduction(): bool
+    {
+        return getenv('APP_ENV') !== 'dev';
+    }
+
     public function getParam(string $path, mixed $default = null): mixed
     {
         $path = trim($path);

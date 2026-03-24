@@ -50,13 +50,41 @@ final class MetaFormatter
     }
 
     /**
-     * Construit le titre de page SEO.
+     * Construit le titre de page SEO avec logique smart ≤ 60 caractères.
      * Format : "Nom — Parent1 — Parent2 — Site"
+     *
+     * Règle : on ajoute les parties de gauche à droite tant que le total ≤ 60.
+     * Si une partie entière ne rentre pas, on l'ignore (on ne tronque jamais).
      *
      * @param string[] $parts  du plus spécifique au plus général
      */
     public function title(string ...$parts): string
     {
-        return implode(' — ', array_filter(array_map('trim', $parts), fn($p) => $p !== ''));
+        $parts = array_filter(array_map('trim', $parts), fn($p) => $p !== '');
+        if (empty($parts)) {
+            return '';
+        }
+
+        $result = [];
+        $length = 0;
+
+        foreach ($parts as $part) {
+            $partLen = mb_strlen($part);
+            $separator = empty($result) ? '' : ' — ';
+            $separatorLen = mb_strlen($separator);
+
+            // Si ajouter cette partie dépasse 60 chars, on s'arrête
+            if ($length + $separatorLen + $partLen > 60) {
+                break;
+            }
+
+            if (!empty($result)) {
+                $length += $separatorLen;
+            }
+            $result[] = $part;
+            $length += $partLen;
+        }
+
+        return implode(' — ', $result);
     }
 }

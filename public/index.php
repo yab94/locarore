@@ -32,6 +32,15 @@ foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
     $container->bind($abstract, fn($c) => $c->get($concrete));
 }
 
+if($config->getStringParam('app.env') === 'prod') {
+    $request = $container->get(\Rore\Infrastructure\Http\HttpRequest::class);
+    if($request->server->getStringParam('HTTPS') === 'off') {
+        $redirectUrl = 'https://' . $request->server->getStringParam('HTTP_HOST') . $request->server->getStringParam('REQUEST_URI');
+        header('Location: ' . $redirectUrl, true, 301);
+        exit;
+    }
+}
+
 // ─── Router ────────────────────────────────────────────────────────────────
 $router = new \Rore\Infrastructure\Http\Router($container, $config);
 $router->addRoutes($config->getArrayParam('routes') ?? []);
