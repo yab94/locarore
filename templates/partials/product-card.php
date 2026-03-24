@@ -1,7 +1,7 @@
 <?php
 $_productUrl = isset($productContextPath)
     ? $config->getStringParam('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()
-    : \Rore\Presentation\Seo\CanonicalUrlResolver::productUrl($config, $product, $allCategories ?? []);
+    : $urlResolver->productUrl($product, $allCategories ?? []);
 ?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
     <?php if ($photo = $product->getMainPhoto()): ?>

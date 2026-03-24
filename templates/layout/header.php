@@ -14,7 +14,7 @@
                 $headerCategories = (new \Rore\Infrastructure\Persistence\MySqlCategoryRepository())->findAllActive();
             }
             foreach ($headerCategories as $cat): ?>
-                <a href="<?= $config->getStringParam('seo.categories_base_url'); ?>/<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($cat, $headerCategories)) ?>"
+                <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->categoryUrl($cat, $headerCategories)) ?>"
                    class="hover:text-brand-700 transition-colors">
                     <?= \Rore\Presentation\Template\Html::e($cat->getName()) ?>
                 </a>

@@ -6,16 +6,6 @@ namespace Rore\Application\Cart;
 
 use Rore\Application\Storage\SessionStorageInterface;
 
-/**
- * Gestion du panier en session.
- *
- * Structure session :
- * $_SESSION['rore_cart'] = [
- *   'start_date' => 'YYYY-MM-DD',
- *   'end_date'   => 'YYYY-MM-DD',
- *   'items'      => [ productId => quantity, ... ],
- * ]
- */
 class CartSession
 {
     private const KEY = 'rore_cart';

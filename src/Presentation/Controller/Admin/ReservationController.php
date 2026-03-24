@@ -8,6 +8,8 @@ use Rore\Application\Reservation\CancelReservationUseCase;
 use Rore\Application\Reservation\ConfirmReservationUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
+use Rore\Application\Cart\CartSession;
+use Rore\Presentation\Seo\UrlResolver;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -32,8 +34,10 @@ class ReservationController extends AdminController
         SessionStorageInterface                     $session,
         CsrfTokenManagerInterface                   $csrfTokenManager,
         SettingsServiceInterface                               $settings,
+        CartSession                              $cart,
+        UrlResolver $urlResolver,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver);
     }
 
     public function index(): void

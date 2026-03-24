@@ -4,7 +4,7 @@
     <?php foreach ($breadcrumb as $crumb): ?>
         <span>›</span>
         <?php if ($crumb->getId() !== $category->getId()): ?>
-            <a href="<?= $config->getStringParam('seo.categories_base_url'); ?>/<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($crumb, $allCategories)) ?>" class="hover:underline">
+            <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
                 <?= \Rore\Presentation\Template\Html::e($crumb->getName()) ?>
             </a>
         <?php else: ?>
@@ -26,7 +26,7 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Sous-catégories</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <?php foreach ($children as $child): ?>
-            <a href="<?= $config->getStringParam('seo.categories_base_url'); ?>/<?= \Rore\Presentation\Template\Html::e(\Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($child, $allCategories)) ?>"
+            <a href="<?= \Rore\Presentation\Template\Html::e($urlResolver->categoryUrl($child, $allCategories)) ?>"
                class="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-600 hover:shadow-sm transition text-center">
                 <div class="text-2xl mb-2">🏷️</div>
                 <div class="text-sm font-medium text-gray-800"><?= \Rore\Presentation\Template\Html::e($child->getName()) ?></div>
@@ -56,7 +56,7 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Produits</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php
-        $productContextPath = \Rore\Presentation\Seo\CanonicalUrlResolver::categoryPath($category, $allCategories);
+        $productContextPath = $urlResolver->categoryPath($category, $allCategories);
         foreach ($products as $product): ?>
             <?php include BASE_PATH . '/templates/partials/product-card.php'; ?>
         <?php endforeach; ?>

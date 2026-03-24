@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
+use Rore\Application\Cart\CartSession;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
+use Rore\Presentation\Seo\UrlResolver;
 
 abstract class Controller
 {
@@ -20,6 +22,8 @@ abstract class Controller
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly SettingsServiceInterface $settings,
+        readonly CartSession $cart,
+        readonly UrlResolver $urlResolver,
     ) {}
 
     protected function render(
@@ -32,10 +36,11 @@ abstract class Controller
         // CSRF token pour les formulaires
         $data['csrfToken'] = $this->csrfTokenManager->token();
         // Compteur panier (pour le header)
-        $data['cartItemCount'] = $this->getCartItemCount();
+        $data['cartItemCount'] = $this->cart->getItemCount();
         // Accès aux settings dans toutes les vues
         $data['settings'] = $this->settings;
         $data['config'] = $this->config;
+        $data['urlResolver'] = $this->urlResolver;
 
         extract($data);
 
@@ -44,24 +49,6 @@ abstract class Controller
         $content = ob_get_clean();
 
         require BASE_PATH . '/templates/' . $layout . '.php';
-    }
-
-    private function getCartItemCount(): int
-    {
-        $cart = $this->session->get('rore_cart', []);
-        if (!is_array($cart)) {
-            return 0;
-        }
-        $items = $cart['items'] ?? [];
-        if (!is_array($items)) {
-            return 0;
-        }
-
-        $sum = 0;
-        foreach ($items as $qty) {
-            $sum += (int) $qty;
-        }
-        return $sum;
     }
 
     protected function redirect(string $url): never

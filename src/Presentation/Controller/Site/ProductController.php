@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
+use Rore\Application\Cart\CartSession;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -14,7 +15,7 @@ use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
-use Rore\Presentation\Seo\CanonicalUrlResolver;
+use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Seo\PageMetaBuilder;
 
 class ProductController extends Controller
@@ -30,8 +31,10 @@ class ProductController extends Controller
         SessionStorageInterface                     $session,
         CsrfTokenManagerInterface                   $csrfTokenManager,
         SettingsServiceInterface                               $settings,
+        CartSession                              $cart,
+        UrlResolver $urlResolver,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver);
     }
 
     public function show(string $path): void
@@ -74,7 +77,7 @@ class ProductController extends Controller
 
         $catChain     = array_slice($breadcrumb, 0, -1);
         $mainCategory = $this->categoryRepo->findById($product->getCategoryId());
-        $canonicalUrl = CanonicalUrlResolver::productUrl($this->config, $product, $allCategories, $mainCategory);
+        $canonicalUrl = $this->urlResolver->productUrl($product, $allCategories, $mainCategory);
         $meta         = $this->metaBuilder->forProduct($product, $category, $catChain, $canonicalUrl);
 
         $this->render('site/product', [

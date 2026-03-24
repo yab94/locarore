@@ -6,6 +6,7 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\AddToCartUseCase;
 use Rore\Application\Cart\CartSession;
+use Rore\Presentation\Seo\UrlResolver;
 use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
@@ -23,7 +24,7 @@ use Rore\Presentation\Seo\PageMetaBuilder;
 class CartController extends Controller
 {
     public function __construct(
-        private readonly CartSession             $cart,
+        CartSession                              $cart,
         private readonly MySqlProductRepository $productRepo,
         private readonly MySqlCategoryRepository $categoryRepo,
         private readonly PageMetaBuilder         $metaBuilder,
@@ -36,9 +37,10 @@ class CartController extends Controller
         Config                                   $config,
         SessionStorageInterface                  $session,
         CsrfTokenManagerInterface                $csrfTokenManager,
-        SettingsServiceInterface                            $settings,
+        SettingsServiceInterface                 $settings,
+        UrlResolver                     $urlResolver,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver);
     }
 
     public function index(): void

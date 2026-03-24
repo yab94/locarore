@@ -10,10 +10,12 @@ use Rore\Infrastructure\Config\Config;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.
- * Méthodes pures, sans état, sans dépendances externes.
+ * Instance injectable via DI — prend Config en constructeur.
  */
-final class CanonicalUrlResolver
+final class UrlResolver
 {
+    public function __construct(private readonly Config $config) {}
+
     /**
      * Construit le chemin canonique d'une catégorie en remontant ses parents.
      * Ex : pour "Ballons" enfant de "Décoration" → "decoration/ballons"
@@ -22,7 +24,7 @@ final class CanonicalUrlResolver
      * @param Category[] $allCategories
      * @return string  chemin sans slash initial ni final
      */
-    public static function categoryPath(Category $category, array $allCategories): string
+    public function categoryPath(Category $category, array $allCategories): string
     {
         $byId = [];
         foreach ($allCategories as $c) {
@@ -38,7 +40,23 @@ final class CanonicalUrlResolver
         return implode('/', $segments);
     }
 
-    public static function productUrl(Config $config, Product $product, array $allCategories, ?Category $category = null): string
+    /**
+     * URL complète d'une catégorie (base_url + chemin hiérarchique).
+     *
+     * @param Category   $category
+     * @param Category[] $allCategories
+     */
+    public function categoryUrl(Category $category, array $allCategories): string
+    {
+        return $this->config->getStringParam('seo.categories_base_url') . '/' . $this->categoryPath($category, $allCategories);
+    }
+
+    /**
+     * URL canonique d'un produit.
+     *
+     * @param Category[] $allCategories
+     */
+    public function productUrl(Product $product, array $allCategories, ?Category $category = null): string
     {
         if ($category === null) {
             $byId = [];
@@ -49,9 +67,9 @@ final class CanonicalUrlResolver
         }
 
         if ($category === null) {
-            return $config->getStringParam('seo.products_base_url') . '/' . $product->getSlug();
+            return $this->config->getStringParam('seo.products_base_url') . '/' . $product->getSlug();
         }
 
-        return $config->getStringParam('seo.products_base_url') . '/' . self::categoryPath($category, $allCategories) . '/' . $product->getSlug();
+        return $this->config->getStringParam('seo.products_base_url') . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
     }
 }
