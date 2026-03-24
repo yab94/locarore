@@ -10,9 +10,7 @@ interface RequestInterface
 {
     public ArrayTypedParams $queryString {  get; }
     public ArrayTypedParams $body {  get; }
-
-    /** @return array<mixed>|null $_FILES entry or null if absent/empty */
+    public function method(): string;
     public function file(string $key): ?array;
-
     public function server(string $key, mixed $default = null): mixed;
 }

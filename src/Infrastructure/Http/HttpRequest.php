@@ -10,7 +10,7 @@ use Rore\Infrastructure\Shared\ArrayTypedParams;
 final class HttpRequest implements RequestInterface
 {
     public ArrayTypedParams $queryString { get => new ArrayTypedParams($_GET); }
-    public ArrayTypedParams $body { get => new ArrayTypedParams($_POST); } 
+    public ArrayTypedParams $body { get => new ArrayTypedParams($_POST); }
 
     public function method(): string
     {
