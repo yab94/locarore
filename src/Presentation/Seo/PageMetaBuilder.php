@@ -16,6 +16,7 @@ final class PageMetaBuilder
 {
     public function __construct(
         private readonly SettingsServiceInterface $settings,
+        private readonly MetaFormatter            $meta,
     ) {}
 
     /**
@@ -41,9 +42,9 @@ final class PageMetaBuilder
         }
 
         return new PageMeta(
-            title:       MetaFormatter::title('Location de décoration', $siteName),
-            description: MetaFormatter::description(...$descParts),
-            keywords:    MetaFormatter::keywords($kw),
+            title:       $this->meta->title('Location de décoration', $siteName),
+            description: $this->meta->description(...$descParts),
+            keywords:    $this->meta->keywords($kw),
         );
     }
 
@@ -77,9 +78,9 @@ final class PageMetaBuilder
         }
 
         return new PageMeta(
-            title:       MetaFormatter::title(...$titleParts),
-            description: MetaFormatter::description(...$descParts),
-            keywords:    MetaFormatter::keywords($kw),
+            title:       $this->meta->title(...$titleParts),
+            description: $this->meta->description(...$descParts),
+            keywords:    $this->meta->keywords($kw),
         );
     }
 
@@ -126,9 +127,9 @@ final class PageMetaBuilder
         }
 
         return new PageMeta(
-            title:        MetaFormatter::title(...$titleParts),
-            description:  MetaFormatter::description(...$descParts),
-            keywords:     MetaFormatter::keywords($kw),
+            title:        $this->meta->title(...$titleParts),
+            description:  $this->meta->description(...$descParts),
+            keywords:     $this->meta->keywords($kw),
             canonicalUrl: $canonicalUrl,
         );
     }
@@ -136,7 +137,7 @@ final class PageMetaBuilder
     public function forCart(): PageMeta
     {
         return new PageMeta(
-            title:  MetaFormatter::title('Mon panier', $this->settings->get('site.name')),
+            title:  $this->meta->title('Mon panier', $this->settings->get('site.name')),
             robots: 'noindex, follow',
         );
     }
@@ -144,7 +145,7 @@ final class PageMetaBuilder
     public function forCheckout(): PageMeta
     {
         return new PageMeta(
-            title:  MetaFormatter::title('Finaliser ma réservation', $this->settings->get('site.name')),
+            title:  $this->meta->title('Finaliser ma réservation', $this->settings->get('site.name')),
             robots: 'noindex, follow',
         );
     }
@@ -152,7 +153,7 @@ final class PageMetaBuilder
     public function forConfirmation(): PageMeta
     {
         return new PageMeta(
-            title:  MetaFormatter::title('Demande envoyée', $this->settings->get('site.name')),
+            title:  $this->meta->title('Demande envoyée', $this->settings->get('site.name')),
             robots: 'noindex, follow',
         );
     }

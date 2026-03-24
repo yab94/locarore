@@ -14,7 +14,7 @@ final class MetaFormatter
      * Génère une meta description propre à partir de textes bruts ou HTML.
      * Supprime les balises, concatène avec " — ", tronque à 160 caractères.
      */
-    public static function description(string ...$parts): string
+    public function description(string ...$parts): string
     {
         $text = '';
         foreach ($parts as $part) {
@@ -33,7 +33,7 @@ final class MetaFormatter
      *
      * @param string[] $words
      */
-    public static function keywords(array $words): string
+    public function keywords(array $words): string
     {
         $seen  = [];
         $clean = [];
@@ -55,7 +55,7 @@ final class MetaFormatter
      *
      * @param string[] $parts  du plus spécifique au plus général
      */
-    public static function title(string ...$parts): string
+    public function title(string ...$parts): string
     {
         return implode(' — ', array_filter(array_map('trim', $parts), fn($p) => $p !== ''));
     }
