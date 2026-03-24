@@ -139,7 +139,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $file = $this->request->file('photo');
+            $file = $this->request->files->getArrayParam('photo');
             if ($file === null) {
                 throw new \RuntimeException('Aucun fichier envoyé.');
             }
