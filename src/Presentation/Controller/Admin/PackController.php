@@ -9,6 +9,7 @@ use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
 use Rore\Application\Cart\CartSession;
 use Rore\Presentation\Seo\UrlResolver;
+use Rore\Presentation\Template\Html;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -34,8 +35,9 @@ class PackController extends AdminController
         SettingsServiceInterface                           $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
+        Html $html,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html);
     }
 
     public function index(): void

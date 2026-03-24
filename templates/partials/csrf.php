@@ -3,5 +3,5 @@
 declare(strict_types=1);
 
 return '<input type="hidden" name="_csrf" value="'
-    . ($html ?? new \Rore\Presentation\Template\Html())((string) ($csrfToken ?? ''))
+    . htmlspecialchars((string) ($csrfToken ?? ''), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
     . '">';

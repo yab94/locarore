@@ -25,6 +25,7 @@ abstract class Controller
         readonly SettingsServiceInterface $settings,
         readonly CartSession $cart,
         readonly UrlResolver $urlResolver,
+        readonly Html $html,
     ) {}
 
     protected function render(
@@ -42,7 +43,7 @@ abstract class Controller
         $data['settings']      = $this->settings;
         $data['config']        = $this->config;
         $data['urlResolver']   = $this->urlResolver;
-        $data['html']          = new Html();
+        $data['html']          = $this->html;
 
         extract($data);
 

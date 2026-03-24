@@ -27,6 +27,7 @@ use Rore\Infrastructure\Storage\FileUploader;
 use Rore\Infrastructure\Storage\PhpSessionStorage;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
+use Rore\Presentation\Template\Html;
 
 /**
  * Composition root : assemble le graphe d'objets de l'application.
@@ -85,6 +86,9 @@ final class ContainerFactory
 
         $c->bind(ResponseInterface::class,
             fn($c) => $c->get(HttpResponse::class));
+
+        // ── Template : Html encoder (singleton sans état) ───────────────
+        $c->instance(Html::class, new Html());
 
         // ── Application : session (via storage) ─────────────────────────
         $c->bind(CartSession::class,

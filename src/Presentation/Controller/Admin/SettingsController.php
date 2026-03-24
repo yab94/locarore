@@ -6,6 +6,7 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Cart\CartSession;
 use Rore\Presentation\Seo\UrlResolver;
+use Rore\Presentation\Template\Html;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
@@ -26,8 +27,9 @@ class SettingsController extends AdminController
         SettingsServiceInterface                            $settings,
         CartSession                              $cart,
         UrlResolver $urlResolver,
+        Html $html,
     ) {
-        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver);
+        parent::__construct($request, $response, $config, $session, $csrfTokenManager, $settings, $cart, $urlResolver, $html);
     }
 
     public function index(): void
