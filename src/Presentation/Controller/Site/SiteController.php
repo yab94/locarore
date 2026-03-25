@@ -5,17 +5,9 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\CartSession;
-use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
-use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
+use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
-use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Controller\Controller;
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Presentation\Http\ResponseInterface;
-use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
 
 /**
  * Base pour tous les contrôleurs du site public.
@@ -24,8 +16,8 @@ use Rore\Presentation\Template\HtmlHelper;
 abstract class SiteController extends Controller
 {
     public function __construct(
-        readonly CartSession                 $cart,
-        readonly CategoryRepositoryInterface $categoryRepository,
+        readonly CartSession                   $cart,
+        readonly GetAllActiveCategoriesUseCase $getActiveCategories,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -41,7 +33,7 @@ abstract class SiteController extends Controller
         $data['cartDateRange']    = $this->cart->hasDates()
             ? new DateRange($this->cart->getStartDate(), $this->cart->getEndDate())
             : null;
-        $data['headerCategories'] = $this->categoryRepository->findAllActive();
+        $data['headerCategories'] = $this->getActiveCategories->execute();
         parent::render($template, $data, $layout);
     }
 }

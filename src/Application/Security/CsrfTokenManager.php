@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Security;
+namespace Rore\Application\Security;
 
-use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 
 /**
@@ -40,10 +39,7 @@ final class CsrfTokenManager implements CsrfTokenManagerInterface
             return false;
         }
 
-        return hash_equals(
-            $sessionToken,
-            $postedToken,
-        );
+        return hash_equals($sessionToken, $postedToken);
     }
 
     public function postKey(): string

@@ -28,6 +28,7 @@ session_start();
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \Rore\Infrastructure\Di\Container();
 $container->instance(\Rore\Infrastructure\Config\Config::class, $config);
+$container->instance(\Rore\Application\Config\ConfigInterface::class, $config);
 foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
     $container->bind($abstract, fn($c) => $c->get($concrete));
 }

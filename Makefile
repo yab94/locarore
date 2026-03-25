@@ -45,3 +45,4 @@ test:
 
 test-file:
 	docker compose exec php php tests/run.php $(FILE)
+

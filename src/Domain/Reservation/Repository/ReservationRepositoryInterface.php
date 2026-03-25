@@ -33,6 +33,11 @@ interface ReservationRepositoryInterface
     public function countReservedQtyForProduct(int $productId, string $startDate, string $endDate): int;
 
     /**
+     * Retourne les périodes réservées pour un produit (pour le calendrier admin).
+     */
+    public function getReservedPeriodsByProduct(int $productId): array;
+
+    /**
      * Insère une nouvelle réservation et retourne son id.
      */
     public function save(Reservation $reservation): int;

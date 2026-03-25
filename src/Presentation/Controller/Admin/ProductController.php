@@ -6,28 +6,26 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Catalog\CreateProductUseCase;
 use Rore\Application\Catalog\DeleteProductPhotoUseCase;
+use Rore\Application\Catalog\GetAllCategoriesUseCase;
+use Rore\Application\Catalog\GetAllProductsUseCase;
+use Rore\Application\Catalog\GetProductEditDataUseCase;
 use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Infrastructure\Persistence\MySqlTagRepository;
 
 class ProductController extends AdminController
 {
     public function __construct(
-        private readonly MySqlProductRepository     $productRepo,
-        private readonly MySqlCategoryRepository    $categoryRepo,
-        private readonly MySqlReservationRepository $reservationRepo,
-        private readonly MySqlTagRepository         $tagRepo,
-        private readonly CreateProductUseCase       $createProductUseCase,
-        private readonly UpdateProductUseCase       $updateProductUseCase,
-        private readonly ToggleProductUseCase       $toggleProductUseCase,
-        private readonly UploadProductPhotoUseCase      $uploadProductPhotoUseCase,
-        private readonly DeleteProductPhotoUseCase       $deleteProductPhotoUseCase,
-        private readonly UpdatePhotoDescriptionUseCase   $updatePhotoDescriptionUseCase,
+        private readonly GetAllProductsUseCase        $getAllProductsUseCase,
+        private readonly GetAllCategoriesUseCase      $getAllCategoriesUseCase,
+        private readonly GetProductEditDataUseCase    $getProductEditDataUseCase,
+        private readonly CreateProductUseCase         $createProductUseCase,
+        private readonly UpdateProductUseCase         $updateProductUseCase,
+        private readonly ToggleProductUseCase         $toggleProductUseCase,
+        private readonly UploadProductPhotoUseCase    $uploadProductPhotoUseCase,
+        private readonly DeleteProductPhotoUseCase    $deleteProductPhotoUseCase,
+        private readonly UpdatePhotoDescriptionUseCase $updatePhotoDescriptionUseCase,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -37,7 +35,7 @@ class ProductController extends AdminController
     {
         $this->render('admin/products/list', [
             'title'    => 'Produits',
-            'products' => $this->productRepo->findAll(),
+            'products' => $this->getAllProductsUseCase->execute(),
         ]);
     }
 
@@ -46,7 +44,7 @@ class ProductController extends AdminController
         $this->render('admin/products/form', [
             'title'      => 'Nouveau produit',
             'product'    => null,
-            'categories' => $this->categoryRepo->findAll(),
+            'categories' => $this->getAllCategoriesUseCase->execute(),
         ]);
     }
 
@@ -55,18 +53,18 @@ class ProductController extends AdminController
         $this->requirePost();
         try {
             $productId = $this->createProductUseCase->execute(
-                categoryId:       $this->request->body->getIntParam('category_id'),
-                name:             $this->request->body->getStringParam('name'),
-                description:      $this->request->body->getStringParam('description') ?: null,
-                stock:            $this->request->body->getIntParam('stock'),
-                priceBase:        $this->request->body->getFloatParam('price_base', 80.0),
-                stockOnDemand:    $this->request->body->getIntParam('stock_on_demand'),
+                categoryId:          $this->request->body->getIntParam('category_id'),
+                name:                $this->request->body->getStringParam('name'),
+                description:         $this->request->body->getStringParam('description') ?: null,
+                stock:               $this->request->body->getIntParam('stock'),
+                priceBase:           $this->request->body->getFloatParam('price_base', 80.0),
+                stockOnDemand:       $this->request->body->getIntParam('stock_on_demand'),
                 fabricationTimeDays: $this->request->body->getFloatParam('fabrication_time_days', 0.0),
-                priceExtraWeekend: $this->request->body->getFloatParam('price_extra_weekend', 0.0),
-                priceExtraWeekday: $this->request->body->getFloatParam('price_extra_weekday', 15.0),
-                extraCategoryIds: array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
-                customSlug:       $this->request->body->getStringParam('slug') ?: null,
-                tagNames:         array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
+                priceExtraWeekend:   $this->request->body->getFloatParam('price_extra_weekend', 0.0),
+                priceExtraWeekday:   $this->request->body->getFloatParam('price_extra_weekday', 15.0),
+                extraCategoryIds:    array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
+                customSlug:          $this->request->body->getStringParam('slug') ?: null,
+                tagNames:            array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
             );
 
             $this->flash('success', 'Produit créé avec succès.');
@@ -79,18 +77,18 @@ class ProductController extends AdminController
 
     public function edit(string $id): void
     {
-        $product = $this->productRepo->findById((int) $id);
-        if (!$product) {
+        try {
+            $data = $this->getProductEditDataUseCase->execute((int) $id);
+        } catch (\Throwable) {
             $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
-        $calendarEvents = $this->reservationRepo->getReservedPeriodsByProduct($product->getId());
 
         $this->render('admin/products/form', [
             'title'          => 'Modifier le produit',
-            'product'        => $product,
-            'categories'     => $this->categoryRepo->findAll(),
-            'calendarEvents' => $calendarEvents,
-            'productTags'    => $this->tagRepo->findByProductId($product->getId()),
+            'product'        => $data['product'],
+            'categories'     => $data['categories'],
+            'calendarEvents' => $data['calendarEvents'],
+            'productTags'    => $data['productTags'],
         ]);
     }
 
@@ -99,19 +97,19 @@ class ProductController extends AdminController
         $this->requirePost();
         try {
             $this->updateProductUseCase->execute(
-                id:               (int) $id,
-                categoryId:       $this->request->body->getIntParam('category_id'),
-                name:             $this->request->body->getStringParam('name'),
-                description:      $this->request->body->getStringParam('description') ?: null,
-                stock:            $this->request->body->getIntParam('stock'),
-                priceBase:        $this->request->body->getFloatParam('price_base', 80.0),
-                stockOnDemand:    $this->request->body->getIntParam('stock_on_demand'),
+                id:                  (int) $id,
+                categoryId:          $this->request->body->getIntParam('category_id'),
+                name:                $this->request->body->getStringParam('name'),
+                description:         $this->request->body->getStringParam('description') ?: null,
+                stock:               $this->request->body->getIntParam('stock'),
+                priceBase:           $this->request->body->getFloatParam('price_base', 80.0),
+                stockOnDemand:       $this->request->body->getIntParam('stock_on_demand'),
                 fabricationTimeDays: $this->request->body->getFloatParam('fabrication_time_days', 0.0),
-                priceExtraWeekend: $this->request->body->getFloatParam('price_extra_weekend', 0.0),
-                priceExtraWeekday: $this->request->body->getFloatParam('price_extra_weekday', 15.0),
-                extraCategoryIds: array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
-                customSlug:       $this->request->body->getStringParam('slug') ?: null,
-                tagNames:         array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
+                priceExtraWeekend:   $this->request->body->getFloatParam('price_extra_weekend', 0.0),
+                priceExtraWeekday:   $this->request->body->getFloatParam('price_extra_weekday', 15.0),
+                extraCategoryIds:    array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
+                customSlug:          $this->request->body->getStringParam('slug') ?: null,
+                tagNames:            array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
             );
             $this->flash('success', 'Produit mis à jour.');
         } catch (\Throwable $e) {
@@ -152,13 +150,9 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $photo     = $this->productRepo->findPhotoById((int) $photoId);
-            $productId = $photo?->getProductId();
-            $this->deleteProductPhotoUseCase->execute((int) $photoId);
+            $productId = $this->deleteProductPhotoUseCase->execute((int) $photoId);
             $this->flash('success', 'Photo supprimée.');
-            if ($productId) {
-                $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));
-            }
+            $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }

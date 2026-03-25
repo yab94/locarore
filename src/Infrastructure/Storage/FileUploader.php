@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Storage;
 
+use Rore\Application\Storage\FileManagerInterface;
 use Rore\Infrastructure\Config\Config;
 
-class FileUploader
+class FileUploader implements FileManagerInterface
 {
     private string $uploadDir;
     private int    $maxSize;
@@ -64,5 +65,13 @@ class FileUploader
         }
 
         return $filename;
+    }
+
+    public function delete(string $filename): void
+    {
+        $filePath = $this->uploadDir . '/' . $filename;
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
     }
 }

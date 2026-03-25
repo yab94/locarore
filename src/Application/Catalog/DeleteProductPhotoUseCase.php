@@ -4,29 +4,26 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog;
 
+use Rore\Application\Storage\FileManagerInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Infrastructure\Config\Config;
 
 class DeleteProductPhotoUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        private Config $config,
+        private FileManagerInterface       $fileManager,
     ) {}
 
-    public function execute(int $photoId): void
+    public function execute(int $photoId): int
     {
         $photo = $this->productRepository->findPhotoById($photoId);
         if ($photo === null) {
             throw new \RuntimeException("Photo introuvable ($photoId).");
         }
 
-        // Suppression du fichier physique
-        $filePath = $this->config->getParam('app.root_dir') . '/public/assets/uploads/products/' . $photo->getFilename();
-        if (file_exists($filePath)) {
-            unlink($filePath);
-        }
-
+        $this->fileManager->delete($photo->getFilename());
         $this->productRepository->deletePhoto($photoId);
+
+        return $photo->getProductId();
     }
 }

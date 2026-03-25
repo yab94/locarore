@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
+use Rore\Application\Config\ConfigInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\SettingsServiceInterface;
 use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Infrastructure\Config\Config;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMeta;
@@ -19,7 +19,7 @@ abstract class Controller
     public function __construct(
         readonly RequestInterface $request,
         readonly ResponseInterface $response,
-        readonly Config $config,
+        readonly ConfigInterface $config,
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly SettingsServiceInterface $settings,

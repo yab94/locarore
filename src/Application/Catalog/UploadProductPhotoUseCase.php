@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog;
 
+use Rore\Application\Storage\FileManagerInterface;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Infrastructure\Storage\FileUploader;
 
 class UploadProductPhotoUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        private FileUploader               $fileUploader,
+        private FileManagerInterface       $fileManager,
     ) {}
 
     /**
@@ -28,7 +28,7 @@ class UploadProductPhotoUseCase
         $existingPhotos = $this->productRepository->findPhotosByProductId($productId);
         $sortOrder = count($existingPhotos);
 
-        $filename = $this->fileUploader->upload($file);
+        $filename = $this->fileManager->upload($file);
 
         $photo = new ProductPhoto(
             id:          null,

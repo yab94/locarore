@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Config;
 
+use Rore\Application\Config\ConfigInterface;
 use Rore\Infrastructure\Shared\AbstractTypedParams;
 
-final class Config extends AbstractTypedParams
+final class Config extends AbstractTypedParams implements ConfigInterface
 {
     public function __construct(private readonly array $data)
     {
