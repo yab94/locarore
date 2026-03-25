@@ -1,6 +1,16 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html       = HtmlHelper::cast($tpl->get('html'));
+$url        = UrlResolver::cast($tpl->get('url'));
+$categories = Cast::array($tpl->tryGet('categories', []));
+// $partial is injected by the Template engine — not a param
+?>
 <div class="flex items-center justify-between mb-6">
     <div></div>
-    <a href="<?= $url('Admin\Category.create') ?>"
+    <a href="<?= $url('Admin\\Category.create') ?>"
        class="bg-brand-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-brand-700 transition">
         + Nouvelle catégorie
     </a>
@@ -28,9 +38,9 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 text-right space-x-3">
-                        <a href="<?= $url('Admin\Category.edit', ['id' => $cat->getId()]) ?>"
+                        <a href="<?= $url('Admin\\Category.edit', ['id' => $cat->getId()]) ?>"
                            class="text-brand-600 hover:underline text-sm">Modifier</a>
-                        <form method="post" action="<?= $url('Admin\Category.toggle', ['id' => $cat->getId()]) ?>"
+                        <form method="post" action="<?= $url('Admin\\Category.toggle', ['id' => $cat->getId()]) ?>"
                               class="inline">
                             <?= $partial('partials/csrf') ?>
                             <button type="submit" class="text-gray-500 hover:text-gray-800 text-sm transition">

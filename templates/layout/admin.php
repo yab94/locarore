@@ -1,9 +1,16 @@
+<?php
+$html    = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
+$url     = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
+$title   = \Rore\Support\Cast::string($tpl->tryGet('title', 'Admin — Locarore'));
+$flash   = \Rore\Support\Cast::array($tpl->tryGet('flash', []));
+$content = \Rore\Support\Cast::string($tpl->get('content'));
+?>
 <!DOCTYPE html>
 <html lang="fr" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $html($title ?? 'Admin — Locarore') ?></title>
+    <title><?= $html($title) ?></title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <link rel="stylesheet" href="/assets/css/app.css">
@@ -63,7 +70,7 @@
     <!-- Main content -->
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="bg-white shadow-sm px-8 py-4">
-            <h1 class="text-xl font-semibold text-gray-800"><?= $html($title ?? '') ?></h1>
+            <h1 class="text-xl font-semibold text-gray-800"><?= $html($title) ?></h1>
         </header>
 
         <main class="flex-1 overflow-y-auto p-8">

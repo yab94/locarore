@@ -1,3 +1,15 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html       = HtmlHelper::cast($tpl->get('html'));
+$url        = UrlResolver::cast($tpl->get('url'));
+$config     = $tpl->get('config');
+$category   = $tpl->tryGet('category', null);
+$categories = Cast::array($tpl->tryGet('categories', []));
+// $partial is injected by the Template engine — not a param
+?>
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 

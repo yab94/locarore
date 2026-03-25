@@ -1,3 +1,21 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+use Rore\Domain\Catalog\Entity\Pack;
+
+$html            = HtmlHelper::cast($tpl->get('html'));
+$url             = UrlResolver::cast($tpl->get('url'));
+$urlResolver     = UrlResolver::cast($tpl->get('urlResolver'));
+$pack            = Pack::cast($tpl->get('pack'));
+$allCategories   = Cast::array($tpl->tryGet('allCategories', []));
+$productsById    = Cast::array($tpl->tryGet('productsById', []));
+$mainProduct     = $tpl->tryGet('mainProduct', null);
+$slotsWithProducts = Cast::array($tpl->tryGet('slotsWithProducts', []));
+$packSelections  = Cast::array($tpl->tryGet('packSelections', []));
+$cart            = $tpl->get('cart');
+// $partial is injected by the Template engine — not a param
+?>
 <?= $partial('partials/breadcrumb') ?>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">

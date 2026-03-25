@@ -1,3 +1,16 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html       = HtmlHelper::cast($tpl->get('html'));
+$url        = UrlResolver::cast($tpl->get('url'));
+$config     = $tpl->get('config');
+$packs      = Cast::array($tpl->tryGet('packs', []));
+$products   = Cast::array($tpl->tryGet('products', []));
+$categories = Cast::array($tpl->tryGet('categories', []));
+// $partial is injected by the Template engine — not a param
+?>
 <div class="flex justify-between items-center mb-6">
     <p class="text-sm text-gray-500"><?= count($packs) ?> pack(s)</p>
     <a href="<?= $url('Admin\Pack.create') ?>"

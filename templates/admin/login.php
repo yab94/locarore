@@ -1,3 +1,9 @@
+<?php
+use Rore\Presentation\Seo\UrlResolver;
+
+$url = UrlResolver::cast($tpl->get('url'));
+// $partial is injected by the Template engine — not a param
+?>
 <div class="max-w-sm mx-auto mt-20">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
         <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Administration</h1>

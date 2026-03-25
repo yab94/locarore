@@ -1,3 +1,12 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+
+$html    = HtmlHelper::cast($tpl->get('html'));
+$url     = UrlResolver::cast($tpl->get('url'));
+$message = $tpl->get('message');
+// $partial is injected by the Template engine — not a param
+?>
 <div class="max-w-2xl space-y-6">
 
     <!-- Infos expéditeur -->

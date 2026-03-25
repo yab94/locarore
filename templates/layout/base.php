@@ -1,3 +1,9 @@
+<?php
+$html    = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
+$meta    = $tpl->get('meta');
+$flash   = \Rore\Support\Cast::array($tpl->tryGet('flash', []));
+$content = \Rore\Support\Cast::string($tpl->get('content'));
+?>
 <!DOCTYPE html>
 <html lang="fr" class="h-full">
 <head>

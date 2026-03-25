@@ -1,3 +1,22 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html          = HtmlHelper::cast($tpl->get('html'));
+$url           = UrlResolver::cast($tpl->get('url'));
+$config        = $tpl->get('config');
+$settings      = $tpl->get('settings');
+$urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
+$allCategories = Cast::array($tpl->tryGet('allCategories', []));
+$cart          = $tpl->get('cart');
+$cartDateRange = $tpl->tryGet('cartDateRange', null);
+$cartProducts  = Cast::array($tpl->tryGet('cartProducts', []));
+$cartPacks     = Cast::array($tpl->tryGet('cartPacks', []));
+$productPrices = Cast::array($tpl->tryGet('productPrices', []));
+$packPrices    = Cast::array($tpl->tryGet('packPrices', []));
+// $partial is injected by the Template engine — not a param
+?>
 <h1 class="text-3xl font-bold text-gray-900 mb-8">Mon panier</h1>
 
 <?php if (!$cart->hasDates()): ?>

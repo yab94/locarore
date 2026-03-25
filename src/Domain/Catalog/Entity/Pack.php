@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
+use Rore\Support\Castable;
+
 class Pack implements PricableInterface
 {
+    use Castable;
     /** @var PackItem[] */
     private array $items = [];
 

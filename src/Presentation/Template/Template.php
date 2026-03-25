@@ -132,12 +132,11 @@ final class Template
 
     public function get(string $key): mixed
     {
-        if (!array_key_exists($key, $this->params)) {
-            throw new InvalidArgumentException(
-                sprintf('Template "%s" : param "$%s" absent.', $this->file, $key)
-            );
-        }
+        return $this->tryGet($key) ?? throw new InvalidArgumentException(sprintf('Template "%s" : param "$%s" est null.', $this->file, $key));
+    }
 
-        return $this->params[$key];
+    public function tryGet(string $key, mixed $default = null): mixed
+    {
+        return array_key_exists($key, $this->params) ? $this->params[$key] : $default;
     }
 }

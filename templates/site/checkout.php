@@ -1,3 +1,11 @@
+<?php
+use Rore\Presentation\Seo\UrlResolver;
+
+$url           = UrlResolver::cast($tpl->get('url'));
+$cart          = $tpl->get('cart');
+$cartDateRange = $tpl->get('cartDateRange');
+// $partial is injected by the Template engine — not a param
+?>
 <div class="max-w-lg mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">Finaliser ma réservation</h1>
     <p class="text-gray-500 mb-8 text-sm">

@@ -1,3 +1,11 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Support\Cast;
+
+$html           = HtmlHelper::cast($tpl->get('html'));
+$settings       = $tpl->get('settings');
+$reservationId  = $tpl->get('reservationId');
+?>
 <div class="max-w-lg mx-auto text-center py-16">
     <div class="text-5xl mb-6">🎉</div>
     <h1 class="text-3xl font-bold text-gray-900 mb-3"><?= $html($settings->get('confirmation.title')) ?></h1>

@@ -1,6 +1,16 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html     = HtmlHelper::cast($tpl->get('html'));
+$url      = UrlResolver::cast($tpl->get('url'));
+$products = Cast::array($tpl->tryGet('products', []));
+// $partial is injected by the Template engine — not a param
+?>
 <div class="flex items-center justify-between mb-6">
     <div></div>
-    <a href="<?= $url('Admin\Product.create') ?>"
+    <a href="<?= $url('Admin\\Product.create') ?>"
        class="bg-brand-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-brand-700 transition">
         + Nouveau produit
     </a>

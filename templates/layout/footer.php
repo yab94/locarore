@@ -1,6 +1,7 @@
 <?php
-$tpl->assertInstanceOf('url', Rore\Presentation\Seo\UrlResolver::class);
-$tpl->assertInstanceOf('html', Rore\Presentation\Template\HtmlHelper::class);
+$html     = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
+$url      = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
+$settings = $tpl->get('settings');
 ?>
 <footer class="bg-gray-900 mt-auto">
     <div class="container mx-auto px-4 max-w-6xl py-8 text-sm text-gray-400 text-center space-y-2">

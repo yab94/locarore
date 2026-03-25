@@ -1,3 +1,13 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html     = HtmlHelper::cast($tpl->get('html'));
+$url      = UrlResolver::cast($tpl->get('url'));
+$messages = Cast::array($tpl->tryGet('messages', []));
+// $partial is injected by the Template engine — not a param
+?>
 <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
     <table class="w-full text-sm">
         <thead class="bg-gray-50 text-gray-500 text-xs uppercase">

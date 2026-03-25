@@ -1,3 +1,18 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html                 = HtmlHelper::cast($tpl->get('html'));
+$url                  = UrlResolver::cast($tpl->get('url'));
+$settings             = $tpl->get('settings');
+$reservation          = $tpl->get('reservation');
+$dateRange            = $tpl->get('dateRange');
+$products             = Cast::array($tpl->tryGet('products', []));
+$packs                = Cast::array($tpl->tryGet('packs', []));
+$productCurrentPrices = Cast::array($tpl->tryGet('productCurrentPrices', []));
+// $partial is injected by the Template engine — not a param
+?>
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
     <!-- Détails -->

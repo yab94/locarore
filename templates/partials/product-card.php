@@ -1,8 +1,18 @@
 <?php
-$tpl->assertInstanceOf('product', Rore\Domain\Catalog\Entity\Product::class);
-$_productUrl = isset($productContextPath)
+use Rore\Domain\Catalog\Entity\Product;
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$product            = Product::cast($tpl->get('product'));
+$html               = HtmlHelper::cast($tpl->get('html'));
+$urlResolver        = UrlResolver::cast($tpl->get('urlResolver'));
+$config             = $tpl->get('config');
+$allCategories      = Cast::array($tpl->tryGet('allCategories', []));
+$productContextPath = $tpl->tryGet('productContextPath', null);
+$_productUrl = $productContextPath !== null
     ? $config->getStringParam('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()
-    : $urlResolver->productUrl($product, $allCategories ?? []);
+    : $urlResolver->productUrl($product, $allCategories);
 ?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
     <?php if ($photo = $product->getMainPhoto()): ?>

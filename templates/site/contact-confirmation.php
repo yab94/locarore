@@ -1,3 +1,8 @@
+<?php
+use Rore\Presentation\Seo\UrlResolver;
+
+$url = UrlResolver::cast($tpl->get('url'));
+?>
 <div class="max-w-xl mx-auto text-center py-16">
     <div class="text-5xl mb-6">✉️</div>
     <h1 class="text-3xl font-bold text-gray-900 mb-4">Message envoyé !</h1>

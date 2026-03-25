@@ -1,7 +1,18 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html      = HtmlHelper::cast($tpl->get('html'));
+$url       = UrlResolver::cast($tpl->get('url'));
+$texts     = Cast::array($tpl->tryGet('texts', []));
+$richtexts = Cast::array($tpl->tryGet('richtexts', []));
+// $partial is injected by the Template engine — not a param
+?>
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
-<form method="post" action="<?= $url('Admin\Settings.index') ?>" class="space-y-10" id="settings-form">
+<form method="post" action="<?= $url('Admin\\Settings.index') ?>" class="space-y-10" id="settings-form">
 <?= $partial('partials/csrf') ?>
 
     <!-- ── Textes courts ─────────────────────────────────────────────── -->

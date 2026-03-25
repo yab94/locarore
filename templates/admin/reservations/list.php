@@ -1,3 +1,15 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$html          = HtmlHelper::cast($tpl->get('html'));
+$url           = UrlResolver::cast($tpl->get('url'));
+$settings      = $tpl->get('settings');
+$reservations  = Cast::array($tpl->tryGet('reservations', []));
+$currentStatus = Cast::string($tpl->tryGet('currentStatus', 'all'));
+// $partial is injected by the Template engine — not a param
+?>
 <!-- Filtres statut -->
 <div class="flex gap-2 mb-6 flex-wrap">
     <?php

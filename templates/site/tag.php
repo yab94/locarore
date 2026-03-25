@@ -1,3 +1,13 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Support\Cast;
+
+$html     = HtmlHelper::cast($tpl->get('html'));
+$tag      = $tpl->get('tag');
+$products = Cast::array($tpl->tryGet('products', []));
+$packs    = Cast::array($tpl->tryGet('packs', []));
+// $partial is injected by the Template engine — not a param
+?>
 <?= $partial('partials/breadcrumb', ['breadcrumb' => [$tag]]) ?>
 
 <div class="mb-8">

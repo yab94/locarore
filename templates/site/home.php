@@ -1,18 +1,18 @@
-
 <?php
 use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
 
-$html         = $tpl->get('html');
-$settings     = $tpl->get('settings');
-$urlResolver  = $tpl->get('urlResolver');
-$allCategories = $tpl->tryGet('allCategories', []);
-$categories   = $tpl->tryGet('categories', []);
-$tags         = $tpl->tryGet('tags', []);
-$config       = $tpl->tryGet('config', null);
-$featured     = $tpl->tryGet('featured', []);
-$partial      = $tpl->tryGet('partial', null);
-$url          = $tpl->tryGet('url', null);
-
+$html          = HtmlHelper::cast($tpl->get('html'));
+$settings      = $tpl->get('settings');
+$url           = UrlResolver::cast($tpl->get('url'));
+$urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
+$config        = $tpl->get('config');
+$allCategories = Cast::array($tpl->tryGet('allCategories', []));
+$categories    = Cast::array($tpl->tryGet('categories', []));
+$tags          = Cast::array($tpl->tryGet('tags', []));
+$featured      = Cast::array($tpl->tryGet('featured', []));
+// $partial is injected by the Template engine — not a param
 ?>
 
 <!-- HERO -->
@@ -57,7 +57,7 @@ $url          = $tpl->tryGet('url', null);
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Parcourir par thème</h2>
     <div class="flex flex-wrap gap-2">
         <?php foreach ($tags as $tag): ?>
-            <a href="<?= $config ? $config->getStringParam('seo.tags_base_url') : '' ?>/<?= $html($tag->getSlug()) ?>"
+            <a href="<?= $config->getStringParam('seo.tags_base_url') ?>/<?= $html($tag->getSlug()) ?>"
                class="inline-flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-brand-100 transition">
                 🏷️ <?= $html($tag->getName()) ?>
             </a>
@@ -72,7 +72,7 @@ $url          = $tpl->tryGet('url', null);
     <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $html($settings->get('home.featured_title')) ?></h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($featured as $product): ?>
-            <?= $partial ? $partial('partials/product-card', ['product' => $product]) : '' ?>
+            <?= $partial('partials/product-card', ['product' => $product]) ?>
         <?php endforeach; ?>
     </div>
 </section>
@@ -83,7 +83,7 @@ $url          = $tpl->tryGet('url', null);
 <section class="mt-10 bg-brand-50 border border-brand-200 rounded-2xl py-8 px-6 text-center" style="padding-bottom:3rem;">
     <h2 class="text-2xl font-bold text-gray-800 mb-2">Vous avez un projet ou une question ?</h2>
     <p class="text-gray-600 mb-6">Notre équipe est disponible pour vous accompagner et vous établir un devis sur mesure.</p>
-    <a href="<?= $url ? $url('Site\\Contact.index') : '#' ?>"
+    <a href="<?= $url('Site\\Contact.index') ?>"
        class="inline-block bg-brand-600 text-white font-semibold px-8 py-3 rounded-xl hover:bg-brand-700 transition">
         Contactez-nous
     </a>

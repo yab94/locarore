@@ -1,3 +1,12 @@
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Seo\UrlResolver;
+
+$html     = HtmlHelper::cast($tpl->get('html'));
+$url      = UrlResolver::cast($tpl->get('url'));
+$settings = $tpl->get('settings');
+// $partial is injected by the Template engine — not a param
+?>
 <div class="max-w-xl mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">
         <?= $html($settings->get('contact.page_title') ?: 'Contactez-nous') ?>

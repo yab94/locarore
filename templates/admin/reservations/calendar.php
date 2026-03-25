@@ -1,4 +1,15 @@
 <?php
+use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
+
+$url          = UrlResolver::cast($tpl->get('url'));
+$month        = (int) $tpl->get('month');
+$year         = (int) $tpl->get('year');
+$start        = $tpl->get('start');
+$end          = $tpl->get('end');
+$reservations = Cast::array($tpl->tryGet('reservations', []));
+?>
+<?php
 // Navigation mois
 $prevMonth = $month === 1 ? 12 : $month - 1;
 $prevYear  = $month === 1 ? $year - 1 : $year;
