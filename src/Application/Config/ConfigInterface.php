@@ -11,5 +11,4 @@ interface ConfigInterface
     public function getInt(string $key, int $default = 0): int;
     public function getFloat(string $key, float $default = 0.0): float;
     public function getArray(string $path, array $default = []): array;
-    public function isProduction(): bool;
 }

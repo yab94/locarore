@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class Typable
 {
-    public function __construct(private array $data)
+    public function __construct(protected array $data)
     {
     }
 

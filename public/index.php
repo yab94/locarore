@@ -10,8 +10,9 @@ require BASE_PATH . '/src/Support/Autoloader.php';
 \Rore\Support\Autoloader::register('Rore\\', BASE_PATH);
 \Rore\Support\Env::load(BASE_PATH);
 
-// ─── Config (.env + app.ini) ──────────────────────────────────────────────────
-$config = \Rore\Infrastructure\Config\Config::load(BASE_PATH);
+$config = new \Rore\Infrastructure\Config\Config(['BASE_PATH' => BASE_PATH]);
+$config->parseIni(BASE_PATH . '/config/default.ini');
+$config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini');
 
 // ─── Paramètres PHP selon l'environnement (section [php] de app.ini) ─────────
 (new \Rore\Infrastructure\Config\PhpRuntime($config))->boot();

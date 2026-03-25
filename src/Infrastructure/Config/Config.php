@@ -12,38 +12,7 @@ final class Config extends Typable implements ConfigInterface
 {
     use Castable;
 
-    public function __construct(private readonly array $data)
-    {
-    }
-
-    /**
-     * Charge .env, puis config/default.ini, puis config/{env}.ini par-dessus
-     * (deep merge section par section).
-     *
-     * @param string $basePath  chemin absolu vers la racine (BASE_PATH)
-     */
-    public static function load(string $basePath): self
-    {
-        putenv('BASE_PATH=' . $basePath);
-        $_ENV['BASE_PATH'] = $basePath;
-
-        // 3. Déterminer l'environnement (tout inconnu → prod, sécurité par défaut)
-        $env = (getenv('APP_ENV') === 'dev') ? 'dev' : 'prod';
-
-        // 3. Charger default.ini puis {env}.ini (deep merge)
-        $data = self::parseIni($basePath . '/config/default.ini');
-        $envIni = $basePath . '/config/' . $env . '.ini';
-        if (file_exists($envIni)) {
-            $data = self::deepMerge($data, self::parseIni($envIni));
-        }
-
-        // 4. Résoudre les références de config internes (${section.key})
-        $data = self::resolveConfigReferences($data);
-
-        return new self($data);
-    }
-
-    private static function parseIni(string $file): array
+    public function parseIni(string $file): void
     {
         $raw = file_get_contents($file);
         $raw = preg_replace_callback(
@@ -52,17 +21,18 @@ final class Config extends Typable implements ConfigInterface
             $raw,
         );
 
-        return parse_ini_string($raw, true) ?: [];
+        $this->data = $this->resolveConfigReferences($this->deepMerge($this->data, parse_ini_string($raw, true) ?: []));
+
     }
 
     /**
      * Fusionne $override dans $base récursivement (section par section).
      */
-    private static function deepMerge(array $base, array $override): array
+    private function deepMerge(array $base, array $override): array
     {
         foreach ($override as $key => $value) {
             if (is_array($value) && isset($base[$key]) && is_array($base[$key])) {
-                $base[$key] = self::deepMerge($base[$key], $value);
+                $base[$key] = $this->deepMerge($base[$key], $value);
             } else {
                 $base[$key] = $value;
             }
@@ -76,13 +46,13 @@ final class Config extends Typable implements ConfigInterface
      * NOTE: array_walk_recursive ne modifie pas les CLÉS d'arrays associatifs,
      * donc on doit parcourir manuellement pour résoudre les clés de routes.
      */
-    private static function resolveConfigReferences(array $data): array
+    private function resolveConfigReferences(array $data): array
     {
         $maxIterations = 10;
         
         for ($iteration = 0; $iteration < $maxIterations; $iteration++) {
             $hasChanges = false;
-            $data = self::resolveArrayRecursive($data, $data, $hasChanges);
+            $data = $this->resolveArrayRecursive($data, $data, $hasChanges);
             
             if (!$hasChanges) {
                 break;
@@ -95,19 +65,19 @@ final class Config extends Typable implements ConfigInterface
     /**
      * Résout récursivement les références dans valeurs ET clés.
      */
-    private static function resolveArrayRecursive(array $array, array $fullData, bool &$hasChanges): array
+    private function resolveArrayRecursive(array $array, array $fullData, bool &$hasChanges): array
     {
         $result = [];
         
         foreach ($array as $key => $value) {
             // Résoudre la clé
-            $resolvedKey = self::resolveString($key, $fullData, $hasChanges);
+            $resolvedKey = $this->resolveString($key, $fullData, $hasChanges);
             
             // Résoudre la valeur
             if (is_array($value)) {
-                $resolvedValue = self::resolveArrayRecursive($value, $fullData, $hasChanges);
+                $resolvedValue = $this->resolveArrayRecursive($value, $fullData, $hasChanges);
             } elseif (is_string($value)) {
-                $resolvedValue = self::resolveString($value, $fullData, $hasChanges);
+                $resolvedValue = $this->resolveString($value, $fullData, $hasChanges);
             } else {
                 $resolvedValue = $value;
             }
@@ -118,10 +88,7 @@ final class Config extends Typable implements ConfigInterface
         return $result;
     }
     
-    /**
-     * Résout les références @{section.key} dans une string.
-     */
-    private static function resolveString(string $value, array $data, bool &$hasChanges): string
+    private function resolveString(string $value, array $data, bool &$hasChanges): string
     {
         $original = $value;
         
@@ -131,6 +98,12 @@ final class Config extends Typable implements ConfigInterface
                 $path = $m[1];
                 $parts = explode('.', $path);
                 
+                // Si c'est une référence simple (BASE_PATH), chercher dans les données de premier niveau
+                if (count($parts) === 1 && isset($data[$parts[0]])) {
+                    return (string) $data[$parts[0]];
+                }
+                
+                // Sinon, chercher dans section.key
                 if (count($parts) === 2 && isset($data[$parts[0]][$parts[1]])) {
                     return (string) $data[$parts[0]][$parts[1]];
                 }
@@ -145,11 +118,6 @@ final class Config extends Typable implements ConfigInterface
         }
         
         return $resolved;
-    }
-
-    public function isProduction(): bool
-    {
-        return getenv('APP_ENV') !== 'dev';
     }
 
     public function get(string $path, mixed $default = null): mixed
