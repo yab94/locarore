@@ -2,9 +2,9 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 
-$html         = HtmlHelper::cast($tpl->get('html'));
+$html         = $tpl->get('html');
 $settings     = $tpl->get('settings');
-$urlResolver  = \Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
+$urlResolver  = $tpl->get('urlResolver');
 $allCategories = $tpl->tryGet('allCategories', []);
 $categories   = $tpl->tryGet('categories', []);
 $tags         = $tpl->tryGet('tags', []);

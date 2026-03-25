@@ -9,5 +9,3 @@ Features
 - Prendre des conseils SEO avec Claude voir ce qu'il pense du code
 
 - more test on each Domain Service
-
-- systeme de template avec injection de variable en lieu et place des include + scope de vars existantes
