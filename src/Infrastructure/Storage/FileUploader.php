@@ -98,7 +98,6 @@ class FileUploader implements FileManagerInterface
 
         $webpPath = preg_replace('/\.(jpe?g|png)$/i', '.webp', $sourcePath);
         imagewebp($img, $webpPath, 82);
-        imagedestroy($img);
         unlink($sourcePath);
 
         return basename((string) $webpPath);
