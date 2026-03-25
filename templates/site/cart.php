@@ -84,6 +84,8 @@ $packPrices    = Cast::array($tpl->tryGet('packPrices', []));
                 <div class="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
                     <?php if ($photo = $p->getMainPhoto()): ?>
                         <img src="<?= $html($photo->getPublicPath()) ?>" alt=""
+                             width="80" height="80"
+                             loading="lazy"
                              class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
                     <?php else: ?>
                         <div class="w-20 h-20 bg-gray-100 rounded-lg flex-shrink-0"></div>

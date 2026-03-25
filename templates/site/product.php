@@ -31,6 +31,8 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
                          src="<?= $html($photo->getPublicPath()) ?>"
                          alt="<?= $photoAlt ?>"
                          title="<?= $photoAlt ?>"
+                         width="768" height="384"
+                         <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
                          class="w-full h-96 object-cover <?= $i > 0 ? 'hidden' : '' ?>">
                 <?php endforeach; ?>
                 <?php if (count($photos) > 1): ?>
@@ -151,6 +153,52 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
         <?php endif; ?>
     </div>
 </div>
+
+<?php
+$_meta  = \Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
+$_crumbs = array_values(\Rore\Support\Cast::array($tpl->get('breadcrumb')));
+
+$_ldProduct = [
+    '@type'  => 'Product',
+    'name'   => $product->getName(),
+    'offers' => [
+        '@type'         => 'Offer',
+        'priceCurrency' => 'EUR',
+        'price'         => (string) $product->getPriceBase(),
+        'availability'  => 'https://schema.org/InStock',
+    ],
+];
+if ($product->getDescription()) {
+    $_ldProduct['description'] = strip_tags($product->getDescription());
+}
+if ($_mainPhoto = $product->getMainPhoto()) {
+    $_ldProduct['image'] = $urlResolver->siteUrl() . $_mainPhoto->getPublicPath();
+}
+if ($_meta->canonicalUrl !== '') {
+    $_ldProduct['url'] = $_meta->canonicalUrl;
+    $_ldProduct['offers']['url'] = $_meta->canonicalUrl;
+}
+
+$_ldItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Accueil', 'item' => $urlResolver->siteUrl() . '/']];
+foreach ($_crumbs as $_i => $_crumb) {
+    $_ldItems[] = [
+        '@type'    => 'ListItem',
+        'position' => $_i + 2,
+        'name'     => $_crumb->getName(),
+        'item'     => ($_i === count($_crumbs) - 1)
+            ? $_meta->canonicalUrl
+            : $urlResolver->siteUrl() . $urlResolver->categoryUrl($_crumb, $allCategories),
+    ];
+}
+
+echo '<script type="application/ld+json">' . json_encode([
+    '@context' => 'https://schema.org',
+    '@graph'   => [
+        $_ldProduct,
+        ['@type' => 'BreadcrumbList', 'itemListElement' => $_ldItems],
+    ],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+?>
 
 <?php if (count($product->getPhotos() ?: []) > 1): ?>
 <script>

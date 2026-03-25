@@ -31,6 +31,8 @@ $cart            = CartSession::cast($tpl->get('cart'));
                 <img src="<?= $html($mainPhoto->getPublicPath()) ?>"
                      alt="<?= $photoAlt ?>"
                      title="<?= $photoAlt ?>"
+                     width="768" height="384"
+                     fetchpriority="high"
                      class="w-full h-96 object-cover">
             </div>
         <?php else: ?>
@@ -155,3 +157,49 @@ $cart            = CartSession::cast($tpl->get('cart'));
         <p class="text-xs text-gray-400 mt-2 text-center">Réservation confirmée après validation de votre devis.</p>
     </div>
 </div>
+
+<?php
+$_meta   = \Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
+$_crumbs = array_values(\Rore\Support\Cast::array($tpl->get('breadcrumb')));
+
+$_ldPack = [
+    '@type'  => 'Product',
+    'name'   => $pack->getName(),
+    'offers' => [
+        '@type'         => 'Offer',
+        'priceCurrency' => 'EUR',
+        'price'         => (string) $pack->getPricePerDay(),
+        'availability'  => 'https://schema.org/InStock',
+    ],
+];
+if ($pack->getDescription()) {
+    $_ldPack['description'] = strip_tags($pack->getDescription());
+}
+if (($_packPhoto = $mainProduct?->getMainPhoto())) {
+    $_ldPack['image'] = $urlResolver->siteUrl() . $_packPhoto->getPublicPath();
+}
+if ($_meta->canonicalUrl !== '') {
+    $_ldPack['url'] = $_meta->canonicalUrl;
+    $_ldPack['offers']['url'] = $_meta->canonicalUrl;
+}
+
+$_ldItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Accueil', 'item' => $urlResolver->siteUrl() . '/']];
+foreach ($_crumbs as $_i => $_crumb) {
+    $_ldItems[] = [
+        '@type'    => 'ListItem',
+        'position' => $_i + 2,
+        'name'     => $_crumb->getName(),
+        'item'     => ($_i === count($_crumbs) - 1)
+            ? $_meta->canonicalUrl
+            : $urlResolver->siteUrl() . $urlResolver->categoryUrl($_crumb, $allCategories),
+    ];
+}
+
+echo '<script type="application/ld+json">' . json_encode([
+    '@context' => 'https://schema.org',
+    '@graph'   => [
+        $_ldPack,
+        ['@type' => 'BreadcrumbList', 'itemListElement' => $_ldItems],
+    ],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
+?>

@@ -21,6 +21,8 @@ $_packUrl       = $config->getStringParam('seo.packs_base_url') . '/' . $pack->g
         <img src="<?= $html($_mainPhoto->getPublicPath()) ?>"
              alt="<?= $_alt ?>"
              title="<?= $_alt ?>"
+             width="400" height="192"
+             loading="lazy"
              class="w-full h-48 object-cover">
     <?php else: ?>
         <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">

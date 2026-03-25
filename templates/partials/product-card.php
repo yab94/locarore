@@ -22,6 +22,8 @@ $_productUrl = $productContextPath !== null
         <img src="<?= $html($photo->getPublicPath()) ?>"
              alt="<?= $photoAlt ?>"
              title="<?= $photoAlt ?>"
+             width="400" height="192"
+             loading="lazy"
              class="w-full h-48 object-cover">
     <?php else: ?>
         <div class="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 text-sm">
