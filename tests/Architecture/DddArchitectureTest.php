@@ -166,4 +166,52 @@ final class DddArchitectureTest
                 . implode("\n", $violations)
         );
     }
+
+    public function testDiBindingsRespectDddLayers(): void
+    {
+        $ini      = parse_ini_file(BASE_PATH . '/config/default.ini', true);
+        $bindings = $ini['di']['bind'] ?? [];
+
+        $violations = [];
+
+        foreach ($bindings as $port => $adapter) {
+            // ── Règles DDD ────────────────────────────────────────────────────
+
+            // Le port doit être une interface hors Infrastructure
+            if (str_starts_with($port, 'Rore\\Infrastructure\\')) {
+                $violations[] = "Port en Infrastructure : {$port}";
+            }
+
+            // L'adaptateur doit être en Infrastructure
+            if (!str_starts_with($adapter, 'Rore\\Infrastructure\\')) {
+                $violations[] = "Adaptateur hors Infrastructure : {$adapter}\n   → port : {$port}";
+            }
+
+            // ── Correctness technique ─────────────────────────────────────────
+
+            // $port doit être une interface
+            if (!interface_exists($port)) {
+                $violations[] = "N'est pas une interface : {$port}";
+                continue; // inutile de tester implements si le port est invalide
+            }
+
+            // $adapter doit être une classe existante
+            if (!class_exists($adapter)) {
+                $violations[] = "Classe introuvable : {$adapter}\n   → port : {$port}";
+                continue;
+            }
+
+            // $adapter doit implémenter $port
+            if (!is_a($adapter, $port, true)) {
+                $violations[] = "« {$adapter} » n'implémente pas « {$port} »";
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nLes bindings DI de default.ini violent les règles DDD :\n\n"
+                . implode("\n\n", $violations)
+        );
+    }
 }
