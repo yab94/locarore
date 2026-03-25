@@ -1,7 +1,7 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Support\Cast;
+use Rore\Framework\Cast;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Infrastructure\Session\CartSession;

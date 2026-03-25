@@ -1,8 +1,8 @@
 <?php
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Presentation\Template\HtmlHelper;
-use Rore\Support\Cast;
-use Rore\Support\Config;
+use Rore\Framework\Cast;
+use Rore\Framework\Config;
 
 $pack          = Pack::cast($tpl->get('pack'));
 $productsById  = Cast::array($tpl->get('productsById'));

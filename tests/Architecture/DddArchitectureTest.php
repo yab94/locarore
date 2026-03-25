@@ -12,8 +12,8 @@ declare(strict_types=1);
  *   Infrastructure           →  Domain, Infrastructure, Application, Support
  *                               (les adaptateurs Infrastructure implémentent des ports Application)
  *
- * Support : Couche utilitaire de base accessible par toutes les couches
- *           (Config, Container, Cast, Typable, etc.)
+ * Framework : Couche framework de base accessible par toutes les couches
+ *             (Config, Container, Cast, Typable, etc.)
  *
  * Contrainte supplémentaire :
  *   Application ne contient QUE des UseCases (*UseCase) et des ports (interfaces).
@@ -23,10 +23,10 @@ final class DddArchitectureTest
     // ─── Règles ──────────────────────────────────────────────────────────────
     // Ordre : du plus spécifique au plus général (premier match gagne).
     private const RULES = [
-        'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Presentation', 'Rore\Support'],
-        'Rore\Application'             => ['Rore\Application', 'Rore\Domain', 'Rore\Support'],
-        'Rore\Domain'                  => ['Rore\Domain', 'Rore\Support'],
-        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application', 'Rore\Support'],
+        'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Presentation', 'Rore\Framework'],
+        'Rore\Application'             => ['Rore\Application', 'Rore\Domain', 'Rore\Framework'],
+        'Rore\Domain'                  => ['Rore\Domain', 'Rore\Framework'],
+        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application', 'Rore\Framework'],
     ];
 
     // ─── Helpers ─────────────────────────────────────────────────────────────

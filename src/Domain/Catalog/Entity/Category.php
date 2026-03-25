@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
-use Rore\Support\Castable;
+use Rore\Framework\Castable;
 
 class Category
 {

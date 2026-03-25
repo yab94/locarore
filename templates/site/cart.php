@@ -1,9 +1,9 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Support\Cast;
+use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
-use Rore\Support\Config;
+use Rore\Framework\Config;
 use Rore\Infrastructure\Session\CartSession;
 use Rore\Domain\Shared\ValueObject\DateRange;
 

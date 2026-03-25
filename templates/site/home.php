@@ -1,9 +1,9 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Support\Cast;
+use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
-use Rore\Support\Config;
+use Rore\Framework\Config;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));

@@ -13,7 +13,7 @@
  */
 
 $_meta = \Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
-$_crumbs = array_values(\Rore\Support\Cast::array($tpl->get('breadcrumb')));
+$_crumbs = array_values(\Rore\Framework\Cast::array($tpl->get('breadcrumb')));
 $_item = $tpl->tryGet('item'); // Product ou Pack (optionnel)
 $_type = $tpl->tryGet('type', 'product'); // 'product' ou 'pack'
 $_mainPhoto = $tpl->tryGet('mainPhoto'); // Pour les packs

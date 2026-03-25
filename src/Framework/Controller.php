@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller;
+namespace Rore\Framework;
 
 use Rore\Framework\Config;
 use Rore\Application\Security\CsrfTokenManagerInterface;

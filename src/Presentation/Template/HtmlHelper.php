@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Template;
 
-use Rore\Support\Castable;
+use Rore\Framework\Castable;
 
 /**
  * Encodeur HTML injectable dans les templates.

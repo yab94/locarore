@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Http;
+namespace Rore\Framework;
 
-use Rore\Presentation\Http\RequestInterface;
-use Rore\Support\Typable;
-
-final class HttpRequest implements RequestInterface
+/**
+ * Requête HTTP avec propriétés hooks pour accès aux super-globales.
+ */
+final class HttpRequest
 {
     public string $method { get => (string) ($_SERVER['REQUEST_METHOD'] ?? 'GET'); }
     public Typable $queryString { get => new Typable($_GET); }

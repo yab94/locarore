@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Http;
+namespace Rore\Framework;
 
-use Rore\Presentation\Http\ResponseInterface;
-
-final class HttpResponse implements ResponseInterface
+/**
+ * Réponse HTTP avec méthodes pour headers et redirections.
+ */
+final class HttpResponse
 {
     public function setStatusCode(int $code): void
     {

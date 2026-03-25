@@ -1,6 +1,6 @@
 <?php
 
-namespace Rore\Support;
+namespace Rore\Framework;
 
 class Env
 {

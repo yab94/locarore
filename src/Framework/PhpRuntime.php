@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Support;
+namespace Rore\Framework;
 
 /**
  * Applique les directives ini_set définies dans la section [php] de

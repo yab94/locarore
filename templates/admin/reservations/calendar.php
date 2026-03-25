@@ -1,6 +1,6 @@
 <?php
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Support\Cast;
+use Rore\Framework\Cast;
 
 $url          = UrlResolver::cast($tpl->get('url'));
 $month        = Cast::int($tpl->get('month'));

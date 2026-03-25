@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Mail;
 
-use Rore\Support\Config;
+use Rore\Framework\Config;
 use Rore\Application\Mail\MailerInterface;
 use RuntimeException;
 

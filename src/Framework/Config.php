@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Support;
+namespace Rore\Framework;
 
 final class Config extends Typable
 {

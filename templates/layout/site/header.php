@@ -2,7 +2,7 @@
 $html            = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
 $url             = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
 $urlResolver     = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
-$headerCategories = \Rore\Support\Cast::array($tpl->get('headerCategories'));
+$headerCategories = \Rore\Framework\Cast::array($tpl->get('headerCategories'));
 $settings        = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));
 $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);
 ?>

@@ -2,8 +2,8 @@
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Support\Cast;
-use Rore\Support\Config;
+use Rore\Framework\Cast;
+use Rore\Framework\Config;
 
 $product            = Product::cast($tpl->get('product'));
 $html               = HtmlHelper::cast($tpl->get('html'));

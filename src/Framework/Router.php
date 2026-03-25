@@ -2,41 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Http;
+namespace Rore\Framework;
 
-use Rore\Support\Config;
-use Rore\Support\Container;
 use Rore\Presentation\Template\Template;
 
-class Router
+/**
+ * Routeur HTTP générique avec résolution de paramètres et dispatch de contrôleurs.
+ */
+class Router extends Typable
 {
-    /** @var array{method: string, path: string, handler: array}[] */
+    /** @var array<array{method: string, path: string, handler: array{string, string}}> */
     private array $routes = [];
 
     public function __construct(
-        private readonly Container $container,
-        private readonly Config    $config,
-        private readonly HttpRequest    $request,
-        private readonly HttpResponse    $response,
-    ) {
-        if($config->getString('app.env') === $config->getString('seo.force_https') && strpos($request->server->getString('SCRIPT_URI'), 'https') !== 0) {
-            $response->redirect('https://' . $request->server->getString('HTTP_HOST') . $request->server->getString('REQUEST_URI'), 301);
-            exit(); 
-        }
-    }
-
-    public function get(string $path, array $handler): void
-    {
-        $this->routes[] = ['method' => 'GET', 'path' => $path, 'handler' => $handler];
-    }
-
-    public function post(string $path, array $handler): void
-    {
-        $this->routes[] = ['method' => 'POST', 'path' => $path, 'handler' => $handler];
-    }
+        private readonly Container   $container,
+        private readonly Config      $config,
+    ) {}
 
     /**
-     * Enregistre les routes depuis un tableau indexé par méthode HTTP.
+     * Ajoute des routes groupées par méthode HTTP.
      *
      * Format attendu :
      *   ['GET' => ['/path' => 'FQCN.method', ...], 'POST' => [...]]
