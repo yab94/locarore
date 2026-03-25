@@ -64,6 +64,9 @@ final class PricingService
 
         $total = 0.0;
         foreach ($pack->getItems() as $item) {
+            if (!$item->isFixed()) {
+                continue;
+            }
             $product = $byId[$item->getProductId()] ?? null;
             if ($product !== null) {
                 $total += $item->getQuantity() * $this->calculate($product, $start, $end);

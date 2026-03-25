@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Application\Catalog\CreatePackUseCase;
+use Rore\Application\Catalog\GetAllCategoriesUseCase;
 use Rore\Application\Catalog\GetAllPacksWithPricingUseCase;
 use Rore\Application\Catalog\GetAllProductsUseCase;
 use Rore\Application\Catalog\GetPackByIdUseCase;
@@ -16,6 +17,7 @@ class PackController extends AdminController
     public function __construct(
         private readonly GetAllPacksWithPricingUseCase $getAllPacksWithPricingUseCase,
         private readonly GetAllProductsUseCase         $getAllProductsUseCase,
+        private readonly GetAllCategoriesUseCase       $getAllCategoriesUseCase,
         private readonly GetPackByIdUseCase            $getPackByIdUseCase,
         private readonly CreatePackUseCase      $createPackUseCase,
         private readonly UpdatePackUseCase      $updatePackUseCase,
@@ -33,6 +35,7 @@ class PackController extends AdminController
             'title'            => 'Packs',
             'packs'            => $data['packs'],
             'products'         => $data['products'],
+            'categories'       => $this->getAllCategoriesUseCase->execute(),
             'packRetailPrices' => $data['retailPrices'],
         ]);
     }
@@ -40,9 +43,10 @@ class PackController extends AdminController
     public function create(): void
     {
         $this->render('admin/packs/form', [
-            'title'    => 'Nouveau pack',
-            'pack'     => null,
-            'products' => $this->getAllProductsUseCase->execute(),
+            'title'      => 'Nouveau pack',
+            'pack'       => null,
+            'products'   => $this->getAllProductsUseCase->execute(),
+            'categories' => $this->getAllCategoriesUseCase->execute(),
         ]);
     }
 
@@ -50,14 +54,14 @@ class PackController extends AdminController
     {
         $this->requirePost();
         try {
-            $items = $this->parseItems();
             $this->createPackUseCase->execute(
                 name:               $this->request->body->getStringParam('name'),
                 description:        $this->request->body->getStringParam('description') ?: null,
                 pricePerDay:        $this->request->body->getFloatParam('price_per_day'),
                 priceExtraWeekend:  $this->request->body->getFloatParam('price_extra_weekend'),
                 priceExtraWeekday:  $this->request->body->getFloatParam('price_extra_weekday'),
-                items:              $items,
+                items:              $this->parseItems(),
+                slots:              $this->parseSlots(),
                 customSlug:         $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Pack créé.');
@@ -74,9 +78,10 @@ class PackController extends AdminController
             $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
         $this->render('admin/packs/form', [
-            'title'    => 'Modifier le pack',
-            'pack'     => $pack,
-            'products' => $this->getAllProductsUseCase->execute(),
+            'title'      => 'Modifier le pack',
+            'pack'       => $pack,
+            'products'   => $this->getAllProductsUseCase->execute(),
+            'categories' => $this->getAllCategoriesUseCase->execute(),
         ]);
     }
 
@@ -84,7 +89,6 @@ class PackController extends AdminController
     {
         $this->requirePost();
         try {
-            $items = $this->parseItems();
             $this->updatePackUseCase->execute(
                 id:                 (int) $id,
                 name:               $this->request->body->getStringParam('name'),
@@ -92,7 +96,8 @@ class PackController extends AdminController
                 pricePerDay:        $this->request->body->getFloatParam('price_per_day'),
                 priceExtraWeekend:  $this->request->body->getFloatParam('price_extra_weekend'),
                 priceExtraWeekday:  $this->request->body->getFloatParam('price_extra_weekday'),
-                items:              $items,
+                items:              $this->parseItems(),
+                slots:              $this->parseSlots(),
                 customSlug:         $this->request->body->getStringParam('slug') ?: null,
             );
             $this->flash('success', 'Pack mis à jour.');
@@ -127,5 +132,21 @@ class PackController extends AdminController
             }
         }
         return $items;
+    }
+
+    /** @return array<int,int> [categoryId => quantity] */
+    private function parseSlots(): array
+    {
+        $slots = [];
+        $categoryIds = $this->request->body->getArrayParam('slot_category_id');
+        $quantities  = $this->request->body->getArrayParam('slot_quantity');
+        foreach ($categoryIds as $i => $cid) {
+            $cid = (int) $cid;
+            $qty = (int) ($quantities[$i] ?? 0);
+            if ($cid > 0 && $qty > 0) {
+                $slots[$cid] = $qty;
+            }
+        }
+        return $slots;
     }
 }

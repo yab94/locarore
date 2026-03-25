@@ -9,6 +9,6 @@ Features
 - faut il créer des interfaces pour distinguer et typer les DDD element UseCaseInterface par exemple, puis créer des règles de DI pour n'autoriser que certaines injections en fonction des couches DDD
 - CartSession n'as peut etre pas sa place dans application que fait il fans les usecase
 
-
+- possible UseCase qui soient inutilisé
 - gestion des variadics parameters avec la DI OK
 - appliquer partout

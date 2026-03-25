@@ -38,10 +38,36 @@ final class GetPackWithDetailsUseCase
             $productsById[$p->getId()] = $p;
         }
 
+        $allCategories = $this->categoryRepo->findAllActive();
+
+        // Pour chaque slot catégorie, charger les produits disponibles de cette catégorie
+        $slotsWithProducts = [];
+        foreach ($pack->getItems() as $item) {
+            if (!$item->isSlot()) continue;
+            $category = null;
+            foreach ($allCategories as $cat) {
+                if ($cat->getId() === $item->getCategoryId()) {
+                    $category = $cat;
+                    break;
+                }
+            }
+            // Filtrer les produits actifs appartenant à cette catégorie (catégorie principale)
+            $categoryProducts = array_values(array_filter(
+                $allProducts,
+                fn($p) => $p->isActive() && $p->getCategoryId() === $item->getCategoryId()
+            ));
+            $slotsWithProducts[$item->getId()] = [
+                'slot'     => $item,
+                'category' => $category,
+                'products' => $categoryProducts,
+            ];
+        }
+
         return [
-            'pack'          => $pack,
-            'productsById'  => $productsById,
-            'allCategories' => $this->categoryRepo->findAllActive(),
+            'pack'              => $pack,
+            'productsById'      => $productsById,
+            'allCategories'     => $allCategories,
+            'slotsWithProducts' => $slotsWithProducts,
         ];
     }
 }

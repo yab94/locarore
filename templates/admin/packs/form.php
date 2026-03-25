@@ -118,6 +118,44 @@
             </button>
         </div>
 
+        <!-- Slots catégorie -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Slots de sélection
+                <span class="text-gray-400 font-normal text-xs ml-1">— le client choisit un produit parmi la catégorie</span>
+            </label>
+
+            <div id="pack-slots" class="space-y-2">
+                <?php
+                $packSlots = $pack ? array_filter($pack->getItems(), fn($i) => $i->isSlot()) : [];
+                foreach ($packSlots as $slot): ?>
+                <div class="pack-slot-row flex items-center gap-3">
+                    <select name="slot_category_id[]"
+                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+                        <option value="">— Choisir une catégorie —</option>
+                        <?php foreach ($categories as $cat): ?>
+                            <option value="<?= $cat->getId() ?>"
+                                <?= $cat->getId() === $slot->getCategoryId() ? 'selected' : '' ?>>
+                                <?= $html($cat->getName()) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="number" name="slot_quantity[]" min="1"
+                           value="<?= $slot->getQuantity() ?>"
+                           class="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm text-center"
+                           title="Nombre de produits à choisir">
+                    <button type="button" onclick="removePackSlot(this)"
+                            class="text-red-400 hover:text-red-600 text-lg font-bold leading-none">×</button>
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+            <button type="button" onclick="addPackSlot()"
+                    class="mt-3 text-sm text-brand-600 hover:underline">
+                + Ajouter un slot catégorie
+            </button>
+        </div>
+
         <div class="flex gap-3 pt-2">
             <button type="submit"
                     class="bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:bg-brand-700 transition text-sm">
@@ -148,6 +186,24 @@
     </div>
 </template>
 
+<!-- Template HTML pour un nouveau slot catégorie -->
+<template id="pack-slot-tpl">
+    <div class="pack-slot-row flex items-center gap-3">
+        <select name="slot_category_id[]"
+                class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+            <option value="">— Choisir une catégorie —</option>
+            <?php foreach ($categories as $cat): ?>
+                <option value="<?= $cat->getId() ?>"><?= $html($cat->getName()) ?></option>
+            <?php endforeach; ?>
+        </select>
+        <input type="number" name="slot_quantity[]" min="1" value="1"
+               class="w-20 border border-gray-300 rounded-lg px-3 py-2 text-sm text-center"
+               title="Nombre de produits à choisir">
+        <button type="button" onclick="removePackSlot(this)"
+                class="text-red-400 hover:text-red-600 text-lg font-bold leading-none">×</button>
+    </div>
+</template>
+
 <script>
 function addPackItem() {
     const tpl = document.getElementById('pack-item-tpl');
@@ -156,6 +212,14 @@ function addPackItem() {
 }
 function removePackItem(btn) {
     btn.closest('.pack-item-row').remove();
+}
+function addPackSlot() {
+    const tpl = document.getElementById('pack-slot-tpl');
+    const row = tpl.content.cloneNode(true);
+    document.getElementById('pack-slots').appendChild(row);
+}
+function removePackSlot(btn) {
+    btn.closest('.pack-slot-row').remove();
 }
 
 // Auto-slug

@@ -22,7 +22,7 @@ final class GetCartDataUseCase
     ) {}
 
     /**
-     * @param array<int, int> $cartItems [productId => quantity]
+     * @param array<int, int>   $cartItems [productId => quantity]
      * @param array<int, mixed> $cartPacks [packId => data]
      * @return array{cartProducts: array, cartPacks: array, productPrices: array, packPrices: array, allCategories: array}
      */
@@ -51,10 +51,28 @@ final class GetCartDataUseCase
 
         $cartPacksArray = [];
         $packPrices     = [];
-        foreach ($cartPacks as $packId => $_) {
+        foreach ($cartPacks as $packId => $packData) {
             $pack = $this->packRepo->findById((int) $packId);
             if ($pack) {
-                $cartPacksArray[] = $pack;
+                // Résoudre les produits sélectionnés pour les slots
+                $selections   = is_array($packData) ? ($packData['selections'] ?? []) : [];
+                $slotProducts = [];
+                foreach ($pack->getItems() as $item) {
+                    if (!$item->isSlot()) continue;
+                    $selectedProductId = $selections[$item->getId()] ?? null;
+                    if ($selectedProductId) {
+                        $product = $this->productRepo->findById((int) $selectedProductId);
+                        if ($product) {
+                            $slotProducts[$item->getId()] = $product;
+                        }
+                    }
+                }
+
+                $cartPacksArray[] = [
+                    'pack'         => $pack,
+                    'slotProducts' => $slotProducts,
+                ];
+
                 if ($startDate && $endDate) {
                     $packPrices[$pack->getId()] = $this->pricingService->calculate(
                         $pack,

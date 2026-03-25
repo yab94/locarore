@@ -114,7 +114,9 @@ class CartSession
     public function addPack(int $packId): void
     {
         $packs = $this->getPacks();
-        $packs[$packId] = 1;
+        if (!isset($packs[$packId])) {
+            $packs[$packId] = ['selections' => []];
+        }
         $cart = $this->getCart();
         $cart['packs'] = $packs;
         $this->setCart($cart);
@@ -124,6 +126,44 @@ class CartSession
     {
         $packs = $this->getPacks();
         unset($packs[$packId]);
+        $cart = $this->getCart();
+        $cart['packs'] = $packs;
+        $this->setCart($cart);
+    }
+
+    /**
+     * Retourne les sélections pour un pack donné.
+     * @return array<int, int>  [slotItemId => productId]
+     */
+    public function getPackSelections(int $packId): array
+    {
+        $packs = $this->getPacks();
+        $selections = $packs[$packId]['selections'] ?? [];
+        return is_array($selections) ? $selections : [];
+    }
+
+    /**
+     * Enregistre le choix de produit pour un slot donné.
+     */
+    public function setPackSelection(int $packId, int $slotItemId, int $productId): void
+    {
+        $packs = $this->getPacks();
+        if (!isset($packs[$packId])) {
+            $packs[$packId] = ['selections' => []];
+        }
+        $packs[$packId]['selections'][$slotItemId] = $productId;
+        $cart = $this->getCart();
+        $cart['packs'] = $packs;
+        $this->setCart($cart);
+    }
+
+    /**
+     * Supprime la sélection d'un slot donné.
+     */
+    public function removePackSelection(int $packId, int $slotItemId): void
+    {
+        $packs = $this->getPacks();
+        unset($packs[$packId]['selections'][$slotItemId]);
         $cart = $this->getCart();
         $cart['packs'] = $packs;
         $this->setCart($cart);

@@ -62,6 +62,10 @@ class Pack implements PricableInterface
         $bestScore = -1.0;
 
         foreach ($this->items as $item) {
+            // Les slots catégorie n'ont pas de produit fixe → ignorer
+            if (!$item->isFixed()) {
+                continue;
+            }
             $product = $productsById[$item->getProductId()] ?? null;
             if ($product === null) {
                 continue;

@@ -105,8 +105,10 @@ class CartController extends SiteController
     {
         $this->requirePost();
         try {
+            $selections = $this->request->body->getArrayParam('slot_selection');
             $this->addPackToCartUseCase->execute(
-                packId: $this->request->body->getIntParam('pack_id'),
+                packId:     $this->request->body->getIntParam('pack_id'),
+                selections: is_array($selections) ? $selections : [],
             );
             $this->flash('success', 'Pack ajouté au panier.');
         } catch (\Throwable $e) {

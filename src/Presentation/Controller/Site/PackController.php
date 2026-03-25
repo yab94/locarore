@@ -50,13 +50,15 @@ class PackController extends SiteController
         );
 
         $this->render('site/pack', [
-            'meta'          => $meta,
-            'pack'          => $pack,
-            'productsById'  => $productsById,
-            'mainProduct'   => $mainProduct,
-            'mainCategory'  => $mainCategory,
-            'breadcrumb'    => [ ...$breadcrumb, $pack ],
-            'allCategories' => $allCategories,
+            'meta'              => $meta,
+            'pack'              => $pack,
+            'productsById'      => $productsById,
+            'mainProduct'       => $mainProduct,
+            'mainCategory'      => $mainCategory,
+            'breadcrumb'        => [ ...$breadcrumb, $pack ],
+            'allCategories'     => $allCategories,
+            'slotsWithProducts' => $result['slotsWithProducts'],
+            'packSelections'    => $this->cart->getPackSelections($pack->getId()),
         ]);
     }
 

@@ -278,8 +278,8 @@ final class AvailabilityServiceTest
         );
         // Pack contient : 2× produit 1 + 3× produit 2
         $pack->setItems([
-            new PackItem(id: 1, packId: $id, productId: 1, quantity: 2),
-            new PackItem(id: 2, packId: $id, productId: 2, quantity: 3),
+            new PackItem(id: 1, packId: $id, productId: 1, categoryId: null, quantity: 2),
+            new PackItem(id: 2, packId: $id, productId: 2, categoryId: null, quantity: 3),
         ]);
         return $pack;
     }

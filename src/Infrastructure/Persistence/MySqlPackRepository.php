@@ -139,11 +139,18 @@ class MySqlPackRepository implements PackRepositoryInterface
 
         // Sync pack_items
         $this->connection->prepare('DELETE FROM pack_items WHERE pack_id = ?')->execute([$id]);
-        $stmt = $this->connection->prepare(
-            'INSERT INTO pack_items (pack_id, product_id, quantity) VALUES (?, ?, ?)'
+        $stmtFixed = $this->connection->prepare(
+            'INSERT INTO pack_items (pack_id, product_id, category_id, quantity) VALUES (?, ?, NULL, ?)'
+        );
+        $stmtSlot = $this->connection->prepare(
+            'INSERT INTO pack_items (pack_id, product_id, category_id, quantity) VALUES (?, NULL, ?, ?)'
         );
         foreach ($pack->getItems() as $item) {
-            $stmt->execute([$id, $item->getProductId(), $item->getQuantity()]);
+            if ($item->isFixed()) {
+                $stmtFixed->execute([$id, $item->getProductId(), $item->getQuantity()]);
+            } else {
+                $stmtSlot->execute([$id, $item->getCategoryId(), $item->getQuantity()]);
+            }
         }
 
         return $id;
@@ -204,10 +211,11 @@ class MySqlPackRepository implements PackRepositoryInterface
     private function hydrateItem(array $row): PackItem
     {
         return new PackItem(
-            id:        (int) $row['id'],
-            packId:    (int) $row['pack_id'],
-            productId: (int) $row['product_id'],
-            quantity:  (int) $row['quantity'],
+            id:         (int) $row['id'],
+            packId:     (int) $row['pack_id'],
+            productId:  isset($row['product_id'])  ? (int) $row['product_id']  : null,
+            categoryId: isset($row['category_id']) ? (int) $row['category_id'] : null,
+            quantity:   (int) $row['quantity'],
         );
     }
 }

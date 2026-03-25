@@ -88,8 +88,8 @@ class PackPriceTest
         );
 
         $pack->setItems([
-            new PackItem(id: null, packId: 1, productId: 1, quantity: 4),
-            new PackItem(id: null, packId: 1, productId: 2, quantity: 6),
+            new PackItem(id: null, packId: 1, productId: 1, categoryId: null, quantity: 4),
+            new PackItem(id: null, packId: 1, productId: 2, categoryId: null, quantity: 6),
         ]);
 
         return $pack;

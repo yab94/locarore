@@ -41,7 +41,11 @@
                         <?php else: ?>
                             <?php foreach ($items as $item): ?>
                                 <span class="inline-flex items-center gap-1 bg-gray-100 rounded px-2 py-0.5 text-xs mr-1 mb-1">
-                                    <?= $html($products[$item->getProductId()]?->getName() ?? 'Produit #' . $item->getProductId()) ?>
+                                    <?php if ($item->isFixed()): ?>
+                                        <?= $html($products[$item->getProductId()]?->getName() ?? 'Produit #' . $item->getProductId()) ?>
+                                    <?php else: ?>
+                                        Produit &quot;<?= $html($categories[$item->getCategoryId()]?->getName()) ?>&quot;</em>
+                                    <?php endif; ?>
                                     × <?= $item->getQuantity() ?>
                                 </span>
                             <?php endforeach; ?>
@@ -51,7 +55,11 @@
                         <?= number_format($pack->getPricePerDay(), 2, ',', ' ') ?> €
                     </td>
                     <td class="px-6 py-4 text-right">
-                        <?php 
+                        <?php
+                        $hasSlots = array_filter($pack->getItems(), fn($i) => $i->isSlot()) !== [];
+                        if ($hasSlots): ?>
+                            <span class="text-xs text-gray-400 italic">variable</span>
+                        <?php else:
                         $retailPrice = $packRetailPrices[$pack->getId()] ?? 0;
                         $packPrice = $pack->getPricePerDay();
                         $diff = $retailPrice > 0 ? (($packPrice - $retailPrice) / $retailPrice) * 100 : 0;
@@ -63,6 +71,7 @@
                             <div class="text-xs <?= $diffColor ?> font-medium">
                                 <?= $diffSign ?><?= number_format($diff, 0) ?>%
                             </div>
+                        <?php endif; ?>
                         <?php endif; ?>
                     </td>
                     <td class="px-6 py-4 text-center">

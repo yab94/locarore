@@ -17,7 +17,9 @@ class UpdatePackUseCase
     ) {}
 
     /**
+    /**
      * @param array<int, int> $items [productId => quantity]
+     * @param array<int, int> $slots [categoryId => quantity]
      */
     public function execute(
         int     $id,
@@ -27,6 +29,7 @@ class UpdatePackUseCase
         float   $priceExtraWeekend,
         float   $priceExtraWeekday,
         array   $items,
+        array   $slots = [],
         ?string $customSlug = null,
     ): void {
         $pack = $this->packRepository->findById($id);
@@ -52,7 +55,11 @@ class UpdatePackUseCase
         $packItems = [];
         foreach ($items as $productId => $qty) {
             if ((int) $qty < 1) continue;
-            $packItems[] = new PackItem(null, $id, (int) $productId, (int) $qty);
+            $packItems[] = new PackItem(null, $id, (int) $productId, null, (int) $qty);
+        }
+        foreach ($slots as $categoryId => $qty) {
+            if ((int) $qty < 1) continue;
+            $packItems[] = new PackItem(null, $id, null, (int) $categoryId, (int) $qty);
         }
         $pack->setItems($packItems);
 

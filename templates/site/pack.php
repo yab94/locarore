@@ -41,20 +41,41 @@
             <h2 class="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Contenu du pack</h2>
             <ul class="space-y-2">
                 <?php foreach ($pack->getItems() as $item): ?>
-                    <?php $p = $productsById[$item->getProductId()] ?? null; ?>
-                    <li class="flex items-center justify-between text-sm">
-                        <span class="text-gray-800">
-                            <?php if ($p): ?>
-                                <a href="<?= $html($urlResolver->productUrl($p, $allCategories)) ?>"
-                                   class="hover:text-brand-600 hover:underline">
-                                    <?= $html($p->getName()) ?>
-                                </a>
-                            <?php else: ?>
-                                Produit #<?= $item->getProductId() ?>
+                    <?php if ($item->isFixed()): ?>
+                        <?php $p = $productsById[$item->getProductId()] ?? null; ?>
+                        <li class="flex items-center justify-between text-sm">
+                            <span class="text-gray-800">
+                                <?php if ($p): ?>
+                                    <a href="<?= $html($urlResolver->productUrl($p, $allCategories)) ?>"
+                                       class="hover:text-brand-600 hover:underline">
+                                        <?= $html($p->getName()) ?>
+                                    </a>
+                                <?php else: ?>
+                                    Produit #<?= $item->getProductId() ?>
+                                <?php endif; ?>
+                            </span>
+                            <span class="text-gray-500 font-medium">× <?= $item->getQuantity() ?></span>
+                        </li>
+                    <?php else: ?>
+                        <?php
+                        $slotData        = $slotsWithProducts[$item->getId()] ?? null;
+                        $selectedProduct = $packSelections[$item->getId()] ?? null;
+                        $selectedProduct = $selectedProduct ? ($productsById[$selectedProduct] ?? null) : null;
+                        ?>
+                        <li class="text-sm border-t border-dashed border-gray-200 pt-2 mt-1">
+                            <span class="text-gray-500 italic">
+                                <?= $item->getQuantity() ?> produit(s) au choix
+                                <?php if ($slotData && $slotData['category']): ?>
+                                    — <span class="text-brand-600"><?= $html($slotData['category']->getName()) ?></span>
+                                <?php endif; ?>
+                            </span>
+                            <?php if ($selectedProduct): ?>
+                                <div class="mt-1 flex items-center justify-between">
+                                    <span class="text-gray-800 font-medium">→ <?= $html($selectedProduct->getName()) ?></span>
+                                </div>
                             <?php endif; ?>
-                        </span>
-                        <span class="text-gray-500 font-medium">× <?= $item->getQuantity() ?></span>
-                    </li>
+                        </li>
+                    <?php endif; ?>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -78,6 +99,27 @@
                 <form method="post" action="<?= $html($urlResolver->resolve('Site\Cart.addPack')) ?>">
                     <?= require 'partials/csrf.php' ?>
                     <input type="hidden" name="pack_id" value="<?= $pack->getId() ?>">
+                    <?php foreach ($slotsWithProducts as $slotId => $slotData): ?>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Choisir <?= $slotData['slot']->getQuantity() ?> produit(s)
+                            <?php if ($slotData['category']): ?>
+                                — <span class="text-brand-600"><?= $html($slotData['category']->getName()) ?></span>
+                            <?php endif; ?>
+                        </label>
+                        <select name="slot_selection[<?= $slotId ?>]"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600"
+                                required>
+                            <option value="">— Choisir un produit —</option>
+                            <?php foreach ($slotData['products'] as $p): ?>
+                                <option value="<?= $p->getId() ?>"
+                                    <?= ($packSelections[$slotId] ?? null) == $p->getId() ? 'selected' : '' ?>>
+                                    <?= $html($p->getName()) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <?php endforeach; ?>
                     <button type="submit"
                             class="block w-full text-center bg-brand-600 text-white font-semibold py-3 rounded-xl hover:bg-brand-700 transition">
                         Ajouter ce pack au panier

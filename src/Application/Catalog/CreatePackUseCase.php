@@ -19,6 +19,7 @@ class CreatePackUseCase
 
     /**
      * @param array<int, int> $items [productId => quantity]
+     * @param array<int, int> $slots [categoryId => quantity]
      */
     public function execute(
         string  $name,
@@ -27,6 +28,7 @@ class CreatePackUseCase
         float   $priceExtraWeekend,
         float   $priceExtraWeekday,
         array   $items,
+        array   $slots = [],
         ?string $customSlug = null,
     ): int {
         $now  = new \DateTimeImmutable();
@@ -39,7 +41,11 @@ class CreatePackUseCase
         $packItems = [];
         foreach ($items as $productId => $qty) {
             if ((int) $qty < 1) continue;
-            $packItems[] = new PackItem(null, 0, (int) $productId, (int) $qty);
+            $packItems[] = new PackItem(null, 0, (int) $productId, null, (int) $qty);
+        }
+        foreach ($slots as $categoryId => $qty) {
+            if ((int) $qty < 1) continue;
+            $packItems[] = new PackItem(null, 0, null, (int) $categoryId, (int) $qty);
         }
 
         $pack = new Pack(

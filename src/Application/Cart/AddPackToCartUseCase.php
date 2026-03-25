@@ -17,7 +17,7 @@ class AddPackToCartUseCase
         private AvailabilityService        $availabilityService,
     ) {}
 
-    public function execute(int $packId): void
+    public function execute(int $packId, array $selections = []): void
     {
         if (!$this->cart->hasDates()) {
             throw new \RuntimeException("Veuillez d'abord choisir vos dates.");
@@ -28,10 +28,19 @@ class AddPackToCartUseCase
             throw new \RuntimeException("Ce pack n'est pas disponible.");
         }
 
-        // Charger tous les produits du pack
+        // Charger tous les produits fixes du pack
         $productsById = [];
         foreach ($pack->getItems() as $item) {
+            if (!$item->isFixed()) continue;
             $product = $this->productRepository->findById($item->getProductId());
+            if ($product) {
+                $productsById[$product->getId()] = $product;
+            }
+        }
+
+        // Ajouter les produits choisis pour les slots
+        foreach ($selections as $slotItemId => $productId) {
+            $product = $this->productRepository->findById((int) $productId);
             if ($product) {
                 $productsById[$product->getId()] = $product;
             }
@@ -48,5 +57,12 @@ class AddPackToCartUseCase
         }
 
         $this->cart->addPack($packId);
+
+        // Stocker les sélections de slots
+        foreach ($selections as $slotItemId => $productId) {
+            if ((int) $productId > 0) {
+                $this->cart->setPackSelection($packId, (int) $slotItemId, (int) $productId);
+            }
+        }
     }
 }
