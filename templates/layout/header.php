@@ -1,3 +1,8 @@
+<?php
+$tpl->assertArray('headerCategories');
+$tpl->assertInstanceOf('url', Rore\Presentation\Seo\UrlResolver::class);
+$tpl->assertInstanceOf('html', Rore\Presentation\Template\HtmlHelper::class);
+?>
 <header class="bg-white shadow-sm border-b-2 border-brand-600">
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->

@@ -1,4 +1,5 @@
 <?php
+$tpl->assertInstanceOf('product', Rore\Domain\Catalog\Entity\Product::class);
 $_productUrl = isset($productContextPath)
     ? $config->getStringParam('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()
     : $urlResolver->productUrl($product, $allCategories ?? []);

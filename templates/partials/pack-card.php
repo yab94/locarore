@@ -1,5 +1,5 @@
 <?php
-// $pack        : Pack entity
+$tpl->assertInstanceOf('pack', Rore\Domain\Catalog\Entity\Pack::class);
 // $productsById : array<int, Product> (tous les produits du pack indexés par id)
 // Détermine la photo via le produit principal
 $_mainProductId = $pack->getMainProductId($productsById);

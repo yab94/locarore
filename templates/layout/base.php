@@ -23,7 +23,7 @@
 </head>
 <body class="h-full bg-gray-50 flex flex-col font-sans antialiased">
 
-    <?php require 'layout/header.php'; ?>
+    <?= $partial('layout/header') ?>
 
     <main class="flex-1 container mx-auto px-4 py-8 max-w-6xl">
 
@@ -42,7 +42,7 @@
 
     </main>
 
-    <?php require 'layout/footer.php'; ?>
+    <?= $partial('layout/footer') ?>
 
     <script src="/assets/js/app.js"></script>
 </body>

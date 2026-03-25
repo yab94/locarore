@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-$statusValue = (string) ($status ?? '');
+$tpl->assertString('status');
 
-return match ($statusValue) {
+echo match ($status) {
     'pending'   => 'bg-yellow-100 text-yellow-800',
     'quoted'    => 'bg-orange-100 text-orange-800',
     'confirmed' => 'bg-green-100 text-green-800',

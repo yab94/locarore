@@ -1,7 +1,4 @@
-<?php 
-$breadcrumb = [$tag];
-require 'partials/breadcrumb.php';
-?>
+<?= $partial('partials/breadcrumb', ['breadcrumb' => [$tag]]) ?>
 
 <div class="mb-8">
     <div class="flex items-center gap-3 mb-1">
@@ -22,7 +19,7 @@ require 'partials/breadcrumb.php';
 <?php else: ?>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($products as $product): ?>
-            <?php include 'partials/product-card.php'; ?>
+            <?= $partial('partials/product-card', ['product' => $product]) ?>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
@@ -32,7 +29,7 @@ require 'partials/breadcrumb.php';
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Packs incluant ces articles</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($packs as $pack): ?>
-            <?php include 'partials/pack-card.php'; ?>
+            <?= $partial('partials/pack-card', ['pack' => $pack]) ?>
         <?php endforeach; ?>
     </div>
 </section>

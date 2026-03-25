@@ -1,4 +1,4 @@
-<?php require 'partials/breadcrumb.php'; ?>
+<?= $partial('partials/breadcrumb') ?>
 
 <div class="mb-8">
     <h1 class="text-3xl font-bold text-gray-900"><?= $html($category->getName()) ?></h1>
@@ -45,7 +45,7 @@
         <?php
         $productContextPath = $urlResolver->categoryPath($category, $allCategories);
         foreach ($products as $product): ?>
-            <?php include 'partials/product-card.php'; ?>
+            <?= $partial('partials/product-card', ['product' => $product, 'productContextPath' => $productContextPath]) ?>
         <?php endforeach; ?>
     </div>
 <?php endif; ?>
@@ -55,7 +55,7 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Packs incluant ces articles</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($packs as $pack): ?>
-            <?php include 'partials/pack-card.php'; ?>
+            <?= $partial('partials/pack-card', ['pack' => $pack]) ?>
         <?php endforeach; ?>
     </div>
 </section>
