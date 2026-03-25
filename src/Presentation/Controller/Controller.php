@@ -13,6 +13,7 @@ use Rore\Presentation\Http\ResponseInterface;
 use Rore\Presentation\Seo\PageMeta;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Presentation\Template\HtmlHelper;
+use Rore\Presentation\Template\Template;
 
 abstract class Controller
 {
@@ -32,26 +33,22 @@ abstract class Controller
         array  $data   = [],
         string $layout = 'layout/base'
     ): void {
-        // Injecte les flash messages dans chaque vue
-        $data['flash'] = $this->getFlash();
-        // PageMeta par défaut si l'action n'en fournit pas
-        $data['meta'] ??= new PageMeta(title: $this->config->getStringParam('app.name'));
-        // CSRF token pour les formulaires
-        $data['csrfToken'] = $this->csrfTokenManager->token();
-        // Accès aux settings dans toutes les vues
-        $data['settings']      = $this->settings;
-        $data['config']        = $this->config;
-        $data['urlResolver']      = $this->urlResolver;
-        $data['url']              = $this->urlResolver; // alias court invokable : $url('Admin\Category.edit', [...])
-        $data['html']             = $this->html;
+        // Helpers globaux injectés dans chaque template
+        $shared = [
+            'flash'       => $this->getFlash(),
+            'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getStringParam('app.name')),
+            'csrfToken'   => $this->csrfTokenManager->token(),
+            'settings'    => $this->settings,
+            'config'      => $this->config,
+            'urlResolver' => $this->urlResolver,
+            'url'         => $this->urlResolver,
+            'html'        => $this->html,
+        ];
 
-        extract($data);
+        $tpl     = new Template($template, [...$shared, ...$data]);
+        $content = $tpl->render();
 
-        ob_start();
-        require $template . '.php';
-        $content = ob_get_clean();
-
-        require $layout . '.php';
+        echo $tpl->partial($layout, ['content' => $content]);
     }
 
     protected function redirect(string $url): never
