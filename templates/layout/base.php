@@ -42,10 +42,6 @@ $content = \Rore\Support\Cast::string($tpl->get('content'));
     <meta name="twitter:description" content="<?= $html($meta->description) ?>">
     <?php endif; ?>
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
-    <!-- Polices Latyana Événements -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body class="h-full bg-gray-50 flex flex-col font-sans antialiased">
