@@ -2,7 +2,7 @@
 <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
 
 <form method="post" action="<?= $url('Admin\Settings.index') ?>" class="space-y-10" id="settings-form">
-<?= require 'partials/csrf.php' ?>
+<?= $partial('partials/csrf') ?>
 
     <!-- ── Textes courts ─────────────────────────────────────────────── -->
     <div class="bg-white rounded-xl border border-gray-200 p-8">

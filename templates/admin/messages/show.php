@@ -49,7 +49,7 @@
         <?php if ($message->isRead()): ?>
             <form method="post"
                   action="<?= $url('Admin\Message.markUnread', ['id' => $message->getId()]) ?>">
-                <?= require 'partials/csrf.php' ?>
+                <?= $partial('partials/csrf') ?>
                 <button type="submit"
                         class="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 transition">
                     Marquer non lu
@@ -58,7 +58,7 @@
         <?php else: ?>
             <form method="post"
                   action="<?= $url('Admin\Message.markRead', ['id' => $message->getId()]) ?>">
-                <?= require 'partials/csrf.php' ?>
+                <?= $partial('partials/csrf') ?>
                 <button type="submit"
                         class="px-4 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50 transition">
                     Marquer lu
@@ -69,7 +69,7 @@
         <form method="post"
               action="<?= $url('Admin\Message.delete', ['id' => $message->getId()]) ?>"
               onsubmit="return confirm('Supprimer ce message définitivement ?')">
-            <?= require 'partials/csrf.php' ?>
+            <?= $partial('partials/csrf') ?>
             <button type="submit"
                     class="px-4 py-2 text-sm rounded-lg bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition">
                 Supprimer

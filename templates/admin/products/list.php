@@ -51,7 +51,7 @@
                         <a href="<?= $url('Admin\Product.edit', ['id' => $p->getId()]) ?>"
                            class="text-brand-600 hover:underline">Modifier</a>
                         <form method="post" action="<?= $url('Admin\Product.toggle', ['id' => $p->getId()]) ?>" class="inline">
-                            <?= require 'partials/csrf.php' ?>
+                            <?= $partial('partials/csrf') ?>
                             <button type="submit" class="text-gray-500 hover:text-gray-800 transition">
                                 <?= $p->isActive() ? 'Désactiver' : 'Activer' ?>
                             </button>

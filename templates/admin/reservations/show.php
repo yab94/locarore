@@ -170,14 +170,14 @@
         // Helper local : bouton POST
         $btn = fn(string $url, string $label, string $cls, ?string $confirm = null) =>
             '<form method="post" action="' . $url . '">'
-            . (require 'partials/csrf.php')
+            . $partial('partials/csrf')
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '"'
             . ($confirm ? ' data-confirm="' . htmlspecialchars($confirm) . '"' : '') . '>'
             . $label . '</button></form>';
         // Bouton vers statut via setStatus (champ caché)
         $btnStatus = fn(string $target, string $label, string $cls) =>
             '<form method="post" action="' . $_urlStatut . '">'
-            . (require 'partials/csrf.php')
+            . $partial('partials/csrf')
             . '<input type="hidden" name="status" value="' . $target . '">'
             . '<button type="submit" class="w-full font-semibold py-3 rounded-xl transition ' . $cls . '">'
             . $label . '</button></form>';

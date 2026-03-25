@@ -88,7 +88,7 @@
                         ✓ Pack dans le panier
                     </span>
                     <form method="post" action="<?= $html($urlResolver->resolve('Site\Cart.removePack')) ?>">
-                        <?= require 'partials/csrf.php' ?>
+                        <?= $partial('partials/csrf') ?>
                         <input type="hidden" name="pack_id" value="<?= $pack->getId() ?>">
                         <button type="submit"
                                 class="text-red-400 hover:text-red-600 text-sm transition py-3 px-2"
@@ -97,7 +97,7 @@
                 </div>
             <?php else: ?>
                 <form method="post" action="<?= $html($urlResolver->resolve('Site\Cart.addPack')) ?>">
-                    <?= require 'partials/csrf.php' ?>
+                    <?= $partial('partials/csrf') ?>
                     <input type="hidden" name="pack_id" value="<?= $pack->getId() ?>">
                     <?php foreach ($slotsWithProducts as $slotId => $slotData): ?>
                     <div class="mb-4">

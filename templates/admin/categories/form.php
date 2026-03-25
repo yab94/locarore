@@ -5,7 +5,7 @@
     <form id="category-form" method="post"
           action="<?= $category ? $url('Admin\Category.update', ['id' => $category->getId()]) : $url('Admin\Category.store') ?>"
           class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
-        <?= require 'partials/csrf.php' ?>
+        <?= $partial('partials/csrf') ?>
 
         <!-- Catégorie parente -->
         <div>

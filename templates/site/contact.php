@@ -8,7 +8,7 @@
 
     <form method="post" action="<?= $url('Site\Contact.send') ?>"
           class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
-        <?= require 'partials/csrf.php' ?>
+        <?= $partial('partials/csrf') ?>
 
         <div class="grid grid-cols-2 gap-4">
             <div>

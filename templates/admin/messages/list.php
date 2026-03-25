@@ -40,7 +40,7 @@
                             <form method="post"
                                   action="<?= $url('Admin\Message.markUnread', ['id' => $m->getId()]) ?>"
                                   class="inline">
-                                <?= require 'partials/csrf.php' ?>
+                                <?= $partial('partials/csrf') ?>
                                 <button type="submit" class="text-gray-500 hover:underline text-xs">
                                     Marquer non lu
                                 </button>
@@ -49,7 +49,7 @@
                             <form method="post"
                                   action="<?= $url('Admin\Message.markRead', ['id' => $m->getId()]) ?>"
                                   class="inline">
-                                <?= require 'partials/csrf.php' ?>
+                                <?= $partial('partials/csrf') ?>
                                 <button type="submit" class="text-gray-500 hover:underline text-xs">
                                     Marquer lu
                                 </button>
@@ -60,7 +60,7 @@
                               action="<?= $url('Admin\Message.delete', ['id' => $m->getId()]) ?>"
                               class="inline"
                               onsubmit="return confirm('Supprimer ce message ?')">
-                            <?= require 'partials/csrf.php' ?>
+                            <?= $partial('partials/csrf') ?>
                             <button type="submit" class="text-red-500 hover:underline text-xs">
                                 Supprimer
                             </button>

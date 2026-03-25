@@ -8,7 +8,7 @@
         <form id="product-form" method="post"
               action="<?= $product ? $url('Admin\Product.update', ['id' => $product->getId()]) : $url('Admin\Product.store') ?>"
               class="bg-white rounded-xl border border-gray-200 p-8 space-y-5">
-            <?= require 'partials/csrf.php' ?>
+            <?= $partial('partials/csrf') ?>
 
             <!-- Catégorie principale -->
             <div>
@@ -164,7 +164,7 @@
             <h3 class="font-semibold text-gray-700 mb-4">Ajouter une photo</h3>
             <form method="post" action="<?= $url('Admin\Product.uploadPhoto', ['id' => $product->getId()]) ?>"
                   enctype="multipart/form-data" class="space-y-3">
-                <?= require 'partials/csrf.php' ?>
+                <?= $partial('partials/csrf') ?>
                 <input type="file" name="photo" accept="<?= $config->getStringParam('upload.allowed_types') ?>" required
                        class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
                 <input type="text" name="photo_description"
@@ -193,7 +193,7 @@
                                     <form method="post"
                                           action="<?= $url('Admin\Product.updatePhotoDescription', ['photoId' => $photo->getId()]) ?>"
                                           class="flex gap-2">
-                                        <?= require 'partials/csrf.php' ?>
+                                        <?= $partial('partials/csrf') ?>
                                         <input type="text" name="description"
                                                value="<?= $html($photo->getDescription() ?? '') ?>"
                                                placeholder="Description (alt/title SEO)..."
@@ -206,7 +206,7 @@
                                     <!-- Formulaire suppression -->
                                     <form method="post"
                                           action="<?= $url('Admin\Product.deletePhoto', ['photoId' => $photo->getId()]) ?>">
-                                        <?= require 'partials/csrf.php' ?>
+                                        <?= $partial('partials/csrf') ?>
                                         <button type="submit"
                                                 class="text-red-600 text-xs hover:underline"
                                                 data-confirm="Supprimer cette photo ?">
