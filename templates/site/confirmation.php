@@ -1,5 +1,5 @@
 <?php
-use Rore\Presentation\Template\HtmlHelper;
+use Rore\Framework\HtmlHelper;
 use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 

@@ -1,6 +1,6 @@
 <?php
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Presentation\Template\HtmlHelper;
+use Rore\Framework\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Framework\Config;

@@ -1,5 +1,5 @@
 <?php
-use Rore\Presentation\Template\HtmlHelper;
+use Rore\Framework\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Domain\Contact\Entity\ContactMessage;
 

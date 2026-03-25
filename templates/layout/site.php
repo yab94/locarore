@@ -1,5 +1,5 @@
 <?php
-$html    = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
+$html    = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
 $flash   = \Rore\Framework\Cast::array($tpl->tryGet('flash', []));
 $content = \Rore\Framework\Cast::string($tpl->get('content'));
 ?>

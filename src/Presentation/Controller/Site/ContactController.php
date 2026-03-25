@@ -18,7 +18,7 @@ final class ContactController extends SiteController
     public function index(): void
     {
         $this->render('site/contact', [
-            'meta' => (new \Rore\Presentation\Seo\PageMeta(
+            'meta' => (new \Rore\Framework\PageMeta(
                 title: $this->settings->get('contact.page_title') ?: 'Contact',
             )),
         ]);
@@ -64,7 +64,7 @@ final class ContactController extends SiteController
     public function confirmation(): void
     {
         $this->render('site/contact-confirmation', [
-            'meta' => (new \Rore\Presentation\Seo\PageMeta(
+            'meta' => (new \Rore\Framework\PageMeta(
                 title: 'Message envoyé',
                 robots: 'noindex, follow',
             )),

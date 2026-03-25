@@ -10,10 +10,10 @@ use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Framework\HttpRequest;
 use Rore\Framework\HttpResponse;
-use Rore\Presentation\Seo\PageMeta;
+use Rore\Framework\PageMeta;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Presentation\Template\HtmlHelper;
-use Rore\Presentation\Template\Template;
+use Rore\Framework\HtmlHelper;
+use Rore\Framework\Template;
 
 abstract class Controller
 {

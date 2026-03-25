@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework;
 
-use Rore\Presentation\Template\Template;
+use Rore\Framework\Template;
 
 /**
  * Routeur HTTP générique avec résolution de paramètres et dispatch de contrôleurs.

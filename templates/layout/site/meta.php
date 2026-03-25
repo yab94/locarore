@@ -1,6 +1,6 @@
 <?php
-$html = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
-$meta = Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
+$html = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
+$meta = Rore\Framework\PageMeta::cast($tpl->get('meta'));
 ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

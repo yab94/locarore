@@ -6,7 +6,7 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetCategoryWithItemsUseCase;
-use Rore\Presentation\Seo\PageMeta;
+use Rore\Framework\PageMeta;
 
 class CategoryController extends SiteController
 {

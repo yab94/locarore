@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Template;
+namespace Rore\Framework;
 
 use InvalidArgumentException;
 

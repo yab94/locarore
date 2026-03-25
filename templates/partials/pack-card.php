@@ -1,6 +1,6 @@
 <?php
 use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Presentation\Template\HtmlHelper;
+use Rore\Framework\HtmlHelper;
 use Rore\Framework\Cast;
 use Rore\Framework\Config;
 

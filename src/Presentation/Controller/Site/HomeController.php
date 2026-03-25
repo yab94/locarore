@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetHomePageDataUseCase;
-use Rore\Presentation\Seo\PageMeta;
+use Rore\Framework\PageMeta;
 
 class HomeController extends SiteController
 {

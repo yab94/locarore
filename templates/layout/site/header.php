@@ -1,5 +1,5 @@
 <?php
-$html            = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
+$html            = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
 $url             = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
 $urlResolver     = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
 $headerCategories = \Rore\Framework\Cast::array($tpl->get('headerCategories'));

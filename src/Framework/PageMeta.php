@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Seo;
+namespace Rore\Framework;
 
 use Rore\Framework\Castable;
 

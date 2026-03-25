@@ -11,7 +11,7 @@ use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\RemovePackFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
-use Rore\Presentation\Seo\PageMeta;
+use Rore\Framework\PageMeta;
 
 class CartController extends SiteController
 {
