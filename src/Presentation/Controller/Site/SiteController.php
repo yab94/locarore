@@ -26,7 +26,7 @@ abstract class SiteController extends Controller
     protected function render(
         string $template,
         array  $data   = [],
-        string $layout = 'layout/site'
+        ?string $layout = null
     ): void {
         $data['cartItemCount']    = $this->cart->getItemCount();
         $data['cart']             = $this->cart;
@@ -34,7 +34,7 @@ abstract class SiteController extends Controller
             ? new DateRange($this->cart->getStartDate(), $this->cart->getEndDate())
             : null;
         $data['headerCategories'] = $this->getActiveCategories->execute();
-        parent::render($template, $data, $layout);
+        parent::render($template, $data, $layout ?? 'layout/site');
     }
 
     /** @return array{url: string, w: int, h: int} */

@@ -20,8 +20,8 @@ abstract class AdminController extends Controller
     protected function render(
         string $template,
         array  $data   = [],
-        string $layout = 'layout/admin'
+        ?string $layout = null
     ): void {
-        parent::render($template, $data, $layout);
+        parent::render($template, $data, $layout ?? 'layout/admin');
     }
 }

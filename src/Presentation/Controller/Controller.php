@@ -4,51 +4,41 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller;
 
-use Rore\Framework\Config;
 use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
-use Rore\Framework\HttpRequest;
-use Rore\Framework\HttpResponse;
 use Rore\Framework\PageMeta;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Framework\HtmlHelper;
-use Rore\Framework\Template;
 
-abstract class Controller
+abstract class Controller extends \Rore\Framework\Controller
 {
     public function __construct(
-        readonly HttpRequest $request,
-        readonly HttpResponse $response,
-        readonly Config $config,
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly GetSettingUseCase $settings,
         readonly UrlResolver $urlResolver,
         readonly HtmlHelper $html,
-    ) {}
+        ...$parentDeps
+    ) {
+        parent::__construct(...$parentDeps);
+    }
 
     protected function render(
         string $template,
         array  $data   = [],
-        string $layout = 'layout/site'
+        ?string $layout = null
     ): void {
-        // Helpers globaux injectés dans chaque template
-        $shared = [
+        parent::render($template, [
             'flash'       => $this->getFlash(),
             'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
             'csrfToken'   => $this->csrfTokenManager->token(),
             'settings'    => $this->settings,
-            'config'      => $this->config,
             'urlResolver' => $this->urlResolver,
             'url'         => $this->urlResolver,
             'html'        => $this->html,
-        ];
-
-        $tpl     = new Template($template, [...$shared, ...$data]);
-        $content = $tpl->render();
-
-        echo $tpl->partial($layout, ['content' => $content]);
+            ...$data,  // Les données spécifiques ont priorité
+        ], $layout);
     }
 
     protected function redirect(string $url): never
