@@ -1,8 +1,13 @@
 Features
+
+- systeme anti captcha formulaire contact 
+
 - generation catalogue PDF en admin uniquement
 
 - Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
 
 - Prendre des conseils SEO avec Claude voir ce qu'il pense du code
+
+- more test on each Domain Service
 
 - systeme de template avec injection de variable en lieu et place des include + scope de vars existantes
