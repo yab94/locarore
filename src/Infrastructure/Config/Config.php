@@ -24,21 +24,6 @@ final class Config extends Typable implements ConfigInterface
      */
     public static function load(string $basePath): self
     {
-        // 1. Charger .env
-        $envFile = $basePath . '/.env';
-        if (file_exists($envFile)) {
-            foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-                if (str_starts_with(trim($line), '#') || !str_contains($line, '=')) {
-                    continue;
-                }
-                [$k, $v] = explode('=', $line, 2);
-                $_ENV[trim($k)] = trim($v);
-                putenv(trim($k) . '=' . trim($v));
-            }
-        }
-
-        // 2. Exposer BASE_PATH comme variable d'environnement
-        //    afin que ${BASE_PATH} soit utilisable comme placeholder dans les ini
         putenv('BASE_PATH=' . $basePath);
         $_ENV['BASE_PATH'] = $basePath;
 

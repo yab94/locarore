@@ -5,16 +5,10 @@ declare(strict_types=1);
 // ─── Constante racine ─────────────────────────────────────────────────────────
 define('BASE_PATH', dirname(__DIR__));
 
-// ─── Autoload (namespace Rore\ → src/) ───────────────────────────────────────
-spl_autoload_register(function (string $class): void {
-    $prefix = 'Rore\\';
-    if (strncmp($class, $prefix, strlen($prefix)) !== 0) return;
-    $relative = substr($class, strlen($prefix));
-    $file = BASE_PATH . '/src/' . str_replace('\\', '/', $relative) . '.php';
-    if (file_exists($file)) {
-        require_once $file;
-    }
-});
+require BASE_PATH . '/src/Support/Autoloader.php';
+
+\Rore\Support\Autoloader::register('Rore\\', BASE_PATH);
+\Rore\Support\Env::load(BASE_PATH);
 
 // ─── Config (.env + app.ini) ──────────────────────────────────────────────────
 $config = \Rore\Infrastructure\Config\Config::load(BASE_PATH);
