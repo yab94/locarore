@@ -41,7 +41,7 @@ class PackController extends SiteController
 
         $breadcrumb = $this->buildCategoryBreadcrumb($mainCategory, $allCategories);
 
-        $canonicalUrl = $this->config->getStringParam('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
+        $canonicalUrl = $this->urlResolver->siteUrl() . $this->config->getStringParam('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
 
         $meta = new PageMeta(
             title:        $pack->getName() . ' — ' . $this->config->getStringParam('app.name'),

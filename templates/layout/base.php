@@ -20,6 +20,27 @@ $content = \Rore\Support\Cast::string($tpl->get('content'));
     <?php if ($meta->canonicalUrl !== ''): ?>
     <link rel="canonical" href="<?= $html($meta->canonicalUrl) ?>">
     <?php endif; ?>
+    <!-- Open Graph / Twitter Card -->
+    <meta property="og:type"        content="website">
+    <meta property="og:locale"      content="fr_FR">
+    <meta property="og:title"       content="<?= $html($meta->title) ?>">
+    <?php if ($meta->description !== ''): ?>
+    <meta property="og:description" content="<?= $html($meta->description) ?>">
+    <?php endif; ?>
+    <?php if ($meta->canonicalUrl !== ''): ?>
+    <meta property="og:url"         content="<?= $html($meta->canonicalUrl) ?>">
+    <?php endif; ?>
+    <?php if ($meta->ogImage !== ''): ?>
+    <meta property="og:image"       content="<?= $html($meta->ogImage) ?>">
+    <meta name="twitter:card"       content="summary_large_image">
+    <meta name="twitter:image"      content="<?= $html($meta->ogImage) ?>">
+    <?php else: ?>
+    <meta name="twitter:card"       content="summary">
+    <?php endif; ?>
+    <meta name="twitter:title"      content="<?= $html($meta->title) ?>">
+    <?php if ($meta->description !== ''): ?>
+    <meta name="twitter:description" content="<?= $html($meta->description) ?>">
+    <?php endif; ?>
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <!-- Polices Latyana Événements -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

@@ -113,6 +113,14 @@ final class UrlResolver
     }
 
     /**
+     * URL de base du site (ex: https://location.latyana-evenements.fr).
+     */
+    public function siteUrl(): string
+    {
+        return $this->config->getStringParam('seo.site_url');
+    }
+
+    /**
      * Construit le chemin canonique d'une catégorie en remontant ses parents.
      * Ex : pour "Ballons" enfant de "Décoration" → "decoration/ballons"
      *

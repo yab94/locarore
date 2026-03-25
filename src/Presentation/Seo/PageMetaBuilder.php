@@ -48,7 +48,7 @@ final class PageMetaBuilder
             title:        $this->meta->title('Location de décoration', $siteName),
             description:  $this->meta->description(...$descParts),
             keywords:     $this->meta->keywords($kw),
-            canonicalUrl: '/',
+            canonicalUrl: $this->urlResolver->siteUrl() . '/',
         );
     }
 
@@ -88,7 +88,7 @@ final class PageMetaBuilder
             title:        $this->meta->title(...$titleParts),
             description:  $this->meta->description(...$descParts),
             keywords:     $this->meta->keywords($kw),
-            canonicalUrl: $allCategories !== [] ? $this->urlResolver->categoryUrl($category, $allCategories) : '',
+            canonicalUrl: $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
         );
     }
 
@@ -134,11 +134,14 @@ final class PageMetaBuilder
             }
         }
 
+        $mainPhoto = $product->getMainPhoto();
+
         return new PageMeta(
             title:        $this->meta->title(...$titleParts),
             description:  $this->meta->description(...$descParts),
             keywords:     $this->meta->keywords($kw),
             canonicalUrl: $canonicalUrl,
+            ogImage:      $mainPhoto !== null ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath() : '',
         );
     }
 
@@ -173,7 +176,7 @@ final class PageMetaBuilder
             title:        $this->meta->title($tag->getName(), $siteName),
             description:  'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
             keywords:     implode(', ', ['location', $tag->getName(), $siteName]),
-            canonicalUrl: $this->urlResolver->tagUrl($tag),
+            canonicalUrl: $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
         );
     }
 }

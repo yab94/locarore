@@ -58,7 +58,7 @@ class ProductController extends SiteController
 
         $catChain     = array_slice($breadcrumb, 0, -1);
         $mainCategory = $this->findCategoryById($product->getCategoryId(), $allCategories);
-        $canonicalUrl = $this->urlResolver->productUrl($product, $allCategories, $mainCategory);
+        $canonicalUrl = $this->urlResolver->siteUrl() . $this->urlResolver->productUrl($product, $allCategories, $mainCategory);
         $meta         = $this->metaBuilder->forProduct($product, $category, $catChain, $canonicalUrl);
 
         $this->render('site/product', [
