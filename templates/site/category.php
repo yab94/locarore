@@ -61,25 +61,4 @@
 </section>
 <?php endif; ?>
 
-<?php
-$_meta   = \Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
-$_crumbs = array_values(\Rore\Support\Cast::array($tpl->get('breadcrumb')));
-
-$_ldItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Accueil', 'item' => $urlResolver->siteUrl() . '/']];
-foreach ($_crumbs as $_i => $_crumb) {
-    $_ldItems[] = [
-        '@type'    => 'ListItem',
-        'position' => $_i + 2,
-        'name'     => $_crumb->getName(),
-        'item'     => ($_i === count($_crumbs) - 1)
-            ? $_meta->canonicalUrl
-            : $urlResolver->siteUrl() . $urlResolver->categoryUrl($_crumb, $allCategories),
-    ];
-}
-
-echo '<script type="application/ld+json">' . json_encode([
-    '@context'        => 'https://schema.org',
-    '@type'           => 'BreadcrumbList',
-    'itemListElement' => $_ldItems,
-], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>';
-?>
+<?= $partial('partials/breadcrumb-ld-json') ?>
