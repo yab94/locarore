@@ -13,7 +13,7 @@ class RobotsController extends SiteController
     }
     public function index(): void
     {
-        $baseUrl = $this->config->getStringParam('seo.site_url');
+        $baseUrl = $this->config->getString('seo.site_url');
         
         $this->response->header('Content-Type', 'text/plain; charset=UTF-8');
         

@@ -71,7 +71,7 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
         <?php if (!empty($product->getTags())): ?>
             <div class="flex flex-wrap gap-2 mb-6">
                 <?php foreach ($product->getTags() as $tag): ?>
-                    <a href="<?= $config->getStringParam('seo.tags_base_url'); ?>/<?= $html($tag->getSlug()) ?>"
+                    <a href="<?= $config->getString('seo.tags_base_url'); ?>/<?= $html($tag->getSlug()) ?>"
                        class="inline-flex items-center gap-1 bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-xs font-medium hover:bg-brand-50 hover:text-brand-700 transition">
                         🏷️ <?= $html($tag->getName()) ?>
                     </a>

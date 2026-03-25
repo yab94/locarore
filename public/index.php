@@ -29,13 +29,13 @@ session_start();
 $container = new \Rore\Infrastructure\Di\Container();
 $container->instance(\Rore\Infrastructure\Config\Config::class, $config);
 $container->instance(\Rore\Application\Config\ConfigInterface::class, $config);
-foreach ($config->getArrayParam('di.bind') ?? [] as $abstract => $concrete) {
+foreach ($config->getArray('di.bind') ?? [] as $abstract => $concrete) {
     $container->bind($abstract, fn($c) => $c->get($concrete));
 }
 
 // ─── Router ────────────────────────────────────────────────────────────────
 $router = $container->get(\Rore\Infrastructure\Http\Router::class);
-$router->addRoutes($config->getArrayParam('routes') ?? []);
+$router->addRoutes($config->getArray('routes') ?? []);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

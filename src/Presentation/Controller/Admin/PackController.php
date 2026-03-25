@@ -55,14 +55,14 @@ class PackController extends AdminController
         $this->requirePost();
         try {
             $this->createPackUseCase->execute(
-                name:               $this->request->body->getStringParam('name'),
-                description:        $this->request->body->getStringParam('description') ?: null,
-                pricePerDay:        $this->request->body->getFloatParam('price_per_day'),
-                priceExtraWeekend:  $this->request->body->getFloatParam('price_extra_weekend'),
-                priceExtraWeekday:  $this->request->body->getFloatParam('price_extra_weekday'),
+                name:               $this->request->body->getString('name'),
+                description:        $this->request->body->getString('description') ?: null,
+                pricePerDay:        $this->request->body->getFloat('price_per_day'),
+                priceExtraWeekend:  $this->request->body->getFloat('price_extra_weekend'),
+                priceExtraWeekday:  $this->request->body->getFloat('price_extra_weekday'),
                 items:              $this->parseItems(),
                 slots:              $this->parseSlots(),
-                customSlug:         $this->request->body->getStringParam('slug') ?: null,
+                customSlug:         $this->request->body->getString('slug') ?: null,
             );
             $this->flash('success', 'Pack créé.');
         } catch (\Throwable $e) {
@@ -91,14 +91,14 @@ class PackController extends AdminController
         try {
             $this->updatePackUseCase->execute(
                 id:                 (int) $id,
-                name:               $this->request->body->getStringParam('name'),
-                description:        $this->request->body->getStringParam('description') ?: null,
-                pricePerDay:        $this->request->body->getFloatParam('price_per_day'),
-                priceExtraWeekend:  $this->request->body->getFloatParam('price_extra_weekend'),
-                priceExtraWeekday:  $this->request->body->getFloatParam('price_extra_weekday'),
+                name:               $this->request->body->getString('name'),
+                description:        $this->request->body->getString('description') ?: null,
+                pricePerDay:        $this->request->body->getFloat('price_per_day'),
+                priceExtraWeekend:  $this->request->body->getFloat('price_extra_weekend'),
+                priceExtraWeekday:  $this->request->body->getFloat('price_extra_weekday'),
                 items:              $this->parseItems(),
                 slots:              $this->parseSlots(),
-                customSlug:         $this->request->body->getStringParam('slug') ?: null,
+                customSlug:         $this->request->body->getString('slug') ?: null,
             );
             $this->flash('success', 'Pack mis à jour.');
         } catch (\Throwable $e) {
@@ -122,8 +122,8 @@ class PackController extends AdminController
     private function parseItems(): array
     {
         $items = [];
-        $productIds = $this->request->body->getArrayParam('item_product_id');
-        $quantities = $this->request->body->getArrayParam('item_quantity');
+        $productIds = $this->request->body->getArray('item_product_id');
+        $quantities = $this->request->body->getArray('item_quantity');
         foreach ($productIds as $i => $pid) {
             $pid = (int) $pid;
             $qty = (int) ($quantities[$i] ?? 0);
@@ -138,8 +138,8 @@ class PackController extends AdminController
     private function parseSlots(): array
     {
         $slots = [];
-        $categoryIds = $this->request->body->getArrayParam('slot_category_id');
-        $quantities  = $this->request->body->getArrayParam('slot_quantity');
+        $categoryIds = $this->request->body->getArray('slot_category_id');
+        $quantities  = $this->request->body->getArray('slot_quantity');
         foreach ($categoryIds as $i => $cid) {
             $cid = (int) $cid;
             $qty = (int) ($quantities[$i] ?? 0);

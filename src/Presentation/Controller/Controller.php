@@ -36,7 +36,7 @@ abstract class Controller
         // Helpers globaux injectés dans chaque template
         $shared = [
             'flash'       => $this->getFlash(),
-            'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getStringParam('app.name')),
+            'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
             'csrfToken'   => $this->csrfTokenManager->token(),
             'settings'    => $this->settings,
             'config'      => $this->config,
@@ -81,7 +81,7 @@ abstract class Controller
             $this->response->write('Method Not Allowed');
             exit;
         }
-        $posted = $this->request->body->getStringParam($this->csrfTokenManager->postKey());
+        $posted = $this->request->body->getString($this->csrfTokenManager->postKey());
         if (!$this->csrfTokenManager->validate($posted)) {
             $this->response->setStatusCode(419);
             $this->response->write('Token CSRF invalide.');

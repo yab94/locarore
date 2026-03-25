@@ -59,7 +59,7 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Parcourir par thème</h2>
     <div class="flex flex-wrap gap-2">
         <?php foreach ($tags as $tag): ?>
-            <a href="<?= $config->getStringParam('seo.tags_base_url') ?>/<?= $html($tag->getSlug()) ?>"
+            <a href="<?= $config->getString('seo.tags_base_url') ?>/<?= $html($tag->getSlug()) ?>"
                class="inline-flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-brand-100 transition">
                 🏷️ <?= $html($tag->getName()) ?>
             </a>

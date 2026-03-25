@@ -17,7 +17,7 @@ class SitemapController extends SiteController
 
     public function index(): void
     {
-        $baseUrl = $this->config->getStringParam('seo.site_url');
+        $baseUrl = $this->config->getString('seo.site_url');
         
         $data       = $this->getAllCatalogItemsUseCase->execute();
         $categories = $data['categories'];
@@ -47,13 +47,13 @@ class SitemapController extends SiteController
         
         // Packs
         foreach ($packs as $pack) {
-            $url = $baseUrl . $this->config->getStringParam('seo.packs_base_url') . '/' . $pack->getSlug();
+            $url = $baseUrl . $this->config->getString('seo.packs_base_url') . '/' . $pack->getSlug();
             echo '<url><loc>' . htmlspecialchars($url) . '</loc><lastmod>' . $pack->getUpdatedAt()->format('Y-m-d') . '</lastmod><priority>0.7</priority></url>';
         }
         
         // Tags (pas de date en base — on omet lastmod)
         foreach ($tags as $tag) {
-            $url = $baseUrl . $this->config->getStringParam('seo.tags_base_url') . '/' . $tag->getSlug();
+            $url = $baseUrl . $this->config->getString('seo.tags_base_url') . '/' . $tag->getSlug();
             echo '<url><loc>' . htmlspecialchars($url) . '</loc><priority>0.6</priority></url>';
         }
         

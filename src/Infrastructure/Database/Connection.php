@@ -12,7 +12,7 @@ class Connection extends PDO
 {
     public function __construct(Config $config)
     {
-        $db  = $config->getArrayParam('database');
+        $db  = $config->getArray('database');
         $dsn = sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
             $db['host'],

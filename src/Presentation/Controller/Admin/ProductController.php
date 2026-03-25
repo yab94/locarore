@@ -53,18 +53,18 @@ class ProductController extends AdminController
         $this->requirePost();
         try {
             $productId = $this->createProductUseCase->execute(
-                categoryId:          $this->request->body->getIntParam('category_id'),
-                name:                $this->request->body->getStringParam('name'),
-                description:         $this->request->body->getStringParam('description') ?: null,
-                stock:               $this->request->body->getIntParam('stock'),
-                priceBase:           $this->request->body->getFloatParam('price_base', 80.0),
-                stockOnDemand:       $this->request->body->getIntParam('stock_on_demand'),
-                fabricationTimeDays: $this->request->body->getFloatParam('fabrication_time_days', 0.0),
-                priceExtraWeekend:   $this->request->body->getFloatParam('price_extra_weekend', 0.0),
-                priceExtraWeekday:   $this->request->body->getFloatParam('price_extra_weekday', 15.0),
-                extraCategoryIds:    array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
-                customSlug:          $this->request->body->getStringParam('slug') ?: null,
-                tagNames:            array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
+                categoryId:          $this->request->body->getInt('category_id'),
+                name:                $this->request->body->getString('name'),
+                description:         $this->request->body->getString('description') ?: null,
+                stock:               $this->request->body->getInt('stock'),
+                priceBase:           $this->request->body->getFloat('price_base', 80.0),
+                stockOnDemand:       $this->request->body->getInt('stock_on_demand'),
+                fabricationTimeDays: $this->request->body->getFloat('fabrication_time_days', 0.0),
+                priceExtraWeekend:   $this->request->body->getFloat('price_extra_weekend', 0.0),
+                priceExtraWeekday:   $this->request->body->getFloat('price_extra_weekday', 15.0),
+                extraCategoryIds:    array_map('intval', $this->request->body->getArray('extra_category_ids', [])),
+                customSlug:          $this->request->body->getString('slug') ?: null,
+                tagNames:            array_filter(array_map('trim', explode(',', $this->request->body->getString('tags') ?? ''))),
             );
 
             $this->flash('success', 'Produit créé avec succès.');
@@ -98,18 +98,18 @@ class ProductController extends AdminController
         try {
             $this->updateProductUseCase->execute(
                 id:                  (int) $id,
-                categoryId:          $this->request->body->getIntParam('category_id'),
-                name:                $this->request->body->getStringParam('name'),
-                description:         $this->request->body->getStringParam('description') ?: null,
-                stock:               $this->request->body->getIntParam('stock'),
-                priceBase:           $this->request->body->getFloatParam('price_base', 80.0),
-                stockOnDemand:       $this->request->body->getIntParam('stock_on_demand'),
-                fabricationTimeDays: $this->request->body->getFloatParam('fabrication_time_days', 0.0),
-                priceExtraWeekend:   $this->request->body->getFloatParam('price_extra_weekend', 0.0),
-                priceExtraWeekday:   $this->request->body->getFloatParam('price_extra_weekday', 15.0),
-                extraCategoryIds:    array_map('intval', $this->request->body->getArrayParam('extra_category_ids', [])),
-                customSlug:          $this->request->body->getStringParam('slug') ?: null,
-                tagNames:            array_filter(array_map('trim', explode(',', $this->request->body->getStringParam('tags') ?? ''))),
+                categoryId:          $this->request->body->getInt('category_id'),
+                name:                $this->request->body->getString('name'),
+                description:         $this->request->body->getString('description') ?: null,
+                stock:               $this->request->body->getInt('stock'),
+                priceBase:           $this->request->body->getFloat('price_base', 80.0),
+                stockOnDemand:       $this->request->body->getInt('stock_on_demand'),
+                fabricationTimeDays: $this->request->body->getFloat('fabrication_time_days', 0.0),
+                priceExtraWeekend:   $this->request->body->getFloat('price_extra_weekend', 0.0),
+                priceExtraWeekday:   $this->request->body->getFloat('price_extra_weekday', 15.0),
+                extraCategoryIds:    array_map('intval', $this->request->body->getArray('extra_category_ids', [])),
+                customSlug:          $this->request->body->getString('slug') ?: null,
+                tagNames:            array_filter(array_map('trim', explode(',', $this->request->body->getString('tags') ?? ''))),
             );
             $this->flash('success', 'Produit mis à jour.');
         } catch (\Throwable $e) {
@@ -133,11 +133,11 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $file = $this->request->files->getArrayParam('photo');
+            $file = $this->request->files->getArray('photo');
             if ($file === null) {
                 throw new \RuntimeException('Aucun fichier envoyé.');
             }
-            $description = $this->request->body->getStringParam('photo_description') ?? '';
+            $description = $this->request->body->getString('photo_description') ?? '';
             $this->uploadProductPhotoUseCase->execute((int) $id, $file, $description);
             $this->flash('success', 'Photo ajoutée.');
         } catch (\Throwable $e) {
@@ -163,7 +163,7 @@ class ProductController extends AdminController
     {
         $this->requirePost();
         try {
-            $description = $this->request->body->getStringParam('description') ?? '';
+            $description = $this->request->body->getString('description') ?? '';
             $productId   = $this->updatePhotoDescriptionUseCase->execute((int) $photoId, $description);
             $this->flash('success', 'Description mise à jour.');
             $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $productId]));

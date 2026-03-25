@@ -15,9 +15,9 @@ class FileUploader implements FileManagerInterface
 
     public function __construct(Config $config)
     {
-        $this->uploadDir    = $config->getParam('app.root_dir') . '/public' . $config->getStringParam('upload.upload_path');
-        $this->maxSize      = (int) $config->getStringParam('upload.max_size');
-        $this->allowedTypes = array_map('trim', explode(',', $config->getStringParam('upload.allowed_types')));
+        $this->uploadDir    = $config->getString('app.root_dir') . '/public' . $config->getString('upload.upload_path');
+        $this->maxSize      = (int) $config->getString('upload.max_size');
+        $this->allowedTypes = array_map('trim', explode(',', $config->getString('upload.allowed_types')));
 
          // Crée le dossier d'upload s'il n'existe pas
          if (!is_dir($this->uploadDir)) {

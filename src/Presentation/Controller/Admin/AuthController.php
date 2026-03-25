@@ -20,8 +20,8 @@ class AuthController extends Controller
     {
         $this->requirePost();
 
-        $password = $this->request->body->getStringParam('password');
-        $expected = (string) $this->config->getParam('admin.password', '');
+        $password = $this->request->body->getString('password');
+        $expected = (string) $this->config->getString('admin.password', '');
 
         if ($password === $expected) {
             $this->session->set('admin_logged_in', true);

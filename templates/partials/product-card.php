@@ -13,7 +13,7 @@ $allCategories      = Cast::array($tpl->tryGet('allCategories', []));
 /** @var string|null $productContextPath */
 $productContextPath = $tpl->tryGet('productContextPath', null);
 $_productUrl = $productContextPath !== null
-    ? $config->getStringParam('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()
+    ? $config->getString('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()
     : $urlResolver->productUrl($product, $allCategories);
 ?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">

@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Rore\Infrastructure\Config;
 
 use Rore\Application\Config\ConfigInterface;
-use Rore\Infrastructure\Shared\AbstractTypedParams;
 use Rore\Support\Castable;
+use Rore\Support\Typable;
 
-final class Config extends AbstractTypedParams implements ConfigInterface
+final class Config extends Typable implements ConfigInterface
 {
     use Castable;
+
     public function __construct(private readonly array $data)
     {
     }
@@ -166,7 +167,7 @@ final class Config extends AbstractTypedParams implements ConfigInterface
         return getenv('APP_ENV') !== 'dev';
     }
 
-    public function getParam(string $path, mixed $default = null): mixed
+    public function get(string $path, mixed $default = null): mixed
     {
         $path = trim($path);
         if ($path === '') {

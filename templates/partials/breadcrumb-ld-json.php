@@ -14,9 +14,9 @@
 
 $_meta = \Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
 $_crumbs = array_values(\Rore\Support\Cast::array($tpl->get('breadcrumb')));
-$_item = $tpl->get('item'); // Product ou Pack (optionnel)
-$_type = $tpl->get('type', 'product'); // 'product' ou 'pack'
-$_mainPhoto = $tpl->get('mainPhoto'); // Pour les packs
+$_item = $tpl->tryGet('item'); // Product ou Pack (optionnel)
+$_type = $tpl->tryGet('type', 'product'); // 'product' ou 'pack'
+$_mainPhoto = $tpl->tryGet('mainPhoto'); // Pour les packs
 
 // Construction du breadcrumb LD+JSON
 $_ldItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Accueil', 'item' => $urlResolver->siteUrl() . '/']];

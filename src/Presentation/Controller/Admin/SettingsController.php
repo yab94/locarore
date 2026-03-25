@@ -36,7 +36,7 @@ class SettingsController extends AdminController
     {
         $this->requirePost();
 
-        $values = $this->request->body->getArrayParam('settings', []);
+        $values = $this->request->body->getArray('settings', []);
         $this->saveSettingsUseCase->execute($values);
 
         $this->flash('success', 'Contenu mis à jour.');

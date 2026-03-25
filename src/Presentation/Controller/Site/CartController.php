@@ -64,10 +64,10 @@ class CartController extends SiteController
     public function setDates(): void
     {
         $this->requirePost();
-        $redirect = $this->request->body->getStringParam('redirect', $this->urlResolver->resolve(self::class . '.index'));
+        $redirect = $this->request->body->getString('redirect', $this->urlResolver->resolve(self::class . '.index'));
 
-        $startDate = $this->request->body->getStringParam('start_date');
-        $endDate   = $this->request->body->getStringParam('end_date');
+        $startDate = $this->request->body->getString('start_date');
+        $endDate   = $this->request->body->getString('end_date');
 
         // Dates vides = intention de réinitialiser le panier
         if ($startDate === '' || $endDate === '') {
@@ -94,15 +94,15 @@ class CartController extends SiteController
         $this->requirePost();
         try {
             $this->addToCartUseCase->execute(
-                productId: $this->request->body->getIntParam('product_id'),
-                quantity:  $this->request->body->getIntParam('quantity', 1),
+                productId: $this->request->body->getInt('product_id'),
+                quantity:  $this->request->body->getInt('quantity', 1),
             );
             $this->flash('success', 'Produit ajouté au panier.');
         } catch (\Throwable $e) {
             $this->flash('error', $e->getMessage());
         }
 
-        $redirect = $this->request->queryString->getStringParam('redirect', $this->urlResolver->resolve(self::class . '.index'));
+        $redirect = $this->request->queryString->getString('redirect', $this->urlResolver->resolve(self::class . '.index'));
         $this->redirect($redirect);
     }
 
@@ -110,9 +110,9 @@ class CartController extends SiteController
     {
         $this->requirePost();
         try {
-            $selections = $this->request->body->getArrayParam('slot_selection');
+            $selections = $this->request->body->getArray('slot_selection');
             $this->addPackToCartUseCase->execute(
-                packId:     $this->request->body->getIntParam('pack_id'),
+                packId:     $this->request->body->getInt('pack_id'),
                 selections: is_array($selections) ? $selections : [],
             );
             $this->flash('success', 'Pack ajouté au panier.');
@@ -120,21 +120,21 @@ class CartController extends SiteController
             $this->flash('error', $e->getMessage());
         }
 
-        $redirect = $this->request->queryString->getStringParam('redirect', $this->urlResolver->resolve(self::class . '.index'));
+        $redirect = $this->request->queryString->getString('redirect', $this->urlResolver->resolve(self::class . '.index'));
         $this->redirect($redirect);
     }
 
     public function remove(): void
     {
         $this->requirePost();
-        $this->removeFromCartUseCase->execute($this->request->body->getIntParam('product_id'));
+        $this->removeFromCartUseCase->execute($this->request->body->getInt('product_id'));
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
     public function removePack(): void
     {
         $this->requirePost();
-        $this->removePackFromCartUseCase->execute($this->request->body->getIntParam('pack_id'));
+        $this->removePackFromCartUseCase->execute($this->request->body->getInt('pack_id'));
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
@@ -161,12 +161,12 @@ class CartController extends SiteController
         $this->requirePost();
         try {
             $reservationId = $this->checkoutUseCase->execute(
-                customerName:    $this->request->body->getStringParam('customer_name'),
-                customerEmail:   $this->request->body->getStringParam('customer_email'),
-                customerPhone:   $this->request->body->getStringParam('customer_phone') ?: null,
-                customerAddress: $this->request->body->getStringParam('customer_address') ?: null,
-                eventAddress:    $this->request->body->getStringParam('event_address') ?: null,
-                notes:           $this->request->body->getStringParam('notes') ?: null,
+                customerName:    $this->request->body->getString('customer_name'),
+                customerEmail:   $this->request->body->getString('customer_email'),
+                customerPhone:   $this->request->body->getString('customer_phone') ?: null,
+                customerAddress: $this->request->body->getString('customer_address') ?: null,
+                eventAddress:    $this->request->body->getString('event_address') ?: null,
+                notes:           $this->request->body->getString('notes') ?: null,
             );
 
             $this->redirect($this->urlResolver->resolve(self::class . '.confirmation') . '?id=' . $reservationId);
@@ -178,7 +178,7 @@ class CartController extends SiteController
 
     public function confirmation(): void
     {
-        $id = $this->request->queryString->getIntParam('id');
+        $id = $this->request->queryString->getInt('id');
         $this->render('site/confirmation', [
             'meta' => (function() {
                 $meta = new PageMeta(

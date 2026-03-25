@@ -74,7 +74,7 @@ $allTags    = Cast::array($tpl->tryGet('allTags', []));
                     <span class="text-gray-400 font-normal text-xs ml-1">— généré automatiquement si vide</span>
                 </label>
                 <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-400"><?= $config->getStringParam('seo.products_base_url'); ?>/</span>
+                    <span class="text-sm text-gray-400"><?= $config->getString('seo.products_base_url'); ?>/</span>
                     <input type="text" name="slug" id="slug"
                            value="<?= $html($product?->getSlug() ?? '') ?>"
                            placeholder="ex: vase-en-verre"
@@ -180,7 +180,7 @@ $allTags    = Cast::array($tpl->tryGet('allTags', []));
             <form method="post" action="<?= $url('Admin\Product.uploadPhoto', ['id' => $product->getId()]) ?>"
                   enctype="multipart/form-data" class="space-y-3">
                 <?= $partial('partials/csrf') ?>
-                <input type="file" name="photo" accept="<?= $config->getStringParam('upload.allowed_types') ?>" required
+                <input type="file" name="photo" accept="<?= $config->getString('upload.allowed_types') ?>" required
                        class="block w-full text-sm text-gray-500 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-brand-600 file:text-white file:text-sm hover:file:bg-brand-700">
                 <input type="text" name="photo_description"
                        placeholder="Description de la photo (alt/title SEO)"

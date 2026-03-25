@@ -41,13 +41,13 @@ final class SmtpMailer implements MailerInterface
         ?string $replyTo = null,
         bool    $isHtml  = false,
     ): void {
-        $host       = $this->config->getStringParam('smtp.host');
-        $port       = $this->config->getIntParam('smtp.port', 587);
-        $encryption = strtolower($this->config->getStringParam('smtp.encryption', 'tls'));
-        $user       = $this->config->getStringParam('smtp.user');
-        $password   = $this->config->getStringParam('smtp.password');
-        $fromEmail  = $this->config->getStringParam('smtp.from_email');
-        $fromName   = $this->config->getStringParam('smtp.from_name', $fromEmail);
+        $host       = $this->config->getString('smtp.host');
+        $port       = $this->config->getInt('smtp.port', 587);
+        $encryption = strtolower($this->config->getString('smtp.encryption', 'tls'));
+        $user       = $this->config->getString('smtp.user');
+        $password   = $this->config->getString('smtp.password');
+        $fromEmail  = $this->config->getString('smtp.from_email');
+        $fromName   = $this->config->getString('smtp.from_name', $fromEmail);
 
         if ($host === '') {
             throw new RuntimeException('SmtpMailer : smtp.host non configuré.');

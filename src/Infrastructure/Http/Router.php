@@ -6,6 +6,7 @@ namespace Rore\Infrastructure\Http;
 
 use Rore\Infrastructure\Config\Config;
 use Rore\Infrastructure\Di\Container;
+use Rore\Presentation\Template\Template;
 
 class Router
 {
@@ -18,8 +19,8 @@ class Router
         private readonly HttpRequest    $request,
         private readonly HttpResponse    $response,
     ) {
-        if($config->getStringParam('app.env') === $config->getStringParam('seo.force_https') && strpos($request->server->getStringParam('SCRIPT_URI'), 'https') !== 0) {
-            $response->redirect('https://' . $request->server->getStringParam('HTTP_HOST') . $request->server->getStringParam('REQUEST_URI'), 301);
+        if($config->getString('app.env') === $config->getString('seo.force_https') && strpos($request->server->getString('SCRIPT_URI'), 'https') !== 0) {
+            $response->redirect('https://' . $request->server->getString('HTTP_HOST') . $request->server->getString('REQUEST_URI'), 301);
             exit(); 
         }
     }
@@ -87,19 +88,19 @@ class Router
         }
 
         http_response_code(404);
-        require 'errors/404.php';
+        echo (new Template('errors/404'))->render();
     }
 
     private function handleError(\Throwable $e): void
     {
         http_response_code(500);
 
-        $isDev        = $this->config->getStringParam('app.env', 'prod') === 'dev';
+        $isDev        = $this->config->getString('app.env', 'prod') === 'dev';
         $errorMessage = $isDev
             ? $e::class . ': ' . $e->getMessage() . "\n\n" . $e->getTraceAsString()
             : null;
 
-        require 'errors/500.php';
+        echo (new Template('errors/500', ['errorMessage' => $errorMessage]))->render();
     }
 
     private function compile(string $path): string

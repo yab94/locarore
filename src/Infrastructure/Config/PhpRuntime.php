@@ -14,7 +14,7 @@ final class PhpRuntime
 
     public function boot(): void
     {
-        $settings = $this->config->getParam('php');
+        $settings = $this->config->getArray('php');
 
         if (!is_array($settings)) {
             return;

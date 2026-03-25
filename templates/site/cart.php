@@ -123,7 +123,7 @@ $packPrices    = Cast::array($tpl->tryGet('packPrices', []));
                             <div class="flex items-center gap-2 mb-0.5">
                                 <span class="text-xs bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-2 py-0.5 font-medium">Pack</span>
                                 <h3 class="font-semibold text-gray-800 truncate">
-                                    <a href="<?= $config->getStringParam('seo.packs_base_url') ?>/<?= $html($pack->getSlug()) ?>" class="hover:text-brand-700">
+                                    <a href="<?= $config->getString('seo.packs_base_url') ?>/<?= $html($pack->getSlug()) ?>" class="hover:text-brand-700">
                                         <?= $html($pack->getName()) ?>
                                     </a>
                                 </h3>

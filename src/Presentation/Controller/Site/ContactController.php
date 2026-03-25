@@ -28,12 +28,12 @@ final class ContactController extends SiteController
     {
         $this->requirePost();
 
-        $firstName = trim($this->request->body->getStringParam('first_name'));
-        $lastName  = trim($this->request->body->getStringParam('last_name'));
-        $email     = trim($this->request->body->getStringParam('email'));
-        $phone     = trim($this->request->body->getStringParam('phone')) ?: null;
-        $subject   = trim($this->request->body->getStringParam('subject'));
-        $content   = trim($this->request->body->getStringParam('content'));
+        $firstName = trim($this->request->body->getString('first_name'));
+        $lastName  = trim($this->request->body->getString('last_name'));
+        $email     = trim($this->request->body->getString('email'));
+        $phone     = trim($this->request->body->getString('phone')) ?: null;
+        $subject   = trim($this->request->body->getString('subject'));
+        $content   = trim($this->request->body->getString('content'));
 
         if ($firstName === '' || $lastName === '' || $email === '' || $subject === '' || $content === '') {
             $this->flash('error', 'Veuillez remplir tous les champs obligatoires.');

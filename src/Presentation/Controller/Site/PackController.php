@@ -41,7 +41,7 @@ class PackController extends SiteController
 
         $breadcrumb = $this->buildCategoryBreadcrumb($mainCategory, $allCategories);
 
-        $canonicalUrl = $this->urlResolver->siteUrl() . $this->config->getStringParam('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
+        $canonicalUrl = $this->urlResolver->siteUrl() . $this->config->getString('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
 
         $mainPhoto     = $mainProduct?->getMainPhoto();
         $ogImage       = $mainPhoto !== null
@@ -51,7 +51,7 @@ class PackController extends SiteController
         $ogImageHeight = $mainPhoto !== null ? 0 : 630;
 
         $meta = new PageMeta(
-            title:         $pack->getName() . ' — ' . $this->config->getStringParam('app.name'),
+            title:         $pack->getName() . ' — ' . $this->config->getString('app.name'),
             description:   $pack->getDescription() ?? ($pack->getName() . ' — pack de location'),
             canonicalUrl:  $canonicalUrl,
             ogImage:       $ogImage,

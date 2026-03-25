@@ -75,7 +75,7 @@ final class UrlResolver
      */
     private function buildRouteIndex(): void
     {
-        $routes = $this->config->getParam('routes');
+        $routes = $this->config->getArray('routes');
         if (!is_array($routes)) {
             return;
         }
@@ -117,7 +117,7 @@ final class UrlResolver
      */
     public function siteUrl(): string
     {
-        return $this->config->getStringParam('seo.site_url');
+        return $this->config->getString('seo.site_url');
     }
 
     /**
@@ -152,7 +152,7 @@ final class UrlResolver
      */
     public function categoryUrl(Category $category, array $allCategories): string
     {
-        return $this->config->getStringParam('seo.categories_base_url') . '/' . $this->categoryPath($category, $allCategories);
+        return $this->config->getString('seo.categories_base_url') . '/' . $this->categoryPath($category, $allCategories);
     }
 
     /**
@@ -171,10 +171,10 @@ final class UrlResolver
         }
 
         if ($category === null) {
-            return $this->config->getStringParam('seo.products_base_url') . '/' . $product->getSlug();
+            return $this->config->getString('seo.products_base_url') . '/' . $product->getSlug();
         }
 
-        return $this->config->getStringParam('seo.products_base_url') . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
+        return $this->config->getString('seo.products_base_url') . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
     }
 
     /**
@@ -182,6 +182,6 @@ final class UrlResolver
      */
     public function tagUrl(Tag $tag): string
     {
-        return $this->config->getStringParam('seo.tags_base_url') . '/' . $tag->getSlug();
+        return $this->config->getString('seo.tags_base_url') . '/' . $tag->getSlug();
     }
 }
