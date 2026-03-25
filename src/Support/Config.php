@@ -2,13 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Config;
+namespace Rore\Support;
 
-use Rore\Application\Config\ConfigInterface;
-use Rore\Support\Castable;
-use Rore\Support\Typable;
-
-final class Config extends Typable implements ConfigInterface
+final class Config extends Typable
 {
     use Castable;
 
@@ -118,6 +114,11 @@ final class Config extends Typable implements ConfigInterface
         }
         
         return $resolved;
+    }
+
+    public function isProduction(): bool
+    {
+        return getenv('APP_ENV') !== 'dev';
     }
 
     public function get(string $path, mixed $default = null): mixed

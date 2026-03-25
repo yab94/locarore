@@ -7,7 +7,7 @@ namespace Rore\Presentation\Seo;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Infrastructure\Config\Config;
+use Rore\Support\Config;
 use Rore\Support\Castable;
 
 /**

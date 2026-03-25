@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Di;
+namespace Rore\Support;
 
 use ReflectionClass;
 use ReflectionNamedType;
@@ -169,4 +169,5 @@ final class Container
         }
 
         return $allDeps;
-    }}
+    }
+}

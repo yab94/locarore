@@ -3,7 +3,7 @@ use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Infrastructure\Config\Config;
+use Rore\Support\Config;
 
 $html       = HtmlHelper::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));

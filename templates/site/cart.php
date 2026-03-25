@@ -3,7 +3,7 @@ use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
-use Rore\Infrastructure\Config\Config;
+use Rore\Support\Config;
 use Rore\Infrastructure\Session\CartSession;
 use Rore\Domain\Shared\ValueObject\DateRange;
 

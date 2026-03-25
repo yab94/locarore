@@ -6,7 +6,7 @@ namespace Rore\Infrastructure\Database;
 
 use PDO;
 use PDOException;
-use Rore\Infrastructure\Config\Config;
+use Rore\Support\Config;
 
 class Connection extends PDO
 {

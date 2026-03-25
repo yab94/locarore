@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Http;
 
-use Rore\Infrastructure\Config\Config;
-use Rore\Infrastructure\Di\Container;
+use Rore\Support\Config;
+use Rore\Support\Container;
 use Rore\Presentation\Template\Template;
 
 class Router

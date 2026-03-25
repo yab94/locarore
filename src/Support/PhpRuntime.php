@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Config;
+namespace Rore\Support;
 
 /**
  * Applique les directives ini_set définies dans la section [php] de
@@ -10,16 +10,8 @@ namespace Rore\Infrastructure\Config;
  */
 final class PhpRuntime
 {
-    public function __construct(private readonly Config $config) {}
-
-    public function boot(): void
+    static public function apply(array $settings): void
     {
-        $settings = $this->config->getArray('php');
-
-        if (!is_array($settings)) {
-            return;
-        }
-
         foreach ($settings as $directive => $value) {
             if ($directive === 'include_path') {
                 set_include_path($value . PATH_SEPARATOR . get_include_path());

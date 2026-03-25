@@ -2,7 +2,7 @@
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Support\Cast;
-use Rore\Infrastructure\Config\Config;
+use Rore\Support\Config;
 
 $pack          = Pack::cast($tpl->get('pack'));
 $productsById  = Cast::array($tpl->get('productsById'));

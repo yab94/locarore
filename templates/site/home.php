@@ -3,7 +3,7 @@ use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
-use Rore\Infrastructure\Config\Config;
+use Rore\Support\Config;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));

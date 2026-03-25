@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Mail;
 
-use Rore\Application\Config\ConfigInterface;
+use Rore\Support\Config;
 use Rore\Application\Mail\MailerInterface;
 use RuntimeException;
 
@@ -31,7 +31,7 @@ final class SmtpMailer implements MailerInterface
     private const TIMEOUT = 15;
 
     public function __construct(
-        private readonly ConfigInterface $config,
+        private readonly Config $config,
     ) {}
 
     public function send(
