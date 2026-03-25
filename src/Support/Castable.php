@@ -14,6 +14,11 @@ use InvalidArgumentException;
  */
 trait Castable
 {
+    public static function castOrNull(mixed $value): ?static
+    {
+        return $value === null ? null : static::cast($value);        
+    }
+
     public static function cast(mixed $value): static
     {
         if (!$value instanceof static) {

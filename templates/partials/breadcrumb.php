@@ -1,8 +1,8 @@
 <?php
-$tpl->assertArray('breadcrumb');
-$tpl->assertArray('allCategories');
-$tpl->assertInstanceOf('urlResolver', Rore\Presentation\Seo\UrlResolver::class);
-$tpl->assertInstanceOf('html', Rore\Presentation\Template\HtmlHelper::class);
+$breadcrumb = Rore\Support\Cast::array($tpl->get('breadcrumb'));
+$allCategories = Rore\Support\Cast::array($tpl->get('allCategories'));
+$urlResolver = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
+$html = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
 $finalCrumb = array_pop($breadcrumb);
 ?>
 <nav class="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-1">

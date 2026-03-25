@@ -7,6 +7,7 @@ namespace Rore\Presentation\Seo;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Infrastructure\Config\Config;
+use Rore\Support\Castable;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.
@@ -14,6 +15,8 @@ use Rore\Infrastructure\Config\Config;
  */
 final class UrlResolver
 {
+    use Castable;
+
     private const FQCN_PREFIX = 'Rore\\Presentation\\Controller\\';
 
     /**
