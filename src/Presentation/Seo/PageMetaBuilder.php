@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
-use Rore\Application\Settings\SettingsServiceInterface;
+use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
 
 /**
  * Construit les métadonnées SEO (PageMeta) pour chaque type de page du site.
- * S'appuie sur SettingsServiceInterface (injecté) pour les settings DB.
+ * S'appuie sur GetSettingUseCase (injecté) pour les settings DB.
  */
 final class PageMetaBuilder
 {
     public function __construct(
-        private readonly SettingsServiceInterface $settings,
+        private readonly GetSettingUseCase $settings,
         private readonly MetaFormatter            $meta,
     ) {}
 

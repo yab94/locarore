@@ -21,4 +21,19 @@ class Setting
     public function getGroup(): string  { return $this->group; }
 
     public function setValue(?string $v): void { $this->value = $v; }
+
+    /**
+     * Retourne la valeur avec les variables interpolées.
+     * Remplace {key} par la valeur correspondante dans $vars.
+     *
+     * @param array<string,string> $vars
+     */
+    public function resolve(array $vars = []): string
+    {
+        $value = $this->value ?? '';
+        foreach ($vars as $k => $v) {
+            $value = str_replace('{' . $k . '}', (string) $v, $value);
+        }
+        return $value;
+    }
 }

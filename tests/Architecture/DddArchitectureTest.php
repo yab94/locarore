@@ -9,7 +9,11 @@ declare(strict_types=1);
  *   Presentation\Controller  →  Application, Presentation
  *   Application              →  Application, Domain
  *   Domain                   →  Domain
- *   Infrastructure           →  Domain, Infrastructure
+ *   Infrastructure           →  Domain, Infrastructure, Application
+ *                               (les adaptateurs Infrastructure implémentent des ports Application)
+ *
+ * Contrainte supplémentaire :
+ *   Application ne contient QUE des UseCases (*UseCase) et des ports (interfaces).
  */
 final class DddArchitectureTest
 {
@@ -19,7 +23,7 @@ final class DddArchitectureTest
         'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Presentation'],
         'Rore\Application'             => ['Rore\Application', 'Rore\Domain'],
         'Rore\Domain'                  => ['Rore\Domain'],
-        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure'],
+        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application'],
     ];
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -123,6 +127,43 @@ final class DddArchitectureTest
             0,
             count($violations),
             "\n\nViolations d'architecture DDD détectées :\n\n" . implode("\n\n", $violations)
+        );
+    }
+
+    public function testApplicationOnlyUseCasesAndPorts(): void
+    {
+        $violations = [];
+
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Application') as $file) {
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
+
+            try {
+                require_once $file;
+                if (!class_exists($className) && !interface_exists($className)) continue;
+                $ref = new ReflectionClass($className);
+            } catch (Throwable) {
+                continue;
+            }
+
+            // Les interfaces (ports) et les abstraits sont toujours OK
+            if ($ref->isInterface() || $ref->isAbstract()) continue;
+
+            // Les classes concrètes doivent se terminer par UseCase
+            $shortName = $ref->getShortName();
+            if (!str_ends_with($shortName, 'UseCase')) {
+                $violations[] = sprintf(
+                    '%s — classe concrète non-UseCase en Application (renommer en *UseCase ou déplacer en Infrastructure)',
+                    $className,
+                );
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nApplication doit uniquement contenir des UseCases et des ports (interfaces) :\n\n"
+                . implode("\n", $violations)
         );
     }
 }

@@ -6,7 +6,7 @@ namespace Rore\Presentation\Controller;
 
 use Rore\Application\Config\ConfigInterface;
 use Rore\Application\Security\CsrfTokenManagerInterface;
-use Rore\Application\Settings\SettingsServiceInterface;
+use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Presentation\Http\RequestInterface;
 use Rore\Presentation\Http\ResponseInterface;
@@ -22,7 +22,7 @@ abstract class Controller
         readonly ConfigInterface $config,
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
-        readonly SettingsServiceInterface $settings,
+        readonly GetSettingUseCase $settings,
         readonly UrlResolver $urlResolver,
         readonly HtmlHelper $html,
     ) {}

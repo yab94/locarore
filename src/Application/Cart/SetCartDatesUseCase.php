@@ -7,7 +7,7 @@ namespace Rore\Application\Cart;
 class SetCartDatesUseCase
 {
     public function __construct(
-        private CartSession $cart,
+        private CartSessionInterface $cart,
     ) {}
 
     public function execute(string $startDate, string $endDate): void

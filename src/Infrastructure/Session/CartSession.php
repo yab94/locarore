@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Rore\Application\Cart;
+namespace Rore\Infrastructure\Session;
 
+use Rore\Application\Cart\CartSessionInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 
-class CartSession
+final class CartSession implements CartSessionInterface
 {
     private const KEY = 'rore_cart';
 
@@ -14,7 +15,7 @@ class CartSession
         private readonly SessionStorageInterface $session,
     ) {}
 
-    // --- Dates -----------------------------------------------------------
+    // --- Dates -------------------------------------------------------------------
 
     public function hasDates(): bool
     {
@@ -50,7 +51,6 @@ class CartSession
             && ($currentStart !== $startDate || $currentEnd !== $endDate)
             && (!empty($this->getItems()) || !empty($this->getPacks()))
         ) {
-            // Les dates changent avec un panier non vide → on vide le panier
             $this->setCart([]);
         }
 
@@ -63,12 +63,12 @@ class CartSession
         $this->setCart($cart);
     }
 
-    // --- Items -----------------------------------------------------------
+    // --- Items -------------------------------------------------------------------
 
     /** @return array<int, int>  [productId => quantity] */
     public function getItems(): array
     {
-        $cart = $this->getCart();
+        $cart  = $this->getCart();
         $items = $cart['items'] ?? [];
         return is_array($items) ? $items : [];
     }
@@ -101,7 +101,7 @@ class CartSession
         return array_sum($this->getItems());
     }
 
-    // --- Packs -----------------------------------------------------------
+    // --- Packs -------------------------------------------------------------------
 
     /** @return array<int, int>  [packId => 1] */
     public function getPacks(): array
@@ -131,20 +131,14 @@ class CartSession
         $this->setCart($cart);
     }
 
-    /**
-     * Retourne les sélections pour un pack donné.
-     * @return array<int, int>  [slotItemId => productId]
-     */
+    /** @return array<int, int>  [slotItemId => productId] */
     public function getPackSelections(int $packId): array
     {
-        $packs = $this->getPacks();
+        $packs      = $this->getPacks();
         $selections = $packs[$packId]['selections'] ?? [];
         return is_array($selections) ? $selections : [];
     }
 
-    /**
-     * Enregistre le choix de produit pour un slot donné.
-     */
     public function setPackSelection(int $packId, int $slotItemId, int $productId): void
     {
         $packs = $this->getPacks();
@@ -157,9 +151,6 @@ class CartSession
         $this->setCart($cart);
     }
 
-    /**
-     * Supprime la sélection d'un slot donné.
-     */
     public function removePackSelection(int $packId, int $slotItemId): void
     {
         $packs = $this->getPacks();
@@ -169,12 +160,14 @@ class CartSession
         $this->setCart($cart);
     }
 
-    // --- Reset -----------------------------------------------------------
+    // --- Reset -------------------------------------------------------------------
 
     public function clear(): void
     {
         $this->setCart([]);
     }
+
+    // --- Private -----------------------------------------------------------------
 
     /** @return array<string, mixed> */
     private function getCart(): array

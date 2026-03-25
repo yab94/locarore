@@ -7,7 +7,7 @@ namespace Rore\Application\Cart;
 class RemoveFromCartUseCase
 {
     public function __construct(
-        private CartSession $cart,
+        private CartSessionInterface $cart,
     ) {}
 
     public function execute(int $productId): void

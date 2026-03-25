@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rore\Application\Security;
+namespace Rore\Infrastructure\Security;
 
+use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Storage\SessionStorageInterface;
 
 /**

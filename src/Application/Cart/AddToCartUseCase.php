@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart;
 
+use Rore\Application\Cart\CartSessionInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Service\AvailabilityService;
 
 class AddToCartUseCase
 {
     public function __construct(
-        private CartSession                $cart,
+        private CartSessionInterface        $cart,
         private ProductRepositoryInterface $productRepository,
         private AvailabilityService        $availabilityService,
     ) {}
