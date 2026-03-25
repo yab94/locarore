@@ -2,10 +2,11 @@
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
+use Rore\Application\Settings\GetSettingUseCase;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
-$settings      = $tpl->get('settings');
+$settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $reservations  = Cast::array($tpl->tryGet('reservations', []));
 $currentStatus = Cast::string($tpl->tryGet('currentStatus', 'all'));
 // $partial is injected by the Template engine — not a param

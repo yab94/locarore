@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Contact\Entity;
 
+use Rore\Support\Castable;
+
 class ContactMessage
 {
+    use Castable;
     public function __construct(
         private ?int               $id,
         private string             $firstName,

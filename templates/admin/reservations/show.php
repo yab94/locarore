@@ -2,12 +2,15 @@
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
+use Rore\Application\Settings\GetSettingUseCase;
+use Rore\Domain\Reservation\Entity\Reservation;
+use Rore\Domain\Shared\ValueObject\DateRange;
 
 $html                 = HtmlHelper::cast($tpl->get('html'));
 $url                  = UrlResolver::cast($tpl->get('url'));
-$settings             = $tpl->get('settings');
-$reservation          = $tpl->get('reservation');
-$dateRange            = $tpl->get('dateRange');
+$settings             = GetSettingUseCase::cast($tpl->get('settings'));
+$reservation          = Reservation::cast($tpl->get('reservation'));
+$dateRange            = DateRange::cast($tpl->get('dateRange'));
 $products             = Cast::array($tpl->tryGet('products', []));
 $packs                = Cast::array($tpl->tryGet('packs', []));
 $productCurrentPrices = Cast::array($tpl->tryGet('productCurrentPrices', []));

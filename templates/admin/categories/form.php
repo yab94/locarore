@@ -2,11 +2,13 @@
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
+use Rore\Infrastructure\Config\Config;
+use Rore\Domain\Catalog\Entity\Category;
 
 $html       = HtmlHelper::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));
-$config     = $tpl->get('config');
-$category   = $tpl->tryGet('category', null);
+$config     = Config::cast($tpl->get('config'));
+$category   = Category::castOrNull($tpl->tryGet('category'));
 $categories = Cast::array($tpl->tryGet('categories', []));
 // $partial is injected by the Template engine — not a param
 ?>

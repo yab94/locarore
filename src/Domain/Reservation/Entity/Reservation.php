@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Reservation\Entity;
 
+use Rore\Support\Castable;
+
 class Reservation
 {
+    use Castable;
     /** @var ReservationItem[] */
     private array $items = [];
 

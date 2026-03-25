@@ -6,9 +6,11 @@ namespace Rore\Infrastructure\Config;
 
 use Rore\Application\Config\ConfigInterface;
 use Rore\Infrastructure\Shared\AbstractTypedParams;
+use Rore\Support\Castable;
 
 final class Config extends AbstractTypedParams implements ConfigInterface
 {
+    use Castable;
     public function __construct(private readonly array $data)
     {
     }

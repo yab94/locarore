@@ -1,9 +1,11 @@
 <?php
 use Rore\Presentation\Seo\UrlResolver;
+use Rore\Infrastructure\Session\CartSession;
+use Rore\Domain\Shared\ValueObject\DateRange;
 
 $url           = UrlResolver::cast($tpl->get('url'));
-$cart          = $tpl->get('cart');
-$cartDateRange = $tpl->get('cartDateRange');
+$cart          = CartSession::cast($tpl->get('cart'));
+$cartDateRange = DateRange::cast($tpl->get('cartDateRange'));
 // $partial is injected by the Template engine — not a param
 ?>
 <div class="max-w-lg mx-auto">

@@ -1,10 +1,11 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Support\Cast;
+use Rore\Application\Settings\GetSettingUseCase;
 
 $html           = HtmlHelper::cast($tpl->get('html'));
-$settings       = $tpl->get('settings');
-$reservationId  = $tpl->get('reservationId');
+$settings       = GetSettingUseCase::cast($tpl->get('settings'));
+$reservationId  = Cast::int($tpl->get('reservationId'));
 ?>
 <div class="max-w-lg mx-auto text-center py-16">
     <div class="text-5xl mb-6">🎉</div>

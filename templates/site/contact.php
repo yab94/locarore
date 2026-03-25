@@ -1,10 +1,11 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
+use Rore\Application\Settings\GetSettingUseCase;
 
 $html     = HtmlHelper::cast($tpl->get('html'));
 $url      = UrlResolver::cast($tpl->get('url'));
-$settings = $tpl->get('settings');
+$settings = GetSettingUseCase::cast($tpl->get('settings'));
 // $partial is injected by the Template engine — not a param
 ?>
 <div class="max-w-xl mx-auto">

@@ -1,13 +1,14 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
+use Rore\Support\Cast;
 
 $html            = HtmlHelper::cast($tpl->get('html'));
 $url             = UrlResolver::cast($tpl->get('url'));
 $countCategories = (int) $tpl->tryGet('countCategories', 0);
 $countProducts   = (int) $tpl->tryGet('countProducts', 0);
 $pendingCount    = (int) $tpl->tryGet('pendingCount', 0);
-$pendingList     = $tpl->tryGet('pendingList', []);
+$pendingList     = Cast::array($tpl->tryGet('pendingList', []));
 ?>
 <!-- Stats cards -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">

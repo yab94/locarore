@@ -3,7 +3,7 @@ $html            = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html')
 $url             = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
 $urlResolver     = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
 $headerCategories = \Rore\Support\Cast::array($tpl->get('headerCategories'));
-$settings        = $tpl->get('settings');
+$settings        = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));
 $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);
 ?>
 <header class="bg-white shadow-sm border-b-2 border-brand-600">

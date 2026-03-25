@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Rore\Application\Settings;
 
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
+use Rore\Support\Castable;
 
 final class GetSettingUseCase
 {
+    use Castable;
     public function __construct(
         private readonly SettingsRepositoryInterface $repo,
     ) {}

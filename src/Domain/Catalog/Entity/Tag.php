@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
+use Rore\Support\Castable;
+
 class Tag
 {
+    use Castable;
     public function __construct(
         private ?int   $id,
         private string $name,

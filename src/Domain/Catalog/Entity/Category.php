@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
+use Rore\Support\Castable;
+
 class Category
 {
+    use Castable;
     /** @var Category[] */
     private array $children = [];
 

@@ -3,12 +3,14 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
+use Rore\Infrastructure\Config\Config;
 
 $product            = Product::cast($tpl->get('product'));
 $html               = HtmlHelper::cast($tpl->get('html'));
 $urlResolver        = UrlResolver::cast($tpl->get('urlResolver'));
-$config             = $tpl->get('config');
+$config             = Config::cast($tpl->get('config'));
 $allCategories      = Cast::array($tpl->tryGet('allCategories', []));
+/** @var string|null $productContextPath */
 $productContextPath = $tpl->tryGet('productContextPath', null);
 $_productUrl = $productContextPath !== null
     ? $config->getStringParam('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()

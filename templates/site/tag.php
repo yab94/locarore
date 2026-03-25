@@ -1,9 +1,10 @@
 <?php
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Support\Cast;
+use Rore\Domain\Catalog\Entity\Tag;
 
 $html     = HtmlHelper::cast($tpl->get('html'));
-$tag      = $tpl->get('tag');
+$tag      = Tag::cast($tpl->get('tag'));
 $products = Cast::array($tpl->tryGet('products', []));
 $packs    = Cast::array($tpl->tryGet('packs', []));
 // $partial is injected by the Template engine — not a param

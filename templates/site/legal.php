@@ -1,5 +1,7 @@
 <?php
-$settings = $tpl->get('settings');
+use Rore\Application\Settings\GetSettingUseCase;
+
+$settings = GetSettingUseCase::cast($tpl->get('settings'));
 ?>
 <div class="max-w-3xl mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Mentions légales</h1>

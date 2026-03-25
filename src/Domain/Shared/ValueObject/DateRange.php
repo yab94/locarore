@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Shared\ValueObject;
 
+use Rore\Support\Castable;
+
 /**
  * Intervalle de dates inclusif (granularité journalière).
  */
 final class DateRange
 {
+    use Castable;
     public readonly \DateTimeImmutable $start;
     public readonly \DateTimeImmutable $end;
 

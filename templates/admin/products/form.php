@@ -3,10 +3,11 @@ use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Infrastructure\Config\Config;
 
 $html       = HtmlHelper::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));
-$config     = $tpl->get('config');
+$config     = Config::cast($tpl->get('config'));
 $product    = Product::castOrNull($tpl->tryGet('product', null));
 $categories = Cast::array($tpl->tryGet('categories', []));
 $allTags    = Cast::array($tpl->tryGet('allTags', []));

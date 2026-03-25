@@ -3,15 +3,17 @@ use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Infrastructure\Config\Config;
+use Rore\Infrastructure\Session\CartSession;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
-$config        = $tpl->get('config');
+$config        = Config::cast($tpl->get('config'));
 $product       = Product::cast($tpl->get('product'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
-$cart          = $tpl->get('cart');
-$availableQty  = $tpl->tryGet('availableQty', null);
+$cart          = CartSession::cast($tpl->get('cart'));
+$availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
 // $partial is injected by the Template engine — not a param
 ?>
 <?= $partial('partials/breadcrumb') ?>

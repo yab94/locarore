@@ -2,12 +2,14 @@
 use Rore\Presentation\Template\HtmlHelper;
 use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
+use Rore\Application\Settings\GetSettingUseCase;
+use Rore\Infrastructure\Config\Config;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
-$settings      = $tpl->get('settings');
+$settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
-$config        = $tpl->get('config');
+$config        = Config::cast($tpl->get('config'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
 $categories    = Cast::array($tpl->tryGet('categories', []));
 $tags          = Cast::array($tpl->tryGet('tags', []));

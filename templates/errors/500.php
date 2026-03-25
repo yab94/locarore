@@ -1,4 +1,4 @@
-<?php $errorMessage = $tpl->tryGet('errorMessage', null); ?>
+<?php /** @var string|null $errorMessage */ $errorMessage = $tpl->tryGet('errorMessage', null); ?>
 <div class="flex items-center justify-center h-full min-h-[60vh] text-center">
     <div>
         <p class="text-8xl font-bold text-gray-200 mb-4">500</p>

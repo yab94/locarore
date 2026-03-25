@@ -6,9 +6,11 @@ namespace Rore\Infrastructure\Session;
 
 use Rore\Application\Cart\CartSessionInterface;
 use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Support\Castable;
 
 final class CartSession implements CartSessionInterface
 {
+    use Castable;
     private const KEY = 'rore_cart';
 
     public function __construct(

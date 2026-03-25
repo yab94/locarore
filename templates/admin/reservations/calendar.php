@@ -3,9 +3,11 @@ use Rore\Presentation\Seo\UrlResolver;
 use Rore\Support\Cast;
 
 $url          = UrlResolver::cast($tpl->get('url'));
-$month        = (int) $tpl->get('month');
-$year         = (int) $tpl->get('year');
+$month        = Cast::int($tpl->get('month'));
+$year         = Cast::int($tpl->get('year'));
+/** @var \DateTimeImmutable $start */
 $start        = $tpl->get('start');
+/** @var \DateTimeImmutable $end */
 $end          = $tpl->get('end');
 $reservations = Cast::array($tpl->tryGet('reservations', []));
 ?>

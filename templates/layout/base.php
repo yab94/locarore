@@ -1,6 +1,6 @@
 <?php
 $html    = Rore\Presentation\Template\HtmlHelper::cast($tpl->get('html'));
-$meta    = $tpl->get('meta');
+$meta    = Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
 $flash   = \Rore\Support\Cast::array($tpl->tryGet('flash', []));
 $content = \Rore\Support\Cast::string($tpl->get('content'));
 ?>
