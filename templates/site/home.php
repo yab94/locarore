@@ -1,3 +1,20 @@
+
+<?php
+use Rore\Presentation\Template\HtmlHelper;
+
+$html         = HtmlHelper::cast($tpl->get('html'));
+$settings     = $tpl->get('settings');
+$urlResolver  = \Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
+$allCategories = $tpl->tryGet('allCategories', []);
+$categories   = $tpl->tryGet('categories', []);
+$tags         = $tpl->tryGet('tags', []);
+$config       = $tpl->tryGet('config', null);
+$featured     = $tpl->tryGet('featured', []);
+$partial      = $tpl->tryGet('partial', null);
+$url          = $tpl->tryGet('url', null);
+
+?>
+
 <!-- HERO -->
 <section class="bg-brand-600 text-white py-16 rounded-2xl mb-10 text-center">
     <h1 class="text-4xl font-bold mb-3"><?= $html($settings->get('hero.title')) ?></h1>
@@ -40,7 +57,7 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Parcourir par thème</h2>
     <div class="flex flex-wrap gap-2">
         <?php foreach ($tags as $tag): ?>
-            <a href="<?= $config->getStringParam('seo.tags_base_url'); ?>/<?= $html($tag->getSlug()) ?>"
+            <a href="<?= $config ? $config->getStringParam('seo.tags_base_url') : '' ?>/<?= $html($tag->getSlug()) ?>"
                class="inline-flex items-center gap-1.5 bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-4 py-1.5 text-sm font-medium hover:bg-brand-100 transition">
                 🏷️ <?= $html($tag->getName()) ?>
             </a>
@@ -55,7 +72,7 @@
     <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $html($settings->get('home.featured_title')) ?></h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($featured as $product): ?>
-            <?= $partial('partials/product-card', ['product' => $product]) ?>
+            <?= $partial ? $partial('partials/product-card', ['product' => $product]) : '' ?>
         <?php endforeach; ?>
     </div>
 </section>
@@ -66,7 +83,7 @@
 <section class="mt-10 bg-brand-50 border border-brand-200 rounded-2xl py-8 px-6 text-center" style="padding-bottom:3rem;">
     <h2 class="text-2xl font-bold text-gray-800 mb-2">Vous avez un projet ou une question ?</h2>
     <p class="text-gray-600 mb-6">Notre équipe est disponible pour vous accompagner et vous établir un devis sur mesure.</p>
-    <a href="<?= $url('Site\Contact.index') ?>"
+    <a href="<?= $url ? $url('Site\\Contact.index') : '#' ?>"
        class="inline-block bg-brand-600 text-white font-semibold px-8 py-3 rounded-xl hover:bg-brand-700 transition">
         Contactez-nous
     </a>
