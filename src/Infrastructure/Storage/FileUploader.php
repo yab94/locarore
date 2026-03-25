@@ -64,7 +64,44 @@ class FileUploader implements FileManagerInterface
             throw new \RuntimeException('Impossible de déplacer le fichier uploadé.');
         }
 
+        // Conversion WebP via GD natif (sauf si déjà webp)
+        if ($mimeType !== 'image/webp') {
+            $filename = $this->convertToWebp($destination, $mimeType);
+        }
+
         return $filename;
+    }
+
+    /**
+     * Convertit une image JPG/PNG en WebP, supprime l'original.
+     * Retourne le nouveau nom de fichier (*.webp).
+     */
+    private function convertToWebp(string $sourcePath, string $mimeType): string
+    {
+        $img = match($mimeType) {
+            'image/jpeg' => imagecreatefromjpeg($sourcePath),
+            'image/png'  => imagecreatefrompng($sourcePath),
+            default      => null,
+        };
+
+        if ($img === null || $img === false) {
+            // GD indisponible ou format inconnu — on garde l'original
+            return basename($sourcePath);
+        }
+
+        // Préserver la transparence PNG
+        if ($mimeType === 'image/png') {
+            imagepalettetotruecolor($img);
+            imagealphablending($img, true);
+            imagesavealpha($img, true);
+        }
+
+        $webpPath = preg_replace('/\.(jpe?g|png)$/i', '.webp', $sourcePath);
+        imagewebp($img, $webpPath, 82);
+        imagedestroy($img);
+        unlink($sourcePath);
+
+        return basename((string) $webpPath);
     }
 
     public function delete(string $filename): void
