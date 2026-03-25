@@ -6,6 +6,7 @@ namespace Rore\Presentation\Seo;
 
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Infrastructure\Config\Config;
 use Rore\Support\Castable;
 
@@ -166,5 +167,13 @@ final class UrlResolver
         }
 
         return $this->config->getStringParam('seo.products_base_url') . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
+    }
+
+    /**
+     * URL canonique d'un tag.
+     */
+    public function tagUrl(Tag $tag): string
+    {
+        return $this->config->getStringParam('seo.tags_base_url') . '/' . $tag->getSlug();
     }
 }

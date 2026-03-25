@@ -40,7 +40,7 @@ class CategoryController extends SiteController
         $allCategories = $this->getAllActiveCategoriesUseCase->execute();
         $children      = array_filter($allCategories, fn($c) => $c->getParentId() === $category->getId());
         $breadcrumb    = $this->buildBreadcrumb($category, $allCategories);
-        $meta          = $this->metaBuilder->forCategory($category, $breadcrumb);
+        $meta          = $this->metaBuilder->forCategory($category, $breadcrumb, $allCategories);
 
         $this->render('site/category', [
             'meta'          => $meta,

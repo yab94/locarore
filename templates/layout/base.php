@@ -17,7 +17,7 @@ $content = \Rore\Support\Cast::string($tpl->get('content'));
     <?php if ($meta->keywords !== ''): ?>
     <meta name="keywords" content="<?= $html($meta->keywords) ?>">
     <?php endif; ?>
-    <?php if ($meta->canonicalUrl !== null): ?>
+    <?php if ($meta->canonicalUrl !== ''): ?>
     <link rel="canonical" href="<?= $html($meta->canonicalUrl) ?>">
     <?php endif; ?>
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">

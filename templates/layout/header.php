@@ -10,7 +10,7 @@ $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);
     <nav class="container mx-auto px-4 max-w-6xl h-16 flex items-center justify-between">
         <!-- Logo -->
         <a href="/">
-            <img src="/assets/images/logo-latyana-evenements.png" alt="<?= $html($settings->get('site.name')) ?> logo" class="h-14 w-auto">
+            <img src="/assets/images/logo-latyana-evenements.png" alt="<?= $html($settings->get('site.name')) ?>" title="<?= $html($settings->get('site.name')) ?>" class="h-14 w-auto">
         </a>
 
         <!-- Catégories principales -->

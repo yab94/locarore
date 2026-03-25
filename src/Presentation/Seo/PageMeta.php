@@ -17,6 +17,6 @@ final class PageMeta
         public readonly string  $description  = '',
         public readonly string  $keywords     = '',
         public readonly string  $robots       = 'index, follow',
-        public readonly ?string $canonicalUrl = null,
+        public readonly string  $canonicalUrl = '',
     ) {}
 }

@@ -8,6 +8,7 @@ use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
+use Rore\Presentation\Seo\UrlResolver;
 
 /**
  * Construit les métadonnées SEO (PageMeta) pour chaque type de page du site.
@@ -17,7 +18,8 @@ final class PageMetaBuilder
 {
     public function __construct(
         private readonly GetSettingUseCase $settings,
-        private readonly MetaFormatter            $meta,
+        private readonly MetaFormatter     $meta,
+        private readonly UrlResolver       $urlResolver,
     ) {}
 
     /**
@@ -43,9 +45,10 @@ final class PageMetaBuilder
         }
 
         return new PageMeta(
-            title:       $this->meta->title('Location de décoration', $siteName),
-            description: $this->meta->description(...$descParts),
-            keywords:    $this->meta->keywords($kw),
+            title:        $this->meta->title('Location de décoration', $siteName),
+            description:  $this->meta->description(...$descParts),
+            keywords:     $this->meta->keywords($kw),
+            canonicalUrl: '/',
         );
     }
 
@@ -55,7 +58,10 @@ final class PageMetaBuilder
      * @param Category   $category   catégorie courante
      * @param Category[] $breadcrumb chaîne racine → courante (incluse)
      */
-    public function forCategory(Category $category, array $breadcrumb): PageMeta
+    /**
+     * @param Category[] $allCategories  toutes les catégories actives (pour URL hiérarchique)
+     */
+    public function forCategory(Category $category, array $breadcrumb, array $allCategories = []): PageMeta
     {
         $titleParts   = array_map(fn($c) => $c->getName(), array_reverse($breadcrumb));
         $titleParts[] = $this->settings->get('site.name');
@@ -79,9 +85,10 @@ final class PageMetaBuilder
         }
 
         return new PageMeta(
-            title:       $this->meta->title(...$titleParts),
-            description: $this->meta->description(...$descParts),
-            keywords:    $this->meta->keywords($kw),
+            title:        $this->meta->title(...$titleParts),
+            description:  $this->meta->description(...$descParts),
+            keywords:     $this->meta->keywords($kw),
+            canonicalUrl: $allCategories !== [] ? $this->urlResolver->categoryUrl($category, $allCategories) : '',
         );
     }
 
@@ -97,7 +104,7 @@ final class PageMetaBuilder
         Product  $product,
         ?Category $category,
         array     $catChain,
-        ?string $canonicalUrl = null,
+        string  $canonicalUrl = '',
     ): PageMeta {
         $titleParts = [$product->getName()];
         foreach (array_reverse($catChain) as $crumb) {
@@ -163,9 +170,10 @@ final class PageMetaBuilder
     {
         $siteName = $this->settings->get('site.name');
         return new PageMeta(
-            title:       $this->meta->title($tag->getName(), $siteName),
-            description: 'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
-            keywords:    implode(', ', ['location', $tag->getName(), $siteName]),
+            title:        $this->meta->title($tag->getName(), $siteName),
+            description:  'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
+            keywords:     implode(', ', ['location', $tag->getName(), $siteName]),
+            canonicalUrl: $this->urlResolver->tagUrl($tag),
         );
     }
 }
