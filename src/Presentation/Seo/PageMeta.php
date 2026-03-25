@@ -21,5 +21,6 @@ final class PageMeta
         public readonly string  $ogImage      = '',
         public readonly int     $ogImageWidth  = 0,
         public readonly int     $ogImageHeight = 0,
+        public readonly string  $ogType        = 'website',
     ) {}
 }

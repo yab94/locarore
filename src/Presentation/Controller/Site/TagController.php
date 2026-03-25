@@ -6,14 +6,13 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetTagWithItemsUseCase;
-use Rore\Presentation\Seo\PageMetaBuilder;
+use Rore\Presentation\Seo\PageMeta;
 
 class TagController extends SiteController
 {
     public function __construct(
         private readonly GetTagWithItemsUseCase         $getTagWithItemsUseCase,
         private readonly GetAllActiveCategoriesUseCase  $getAllActiveCategoriesUseCase,
-        private readonly PageMetaBuilder                $metaBuilder,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -35,7 +34,18 @@ class TagController extends SiteController
         $productsById = $result['productsById'];
 
         $allCategories = $this->getAllActiveCategoriesUseCase->execute();
-        $meta          = $this->metaBuilder->forTag($tag);
+
+        $siteName = $this->settings->get('site.name');
+        $_og = $this->defaultOgImage();
+        $meta = new PageMeta(
+            title:         $this->metaFormatter->title($tag->getName(), $siteName),
+            description:   'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
+            keywords:      implode(', ', ['location', $tag->getName(), $siteName]),
+            canonicalUrl:  $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
+            ogImage:       $_og['url'],
+            ogImageWidth:  $_og['w'],
+            ogImageHeight: $_og['h'],
+        );
 
         $this->render('site/tag', [
             'meta'          => $meta,

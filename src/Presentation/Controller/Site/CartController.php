@@ -11,17 +11,16 @@ use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\RemovePackFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
-use Rore\Presentation\Seo\PageMetaBuilder;
+use Rore\Presentation\Seo\PageMeta;
 
 class CartController extends SiteController
 {
     public function __construct(
-        private readonly GetCartDataUseCase      $getCartDataUseCase,
-        private readonly PageMetaBuilder         $metaBuilder,
-        private readonly SetCartDatesUseCase     $setCartDatesUseCase,
-        private readonly AddToCartUseCase        $addToCartUseCase,
-        private readonly AddPackToCartUseCase    $addPackToCartUseCase,
-        private readonly RemoveFromCartUseCase      $removeFromCartUseCase,
+        private readonly GetCartDataUseCase          $getCartDataUseCase,
+        private readonly SetCartDatesUseCase         $setCartDatesUseCase,
+        private readonly AddToCartUseCase            $addToCartUseCase,
+        private readonly AddPackToCartUseCase        $addPackToCartUseCase,
+        private readonly RemoveFromCartUseCase       $removeFromCartUseCase,
         private readonly RemovePackFromCartUseCase   $removePackFromCartUseCase,
         private readonly CheckoutUseCase             $checkoutUseCase,
         ...$parentDeps
@@ -46,7 +45,10 @@ class CartController extends SiteController
         );
 
         $this->render('site/cart', [
-            'meta'          => $this->metaBuilder->forCart(),
+            'meta'          => new PageMeta(
+                title:  $this->metaFormatter->title('Mon panier', $this->settings->get('site.name')),
+                robots: 'noindex, follow',
+            ),
             'cart'          => $this->cart,
             'cartProducts'  => $data['cartProducts'],
             'cartPacks'     => $data['cartPacks'],
@@ -140,7 +142,10 @@ class CartController extends SiteController
         }
 
         $this->render('site/checkout', [
-            'meta' => $this->metaBuilder->forCheckout(),
+            'meta' => new PageMeta(
+                title:  $this->metaFormatter->title('Finaliser ma réservation', $this->settings->get('site.name')),
+                robots: 'noindex, follow',
+            ),
             'cart' => $this->cart,
         ]);
     }
@@ -169,7 +174,10 @@ class CartController extends SiteController
     {
         $id = $this->request->queryString->getIntParam('id');
         $this->render('site/confirmation', [
-            'meta'          => $this->metaBuilder->forConfirmation(),
+            'meta'          => new PageMeta(
+                title:  $this->metaFormatter->title('Demande envoyée', $this->settings->get('site.name')),
+                robots: 'noindex, follow',
+            ),
             'reservationId' => $id,
         ]);
     }

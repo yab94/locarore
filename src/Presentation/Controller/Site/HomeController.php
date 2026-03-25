@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetHomePageDataUseCase;
-use Rore\Presentation\Seo\PageMetaBuilder;
+use Rore\Presentation\Seo\PageMeta;
 
 class HomeController extends SiteController
 {
     public function __construct(
         private readonly GetHomePageDataUseCase  $getHomePageDataUseCase,
-        private readonly PageMetaBuilder         $metaBuilder,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -24,7 +23,28 @@ class HomeController extends SiteController
         $products   = $data['products'];
         $tags       = $data['tags'];
         $featured   = array_slice($products, 0, 6);
-        $meta       = $this->metaBuilder->forHome($categories);
+
+        $siteName  = $this->settings->get('site.name');
+        $descParts = [$this->settings->get('site.tagline')];
+        foreach (array_slice($categories, 0, 4) as $cat) {
+            if ($cat->getDescriptionShort()) {
+                $descParts[] = $cat->getDescriptionShort();
+            }
+        }
+        $kw = [$siteName, 'location décoration', 'location matériel événement'];
+        foreach ($categories as $cat) {
+            $kw[] = $cat->getName();
+        }
+        $_og = $this->defaultOgImage();
+        $meta = new PageMeta(
+            title:         $this->metaFormatter->title('Location de décoration', $siteName),
+            description:   $this->metaFormatter->description(...$descParts),
+            keywords:      $this->metaFormatter->keywords($kw),
+            canonicalUrl:  $this->urlResolver->siteUrl() . '/',
+            ogImage:       $_og['url'],
+            ogImageWidth:  $_og['w'],
+            ogImageHeight: $_og['h'],
+        );
 
         $this->render('site/home', [
             'meta'          => $meta,

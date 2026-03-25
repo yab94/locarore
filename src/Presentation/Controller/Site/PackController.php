@@ -57,6 +57,7 @@ class PackController extends SiteController
             ogImage:       $ogImage,
             ogImageWidth:  $ogImageWidth,
             ogImageHeight: $ogImageHeight,
+            ogType:        'product',
         );
 
         $this->render('site/pack', [

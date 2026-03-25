@@ -6,14 +6,13 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetProductWithDetailsUseCase;
 use Rore\Application\Reservation\GetReservedQuantityForProductUseCase;
-use Rore\Presentation\Seo\PageMetaBuilder;
+use Rore\Presentation\Seo\PageMeta;
 
 class ProductController extends SiteController
 {
     public function __construct(
         private readonly GetProductWithDetailsUseCase           $getProductWithDetailsUseCase,
         private readonly GetReservedQuantityForProductUseCase   $getReservedQuantityForProductUseCase,
-        private readonly PageMetaBuilder                        $metaBuilder,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -59,7 +58,39 @@ class ProductController extends SiteController
         $catChain     = array_slice($breadcrumb, 0, -1);
         $mainCategory = $this->findCategoryById($product->getCategoryId(), $allCategories);
         $canonicalUrl = $this->urlResolver->siteUrl() . $this->urlResolver->productUrl($product, $allCategories, $mainCategory);
-        $meta         = $this->metaBuilder->forProduct($product, $category, $catChain, $canonicalUrl);
+
+        $titleParts = [$product->getName()];
+        foreach (array_reverse($catChain) as $crumb) {
+            $titleParts[] = $crumb->getName();
+        }
+        $titleParts[] = $this->settings->get('site.name');
+        $descParts = [];
+        if ($product->getDescription()) {
+            $descParts[] = $product->getDescription();
+        }
+        foreach ($catChain as $crumb) {
+            if ($crumb->getDescriptionShort()) {
+                $descParts[] = $crumb->getDescriptionShort();
+            }
+        }
+        if (empty($descParts)) {
+            $descParts[] = $product->getName()
+                . ($category ? ' — ' . $category->getName() : '')
+                . ' — ' . $this->settings->get('site.tagline');
+        }
+        $kw = [$product->getName(), 'location', $this->settings->get('site.name')];
+        foreach ($catChain as $crumb) {
+            $kw[] = $crumb->getName();
+        }
+        $mainPhoto = $product->getMainPhoto();
+        $meta = new PageMeta(
+            title:        $this->metaFormatter->title(...$titleParts),
+            description:  $this->metaFormatter->description(...$descParts),
+            keywords:     $this->metaFormatter->keywords($kw),
+            canonicalUrl: $canonicalUrl,
+            ogImage:      $mainPhoto !== null ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath() : '',
+            ogType:       'product',
+        );
 
         $this->render('site/product', [
             'meta'          => $meta,

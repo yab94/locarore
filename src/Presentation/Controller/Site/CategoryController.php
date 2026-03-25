@@ -6,14 +6,13 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetCategoryWithItemsUseCase;
-use Rore\Presentation\Seo\PageMetaBuilder;
+use Rore\Presentation\Seo\PageMeta;
 
 class CategoryController extends SiteController
 {
     public function __construct(
         private readonly GetCategoryWithItemsUseCase    $getCategoryWithItemsUseCase,
         private readonly GetAllActiveCategoriesUseCase  $getAllActiveCategoriesUseCase,
-        private readonly PageMetaBuilder                $metaBuilder,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -40,7 +39,33 @@ class CategoryController extends SiteController
         $allCategories = $this->getAllActiveCategoriesUseCase->execute();
         $children      = array_filter($allCategories, fn($c) => $c->getParentId() === $category->getId());
         $breadcrumb    = $this->buildBreadcrumb($category, $allCategories);
-        $meta          = $this->metaBuilder->forCategory($category, $breadcrumb, $allCategories);
+
+        $titleParts   = array_map(fn($c) => $c->getName(), array_reverse($breadcrumb));
+        $titleParts[] = $this->settings->get('site.name');
+        $descParts = [];
+        foreach ($breadcrumb as $crumb) {
+            if ($crumb->getDescriptionShort()) $descParts[] = $crumb->getDescriptionShort();
+        }
+        if (empty($descParts) && $category->getDescription()) {
+            $descParts[] = $category->getDescription();
+        }
+        if (empty($descParts)) {
+            $descParts[] = $category->getName() . ' — ' . $this->settings->get('site.tagline');
+        }
+        $kw = ['location', $this->settings->get('site.name')];
+        foreach ($breadcrumb as $crumb) {
+            $kw[] = $crumb->getName();
+        }
+        $_og = $this->defaultOgImage();
+        $meta = new PageMeta(
+            title:         $this->metaFormatter->title(...$titleParts),
+            description:   $this->metaFormatter->description(...$descParts),
+            keywords:      $this->metaFormatter->keywords($kw),
+            canonicalUrl:  $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
+            ogImage:       $_og['url'],
+            ogImageWidth:  $_og['w'],
+            ogImageHeight: $_og['h'],
+        );
 
         $this->render('site/category', [
             'meta'          => $meta,

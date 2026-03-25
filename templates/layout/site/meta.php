@@ -16,7 +16,7 @@ $meta = Rore\Presentation\Seo\PageMeta::cast($tpl->get('meta'));
     <link rel="canonical" href="<?= $html($meta->canonicalUrl) ?>">
     <?php endif; ?>
     <!-- Open Graph / Twitter Card -->
-    <meta property="og:type"        content="website">
+    <meta property="og:type"        content="<?= $html($meta->ogType) ?>">
     <meta property="og:locale"      content="fr_FR">
     <meta property="og:title"       content="<?= $html($meta->title) ?>">
     <?php if ($meta->description !== ''): ?>

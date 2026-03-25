@@ -6,6 +6,6 @@ Features
 
 - Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
 
-- Prendre des conseils SEO avec Claude voir ce qu'il pense du code
-
 - more test on each Domain Service
+
+Le pageMetaBuilder avec ses method forCeci forCela n'est pas bon, il faut que les Controller gere ça directement je pense
