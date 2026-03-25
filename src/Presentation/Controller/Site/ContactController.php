@@ -1,0 +1,73 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Rore\Presentation\Controller\Site;
+
+use Rore\Application\Contact\SendContactMessageUseCase;
+
+final class ContactController extends SiteController
+{
+    public function __construct(
+        private readonly SendContactMessageUseCase $sendContactMessage,
+        ...$parentDeps
+    ) {
+        parent::__construct(...$parentDeps);
+    }
+
+    public function index(): void
+    {
+        $this->render('site/contact', [
+            'meta' => (new \Rore\Presentation\Seo\PageMeta(
+                title: $this->settings->get('contact.page_title') ?: 'Contact',
+            )),
+        ]);
+    }
+
+    public function send(): void
+    {
+        $this->requirePost();
+
+        $firstName = trim($this->request->body->getStringParam('first_name'));
+        $lastName  = trim($this->request->body->getStringParam('last_name'));
+        $email     = trim($this->request->body->getStringParam('email'));
+        $phone     = trim($this->request->body->getStringParam('phone')) ?: null;
+        $subject   = trim($this->request->body->getStringParam('subject'));
+        $content   = trim($this->request->body->getStringParam('content'));
+
+        if ($firstName === '' || $lastName === '' || $email === '' || $subject === '' || $content === '') {
+            $this->flash('error', 'Veuillez remplir tous les champs obligatoires.');
+            $this->redirect($this->urlResolver->resolve('Site\Contact.index'));
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->flash('error', 'L\'adresse email n\'est pas valide.');
+            $this->redirect($this->urlResolver->resolve('Site\Contact.index'));
+        }
+
+        try {
+            $this->sendContactMessage->execute(
+                firstName: $firstName,
+                lastName:  $lastName,
+                email:     $email,
+                phone:     $phone,
+                subject:   $subject,
+                content:   $content,
+            );
+            $this->redirect($this->urlResolver->resolve('Site\Contact.confirmation'));
+        } catch (\Throwable) {
+            $this->flash('error', 'Une erreur est survenue. Veuillez réessayer.');
+            $this->redirect($this->urlResolver->resolve('Site\Contact.index'));
+        }
+    }
+
+    public function confirmation(): void
+    {
+        $this->render('site/contact-confirmation', [
+            'meta' => (new \Rore\Presentation\Seo\PageMeta(
+                title: 'Message envoyé',
+                robots: 'noindex, follow',
+            )),
+        ]);
+    }
+}

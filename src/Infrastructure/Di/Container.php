@@ -100,9 +100,12 @@ final class Container
         foreach ($constructor->getParameters() as $param) {
             $type = $param->getType();
 
-            // Paramètre variadic : résoudre TOUTES les deps de la chaîne d'héritage
+            // Paramètre variadic : résoudre TOUTES les deps de la chaîne d'héritage.
+            // On part de la classe qui DÉCLARE ce constructeur (pas de la classe buildée),
+            // sinon une classe héritant d'un constructeur variadic aurait ses params résolus en double.
             if ($param->isVariadic()) {
-                $parentArgs = $this->resolveParentDependencies($ref);
+                $declaringClass = new ReflectionClass($constructor->getDeclaringClass()->getName());
+                $parentArgs = $this->resolveParentDependencies($declaringClass);
                 array_push($args, ...$parentArgs);
                 continue;
             }

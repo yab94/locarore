@@ -40,6 +40,10 @@
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 Calendrier
             </a>
+            <a href="<?= $url('Admin\Message.index') ?>"
+               class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
+                ✉️ Messages
+            </a>
             <a href="<?= $url('Admin\Settings.index') ?>"
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 ✏️ Contenu

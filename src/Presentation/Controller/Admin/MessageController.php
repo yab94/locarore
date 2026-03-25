@@ -1,0 +1,75 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Rore\Presentation\Controller\Admin;
+
+use Rore\Application\Contact\DeleteContactMessageUseCase;
+use Rore\Application\Contact\GetContactMessageUseCase;
+use Rore\Application\Contact\GetContactMessagesUseCase;
+use Rore\Application\Contact\MarkMessageReadUseCase;
+use Rore\Application\Contact\MarkMessageUnreadUseCase;
+
+final class MessageController extends AdminController
+{
+    public function __construct(
+        private readonly GetContactMessagesUseCase $getMessages,
+        private readonly GetContactMessageUseCase  $getMessage,
+        private readonly MarkMessageReadUseCase    $markRead,
+        private readonly MarkMessageUnreadUseCase  $markUnread,
+        private readonly DeleteContactMessageUseCase $deleteMessage,
+        ...$parentDeps
+    ) {
+        parent::__construct(...$parentDeps);
+    }
+
+    public function index(): void
+    {
+        $messages = $this->getMessages->all();
+
+        $this->render('admin/messages/list', [
+            'title'    => 'Messages',
+            'messages' => $messages,
+        ]);
+    }
+
+    public function show(string $id): void
+    {
+        $id      = (int) $id;
+        $message = $this->getMessage->execute($id);
+
+        // Marquer automatiquement comme lu à l'ouverture
+        if (!$message->isRead()) {
+            $this->markRead->execute($id);
+        }
+
+        $this->render('admin/messages/show', [
+            'title'   => 'Message de ' . $message->getFullName(),
+            'message' => $message,
+        ]);
+    }
+
+    public function markRead(string $id): void
+    {
+        $this->requirePost();
+        $this->markRead->execute((int) $id);
+        $this->flash('success', 'Message marqué comme lu.');
+        $this->redirect($this->urlResolver->resolve('Admin\Message.index'));
+    }
+
+    public function markUnread(string $id): void
+    {
+        $this->requirePost();
+        $this->markUnread->execute((int) $id);
+        $this->flash('success', 'Message marqué comme non lu.');
+        $this->redirect($this->urlResolver->resolve('Admin\Message.index'));
+    }
+
+    public function delete(string $id): void
+    {
+        $this->requirePost();
+        $this->deleteMessage->execute((int) $id);
+        $this->flash('success', 'Message supprimé.');
+        $this->redirect($this->urlResolver->resolve('Admin\Message.index'));
+    }
+}
