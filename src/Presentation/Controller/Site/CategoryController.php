@@ -57,14 +57,15 @@ class CategoryController extends SiteController
             $kw[] = $crumb->getName();
         }
         $_og = $this->defaultOgImage();
+        
         $meta = new PageMeta(
-            title:         $this->metaFormatter->title(...$titleParts),
-            description:   $this->metaFormatter->description(...$descParts),
-            keywords:      $this->metaFormatter->keywords($kw),
-            canonicalUrl:  $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
-            ogImage:       $_og['url'],
-            ogImageWidth:  $_og['w'],
+            canonicalUrl: $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
+            ogImage: $_og['url'],
+            ogImageWidth: $_og['w'],
             ogImageHeight: $_og['h'],
+            title: $titleParts,
+            description: $descParts,
+            keywords: $kw,
         );
 
         $this->render('site/category', [

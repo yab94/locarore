@@ -37,14 +37,15 @@ class TagController extends SiteController
 
         $siteName = $this->settings->get('site.name');
         $_og = $this->defaultOgImage();
+        
         $meta = new PageMeta(
-            title:         $this->metaFormatter->title($tag->getName(), $siteName),
-            description:   'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
-            keywords:      implode(', ', ['location', $tag->getName(), $siteName]),
-            canonicalUrl:  $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
-            ogImage:       $_og['url'],
-            ogImageWidth:  $_og['w'],
+            canonicalUrl: $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
+            ogImage: $_og['url'],
+            ogImageWidth: $_og['w'],
             ogImageHeight: $_og['h'],
+            title: [$tag->getName(), $siteName],
+            description: ['Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName)],
+            keywords: ['location', $tag->getName(), $siteName],
         );
 
         $this->render('site/tag', [

@@ -83,13 +83,14 @@ class ProductController extends SiteController
             $kw[] = $crumb->getName();
         }
         $mainPhoto = $product->getMainPhoto();
+        
         $meta = new PageMeta(
-            title:        $this->metaFormatter->title(...$titleParts),
-            description:  $this->metaFormatter->description(...$descParts),
-            keywords:     $this->metaFormatter->keywords($kw),
             canonicalUrl: $canonicalUrl,
-            ogImage:      $mainPhoto !== null ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath() : '',
-            ogType:       'product',
+            ogImage: $mainPhoto !== null ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath() : '',
+            ogType: 'product',
+            title: $titleParts,
+            description: $descParts,
+            keywords: $kw,
         );
 
         $this->render('site/product', [

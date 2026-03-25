@@ -45,10 +45,13 @@ class CartController extends SiteController
         );
 
         $this->render('site/cart', [
-            'meta'          => new PageMeta(
-                title:  $this->metaFormatter->title('Mon panier', $this->settings->get('site.name')),
-                robots: 'noindex, follow',
-            ),
+            'meta' => (function() {
+                $meta = new PageMeta(
+                    robots: 'noindex, follow',
+                    title: ['Mon panier', $this->settings->get('site.name')],
+                );
+                return $meta;
+            })(),
             'cart'          => $this->cart,
             'cartProducts'  => $data['cartProducts'],
             'cartPacks'     => $data['cartPacks'],
@@ -142,10 +145,13 @@ class CartController extends SiteController
         }
 
         $this->render('site/checkout', [
-            'meta' => new PageMeta(
-                title:  $this->metaFormatter->title('Finaliser ma réservation', $this->settings->get('site.name')),
-                robots: 'noindex, follow',
-            ),
+            'meta' => (function() {
+                $meta = new PageMeta(
+                    robots: 'noindex, follow',
+                    title: ['Finaliser ma réservation', $this->settings->get('site.name')],
+                );
+                return $meta;
+            })(),
             'cart' => $this->cart,
         ]);
     }
@@ -174,10 +180,13 @@ class CartController extends SiteController
     {
         $id = $this->request->queryString->getIntParam('id');
         $this->render('site/confirmation', [
-            'meta'          => new PageMeta(
-                title:  $this->metaFormatter->title('Demande envoyée', $this->settings->get('site.name')),
-                robots: 'noindex, follow',
-            ),
+            'meta' => (function() {
+                $meta = new PageMeta(
+                    robots: 'noindex, follow',
+                    title: ['Demande envoyée', $this->settings->get('site.name')],
+                );
+                return $meta;
+            })(),
             'reservationId' => $id,
         ]);
     }

@@ -35,15 +35,12 @@ class HomeController extends SiteController
         foreach ($categories as $cat) {
             $kw[] = $cat->getName();
         }
-        $_og = $this->defaultOgImage();
+        
         $meta = new PageMeta(
-            title:         $this->metaFormatter->title('Location de décoration', $siteName),
-            description:   $this->metaFormatter->description(...$descParts),
-            keywords:      $this->metaFormatter->keywords($kw),
-            canonicalUrl:  $this->urlResolver->siteUrl() . '/',
-            ogImage:       $_og['url'],
-            ogImageWidth:  $_og['w'],
-            ogImageHeight: $_og['h'],
+            canonicalUrl: $this->urlResolver->siteUrl() . '/',
+            title: ['Location de décoration', $siteName],
+            description: $descParts,
+            keywords: $kw,
         );
 
         $this->render('site/home', [

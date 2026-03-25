@@ -8,7 +8,6 @@ use Rore\Application\Cart\CartSessionInterface;
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Presentation\Controller\Controller;
-use Rore\Presentation\Seo\MetaFormatter;
 
 /**
  * Base pour tous les contrôleurs du site public.
@@ -19,7 +18,6 @@ abstract class SiteController extends Controller
     public function __construct(
         readonly CartSessionInterface           $cart,
         readonly GetAllActiveCategoriesUseCase $getActiveCategories,
-        readonly MetaFormatter                 $metaFormatter,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
