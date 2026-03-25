@@ -51,7 +51,7 @@
 
 <!-- PRODUITS PHARES -->
 <?php if (!empty($featured)): ?>
-<section>
+<section class="mb-12">
     <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $html($settings->get('home.featured_title')) ?></h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($featured as $product): ?>
@@ -60,3 +60,14 @@
     </div>
 </section>
 <?php endif; ?>
+
+<!-- CTA CONTACT -->
+
+<section class="mt-10 bg-brand-50 border border-brand-200 rounded-2xl py-8 px-6 text-center" style="padding-bottom:3rem;">
+    <h2 class="text-2xl font-bold text-gray-800 mb-2">Vous avez un projet ou une question ?</h2>
+    <p class="text-gray-600 mb-6">Notre équipe est disponible pour vous accompagner et vous établir un devis sur mesure.</p>
+    <a href="<?= $url('Site\Contact.index') ?>"
+       class="inline-block bg-brand-600 text-white font-semibold px-8 py-3 rounded-xl hover:bg-brand-700 transition">
+        Contactez-nous
+    </a>
+</section>
