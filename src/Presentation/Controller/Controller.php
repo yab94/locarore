@@ -31,7 +31,7 @@ abstract class Controller
     protected function render(
         string $template,
         array  $data   = [],
-        string $layout = 'layout/base'
+        string $layout = 'layout/site'
     ): void {
         // Helpers globaux injectés dans chaque template
         $shared = [

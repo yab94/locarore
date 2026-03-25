@@ -43,10 +43,20 @@ class PackController extends SiteController
 
         $canonicalUrl = $this->urlResolver->siteUrl() . $this->config->getStringParam('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
 
+        $mainPhoto     = $mainProduct?->getMainPhoto();
+        $ogImage       = $mainPhoto !== null
+            ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath()
+            : $this->urlResolver->siteUrl() . '/assets/images/og-default.jpg';
+        $ogImageWidth  = $mainPhoto !== null ? 0 : 1200;
+        $ogImageHeight = $mainPhoto !== null ? 0 : 630;
+
         $meta = new PageMeta(
-            title:        $pack->getName() . ' — ' . $this->config->getStringParam('app.name'),
-            description:  $pack->getDescription() ?? ($pack->getName() . ' — pack de location'),
-            canonicalUrl: $canonicalUrl,
+            title:         $pack->getName() . ' — ' . $this->config->getStringParam('app.name'),
+            description:   $pack->getDescription() ?? ($pack->getName() . ' — pack de location'),
+            canonicalUrl:  $canonicalUrl,
+            ogImage:       $ogImage,
+            ogImageWidth:  $ogImageWidth,
+            ogImageHeight: $ogImageHeight,
         );
 
         $this->render('site/pack', [

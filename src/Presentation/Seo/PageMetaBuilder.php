@@ -44,11 +44,15 @@ final class PageMetaBuilder
             $kw[] = $cat->getName();
         }
 
+        $_og = $this->defaultOgImage();
         return new PageMeta(
-            title:        $this->meta->title('Location de décoration', $siteName),
-            description:  $this->meta->description(...$descParts),
-            keywords:     $this->meta->keywords($kw),
-            canonicalUrl: $this->urlResolver->siteUrl() . '/',
+            title:         $this->meta->title('Location de décoration', $siteName),
+            description:   $this->meta->description(...$descParts),
+            keywords:      $this->meta->keywords($kw),
+            canonicalUrl:  $this->urlResolver->siteUrl() . '/',
+            ogImage:       $_og['url'],
+            ogImageWidth:  $_og['w'],
+            ogImageHeight: $_og['h'],
         );
     }
 
@@ -84,11 +88,15 @@ final class PageMetaBuilder
             $kw[] = $crumb->getName();
         }
 
+        $_og = $this->defaultOgImage();
         return new PageMeta(
-            title:        $this->meta->title(...$titleParts),
-            description:  $this->meta->description(...$descParts),
-            keywords:     $this->meta->keywords($kw),
-            canonicalUrl: $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
+            title:         $this->meta->title(...$titleParts),
+            description:   $this->meta->description(...$descParts),
+            keywords:      $this->meta->keywords($kw),
+            canonicalUrl:  $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
+            ogImage:       $_og['url'],
+            ogImageWidth:  $_og['w'],
+            ogImageHeight: $_og['h'],
         );
     }
 
@@ -145,6 +153,16 @@ final class PageMetaBuilder
         );
     }
 
+    /** @return array{url: string, w: int, h: int} */
+    private function defaultOgImage(): array
+    {
+        return [
+            'url' => $this->urlResolver->siteUrl() . '/assets/images/og-default.jpg',
+            'w'   => 1200,
+            'h'   => 630,
+        ];
+    }
+
     public function forCart(): PageMeta
     {
         return new PageMeta(
@@ -172,11 +190,15 @@ final class PageMetaBuilder
     public function forTag(Tag $tag): PageMeta
     {
         $siteName = $this->settings->get('site.name');
+        $_og = $this->defaultOgImage();
         return new PageMeta(
-            title:        $this->meta->title($tag->getName(), $siteName),
-            description:  'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
-            keywords:     implode(', ', ['location', $tag->getName(), $siteName]),
-            canonicalUrl: $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
+            title:         $this->meta->title($tag->getName(), $siteName),
+            description:   'Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName),
+            keywords:      implode(', ', ['location', $tag->getName(), $siteName]),
+            canonicalUrl:  $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
+            ogImage:       $_og['url'],
+            ogImageWidth:  $_og['w'],
+            ogImageHeight: $_og['h'],
         );
     }
 }
