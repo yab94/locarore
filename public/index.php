@@ -29,9 +29,6 @@ $container->bind(\Rore\Framework\FileManagerInterface::class, fn() => new \Rore\
     maxSize:      (int) $config->getString('upload.max_size'),
     allowedTypes: $config->getString('upload.allowed_types'),
 ));
-$container->bind(\Rore\Framework\UrlResolver::class, fn() => new \Rore\Framework\UrlResolver(
-    controllerNamespace: $config->getString('routes.controller_namespace'),
-));
 
 // ── Database ────────────────────────────────────────────────────────────────
 $container->bind(\Rore\Framework\Database::class, fn() => new \Rore\Framework\Database(...$config->getArray('database')));
@@ -65,7 +62,7 @@ $routes = $scanner->getRoutes();
 $router = $container->get(\Rore\Framework\Router::class);
 $router->loadRoutes($routes);
 
-$container->get(\Rore\Framework\UrlResolver::class)->loadRoutes($routes);
+$container->get(\Rore\Framework\UrlResolver::class)->loadRoutes('Rore\Presentation\Controller', $routes);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

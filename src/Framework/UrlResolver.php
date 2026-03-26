@@ -14,28 +14,8 @@ class UrlResolver
 {
     use Castable;
 
-    /**
-     * Double index :
-     *   "FQCN.method"         → path pattern  (ex: resolve() avec ::class)
-     *   "Admin\Category.edit" → path pattern  (ex: $url() alias court)
-     *
-     * @var array<string, string>
-     */
     private array $handlerToPath = [];
 
-    public function __construct(private string $controllerNamespace)
-    {}
-
-    /**
-     * Résout l'URL d'un handler.
-     *
-     * Accepte deux formes :
-     *   - FQCN complète : "Rore\...\CategoryController.edit"
-     *   - Alias court   : "Admin\Category.edit"
-     *
-     * @param array<string, string|int> $params
-     * @throws \InvalidArgumentException si le handler est introuvable
-     */
     public function resolve(string $handler, array $params = []): string
     {
         $path = $this->handlerToPath[$handler] ?? null;
@@ -50,23 +30,12 @@ class UrlResolver
         );
     }
 
-    /**
-     * Raccourci invokable pour les templates : $url('Admin\Category.edit', [...])
-     *
-     * @param array<string, string|int> $params
-     */
     public function __invoke(string $handler, array $params = []): string
     {
         return $this->resolve($handler, $params);
     }
 
-    /**
-     * Charge les routes collectées par RouteScanner.
-     * GET est prioritaire sur POST pour la génération de liens.
-     *
-     * @param array<array{method: string, path: string, handler: string}> $routes
-     */
-    public function loadRoutes(array $routes): void
+    public function loadRoutes(string $controllerNamespace, array $routes): void
     {
         // POST en premier, GET écrase (GET prioritaire)
         usort($routes, fn($a, $b) => ($a['method'] === 'GET' ? 1 : 0) - ($b['method'] === 'GET' ? 1 : 0));
@@ -74,25 +43,19 @@ class UrlResolver
             $fqcn  = $route['handler'];
             $path  = $route['path'];
             $this->handlerToPath[$fqcn] = $path;
-            $short = $this->buildRouteName($fqcn);
+            $short = $this->buildRouteName($controllerNamespace, $fqcn);
             if ($short !== $fqcn) {
                 $this->handlerToPath[$short] = $path;
             }
         }
     }
 
-    /**
-     * Construit l'alias court d'un handler FQCN.
-     * Le namespace de base est lu depuis config : routes.controller_namespace
-     *
-     * Ex: "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
-     */
-    protected function buildRouteName(string $handler): string
+    protected function buildRouteName(string $controllerNamespace, string $handler): string
     {
-        if ($this->controllerNamespace === '' || !str_starts_with($handler, $this->controllerNamespace . '\\')) {
+        if ($controllerNamespace === '' || !str_starts_with($handler, $controllerNamespace . '\\')) {
             return $handler;
         }
-        $short = substr($handler, strlen($this->controllerNamespace) + 1);
+        $short = substr($handler, strlen($controllerNamespace) + 1);
         return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
     }
 }
