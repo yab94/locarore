@@ -4,7 +4,7 @@ use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Infrastructure\Session\CartSession;
+use Rore\Domain\Cart\Service\CartService;
 
 $html            = HtmlHelper::cast($tpl->get('html'));
 $url             = UrlResolver::cast($tpl->get('url'));
@@ -14,7 +14,7 @@ $productsById    = Cast::array($tpl->tryGet('productsById', []));
 $mainProduct     = Product::castOrNull($tpl->tryGet('mainProduct'));
 $slotsWithProducts = Cast::array($tpl->tryGet('slotsWithProducts', []));
 $packSelections  = Cast::array($tpl->tryGet('packSelections', []));
-$cart            = CartSession::cast($tpl->get('cart'));
+$cart            = CartService::cast($tpl->get('cart'));
 // $partial is injected by the Template engine — not a param
 ?>
 <?= $partial('partials/breadcrumb') ?>

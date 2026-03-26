@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Mail;
+namespace Rore\Framework;
 
 use Rore\Framework\Config;
-use Rore\Application\Mail\MailerInterface;
+use Rore\Framework\MailerInterface;
 use RuntimeException;
 
 /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Application\Mail;
+namespace Rore\Framework;
 
 interface MailerInterface
 {

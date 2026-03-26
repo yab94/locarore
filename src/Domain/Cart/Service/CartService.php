@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Session;
+namespace Rore\Domain\Cart\Service;
 
-use Rore\Application\Cart\CartSessionInterface;
-use Rore\Framework\SessionStorageInterface;
 use Rore\Framework\Castable;
+use Rore\Framework\SessionStorageInterface;
 
-final class CartSession implements CartSessionInterface
+final class CartService
 {
     use Castable;
     private const KEY = 'rore_cart';

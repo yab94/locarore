@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Contact;
 
-use Rore\Application\Mail\MailerInterface;
+use Rore\Framework\MailerInterface;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;

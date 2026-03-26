@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart;
 
+use Rore\Domain\Cart\Service\CartService;
+
 class SetCartDatesUseCase
 {
     public function __construct(
-        private CartSessionInterface $cart,
+        private CartService $cart,
     ) {}
 
     public function execute(string $startDate, string $endDate): void

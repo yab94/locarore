@@ -4,7 +4,7 @@ use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Framework\Config;
-use Rore\Infrastructure\Session\CartSession;
+use Rore\Domain\Cart\Service\CartService;
 use Rore\Domain\Shared\ValueObject\DateRange;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
@@ -12,7 +12,7 @@ $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
-$cart          = CartSession::cast($tpl->get('cart'));
+$cart          = CartService::cast($tpl->get('cart'));
 $cartDateRange = DateRange::castOrNull($tpl->tryGet('cartDateRange'));
 $cartProducts  = Cast::array($tpl->tryGet('cartProducts', []));
 $cartPacks     = Cast::array($tpl->tryGet('cartPacks', []));

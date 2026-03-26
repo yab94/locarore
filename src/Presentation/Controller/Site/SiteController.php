@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Cart\CartSessionInterface;
+use Rore\Domain\Cart\Service\CartService;
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Presentation\Controller\Controller;
@@ -16,7 +16,7 @@ use Rore\Presentation\Controller\Controller;
 abstract class SiteController extends Controller
 {
     public function __construct(
-        readonly CartSessionInterface           $cart,
+        readonly CartService                    $cart,
         readonly GetAllActiveCategoriesUseCase $getActiveCategories,
         ...$parentDeps
     ) {

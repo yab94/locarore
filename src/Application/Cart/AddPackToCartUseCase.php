@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart;
 
-use Rore\Application\Cart\CartSessionInterface;
+use Rore\Domain\Cart\Service\CartService;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Service\AvailabilityService;
@@ -12,7 +12,7 @@ use Rore\Domain\Reservation\Service\AvailabilityService;
 class AddPackToCartUseCase
 {
     public function __construct(
-        private CartSessionInterface        $cart,
+        private CartService                 $cart,
         private PackRepositoryInterface    $packRepository,
         private ProductRepositoryInterface $productRepository,
         private AvailabilityService        $availabilityService,
