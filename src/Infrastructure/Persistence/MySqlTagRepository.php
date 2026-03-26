@@ -7,11 +7,16 @@ namespace Rore\Infrastructure\Persistence;
 use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
+use Rore\Framework\Config;
 use Rore\Framework\Database;
+use Rore\Framework\From;
 
 class MySqlTagRepository implements TagRepositoryInterface
 {
-    public function __construct(private readonly Database $connection) {}
+    public function __construct(
+        #[From(static function(Config $c) { return $c->getArray('database'); })]
+        private readonly Database $connection
+    ) {}
 
     /** @return Tag[] */
     public function findAll(): array

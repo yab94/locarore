@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Framework;
 
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionNamedType;
 use RuntimeException;
 
@@ -110,6 +111,15 @@ final class Container
                 continue;
             }
 
+            // Paramètre annoté #[From] → closure auto-wirée fournit les args
+            $fromAttrs = $param->getAttributes(From::class);
+            if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                /** @var From $from */
+                $from   = $fromAttrs[0]->newInstance();
+                $args[] = $this->resolveFromAttribute($from, $type->getName());
+                continue;
+            }
+
             if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 $args[] = $this->get($type->getName());
             } elseif ($param->isDefaultValueAvailable()) {
@@ -125,6 +135,46 @@ final class Container
 
         /** @var T */
         return $ref->newInstanceArgs($args);
+    }
+
+    /**
+     * Résout un paramètre annoté #[From] :
+     * - appelle la closure avec ses dépendances auto-wirées
+     * - construit (ou récupère depuis le cache) l'instance cible
+     *
+     * Clé de cache = FQCN + ':' + md5(serialize(args))
+     * → deux #[From] produisant des résultats différents donnent
+     *   deux instances distinctes (ex: connexion principale vs réplique).
+     */
+    private function resolveFromAttribute(From $from, string $className): object
+    {
+        // 1. Auto-wirer les dépendances de la closure
+        $refFn      = new ReflectionFunction($from->resolver);
+        $closureArgs = [];
+        foreach ($refFn->getParameters() as $p) {
+            $t = $p->getType();
+            if ($t instanceof ReflectionNamedType && !$t->isBuiltin()) {
+                $closureArgs[] = $this->get($t->getName());
+            } elseif ($p->isDefaultValueAvailable()) {
+                $closureArgs[] = $p->getDefaultValue();
+            }
+        }
+
+        // 2. Appeler la closure → tableau d'args nommés pour le constructeur cible
+        $constructorArgs = ($from->resolver)(...$closureArgs);
+
+        // 3. Clé de cache : FQCN + empreinte des args
+        $cacheKey = $className . ':' . md5(serialize($constructorArgs));
+
+        if (isset($this->instances[$cacheKey])) {
+            return $this->instances[$cacheKey];
+        }
+
+        // 4. Construire l'instance avec named args spread (PHP 8+)
+        $instance = (new ReflectionClass($className))->newInstance(...$constructorArgs);
+        $this->instances[$cacheKey] = $instance;
+
+        return $instance;
     }
 
     /**

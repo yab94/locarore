@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
+use Rore\Framework\Config;
 use Rore\Framework\Database;
+use Rore\Framework\From;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
@@ -14,9 +16,10 @@ class MySqlProductRepository implements ProductRepositoryInterface
 {
 
 
-    public function __construct(private readonly Database $connection)
-    {
-    }
+    public function __construct(
+        #[From(static function(Config $c) { return $c->getArray('database'); })]
+        private readonly Database $connection
+    ) {}
 
     public function findAll(): array
     {
