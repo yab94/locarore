@@ -19,8 +19,9 @@ class Typable
 
     public function get(string $key, mixed $default = null): mixed
     {
-        $value = $this->data[$key] ?? self::missing();
-        if ($value === self::$MISSING) {
+        $missing = self::missing();
+        $value   = array_key_exists($key, $this->data) ? $this->data[$key] : $missing;
+        if ($value === $missing) {
             if (func_num_args() < 2) {
                 throw new \InvalidArgumentException("Param '$key' is required.");
             }
