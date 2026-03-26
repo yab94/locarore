@@ -59,18 +59,11 @@ class FileUploader implements FileManagerInterface
             'image/jpeg' => 'jpg',
             'image/png'  => 'png',
             'image/webp' => 'webp',
+            'image/bmp'  => 'bmp',
+            'image/gif'  => 'gif',
+            'image/tiff' => 'tiff',
             default      => throw new \RuntimeException("Extension inconnue pour $mimeType."),
         };
-
-            $ext = match($mimeType) {
-                'image/jpeg' => 'jpg',
-                'image/png'  => 'png',
-                'image/webp' => 'webp',
-                'image/bmp'  => 'bmp',
-                'image/gif'  => 'gif',
-                'image/tiff' => 'tiff',
-                default      => throw new \RuntimeException("Extension inconnue pour $mimeType."),
-            };
 
         $filename    = uniqid('photo_', true) . '.' . $ext;
         $destination = $this->uploadDir . '/' . $filename;
@@ -80,9 +73,9 @@ class FileUploader implements FileManagerInterface
         }
 
         // Resize image if needed (except webp, already optimized)
-            if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/tiff'], true)) {
-                $this->resizeImage($destination, $mimeType, $this->maxWidth, $this->maxHeight);
-            }
+        if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/tiff'], true)) {
+            $this->resizeImage($destination, $mimeType, $this->maxWidth, $this->maxHeight);
+        }
 
         // Conversion WebP via GD natif (sauf si déjà webp)
         if ($mimeType !== 'image/webp') {
