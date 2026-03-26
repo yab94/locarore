@@ -5,31 +5,31 @@ declare(strict_types=1);
 // ─── Constante racine ─────────────────────────────────────────────────────────
 define('BASE_PATH', dirname(__DIR__));
 
-require BASE_PATH . '/src/Framework/Autoloader.php';
+require BASE_PATH . '/src/Framework/Bootstrap/Autoloader.php';
 
-\Rore\Framework\Autoloader::register('Rore\\', BASE_PATH);
-\Rore\Framework\Env::load(BASE_PATH);
+\Rore\Framework\Bootstrap\Autoloader::register('Rore\\', BASE_PATH);
+\Rore\Framework\Bootstrap\Env::load(BASE_PATH);
 
-$config = new \Rore\Framework\Config(['BASE_PATH' => BASE_PATH]);
+$config = new \Rore\Framework\Bootstrap\Config(['BASE_PATH' => BASE_PATH]);
 $config->parseIni(BASE_PATH . '/config/default.ini');
 $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini');
 
-\Rore\Framework\PhpRuntime::apply($config->getArray('php') ?? []);
+\Rore\Framework\Bootstrap\PhpRuntime::apply($config->getArray('php') ?? []);
 
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
-$container = new \Rore\Framework\Container();
-$container->bind(\Rore\Framework\Config::class, $config);
+$container = new \Rore\Framework\Di\Container();
+$container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
 
 // ── Framework ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\SessionStorageInterface::class,   \Rore\Framework\PhpSessionStorage::class);
-$container->bind(\Rore\Framework\CsrfTokenManagerInterface::class, \Rore\Framework\CsrfTokenManager::class);
-$container->bind(\Rore\Framework\MailerInterface::class,           \Rore\Framework\SmtpMailer::class);
-$container->bind(\Rore\Framework\FileManagerInterface::class, fn() => new \Rore\Framework\FileUploader(
+$container->bind(\Rore\Framework\Session\SessionStorageInterface::class,   \Rore\Framework\Session\PhpSessionStorage::class);
+$container->bind(\Rore\Framework\Security\CsrfTokenManagerInterface::class, \Rore\Framework\Security\CsrfTokenManager::class);
+$container->bind(\Rore\Framework\Mail\MailerInterface::class,           \Rore\Framework\Mail\SmtpMailer::class);
+$container->bind(\Rore\Framework\Storage\FileManagerInterface::class, fn() => new \Rore\Framework\Storage\FileUploader(
     uploadDir:    BASE_PATH . '/public' . $config->getString('upload.upload_path'),
     maxSize:      (int) $config->getString('upload.max_size'),
     allowedTypes: $config->getString('upload.allowed_types'),
 ));
-$container->bind(\Rore\Framework\SmtpMailer::class, fn() => new \Rore\Framework\SmtpMailer(
+$container->bind(\Rore\Framework\Mail\SmtpMailer::class, fn() => new \Rore\Framework\Mail\SmtpMailer(
     host:       $config->getString('smtp.host'),
     port:       $config->getInt('smtp.port', 587),
     encryption: strtolower($config->getString('smtp.encryption', 'tls')),
@@ -40,7 +40,7 @@ $container->bind(\Rore\Framework\SmtpMailer::class, fn() => new \Rore\Framework\
 ));
 
 // ── Database ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\Database::class, fn() => new \Rore\Framework\Database(...$config->getArray('database')));
+$container->bind(\Rore\Framework\Database\Database::class, fn() => new \Rore\Framework\Database\Database(...$config->getArray('database')));
 
 // ── Repositories ─────────────────────────────────────────────────────────────
 $container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       \Rore\Infrastructure\Persistence\MySqlCategoryRepository::class);
@@ -61,14 +61,14 @@ $container->bind(\Rore\Presentation\Seo\SlugResolver::class, fn() => new \Rore\P
 ));
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
-$scanner = new \Rore\Framework\RouteScanner();
+$scanner = new \Rore\Framework\Http\RouteScanner();
 $scanner->scan(BASE_PATH . '/src/Presentation/Controller', 'Rore\Presentation\Controller');
 $routes = $scanner->getRoutes();
 
-$router = $container->get(\Rore\Framework\Router::class);
+$router = $container->get(\Rore\Framework\Http\Router::class);
 $router->loadRoutes($routes);
 
-$container->get(\Rore\Framework\UrlResolver::class)->loadRoutes('Rore\Presentation\Controller', $routes);
+$container->get(\Rore\Framework\Http\UrlResolver::class)->loadRoutes('Rore\Presentation\Controller', $routes);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

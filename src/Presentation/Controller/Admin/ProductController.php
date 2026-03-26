@@ -13,7 +13,7 @@ use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
-use Rore\Framework\Route;
+use Rore\Framework\Http\Route;
 
 class ProductController extends AdminController
 {

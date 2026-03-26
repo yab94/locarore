@@ -7,7 +7,7 @@ namespace Rore\Infrastructure\Persistence;
 use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Framework\Database;
+use Rore\Framework\Database\Database;
 
 class MySqlTagRepository implements TagRepositoryInterface
 {

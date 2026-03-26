@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Reservation\Entity;
 
-use Rore\Framework\Castable;
+use Rore\Framework\Support\Castable;
 
 class Reservation
 {

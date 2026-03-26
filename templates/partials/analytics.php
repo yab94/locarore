@@ -1,6 +1,6 @@
 <?php
-/** @var \Rore\Framework\Config $config */
-$config = \Rore\Framework\Config::cast($this->get('config'));
+/** @var \Rore\Framework\Bootstrap\Config $config */
+$config = \Rore\Framework\Bootstrap\Config::cast($this->get('config'));
 
 $gaId = $config->getString('analytics.ga_measurement_id', '');
 

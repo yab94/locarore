@@ -1,7 +1,7 @@
 <?php
-$breadcrumb = Rore\Framework\Cast::array($tpl->get('breadcrumb'));
-$allCategories = Rore\Framework\Cast::array($tpl->get('allCategories'));
-$html = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
+$breadcrumb = Rore\Framework\Support\Cast::array($tpl->get('breadcrumb'));
+$allCategories = Rore\Framework\Support\Cast::array($tpl->get('allCategories'));
+$html = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
 $finalCrumb = array_pop($breadcrumb);
 ?>
 <nav class="text-sm text-gray-500 mb-6 flex flex-wrap items-center gap-1">

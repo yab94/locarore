@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog;
 
-use Rore\Framework\FileManagerInterface;
+use Rore\Framework\Storage\FileManagerInterface;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 

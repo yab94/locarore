@@ -12,7 +12,7 @@ use Rore\Application\Catalog\GetPackByIdUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
 
-use Rore\Framework\Route;
+use Rore\Framework\Http\Route;
 class PackController extends AdminController
 {
     public function __construct(

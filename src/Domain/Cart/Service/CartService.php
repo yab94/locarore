@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Cart\Service;
 
-use Rore\Framework\Castable;
-use Rore\Framework\SessionStorageInterface;
+use Rore\Framework\Support\Castable;
+use Rore\Framework\Session\SessionStorageInterface;
 
 final class CartService
 {

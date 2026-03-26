@@ -7,7 +7,7 @@ namespace Rore\Presentation\Seo;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Framework\Castable;
+use Rore\Framework\Support\Castable;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.

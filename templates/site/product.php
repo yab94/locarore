@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\HtmlHelper;
-use Rore\Framework\UrlResolver;
-use Rore\Framework\Cast;
+use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\Http\UrlResolver;
+use Rore\Framework\Support\Cast;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Framework\Config;
+use Rore\Framework\Bootstrap\Config;
 use Rore\Domain\Cart\ValueObject\CartState;
 
 $html          = HtmlHelper::cast($tpl->get('html'));

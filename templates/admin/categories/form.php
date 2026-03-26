@@ -1,8 +1,8 @@
 <?php
-use Rore\Framework\HtmlHelper;
-use Rore\Framework\UrlResolver;
-use Rore\Framework\Cast;
-use Rore\Framework\Config;
+use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\Http\UrlResolver;
+use Rore\Framework\Support\Cast;
+use Rore\Framework\Bootstrap\Config;
 use Rore\Domain\Catalog\Entity\Category;
 
 $html       = HtmlHelper::cast($tpl->get('html'));

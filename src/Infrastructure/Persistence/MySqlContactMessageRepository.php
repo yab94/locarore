@@ -6,7 +6,7 @@ namespace Rore\Infrastructure\Persistence;
 
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
-use Rore\Framework\Database;
+use Rore\Framework\Database\Database;
 
 final class MySqlContactMessageRepository implements ContactMessageRepositoryInterface
 {

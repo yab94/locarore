@@ -7,7 +7,7 @@ namespace Rore\Presentation\Controller;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Presentation\Seo\SlugResolver;
 
-abstract class Controller extends \Rore\Framework\Controller
+abstract class Controller extends \Rore\Framework\Http\Controller
 {
     public function __construct(
         readonly GetSettingUseCase $settings,

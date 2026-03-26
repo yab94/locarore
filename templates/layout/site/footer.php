@@ -1,6 +1,6 @@
 <?php
-$html     = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
-$url      = Rore\Framework\UrlResolver::cast($tpl->get('url'));
+$html     = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
+$url      = Rore\Framework\Http\UrlResolver::cast($tpl->get('url'));
 $settings = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));
 ?>
 <footer class="bg-gray-900 mt-auto">

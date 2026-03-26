@@ -10,7 +10,7 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Domain\Catalog\Repository\SearchRepositoryInterface;
-use Rore\Framework\Database;
+use Rore\Framework\Database\Database;
 
 class MySqlSearchRepository implements SearchRepositoryInterface
 {

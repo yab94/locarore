@@ -1,6 +1,6 @@
 <?php
-use Rore\Framework\HtmlHelper;
-use Rore\Framework\UrlResolver;
+use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\Http\UrlResolver;
 use Rore\Application\Settings\GetSettingUseCase;
 
 $html     = HtmlHelper::cast($tpl->get('html'));

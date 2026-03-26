@@ -6,7 +6,7 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Presentation\Controller\Controller;
 
-use Rore\Framework\Route;
+use Rore\Framework\Http\Route;
 class AuthController extends Controller
 {
     #[Route('GET', '/admin')]

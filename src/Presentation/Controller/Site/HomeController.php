@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetHomePageDataUseCase;
-use Rore\Framework\PageMeta;
-use Rore\Framework\Route;
+use Rore\Framework\View\PageMeta;
+use Rore\Framework\Http\Route;
 
 class HomeController extends SiteController
 {

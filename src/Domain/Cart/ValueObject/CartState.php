@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Cart\ValueObject;
 
-use Rore\Framework\Castable;
+use Rore\Framework\Support\Castable;
 
 /**
  * Snapshot read-only de l'état du panier, destiné aux vues.

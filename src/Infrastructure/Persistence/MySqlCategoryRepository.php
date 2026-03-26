@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Framework\Database;
+use Rore\Framework\Database\Database;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 

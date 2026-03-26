@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Contact\SendContactMessageUseCase;
-use Rore\Framework\Route;
+use Rore\Framework\Http\Route;
 
 final class ContactController extends SiteController
 {
@@ -20,7 +20,7 @@ final class ContactController extends SiteController
     public function index(): void
     {
         $this->render('site/contact', [
-            'meta' => (new \Rore\Framework\PageMeta(
+            'meta' => (new \Rore\Framework\View\PageMeta(
                 title: $this->settings->get('contact.page_title') ?: 'Contact',
             )),
         ]);
@@ -73,7 +73,7 @@ final class ContactController extends SiteController
     public function confirmation(): void
     {
         $this->render('site/contact-confirmation', [
-            'meta' => (new \Rore\Framework\PageMeta(
+            'meta' => (new \Rore\Framework\View\PageMeta(
                 title: 'Message envoyé',
                 robots: 'noindex, follow',
             )),

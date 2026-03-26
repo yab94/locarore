@@ -6,9 +6,9 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetTagWithItemsUseCase;
-use Rore\Framework\PageMeta;
+use Rore\Framework\View\PageMeta;
 
-use Rore\Framework\Route;
+use Rore\Framework\Http\Route;
 class TagController extends SiteController
 {
     public function __construct(
