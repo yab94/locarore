@@ -92,6 +92,15 @@ $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() ==
         <!-- Actions -->
         <div class="flex items-center gap-4 shrink-0">
 
+            <!-- Recherche (mobile uniquement) -->
+            <a href="/recherche" title="Rechercher"
+               class="md:hidden text-gray-700 hover:text-brand-700 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+                </svg>
+            </a>
+
             <!-- Contact -->
             <a href="<?= $url('Site\Contact.index') ?>" title="Nous contacter"
                class="text-gray-700 hover:text-brand-700 transition-colors">

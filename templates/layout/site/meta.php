@@ -41,4 +41,4 @@ $meta = Rore\Framework\PageMeta::cast($tpl->get('meta'));
     <meta name="twitter:description" content="<?= $html($meta->description) ?>">
     <?php endif; ?>
     <link rel="icon" type="image/png" href="/assets/images/favicon.png">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/app.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . '/assets/css/app.css') ?>">
