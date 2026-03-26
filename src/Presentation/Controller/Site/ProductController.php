@@ -45,9 +45,8 @@ class ProductController extends SiteController
             : [];
         $breadcrumb[] = $product;   // Le produit lui-même en dernier
 
-        $cart      = $this->session->get('rore_cart');
-        $startDate = $cart['start_date'] ?? null;
-        $endDate   = $cart['end_date']   ?? null;
+        $startDate = $this->cart->getStartDate();
+        $endDate   = $this->cart->getEndDate();
 
         $availableQty = $product->getTotalStock();
         if ($startDate && $endDate) {
@@ -99,7 +98,6 @@ class ProductController extends SiteController
             'category'      => $category,
             'breadcrumb'    => $breadcrumb,
             'availableQty'  => $availableQty,
-            'cart'          => $cart,
             'allCategories' => $allCategories,
         ]);
     }
