@@ -9,8 +9,6 @@ use Rore\Framework\Storage\FileManagerInterface;
 class FileUploader implements FileManagerInterface
 {
     private array $allowedTypes;
-    private int $maxWidth;
-    private int $maxHeight;
 
     /**
      * @param string $uploadDir
@@ -22,11 +20,10 @@ class FileUploader implements FileManagerInterface
         private string $uploadDir,
         private int    $maxSize,
         string         $allowedTypes,
-        ?array         $maxDimensions = null,
+        private int $maxWidth,
+        private int $maxHeight,
     ) {
         $this->allowedTypes = array_map('trim', explode(',', $allowedTypes));
-        $this->maxWidth  = $maxDimensions[0] ?? 1200;
-        $this->maxHeight = $maxDimensions[1] ?? 1200;
 
         if (!is_dir($this->uploadDir)) {
             mkdir($this->uploadDir, 0755, true);
@@ -65,6 +62,16 @@ class FileUploader implements FileManagerInterface
             default      => throw new \RuntimeException("Extension inconnue pour $mimeType."),
         };
 
+            $ext = match($mimeType) {
+                'image/jpeg' => 'jpg',
+                'image/png'  => 'png',
+                'image/webp' => 'webp',
+                'image/bmp'  => 'bmp',
+                'image/gif'  => 'gif',
+                'image/tiff' => 'tiff',
+                default      => throw new \RuntimeException("Extension inconnue pour $mimeType."),
+            };
+
         $filename    = uniqid('photo_', true) . '.' . $ext;
         $destination = $this->uploadDir . '/' . $filename;
 
@@ -73,9 +80,9 @@ class FileUploader implements FileManagerInterface
         }
 
         // Resize image if needed (except webp, already optimized)
-        if ($mimeType === 'image/jpeg' || $mimeType === 'image/png') {
-            $this->resizeImage($destination, $mimeType, $this->maxWidth, $this->maxHeight);
-        }
+            if (in_array($mimeType, ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/tiff'], true)) {
+                $this->resizeImage($destination, $mimeType, $this->maxWidth, $this->maxHeight);
+            }
 
         // Conversion WebP via GD natif (sauf si déjà webp)
         if ($mimeType !== 'image/webp') {
@@ -97,6 +104,9 @@ class FileUploader implements FileManagerInterface
         $srcImg = match($mimeType) {
             'image/jpeg' => imagecreatefromjpeg($filePath),
             'image/png'  => imagecreatefrompng($filePath),
+            'image/bmp'  => function_exists('imagecreatefrombmp') ? imagecreatefrombmp($filePath) : null,
+            'image/gif'  => imagecreatefromgif($filePath),
+            'image/tiff' => function_exists('imagecreatefromtiff') ? imagecreatefromtiff($filePath) : null, // GD ne supporte pas nativement TIFF
             default      => null,
         };
         if (!$srcImg) return;
@@ -115,6 +125,9 @@ class FileUploader implements FileManagerInterface
         match($mimeType) {
             'image/jpeg' => imagejpeg($dstImg, $filePath, 90),
             'image/png'  => imagepng($dstImg, $filePath, 6),
+            'image/bmp'  => function_exists('imagebmp') ? imagebmp($dstImg, $filePath) : null,
+            'image/gif'  => imagegif($dstImg, $filePath),
+            'image/tiff' => null, // Pas de support natif
         };
     }
 
@@ -127,6 +140,9 @@ class FileUploader implements FileManagerInterface
         $img = match($mimeType) {
             'image/jpeg' => imagecreatefromjpeg($sourcePath),
             'image/png'  => imagecreatefrompng($sourcePath),
+            'image/bmp'  => function_exists('imagecreatefrombmp') ? imagecreatefrombmp($sourcePath) : null,
+            'image/gif'  => imagecreatefromgif($sourcePath),
+            'image/tiff' => function_exists('imagecreatefromtiff') ? imagecreatefromtiff($sourcePath) : null, // GD ne supporte pas nativement TIFF
             default      => null,
         };
 
@@ -135,8 +151,8 @@ class FileUploader implements FileManagerInterface
             return basename($sourcePath);
         }
 
-        // Préserver la transparence PNG
-        if ($mimeType === 'image/png') {
+        // Préserver la transparence PNG et GIF
+        if (in_array($mimeType, ['image/png', 'image/gif'], true)) {
             imagepalettetotruecolor($img);
             imagealphablending($img, true);
             imagesavealpha($img, true);
