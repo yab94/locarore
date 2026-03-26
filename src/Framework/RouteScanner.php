@@ -8,32 +8,29 @@ use ReflectionClass;
 use ReflectionMethod;
 
 /**
- * Scanne récursivement un répertoire de controllers et collecte
+ * Scanne récursivement un ou plusieurs répertoires de controllers et collecte
  * toutes les méthodes annotées avec #[Route].
  *
- * Retourne un tableau de routes :
- *   [['method' => 'GET', 'path' => '/panier', 'handler' => 'FQCN.methodName'], ...]
+ * Usage :
+ *   $scanner->scan($dir1, $ns1);
+ *   $scanner->scan($dir2, $ns2);
+ *   $routes = $scanner->getRoutes();
  */
 final class RouteScanner
 {
+    /** @var array<array{method: string, path: string, handler: string}> */
+    private array $routes = [];
+
     /**
+     * Scanne $baseDir et accumule les routes trouvées.
+     *
      * @param string $baseDir       Chemin absolu du répertoire racine des controllers
      * @param string $baseNamespace Namespace PHP correspondant (ex: "Rore\Presentation\Controller")
      */
-    public function __construct(
-        private readonly string $baseDir,
-        private readonly string $baseNamespace,
-    ) {}
-
-    /**
-     * @return array<array{method: string, path: string, handler: string}>
-     */
-    public function scan(): array
+    public function scan(string $baseDir, string $baseNamespace): void
     {
-        $routes = [];
-
-        foreach ($this->findPhpFiles($this->baseDir) as $file) {
-            $fqcn = $this->fileToFqcn($file);
+        foreach ($this->findPhpFiles($baseDir) as $file) {
+            $fqcn = $this->fileToFqcn($file, $baseDir, $baseNamespace);
             if ($fqcn === null) {
                 continue;
             }
@@ -51,8 +48,8 @@ final class RouteScanner
                 $attrs = $method->getAttributes(Route::class);
                 foreach ($attrs as $attr) {
                     /** @var Route $route */
-                    $route    = $attr->newInstance();
-                    $routes[] = [
+                    $route          = $attr->newInstance();
+                    $this->routes[] = [
                         'method'  => $route->method,
                         'path'    => $route->path,
                         'handler' => $fqcn . '.' . $method->getName(),
@@ -60,8 +57,16 @@ final class RouteScanner
                 }
             }
         }
+    }
 
-        return $routes;
+    /**
+     * Retourne toutes les routes accumulées par les appels à scan().
+     *
+     * @return array<array{method: string, path: string, handler: string}>
+     */
+    public function getRoutes(): array
+    {
+        return $this->routes;
     }
 
     /** @return \Generator<string> */
@@ -74,13 +79,13 @@ final class RouteScanner
         }
     }
 
-    private function fileToFqcn(string $file): ?string
+    private function fileToFqcn(string $file, string $baseDir, string $baseNamespace): ?string
     {
         // Chemin relatif depuis baseDir → segments namespace
-        $relative = ltrim(str_replace($this->baseDir, '', $file), DIRECTORY_SEPARATOR);
+        $relative = ltrim(str_replace($baseDir, '', $file), DIRECTORY_SEPARATOR);
         $relative = str_replace(DIRECTORY_SEPARATOR, '\\', $relative);
         $relative = preg_replace('/\.php$/', '', $relative);
 
-        return $this->baseNamespace . '\\' . $relative;
+        return $baseNamespace . '\\' . $relative;
     }
 }

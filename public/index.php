@@ -44,11 +44,12 @@ $container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterfa
 $container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlSearchRepository::class));
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
-$scanner = new \Rore\Framework\RouteScanner(
+$scanner = new \Rore\Framework\RouteScanner();
+$scanner->scan(
     baseDir:       BASE_PATH . '/src/Presentation/Controller',
     baseNamespace: 'Rore\Presentation\Controller',
 );
-$routes = $scanner->scan();
+$routes = $scanner->getRoutes();
 
 $router = $container->get(\Rore\Framework\Router::class);
 $router->loadRoutes($routes);
