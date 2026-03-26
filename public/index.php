@@ -24,21 +24,14 @@ $container->instance(\Rore\Framework\Config::class, $config);
 $container->bind(\Rore\Framework\SessionStorageInterface::class,   \Rore\Framework\PhpSessionStorage::class);
 $container->bind(\Rore\Framework\CsrfTokenManagerInterface::class, \Rore\Framework\CsrfTokenManager::class);
 $container->bind(\Rore\Framework\MailerInterface::class,           \Rore\Framework\SmtpMailer::class);
-$container->bind(\Rore\Framework\FileManagerInterface::class, function($c) {
-    $cfg = $c->get(\Rore\Framework\Config::class);
-    return new \Rore\Framework\FileUploader(
-        uploadDir:    $cfg->getString('app.root_dir') . '/public' . $cfg->getString('upload.upload_path'),
-        maxSize:      (int) $cfg->getString('upload.max_size'),
-        allowedTypes: $cfg->getString('upload.allowed_types'),
-    );
-});
+$container->bind(\Rore\Framework\FileManagerInterface::class, fn() => new \Rore\Framework\FileUploader(
+    uploadDir:    $config->getString('app.root_dir') . '/public' . $config->getString('upload.upload_path'),
+    maxSize:      (int) $config->getString('upload.max_size'),
+    allowedTypes: $config->getString('upload.allowed_types'),
+));
 
 // ── Database ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\Database::class, function($c) {
-    $cfg = $c->get(\Rore\Framework\Config::class);
-    $db  = $cfg->getArray('database');
-    return new \Rore\Framework\Database(...$db);
-});
+$container->bind(\Rore\Framework\Database::class, fn() => new \Rore\Framework\Database(...$config->getArray('database')));
 
 // ── Repositories ─────────────────────────────────────────────────────────────
 $container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       \Rore\Infrastructure\Persistence\MySqlCategoryRepository::class);
