@@ -31,7 +31,13 @@ final class SmtpMailer implements MailerInterface
     private const TIMEOUT = 15;
 
     public function __construct(
-        private readonly Config $config,
+        private string $host,
+        private int    $port,
+        private string $encryption,
+        private string $user,
+        private string $password,
+        private string $fromEmail,
+        private string $fromName,
     ) {}
 
     public function send(
@@ -41,13 +47,13 @@ final class SmtpMailer implements MailerInterface
         ?string $replyTo = null,
         bool    $isHtml  = false,
     ): void {
-        $host       = $this->config->getString('smtp.host');
-        $port       = $this->config->getInt('smtp.port', 587);
-        $encryption = strtolower($this->config->getString('smtp.encryption', 'tls'));
-        $user       = $this->config->getString('smtp.user');
-        $password   = $this->config->getString('smtp.password');
-        $fromEmail  = $this->config->getString('smtp.from_email');
-        $fromName   = $this->config->getString('smtp.from_name', $fromEmail);
+        $host       = $this->host;
+        $port       = $this->port;
+        $encryption = strtolower($this->encryption);
+        $user       = $this->user;
+        $password   = $this->password;
+        $fromEmail  = $this->fromEmail;
+        $fromName   = $this->fromName;
 
         if ($host === '') {
             throw new RuntimeException('SmtpMailer : smtp.host non configuré.');

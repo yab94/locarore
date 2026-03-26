@@ -29,6 +29,15 @@ $container->bind(\Rore\Framework\FileManagerInterface::class, fn() => new \Rore\
     maxSize:      (int) $config->getString('upload.max_size'),
     allowedTypes: $config->getString('upload.allowed_types'),
 ));
+$container->bind(\Rore\Framework\SmtpMailer::class, fn() => new \Rore\Framework\SmtpMailer(
+    host:       $config->getString('smtp.host'),
+    port:       $config->getInt('smtp.port', 587),
+    encryption: strtolower($config->getString('smtp.encryption', 'tls')),
+    user:       $config->getString('smtp.user'),
+    password:   $config->getString('smtp.password'),
+    fromEmail:  $config->getString('smtp.from_email'),
+    fromName:   $config->getString('smtp.from_name', $config->getString('smtp.from_email')),
+));
 
 // ── Database ────────────────────────────────────────────────────────────────
 $container->bind(\Rore\Framework\Database::class, fn() => new \Rore\Framework\Database(...$config->getArray('database')));
