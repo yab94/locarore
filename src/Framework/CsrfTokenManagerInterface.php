@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Rore\Application\Security;
+namespace Rore\Framework;
 
-/**
- * Port applicatif pour la gestion CSRF.
- */
 interface CsrfTokenManagerInterface
 {
     public function token(): string;

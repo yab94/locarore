@@ -10,7 +10,7 @@ namespace Rore\Framework;
  * - token()    : génère ou récupère le token de la session courante
  * - validate() : vérifie la correspondance session ↔ token fourni (timing-safe)
  */
-final class CsrfTokenManager
+final class CsrfTokenManager implements CsrfTokenManagerInterface
 {
     private const SESSION_KEY = 'csrf_token';
     private const POST_KEY    = '_csrf';

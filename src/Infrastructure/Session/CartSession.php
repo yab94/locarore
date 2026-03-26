@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Infrastructure\Session;
 
 use Rore\Application\Cart\CartSessionInterface;
-use Rore\Application\Storage\SessionStorageInterface;
+use Rore\Framework\SessionStorageInterface;
 use Rore\Framework\Castable;
 
 final class CartSession implements CartSessionInterface

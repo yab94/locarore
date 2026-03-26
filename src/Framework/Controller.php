@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Framework;
 
-use Rore\Framework\Config;
-use Rore\Framework\HttpRequest;
-use Rore\Framework\HttpResponse;
-use Rore\Framework\Template;
-
 abstract class Controller
 {
     public function __construct(
@@ -17,6 +12,8 @@ abstract class Controller
         readonly Config $config,
         readonly HtmlHelper $html,
         readonly UrlResolver $urlResolver,
+        readonly SessionStorageInterface $session,
+        readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {}
 
     protected function render(
@@ -29,6 +26,9 @@ abstract class Controller
             'config'      => $this->config,
             'html'        => $this->html,
             'url'         => $this->urlResolver,
+            'csrfToken'   => $this->csrfTokenManager->token(),
+            'flash'       => $this->getFlash(),
+            'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
         ];
 
         $tpl     = new Template($template, [...$shared, ...$data]);
@@ -41,5 +41,37 @@ abstract class Controller
     {
         $this->response->redirect($url);
         exit;
+    }
+
+    protected function flash(string $type, string $message): void
+    {
+        $flash = $this->session->get('flash', []);
+        if (!is_array($flash)) {
+            $flash = [];
+        }
+        $flash[$type] = $message;
+        $this->session->set('flash', $flash);
+    }
+
+    protected function getFlash(): array
+    {
+        $flash = $this->session->get('flash', []);
+        $this->session->remove('flash');
+        return is_array($flash) ? $flash : [];
+    }
+
+    protected function requirePost(): void
+    {
+        if ($this->request->method !== 'POST') {
+            $this->response->setStatusCode(405);
+            $this->response->write('Method Not Allowed');
+            exit;
+        }
+        $posted = $this->request->body->getString($this->csrfTokenManager->postKey());
+        if (!$this->csrfTokenManager->validate($posted)) {
+            $this->response->setStatusCode(419);
+            $this->response->write('Token CSRF invalide.');
+            exit;
+        }
     }
 }

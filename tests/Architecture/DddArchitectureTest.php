@@ -180,14 +180,21 @@ final class DddArchitectureTest
         foreach ($bindings as $port => $adapter) {
             // ── Règles DDD ────────────────────────────────────────────────────
 
-            // Le port doit être une interface hors Infrastructure
-            if (str_starts_with($port, 'Rore\\Infrastructure\\')) {
-                $violations[] = "Port en Infrastructure : {$port}";
-            }
+            // Binding Framework→Framework : implémentations internes au framework,
+            // exemptées des règles DDD (pas de port applicatif, pas d'adaptateur externe)
+            $isFrameworkBinding = str_starts_with($port, 'Rore\\Framework\\')
+                               && str_starts_with($adapter, 'Rore\\Framework\\');
 
-            // L'adaptateur doit être en Infrastructure
-            if (!str_starts_with($adapter, 'Rore\\Infrastructure\\')) {
-                $violations[] = "Adaptateur hors Infrastructure : {$adapter}\n   → port : {$port}";
+            if (!$isFrameworkBinding) {
+                // Le port doit être une interface hors Infrastructure
+                if (str_starts_with($port, 'Rore\\Infrastructure\\')) {
+                    $violations[] = "Port en Infrastructure : {$port}";
+                }
+
+                // L'adaptateur doit être en Infrastructure
+                if (!str_starts_with($adapter, 'Rore\\Infrastructure\\')) {
+                    $violations[] = "Adaptateur hors Infrastructure : {$adapter}\n   → port : {$port}";
+                }
             }
 
             // ── Correctness technique ─────────────────────────────────────────
