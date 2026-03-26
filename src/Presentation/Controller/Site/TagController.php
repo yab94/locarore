@@ -39,7 +39,7 @@ class TagController extends SiteController
         $_og = $this->defaultOgImage();
         
         $meta = new PageMeta(
-            canonicalUrl: $this->urlResolver->siteUrl() . $this->urlResolver->tagUrl($tag),
+            canonicalUrl: $this->slugResolver->siteUrl() . $this->slugResolver->tagUrl($tag),
             ogImage: $_og['url'],
             ogImageWidth: $_og['w'],
             ogImageHeight: $_og['h'],

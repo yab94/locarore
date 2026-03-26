@@ -1,6 +1,6 @@
 <?php
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Framework\Config;
@@ -41,7 +41,7 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
     <?php else: ?>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <?php foreach ($categories as $cat): ?>
-                <a href="<?= $html($urlResolver->categoryUrl($cat, $allCategories)) ?>"
+                <a href="<?= $html($slug->categoryUrl($cat, $allCategories)) ?>"
                    class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition text-center">
                     <h3 class="font-semibold text-gray-800"><?= $html($cat->getName()) ?></h3>
                     <?php if ($cat->getDescriptionShort()): ?>

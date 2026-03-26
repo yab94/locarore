@@ -59,7 +59,7 @@ class CategoryController extends SiteController
         $_og = $this->defaultOgImage();
         
         $meta = new PageMeta(
-            canonicalUrl: $allCategories !== [] ? $this->urlResolver->siteUrl() . $this->urlResolver->categoryUrl($category, $allCategories) : '',
+            canonicalUrl: $allCategories !== [] ? $this->slugResolver->siteUrl() . $this->slugResolver->categoryUrl($category, $allCategories) : '',
             ogImage: $_og['url'],
             ogImageWidth: $_og['w'],
             ogImageHeight: $_og['h'],

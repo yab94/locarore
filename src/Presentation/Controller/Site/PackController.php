@@ -41,12 +41,12 @@ class PackController extends SiteController
 
         $breadcrumb = $this->buildCategoryBreadcrumb($mainCategory, $allCategories);
 
-        $canonicalUrl = $this->urlResolver->siteUrl() . $this->config->getString('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
+        $canonicalUrl = $this->slugResolver->siteUrl() . $this->config->getString('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
 
         $mainPhoto     = $mainProduct?->getMainPhoto();
         $ogImage       = $mainPhoto !== null
-            ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath()
-            : $this->urlResolver->siteUrl() . '/assets/images/og-default.jpg';
+            ? $this->slugResolver->siteUrl() . $mainPhoto->getPublicPath()
+            : $this->slugResolver->siteUrl() . '/assets/images/og-default.jpg';
         $ogImageWidth  = $mainPhoto !== null ? 0 : 1200;
         $ogImageHeight = $mainPhoto !== null ? 0 : 630;
 

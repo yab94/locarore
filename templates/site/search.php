@@ -1,7 +1,7 @@
 <?php
 use Rore\Framework\Cast;
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 
 $html        = HtmlHelper::cast($tpl->get('html'));
 $urlResolver = UrlResolver::cast($tpl->get('urlResolver'));

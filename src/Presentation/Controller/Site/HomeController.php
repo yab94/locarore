@@ -37,7 +37,7 @@ class HomeController extends SiteController
         }
         
         $meta = new PageMeta(
-            canonicalUrl: $this->urlResolver->siteUrl() . '/',
+            canonicalUrl: $this->slugResolver->siteUrl() . '/',
             title: ['Location de décoration', $siteName],
             description: $descParts,
             keywords: $kw,

@@ -1,6 +1,6 @@
 <?php
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Reservation\Entity\Reservation;

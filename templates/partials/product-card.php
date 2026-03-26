@@ -1,7 +1,7 @@
 <?php
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Framework\Config;
 
@@ -14,7 +14,7 @@ $allCategories      = Cast::array($tpl->tryGet('allCategories', []));
 $productContextPath = $tpl->tryGet('productContextPath', null);
 $_productUrl = $productContextPath !== null
     ? $config->getString('seo.products_base_url') . '/' . $productContextPath . '/' . $product->getSlug()
-    : $urlResolver->productUrl($product, $allCategories);
+    : $slug->productUrl($product, $allCategories);
 ?>
 <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
     <?php if ($photo = $product->getMainPhoto()): ?>

@@ -1,6 +1,6 @@
 <?php
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
@@ -68,7 +68,7 @@ $cart            = CartSession::cast($tpl->get('cart'));
                         <li class="flex items-center justify-between text-sm">
                             <span class="text-gray-800">
                                 <?php if ($p): ?>
-                                    <a href="<?= $html($urlResolver->productUrl($p, $allCategories)) ?>"
+                                    <a href="<?= $html($slug->productUrl($p, $allCategories)) ?>"
                                        class="hover:text-brand-600 hover:underline">
                                         <?= $html($p->getName()) ?>
                                     </a>

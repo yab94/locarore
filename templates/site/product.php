@@ -1,6 +1,6 @@
 <?php
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Framework\Config;
@@ -91,7 +91,7 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
                     <input type="date" name="end_date" required
                            class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
                            min="<?= date('Y-m-d') ?>">
-                    <input type="hidden" name="redirect" value="<?= $html($urlResolver->productUrl($product, $allCategories)) ?>">
+                    <input type="hidden" name="redirect" value="<?= $html($slug->productUrl($product, $allCategories)) ?>">
                     <button type="submit"
                             class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 transition">
                         Valider
@@ -118,7 +118,7 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
                            value="<?= htmlspecialchars($cart->getEndDate()) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
-                    <input type="hidden" name="redirect" value="<?= $html($urlResolver->productUrl($product, $allCategories)) ?>">
+                    <input type="hidden" name="redirect" value="<?= $html($slug->productUrl($product, $allCategories)) ?>">
                     <button type="submit"
                             class="bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-800 transition">
                         Valider
@@ -134,7 +134,7 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
                 <form method="post" action="<?= $url('Site\Cart.add') ?>">
                     <?= $partial('partials/csrf') ?>
                     <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
-                    <input type="hidden" name="redirect" value="<?= $html($urlResolver->productUrl($product, $allCategories)) ?>">
+                    <input type="hidden" name="redirect" value="<?= $html($slug->productUrl($product, $allCategories)) ?>">
                     <div class="flex items-center gap-3 mb-4">
                         <label class="text-sm font-medium text-gray-700">Quantité</label>
                         <input type="number" name="quantity" value="1" min="1"

@@ -12,6 +12,7 @@
  * - $mainPhoto : (optionnel) Photo object pour les packs
  */
 
+$slug = \Rore\Presentation\Seo\SlugResolver::cast($tpl->get('slugResolver'));
 $_meta = \Rore\Framework\PageMeta::cast($tpl->get('meta'));
 $_crumbs = array_values(\Rore\Framework\Cast::array($tpl->get('breadcrumb')));
 $_item = $tpl->tryGet('item'); // Product ou Pack (optionnel)
@@ -19,7 +20,7 @@ $_type = $tpl->tryGet('type', 'product'); // 'product' ou 'pack'
 $_mainPhoto = $tpl->tryGet('mainPhoto'); // Pour les packs
 
 // Construction du breadcrumb LD+JSON
-$_ldItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Accueil', 'item' => $urlResolver->siteUrl() . '/']];
+$_ldItems = [['@type' => 'ListItem', 'position' => 1, 'name' => 'Accueil', 'item' => $slug->siteUrl() . '/']];
 foreach ($_crumbs as $_i => $_crumb) {
     $_ldItems[] = [
         '@type'    => 'ListItem',
@@ -27,7 +28,7 @@ foreach ($_crumbs as $_i => $_crumb) {
         'name'     => $_crumb->getName(),
         'item'     => ($_i === count($_crumbs) - 1)
             ? $_meta->canonicalUrl
-            : $urlResolver->siteUrl() . $urlResolver->categoryUrl($_crumb, $allCategories),
+            : $slug->siteUrl() . $slug->categoryUrl($_crumb, $allCategories),
     ];
 }
 
@@ -55,12 +56,12 @@ if ($_item) {
     if ($_type === 'pack') {
         // Pour pack: utilise la photo fournie en paramètre
         if ($_mainPhoto) {
-            $_ldProduct['image'] = $urlResolver->siteUrl() . $_mainPhoto->getPublicPath();
+            $_ldProduct['image'] = $slug->siteUrl() . $_mainPhoto->getPublicPath();
         }
     } else {
         // Pour product: utilise getMainPhoto() directement
         if ($_mainPhoto = $_item->getMainPhoto()) {
-            $_ldProduct['image'] = $urlResolver->siteUrl() . $_mainPhoto->getPublicPath();
+            $_ldProduct['image'] = $slug->siteUrl() . $_mainPhoto->getPublicPath();
         }
     }
 

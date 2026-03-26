@@ -56,7 +56,7 @@ class ProductController extends SiteController
 
         $catChain     = array_slice($breadcrumb, 0, -1);
         $mainCategory = $this->findCategoryById($product->getCategoryId(), $allCategories);
-        $canonicalUrl = $this->urlResolver->siteUrl() . $this->urlResolver->productUrl($product, $allCategories, $mainCategory);
+        $canonicalUrl = $this->slugResolver->siteUrl() . $this->slugResolver->productUrl($product, $allCategories, $mainCategory);
 
         $titleParts = [$product->getName()];
         foreach (array_reverse($catChain) as $crumb) {
@@ -85,7 +85,7 @@ class ProductController extends SiteController
         
         $meta = new PageMeta(
             canonicalUrl: $canonicalUrl,
-            ogImage: $mainPhoto !== null ? $this->urlResolver->siteUrl() . $mainPhoto->getPublicPath() : '',
+            ogImage: $mainPhoto !== null ? $this->slugResolver->siteUrl() . $mainPhoto->getPublicPath() : '',
             ogType: 'product',
             title: $titleParts,
             description: $descParts,

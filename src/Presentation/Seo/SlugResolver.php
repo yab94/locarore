@@ -4,31 +4,23 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
+use Rore\Framework\Config;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
+use Rore\Framework\Castable;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.
  * Instance injectable via DI — prend Config en constructeur.
  */
-final class UrlResolver extends \Rore\Framework\UrlResolver
+final class SlugResolver
 {
-    /**
-     * Alias courts pour les handlers de type contrôleur.
-     * "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
-     * "Rore\Presentation\Controller\Site\CartController.index"     → "Site\Cart.index"
-     */
-    protected function buildRouteName(string $handler): string
-    {
-        $pos = strpos($handler, '\\Controller\\');
-        if ($pos === false) {
-            return $handler;
-        }
-        $short = substr($handler, $pos + strlen('\\Controller\\'));
-        return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
-    }
+    use Castable;
 
+    public function __construct(readonly Config $config) {
+    }
+    
     /**
      * URL de base du site (ex: https://location.latyana-evenements.fr).
      */

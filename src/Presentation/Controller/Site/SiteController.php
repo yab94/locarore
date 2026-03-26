@@ -41,7 +41,7 @@ abstract class SiteController extends Controller
     protected function defaultOgImage(): array
     {
         return [
-            'url' => $this->urlResolver->siteUrl() . '/assets/images/og-default.jpg',
+            'url' => $this->slugResolver->siteUrl() . '/assets/images/og-default.jpg',
             'w'   => 1200,
             'h'   => 630,
         ];

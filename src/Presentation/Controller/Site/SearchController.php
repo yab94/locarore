@@ -24,7 +24,7 @@ class SearchController extends SiteController
         $siteName = $this->settings->get('site.name');
 
         $meta = new PageMeta(
-            canonicalUrl: $this->urlResolver->siteUrl() . '/recherche?q=' . urlencode($q),
+            canonicalUrl: $this->slugResolver->siteUrl() . '/recherche?q=' . urlencode($q),
             title: $q !== '' ? ['Recherche : ' . $q, $siteName] : ['Recherche', $siteName],
             description: $q !== '' ? 'Résultats de recherche pour « ' . $q . ' » sur ' . $siteName : 'Recherche de produits et packs',
             robots: 'noindex, follow',

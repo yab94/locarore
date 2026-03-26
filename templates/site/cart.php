@@ -1,6 +1,6 @@
 <?php
 use Rore\Framework\HtmlHelper;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Framework\Config;
@@ -92,7 +92,7 @@ $packPrices    = Cast::array($tpl->tryGet('packPrices', []));
                     <?php endif; ?>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-semibold text-gray-800 truncate">
-                            <a href="<?= $html($urlResolver->productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
+                            <a href="<?= $html($slug->productUrl($p, $allCategories)) ?>" class="hover:text-brand-700">
                                 <?= $html($p->getName()) ?>
                             </a>
                         </h3>

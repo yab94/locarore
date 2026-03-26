@@ -8,7 +8,7 @@ use Rore\Application\Security\CsrfTokenManagerInterface;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Framework\PageMeta;
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Presentation\Seo\SlugResolver;
 
 abstract class Controller extends \Rore\Framework\Controller
 {
@@ -16,13 +16,10 @@ abstract class Controller extends \Rore\Framework\Controller
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly GetSettingUseCase $settings,
-        UrlResolver $urlResolver,
+        readonly SlugResolver $slugResolver,
         ...$parentDeps
     ) {
-        parent::__construct(
-            ...$parentDeps,
-            urlResolver: $urlResolver,
-        );
+        parent::__construct(...$parentDeps);
     }
 
     protected function render(
@@ -35,6 +32,8 @@ abstract class Controller extends \Rore\Framework\Controller
             'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
             'csrfToken'   => $this->csrfTokenManager->token(),
             'settings'    => $this->settings,
+            'slugResolver'    => $this->slugResolver,
+            'slug'    => $this->slugResolver,
             ...$data,  // Les données spécifiques ont priorité
         ], $layout);
     }

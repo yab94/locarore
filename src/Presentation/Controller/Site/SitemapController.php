@@ -35,13 +35,13 @@ class SitemapController extends SiteController
         
         // Categories
         foreach ($categories as $cat) {
-            $url = $baseUrl . $this->urlResolver->categoryUrl($cat, $categories);
+            $url = $baseUrl . $this->slugResolver->categoryUrl($cat, $categories);
             echo '<url><loc>' . htmlspecialchars($url) . '</loc><lastmod>' . $cat->getUpdatedAt()->format('Y-m-d') . '</lastmod><priority>0.8</priority></url>';
         }
         
         // Products
         foreach ($products as $product) {
-            $url = $baseUrl . $this->urlResolver->productUrl($product, $categories);
+            $url = $baseUrl . $this->slugResolver->productUrl($product, $categories);
             echo '<url><loc>' . htmlspecialchars($url) . '</loc><lastmod>' . $product->getUpdatedAt()->format('Y-m-d') . '</lastmod><priority>0.9</priority></url>';
         }
         

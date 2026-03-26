@@ -1,5 +1,5 @@
 <?php
-use Rore\Presentation\Seo\UrlResolver;
+use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 
 $url          = UrlResolver::cast($tpl->get('url'));

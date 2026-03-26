@@ -13,7 +13,7 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Sous-catégories</h2>
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         <?php foreach ($children as $child): ?>
-            <a href="<?= $html($urlResolver->categoryUrl($child, $allCategories)) ?>"
+            <a href="<?= $html($slug->categoryUrl($child, $allCategories)) ?>"
                class="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-600 hover:shadow-sm transition text-center">
                 <div class="text-2xl mb-2">🏷️</div>
                 <div class="text-sm font-medium text-gray-800"><?= $html($child->getName()) ?></div>

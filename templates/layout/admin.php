@@ -1,6 +1,6 @@
 <?php
 $html    = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
-$url     = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
+$url     = Rore\Framework\UrlResolver::cast($tpl->get('url'));
 $title   = \Rore\Framework\Cast::string($tpl->tryGet('title', 'Admin — Locarore'));
 $flash   = \Rore\Framework\Cast::array($tpl->tryGet('flash', []));
 $content = \Rore\Framework\Cast::string($tpl->get('content'));

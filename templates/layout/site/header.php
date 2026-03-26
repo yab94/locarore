@@ -1,7 +1,7 @@
 <?php
 $html            = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
-$url             = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('url'));
-$urlResolver     = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
+$url             = Rore\Framework\UrlResolver::cast($tpl->get('url'));
+$urlResolver     = Rore\Framework\UrlResolver::cast($tpl->get('urlResolver'));
 $headerCategories = \Rore\Framework\Cast::array($tpl->get('headerCategories'));
 $settings        = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));
 $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);
@@ -42,7 +42,7 @@ $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() ==
                     <?php foreach ($rootCategories as $root): ?>
 
                         <!-- Racine -->
-                        <a href="<?= $html($urlResolver->categoryUrl($root, $headerCategories)) ?>"
+                        <a href="<?= $html($slug->categoryUrl($root, $headerCategories)) ?>"
                            class="flex items-center gap-2.5 px-4 py-2.5 text-sm font-semibold text-gray-800 hover:bg-brand-50 hover:text-brand-700 transition-colors group">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
@@ -59,7 +59,7 @@ $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() ==
                             <!-- Enfants avec connecteur arbre -->
                             <div class="ml-5 mb-1 border-l-2 border-gray-100">
                                 <?php foreach ($root->getChildren() as $child): ?>
-                                    <a href="<?= $html($urlResolver->categoryUrl($child, $headerCategories)) ?>"
+                                    <a href="<?= $html($slug->categoryUrl($child, $headerCategories)) ?>"
                                        class="relative flex items-center gap-2 pl-5 pr-4 py-1.5 text-xs text-gray-500 hover:bg-brand-50 hover:text-brand-600 transition-colors whitespace-nowrap">
                                         <span class="absolute left-0 top-1/2 w-4 h-px bg-gray-200"></span>
                                         <?= $html($child->getName()) ?>

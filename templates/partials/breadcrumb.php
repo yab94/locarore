@@ -1,7 +1,7 @@
 <?php
 $breadcrumb = Rore\Framework\Cast::array($tpl->get('breadcrumb'));
 $allCategories = Rore\Framework\Cast::array($tpl->get('allCategories'));
-$urlResolver = Rore\Presentation\Seo\UrlResolver::cast($tpl->get('urlResolver'));
+$urlResolver = Rore\Framework\UrlResolver::cast($tpl->get('urlResolver'));
 $html = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
 $finalCrumb = array_pop($breadcrumb);
 ?>
@@ -9,7 +9,7 @@ $finalCrumb = array_pop($breadcrumb);
     <a href="/" class="hover:underline">Accueil</a>
     <?php foreach ($breadcrumb as $crumb): ?>
         <span>›</span>
-        <a href="<?= $html($urlResolver->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
+        <a href="<?= $html($slug->categoryUrl($crumb, $allCategories)) ?>" class="hover:underline">
             <?= $html($crumb->getName()) ?>
         </a>
     <?php endforeach; ?>

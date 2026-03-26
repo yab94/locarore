@@ -87,14 +87,18 @@ class UrlResolver
             }
         }
     }
-
     /**
-     * Construit le nom de route à indexer pour un handler FQCN donné.
-     * Par défaut retourne le handler non modifié.
-     * À surcharger pour appliquer une convention d'alias (ex: alias courts type "Admin\Category.edit").
+     * Alias courts pour les handlers de type contrôleur.
+     * "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
+     * "Rore\Presentation\Controller\Site\CartController.index"     → "Site\Cart.index"
      */
     protected function buildRouteName(string $handler): string
     {
-        return $handler;
+        $pos = strpos($handler, '\\Controller\\');
+        if ($pos === false) {
+            return $handler;
+        }
+        $short = substr($handler, $pos + strlen('\\Controller\\'));
+        return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
     }
 }
