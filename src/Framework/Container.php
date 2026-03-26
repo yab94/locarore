@@ -33,11 +33,15 @@ final class Container
      * Déclare une factory pour un type donné.
      * Utile pour les interfaces ou les classes avec des arguments scalaires.
      *
-     * @param string          $abstract Nom de classe ou d'interface (FQCN)
-     * @param \Closure|string $factory  Closure(Container): object, ou FQCN de la classe concrète
+     * @param string                 $abstract Nom de classe ou d'interface (FQCN)
+     * @param \Closure|string|object $factory  Closure(Container): object, FQCN de la classe concrète, ou instance déjà construite
      */
-    public function bind(string $abstract, \Closure|string $factory): void
+    public function bind(string $abstract, \Closure|string|object $factory): void
     {
+        if ($factory instanceof \Closure === false && is_object($factory)) {
+            $this->instances[$abstract] = $factory;
+            return;
+        }
         if (is_string($factory)) {
             $factory = fn($c) => $c->get($factory);
         }

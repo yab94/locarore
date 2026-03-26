@@ -13,12 +13,6 @@ abstract class Controller extends \Rore\Framework\Controller
 {
     public function __construct(
         readonly GetSettingUseCase $settings,
-        #[Bind(static function(Config $config) { return [
-            'siteUrl' => $config->getString('seo.site_url'),
-            'categoriesBaseUrl' => $config->getString('seo.categories_base_url'),
-            'productsBaseUrl' => $config->getString('seo.products_base_url'),
-            'tagsBaseUrl' => $config->getString('seo.tags_base_url'),
-        ]; })]
         readonly SlugResolver $slugResolver,
         ...$parentDeps
     ) {

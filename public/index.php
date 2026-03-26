@@ -18,7 +18,7 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \Rore\Framework\Container();
-$container->instance(\Rore\Framework\Config::class, $config);
+$container->bind(\Rore\Framework\Config::class, $config);
 
 // ── Framework ────────────────────────────────────────────────────────────────
 $container->bind(\Rore\Framework\SessionStorageInterface::class,   \Rore\Framework\PhpSessionStorage::class);
@@ -42,6 +42,14 @@ $container->bind(\Rore\Domain\Reservation\Repository\ReservationRepositoryInterf
 $container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::class,      \Rore\Infrastructure\Persistence\MySqlSettingsRepository::class);
 $container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, \Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class);
 $container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlSearchRepository::class);
+
+// ── Services spécifiques ─────────────────────────────────────────────────────
+$container->bind(\Rore\Presentation\Seo\SlugResolver::class, fn() => new \Rore\Presentation\Seo\SlugResolver(
+    siteUrl: $config->getString('seo.site_url'),
+    categoriesBaseUrl: $config->getString('seo.categories_base_url'),
+    productsBaseUrl: $config->getString('seo.products_base_url'),
+    tagsBaseUrl: $config->getString('seo.tags_base_url'),
+));
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \Rore\Framework\RouteScanner();
