@@ -80,8 +80,8 @@ class UrlResolver
                 $fqcn = (string) $handler;
                 $this->handlerToPath[$fqcn] = $path;
                 // Indexation alias court : "Admin\Category.edit"
-                $short = $this->shortAlias($fqcn);
-                if ($short !== null) {
+                $short = $this->buildRouteName($fqcn);
+                if ($short !== $fqcn) {
                     $this->handlerToPath[$short] = $path;
                 }
             }
@@ -89,23 +89,12 @@ class UrlResolver
     }
 
     /**
-     * Convertit un handler FQCN en alias court, ou retourne null si le
-     * handler ne contient pas \Controller\ dans son namespace.
-     *
-     * Exemples :
-     *   "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
-     *   "Rore\Presentation\Controller\Site\CartController.index"     → "Site\Cart.index"
+     * Construit le nom de route à indexer pour un handler FQCN donné.
+     * Par défaut retourne le handler non modifié.
+     * À surcharger pour appliquer une convention d'alias (ex: alias courts type "Admin\Category.edit").
      */
-    private function shortAlias(string $handler): ?string
+    protected function buildRouteName(string $handler): string
     {
-        $controllerPos = strpos($handler, '\\Controller\\');
-        if ($controllerPos === false) {
-            return null;
-        }
-        
-        // Extrait tout après "\Controller\"
-        $short = substr($handler, $controllerPos + strlen('\\Controller\\'));
-        // Supprime "Controller" juste avant le ".method"
-        return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
+        return $handler;
     }
 }

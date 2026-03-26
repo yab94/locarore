@@ -15,6 +15,21 @@ use Rore\Domain\Catalog\Entity\Tag;
 final class UrlResolver extends \Rore\Framework\UrlResolver
 {
     /**
+     * Alias courts pour les handlers de type contrôleur.
+     * "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
+     * "Rore\Presentation\Controller\Site\CartController.index"     → "Site\Cart.index"
+     */
+    protected function buildRouteName(string $handler): string
+    {
+        $pos = strpos($handler, '\\Controller\\');
+        if ($pos === false) {
+            return $handler;
+        }
+        $short = substr($handler, $pos + strlen('\\Controller\\'));
+        return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
+    }
+
+    /**
      * URL de base du site (ex: https://location.latyana-evenements.fr).
      */
     public function siteUrl(): string
