@@ -9,7 +9,6 @@ use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Application\Storage\SessionStorageInterface;
 use Rore\Framework\PageMeta;
 use Rore\Presentation\Seo\UrlResolver;
-use Rore\Framework\HtmlHelper;
 
 abstract class Controller extends \Rore\Framework\Controller
 {
@@ -18,7 +17,6 @@ abstract class Controller extends \Rore\Framework\Controller
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly GetSettingUseCase $settings,
         readonly UrlResolver $urlResolver,
-        readonly HtmlHelper $html,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -36,7 +34,6 @@ abstract class Controller extends \Rore\Framework\Controller
             'settings'    => $this->settings,
             'urlResolver' => $this->urlResolver,
             'url'         => $this->urlResolver,
-            'html'        => $this->html,
             ...$data,  // Les données spécifiques ont priorité
         ], $layout);
     }

@@ -15,6 +15,7 @@ abstract class Controller
         readonly HttpRequest $request,
         readonly HttpResponse $response,
         readonly Config $config,
+        readonly HtmlHelper $html,
     ) {}
 
     protected function render(
@@ -25,6 +26,7 @@ abstract class Controller
         // Helpers globaux injectés dans chaque template
         $shared = [
             'config'      => $this->config,
+            'html'        => $this->html,
         ];
 
         $tpl     = new Template($template, [...$shared, ...$data]);
