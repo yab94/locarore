@@ -33,6 +33,13 @@ $container->bind(\Rore\Framework\FileManagerInterface::class, function($c) {
     );
 });
 
+// ── Database ────────────────────────────────────────────────────────────────
+$container->bind(\Rore\Framework\Database::class, function($c) {
+    $cfg = $c->get(\Rore\Framework\Config::class);
+    $db  = $cfg->getArray('database');
+    return new \Rore\Framework\Database(...$db);
+});
+
 // ── Repositories ─────────────────────────────────────────────────────────────
 $container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlCategoryRepository::class));
 $container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlProductRepository::class));

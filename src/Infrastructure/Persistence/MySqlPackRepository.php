@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Framework\Config;
 use Rore\Framework\Database;
-use Rore\Framework\From;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
@@ -16,7 +14,6 @@ class MySqlPackRepository implements PackRepositoryInterface
 
 
     public function __construct(
-        #[From(static function(Config $c) { return $c->getArray('database'); })]
         private readonly Database $connection
     ) {}
 

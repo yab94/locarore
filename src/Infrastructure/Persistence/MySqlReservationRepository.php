@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Framework\Config;
 use Rore\Framework\Database;
-use Rore\Framework\From;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
@@ -16,7 +14,6 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
 
     public function __construct(
-        #[From(static function(Config $c) { return $c->getArray('database'); })]
         private readonly Database $connection
     ) {}
 
