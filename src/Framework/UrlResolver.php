@@ -88,17 +88,18 @@ class UrlResolver
         }
     }
     /**
-     * Alias courts pour les handlers de type contrôleur.
-     * "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
-     * "Rore\Presentation\Controller\Site\CartController.index"     → "Site\Cart.index"
+     * Construit l'alias court d'un handler FQCN.
+     * Le namespace de base est lu depuis config : routes.controller_namespace
+     *
+     * Ex: "Rore\Presentation\Controller\Admin\CategoryController.edit" → "Admin\Category.edit"
      */
     protected function buildRouteName(string $handler): string
     {
-        $pos = strpos($handler, '\\Controller\\');
-        if ($pos === false) {
+        $ns = $this->config->getString('routes.controller_namespace', '');
+        if ($ns === '' || !str_starts_with($handler, $ns . '\\')) {
             return $handler;
         }
-        $short = substr($handler, $pos + strlen('\\Controller\\'));
+        $short = substr($handler, strlen($ns) + 1);
         return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
     }
 }
