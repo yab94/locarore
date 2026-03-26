@@ -21,9 +21,9 @@ $container = new \Rore\Framework\Container();
 $container->instance(\Rore\Framework\Config::class, $config);
 
 // ── Framework ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\SessionStorageInterface::class,   fn($c) => $c->get(\Rore\Framework\PhpSessionStorage::class));
-$container->bind(\Rore\Framework\CsrfTokenManagerInterface::class, fn($c) => $c->get(\Rore\Framework\CsrfTokenManager::class));
-$container->bind(\Rore\Framework\MailerInterface::class,           fn($c) => $c->get(\Rore\Framework\SmtpMailer::class));
+$container->bind(\Rore\Framework\SessionStorageInterface::class,   \Rore\Framework\PhpSessionStorage::class);
+$container->bind(\Rore\Framework\CsrfTokenManagerInterface::class, \Rore\Framework\CsrfTokenManager::class);
+$container->bind(\Rore\Framework\MailerInterface::class,           \Rore\Framework\SmtpMailer::class);
 $container->bind(\Rore\Framework\FileManagerInterface::class, function($c) {
     $cfg = $c->get(\Rore\Framework\Config::class);
     return new \Rore\Framework\FileUploader(
@@ -41,14 +41,14 @@ $container->bind(\Rore\Framework\Database::class, function($c) {
 });
 
 // ── Repositories ─────────────────────────────────────────────────────────────
-$container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlCategoryRepository::class));
-$container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlProductRepository::class));
-$container->bind(\Rore\Domain\Catalog\Repository\PackRepositoryInterface::class,           fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlPackRepository::class));
-$container->bind(\Rore\Domain\Catalog\Repository\TagRepositoryInterface::class,            fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlTagRepository::class));
-$container->bind(\Rore\Domain\Reservation\Repository\ReservationRepositoryInterface::class,fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlReservationRepository::class));
-$container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::class,      fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlSettingsRepository::class));
-$container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class));
-$container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlSearchRepository::class));
+$container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       \Rore\Infrastructure\Persistence\MySqlCategoryRepository::class);
+$container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlProductRepository::class);
+$container->bind(\Rore\Domain\Catalog\Repository\PackRepositoryInterface::class,           \Rore\Infrastructure\Persistence\MySqlPackRepository::class);
+$container->bind(\Rore\Domain\Catalog\Repository\TagRepositoryInterface::class,            \Rore\Infrastructure\Persistence\MySqlTagRepository::class);
+$container->bind(\Rore\Domain\Reservation\Repository\ReservationRepositoryInterface::class,\Rore\Infrastructure\Persistence\MySqlReservationRepository::class);
+$container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::class,      \Rore\Infrastructure\Persistence\MySqlSettingsRepository::class);
+$container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, \Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class);
+$container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlSearchRepository::class);
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \Rore\Framework\RouteScanner();
