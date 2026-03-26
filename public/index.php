@@ -29,7 +29,7 @@ $container->bind(\Rore\Framework\FileManagerInterface::class, function($c) {
     return new \Rore\Framework\FileUploader(
         uploadDir:    $cfg->getString('app.root_dir') . '/public' . $cfg->getString('upload.upload_path'),
         maxSize:      (int) $cfg->getString('upload.max_size'),
-        allowedTypes: array_map('trim', explode(',', $cfg->getString('upload.allowed_types'))),
+        allowedTypes: $cfg->getString('upload.allowed_types'),
     );
 });
 
