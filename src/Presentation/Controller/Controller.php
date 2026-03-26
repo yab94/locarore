@@ -16,10 +16,10 @@ abstract class Controller extends \Rore\Framework\Controller
         readonly SessionStorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
         readonly GetSettingUseCase $settings,
-        readonly UrlResolver $urlResolver,
+        UrlResolver $urlResolver,
         ...$parentDeps
     ) {
-        parent::__construct(...$parentDeps);
+        parent::__construct( ...$parentDeps, urlResolver: $urlResolver);
     }
 
     protected function render(

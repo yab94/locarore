@@ -131,17 +131,21 @@ final class Container
      * Résout récursivement toutes les dépendances de la chaîne d'héritage.
      * Remonte de parent en parent jusqu'à ne plus avoir de constructeur.
      *
-     * @return array Liste des instances résolues pour tous les parents (parent direct → ancêtres)
+     * Les paramètres déjà collectés dans un niveau plus proche (feuille)
+     * sont dédupliqués par nom, évitant les collisions quand un param
+     * ($urlResolver, etc.) apparaît dans plusieurs niveaux d'héritage.
+     *
+     * @return array Liste des instances résolues (parent direct → ancêtres)
      */
     private function resolveParentDependencies(ReflectionClass $childClass): array
     {
-        $allDeps = [];
-        $current = $childClass;
+        $allDeps   = [];
+        $seenNames = [];   // noms de paramètres déjà collectés dans un niveau plus proche
+        $current   = $childClass;
 
-        // Remonter la chaîne d'héritage
         while ($parent = $current->getParentClass()) {
             $constructor = $parent->getConstructor();
-            
+
             if (!$constructor) {
                 break;
             }
@@ -153,8 +157,16 @@ final class Container
                     break;
                 }
 
+                // Ignorer si un niveau plus proche a déjà déclaré ce nom de paramètre
+                // (ex: $urlResolver dans Presentation\Controller ET Framework\Controller)
+                $name = $param->getName();
+                if (isset($seenNames[$name])) {
+                    continue;
+                }
+                $seenNames[$name] = true;
+
                 $type = $param->getType();
-                
+
                 if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     $parentDeps[] = $this->get($type->getName());
                 } elseif ($param->isDefaultValueAvailable()) {
@@ -162,9 +174,8 @@ final class Container
                 }
             }
 
-            // Ajouter les deps de ce niveau à la fin (ordre parent direct → ancêtres)
             array_push($allDeps, ...$parentDeps);
-            
+
             $current = $parent;
         }
 

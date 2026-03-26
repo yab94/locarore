@@ -16,6 +16,7 @@ abstract class Controller
         readonly HttpResponse $response,
         readonly Config $config,
         readonly HtmlHelper $html,
+        readonly UrlResolver $urlResolver,
     ) {}
 
     protected function render(
@@ -27,6 +28,8 @@ abstract class Controller
         $shared = [
             'config'      => $this->config,
             'html'        => $this->html,
+            'urlResolver' => $this->urlResolver,
+            'url'         => $this->urlResolver,
         ];
 
         $tpl     = new Template($template, [...$shared, ...$data]);
