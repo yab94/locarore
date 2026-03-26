@@ -115,7 +115,7 @@ final class Container
             if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 /** @var Bind $from */
                 $from   = $fromAttrs[0]->newInstance();
-                $args[] = $this->resolveFromAttribute($from, $type->getName());
+                $args[] = $this->resolveBindAttribute($from, $type->getName());
                 continue;
             }
 
@@ -145,7 +145,7 @@ final class Container
      * → deux #[Bind] produisant des résultats différents donnent
      *   deux instances distinctes (ex: connexion principale vs réplique).
      */
-    private function resolveFromAttribute(Bind $from, string $className): object
+    private function resolveBindAttribute(Bind $from, string $className): object
     {
         // 1. Auto-wirer les dépendances de la closure
         $refFn      = new ReflectionFunction($from->resolver);
@@ -220,7 +220,7 @@ final class Container
                 if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     /** @var Bind $from */
                     $from = $fromAttrs[0]->newInstance();
-                    $parentDeps[] = $this->resolveFromAttribute($from, $type->getName());
+                    $parentDeps[] = $this->resolveBindAttribute($from, $type->getName());
                 } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     $parentDeps[] = $this->get($type->getName());
                 } elseif ($param->isDefaultValueAvailable()) {
