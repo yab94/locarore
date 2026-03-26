@@ -43,9 +43,17 @@ $container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::c
 $container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class));
 $container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlSearchRepository::class));
 
-// ─── Router ────────────────────────────────────────────────────────────────
+// ─── Router + UrlResolver ──────────────────────────────────────────────────
+$scanner = new \Rore\Framework\RouteScanner(
+    baseDir:       BASE_PATH . '/src/Presentation/Controller',
+    baseNamespace: 'Rore\Presentation\Controller',
+);
+$routes = $scanner->scan();
+
 $router = $container->get(\Rore\Framework\Router::class);
-$router->addRoutes($config->getArray('routes') ?? []);
+$router->loadRoutes($routes);
+
+$container->get(\Rore\Framework\UrlResolver::class)->loadRoutes($routes);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

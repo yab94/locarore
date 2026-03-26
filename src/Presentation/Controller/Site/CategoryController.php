@@ -8,6 +8,7 @@ use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetCategoryWithItemsUseCase;
 use Rore\Framework\PageMeta;
 
+use Rore\Framework\Route;
 class CategoryController extends SiteController
 {
     public function __construct(
@@ -21,6 +22,7 @@ class CategoryController extends SiteController
     /**
      * $path peut être "slug" ou "parent/enfant" (multi-segments via {path+})
      */
+    #[Route('GET', '/categories/{path+}')]
     public function show(string $path): void
     {
         $result = $this->getCategoryWithItemsUseCase->execute($path);

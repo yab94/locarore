@@ -8,6 +8,7 @@ use Rore\Application\Catalog\GetAllCategoriesUseCase;
 use Rore\Application\Catalog\GetAllProductsUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 
+use Rore\Framework\Route;
 class DashboardController extends AdminController
 {
     public function __construct(
@@ -19,6 +20,7 @@ class DashboardController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/dashboard')]
     public function index(): void
     {
         $categories = $this->getAllCategoriesUseCase->execute();

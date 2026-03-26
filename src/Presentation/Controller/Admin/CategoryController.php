@@ -10,6 +10,7 @@ use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
 
+use Rore\Framework\Route;
 class CategoryController extends AdminController
 {
     public function __construct(
@@ -23,6 +24,7 @@ class CategoryController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/categories')]
     public function index(): void
     {
         $this->render('admin/categories/list', [
@@ -31,6 +33,7 @@ class CategoryController extends AdminController
         ]);
     }
 
+    #[Route('GET', '/admin/categories/creer')]
     public function create(): void
     {
         $this->render('admin/categories/form', [
@@ -40,6 +43,7 @@ class CategoryController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/categories/creer')]
     public function store(): void
     {
         $this->requirePost();
@@ -58,6 +62,7 @@ class CategoryController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('GET', '/admin/categories/{id}/modifier')]
     public function edit(string $id): void
     {
         $category = $this->getCategoryByIdUseCase->execute((int) $id);
@@ -71,6 +76,7 @@ class CategoryController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/categories/{id}/modifier')]
     public function update(string $id): void
     {
         $this->requirePost();
@@ -90,6 +96,7 @@ class CategoryController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('POST', '/admin/categories/{id}/toggle')]
     public function toggle(string $id): void
     {
         $this->requirePost();

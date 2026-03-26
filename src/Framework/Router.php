@@ -20,20 +20,15 @@ class Router extends Typable
     ) {}
 
     /**
-     * Ajoute des routes groupées par méthode HTTP.
+     * Charge les routes collectées par RouteScanner.
      *
-     * Format attendu :
-     *   ['GET' => ['/path' => 'FQCN.method', ...], 'POST' => [...]]
-     *
-     * @param array<string, array<string, string>> $routes
+     * @param array<array{method: string, path: string, handler: string}> $routes
      */
-    public function addRoutes(array $routes): void
+    public function loadRoutes(array $routes): void
     {
-        foreach (['GET', 'POST'] as $method) {
-            foreach ($routes[$method] ?? [] as $path => $handler) {
-                [$class, $action] = explode('.', (string) $handler, 2);
-                $this->routes[] = ['method' => $method, 'path' => $path, 'handler' => [$class, $action]];
-            }
+        foreach ($routes as $route) {
+            [$class, $action] = explode('.', $route['handler'], 2);
+            $this->routes[] = ['method' => $route['method'], 'path' => $route['path'], 'handler' => [$class, $action]];
         }
     }
 

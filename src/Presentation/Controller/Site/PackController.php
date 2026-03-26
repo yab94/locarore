@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Site;
 use Rore\Application\Catalog\GetPackWithDetailsUseCase;
 use Rore\Framework\PageMeta;
 
+use Rore\Framework\Route;
 class PackController extends SiteController
 {
     public function __construct(
@@ -16,6 +17,7 @@ class PackController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/packs/{slug}')]
     public function show(string $slug): void
     {
         $result = $this->getPackWithDetailsUseCase->execute($slug);

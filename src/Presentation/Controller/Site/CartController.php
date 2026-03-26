@@ -14,6 +14,7 @@ use Rore\Application\Cart\SetCartDatesUseCase;
 use Rore\Domain\Cart\Service\CartService;
 use Rore\Framework\PageMeta;
 
+use Rore\Framework\Route;
 class CartController extends SiteController
 {
     public function __construct(
@@ -30,6 +31,7 @@ class CartController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/panier')]
     public function index(): void
     {
         $cart      = $this->cartState();
@@ -59,6 +61,7 @@ class CartController extends SiteController
         ]);
     }
 
+    #[Route('POST', '/panier/dates')]
     public function setDates(): void
     {
         $this->requirePost();
@@ -87,6 +90,7 @@ class CartController extends SiteController
         $this->redirect($redirect);
     }
 
+    #[Route('POST', '/panier/ajouter')]
     public function add(): void
     {
         $this->requirePost();
@@ -104,6 +108,7 @@ class CartController extends SiteController
         $this->redirect($redirect);
     }
 
+    #[Route('POST', '/panier/ajouter-pack')]
     public function addPack(): void
     {
         $this->requirePost();
@@ -122,6 +127,7 @@ class CartController extends SiteController
         $this->redirect($redirect);
     }
 
+    #[Route('POST', '/panier/supprimer')]
     public function remove(): void
     {
         $this->requirePost();
@@ -129,6 +135,7 @@ class CartController extends SiteController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('POST', '/panier/supprimer-pack')]
     public function removePack(): void
     {
         $this->requirePost();
@@ -136,6 +143,7 @@ class CartController extends SiteController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('GET', '/panier/checkout')]
     public function checkout(): void
     {
         $cart = $this->cartState();
@@ -154,6 +162,7 @@ class CartController extends SiteController
         ]);
     }
 
+    #[Route('POST', '/panier/checkout')]
     public function processCheckout(): void
     {
         $this->requirePost();
@@ -174,6 +183,7 @@ class CartController extends SiteController
         }
     }
 
+    #[Route('GET', '/panier/confirmation')]
     public function confirmation(): void
     {
         $id = $this->request->queryString->getInt('id');

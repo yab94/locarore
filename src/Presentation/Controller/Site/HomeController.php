@@ -6,6 +6,7 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetHomePageDataUseCase;
 use Rore\Framework\PageMeta;
+use Rore\Framework\Route;
 
 class HomeController extends SiteController
 {
@@ -16,6 +17,7 @@ class HomeController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/')]
     public function index(): void
     {
         $data       = $this->getHomePageDataUseCase->execute();

@@ -9,6 +9,7 @@ use Rore\Application\Contact\GetContactMessageUseCase;
 use Rore\Application\Contact\GetContactMessagesUseCase;
 use Rore\Application\Contact\MarkMessageReadUseCase;
 use Rore\Application\Contact\MarkMessageUnreadUseCase;
+use Rore\Framework\Route;
 
 final class MessageController extends AdminController
 {
@@ -23,6 +24,7 @@ final class MessageController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/messages')]
     public function index(): void
     {
         $messages = $this->getMessages->all();
@@ -33,6 +35,7 @@ final class MessageController extends AdminController
         ]);
     }
 
+    #[Route('GET', '/admin/messages/{id}')]
     public function show(string $id): void
     {
         $id      = (int) $id;
@@ -49,6 +52,7 @@ final class MessageController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/messages/{id}/lire')]
     public function markRead(string $id): void
     {
         $this->requirePost();
@@ -57,6 +61,7 @@ final class MessageController extends AdminController
         $this->redirect($this->urlResolver->resolve('Admin\Message.index'));
     }
 
+    #[Route('POST', '/admin/messages/{id}/non-lu')]
     public function markUnread(string $id): void
     {
         $this->requirePost();
@@ -65,6 +70,7 @@ final class MessageController extends AdminController
         $this->redirect($this->urlResolver->resolve('Admin\Message.index'));
     }
 
+    #[Route('POST', '/admin/messages/{id}/supprimer')]
     public function delete(string $id): void
     {
         $this->requirePost();

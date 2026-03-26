@@ -13,6 +13,7 @@ use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
 use Rore\Application\Catalog\UploadProductPhotoUseCase;
+use Rore\Framework\Route;
 
 class ProductController extends AdminController
 {
@@ -31,6 +32,7 @@ class ProductController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/produits')]
     public function index(): void
     {
         $this->render('admin/products/list', [
@@ -39,6 +41,7 @@ class ProductController extends AdminController
         ]);
     }
 
+    #[Route('GET', '/admin/produits/creer')]
     public function create(): void
     {
         $this->render('admin/products/form', [
@@ -48,6 +51,7 @@ class ProductController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/produits/creer')]
     public function store(): void
     {
         $this->requirePost();
@@ -76,6 +80,7 @@ class ProductController extends AdminController
         }
     }
 
+    #[Route('GET', '/admin/produits/{id}/modifier')]
     public function edit(string $id): void
     {
         try {
@@ -93,6 +98,7 @@ class ProductController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/produits/{id}/modifier')]
     public function update(string $id): void
     {
         $this->requirePost();
@@ -120,6 +126,7 @@ class ProductController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $id]));
     }
 
+    #[Route('POST', '/admin/produits/{id}/toggle')]
     public function toggle(string $id): void
     {
         $this->requirePost();
@@ -131,6 +138,7 @@ class ProductController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('POST', '/admin/produits/{id}/photo')]
     public function uploadPhoto(string $id): void
     {
         $this->requirePost();
@@ -148,6 +156,7 @@ class ProductController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $id]));
     }
 
+    #[Route('POST', '/admin/produits/photo/{photoId}/supprimer')]
     public function deletePhoto(string $photoId): void
     {
         $this->requirePost();
@@ -161,6 +170,7 @@ class ProductController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('POST', '/admin/produits/photo/{photoId}/description')]
     public function updatePhotoDescription(string $photoId): void
     {
         $this->requirePost();

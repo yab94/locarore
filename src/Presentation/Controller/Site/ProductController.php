@@ -8,6 +8,7 @@ use Rore\Application\Catalog\GetProductWithDetailsUseCase;
 use Rore\Application\Reservation\GetReservedQuantityForProductUseCase;
 use Rore\Framework\PageMeta;
 
+use Rore\Framework\Route;
 class ProductController extends SiteController
 {
     public function __construct(
@@ -18,6 +19,7 @@ class ProductController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/produits/{path+}')]
     public function show(string $path): void
     {
         $segments    = explode('/', trim($path, '/'));

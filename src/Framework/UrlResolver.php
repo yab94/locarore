@@ -25,9 +25,7 @@ class UrlResolver
     private array $handlerToPath = [];
 
     public function __construct(readonly Config $config)
-    {
-        $this->buildRouteIndex();
-    }
+    {}
 
     /**
      * Résout l'URL d'un handler.
@@ -64,29 +62,26 @@ class UrlResolver
     }
 
     /**
-     * Construit l'index handler → path depuis config.routes.
-     * GET est prioritaire sur POST : si le même handler existe en GET et POST,
-     * on retient le GET (pertinent pour générer des liens).
+     * Charge les routes collectées par RouteScanner.
+     * GET est prioritaire sur POST pour la génération de liens.
+     *
+     * @param array<array{method: string, path: string, handler: string}> $routes
      */
-    private function buildRouteIndex(): void
+    public function loadRoutes(array $routes): void
     {
-        $routes = $this->config->getArray('routes');
-        if (!is_array($routes)) {
-            return;
-        }
         // POST en premier, GET écrase (GET prioritaire)
-        foreach (['POST', 'GET'] as $method) {
-            foreach ($routes[$method] ?? [] as $path => $handler) {
-                $fqcn = (string) $handler;
-                $this->handlerToPath[$fqcn] = $path;
-                // Indexation alias court : "Admin\Category.edit"
-                $short = $this->buildRouteName($fqcn);
-                if ($short !== $fqcn) {
-                    $this->handlerToPath[$short] = $path;
-                }
+        usort($routes, fn($a, $b) => ($a['method'] === 'GET' ? 1 : 0) - ($b['method'] === 'GET' ? 1 : 0));
+        foreach ($routes as $route) {
+            $fqcn  = $route['handler'];
+            $path  = $route['path'];
+            $this->handlerToPath[$fqcn] = $path;
+            $short = $this->buildRouteName($fqcn);
+            if ($short !== $fqcn) {
+                $this->handlerToPath[$short] = $path;
             }
         }
     }
+
     /**
      * Construit l'alias court d'un handler FQCN.
      * Le namespace de base est lu depuis config : routes.controller_namespace

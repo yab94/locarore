@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetAllCatalogItemsUseCase;
+use Rore\Framework\Route;
 
 class SitemapController extends SiteController
 {
@@ -15,6 +16,7 @@ class SitemapController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/sitemap.xml')]
     public function index(): void
     {
         $baseUrl = $this->config->getString('seo.site_url');

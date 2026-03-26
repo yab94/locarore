@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Contact\SendContactMessageUseCase;
+use Rore\Framework\Route;
 
 final class ContactController extends SiteController
 {
@@ -15,6 +16,7 @@ final class ContactController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/contact')]
     public function index(): void
     {
         $this->render('site/contact', [
@@ -24,6 +26,7 @@ final class ContactController extends SiteController
         ]);
     }
 
+    #[Route('POST', '/contact')]
     public function send(): void
     {
         $this->requirePost();
@@ -61,6 +64,7 @@ final class ContactController extends SiteController
         }
     }
 
+    #[Route('GET', '/contact/merci')]
     public function confirmation(): void
     {
         $this->render('site/contact-confirmation', [

@@ -8,6 +8,7 @@ use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Application\Catalog\GetTagWithItemsUseCase;
 use Rore\Framework\PageMeta;
 
+use Rore\Framework\Route;
 class TagController extends SiteController
 {
     public function __construct(
@@ -18,6 +19,7 @@ class TagController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/tags/{slug}')]
     public function show(string $slug): void
     {
         $result = $this->getTagWithItemsUseCase->execute($slug);

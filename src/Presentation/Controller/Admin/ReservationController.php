@@ -11,6 +11,7 @@ use Rore\Application\Reservation\GetReservationDetailsUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
+use Rore\Framework\Route;
 
 class ReservationController extends AdminController
 {
@@ -26,6 +27,7 @@ class ReservationController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/reservations')]
     public function index(): void
     {
         $status       = $this->request->queryString->getString('status', 'all');
@@ -40,6 +42,7 @@ class ReservationController extends AdminController
         ]);
     }
 
+    #[Route('GET', '/admin/reservations/{id}')]
     public function show(string $id): void
     {
         try {
@@ -61,6 +64,7 @@ class ReservationController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/reservations/{id}/devis')]
     public function quote(string $id): void
     {
         $this->requirePost();
@@ -73,6 +77,7 @@ class ReservationController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
+    #[Route('POST', '/admin/reservations/{id}/statut')]
     public function setStatus(string $id): void
     {
         $this->requirePost();
@@ -86,6 +91,7 @@ class ReservationController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
+    #[Route('POST', '/admin/reservations/{id}/confirmer')]
     public function confirm(string $id): void
     {
         $this->requirePost();
@@ -98,6 +104,7 @@ class ReservationController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
+    #[Route('POST', '/admin/reservations/{id}/annuler')]
     public function cancel(string $id): void
     {
         $this->requirePost();
@@ -110,6 +117,7 @@ class ReservationController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
     }
 
+    #[Route('GET', '/admin/reservations/calendrier')]
     public function calendar(): void
     {
         $month = $this->request->queryString->getInt('month', (int) date('n'));

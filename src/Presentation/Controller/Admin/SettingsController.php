@@ -7,6 +7,7 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Settings\GetAllSettingsUseCase;
 use Rore\Application\Settings\SaveSettingsUseCase;
 
+use Rore\Framework\Route;
 class SettingsController extends AdminController
 {
     public function __construct(
@@ -17,6 +18,7 @@ class SettingsController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/contenu')]
     public function index(): void
     {
         $settings = $this->getAllSettingsUseCase->execute();
@@ -32,6 +34,7 @@ class SettingsController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/contenu')]
     public function save(): void
     {
         $this->requirePost();

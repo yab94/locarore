@@ -6,8 +6,10 @@ namespace Rore\Presentation\Controller\Admin;
 
 use Rore\Presentation\Controller\Controller;
 
+use Rore\Framework\Route;
 class AuthController extends Controller
 {
+    #[Route('GET', '/admin')]
     public function login(): void
     {
         if (!empty($this->session->get('admin_logged_in'))) {
@@ -16,6 +18,7 @@ class AuthController extends Controller
         $this->render('admin/login', ['title' => 'Administration'], 'layout/admin');
     }
 
+    #[Route('POST', '/admin/connexion')]
     public function processLogin(): void
     {
         $this->requirePost();
@@ -32,6 +35,7 @@ class AuthController extends Controller
         $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
     }
 
+    #[Route('POST', '/admin/deconnexion')]
     public function logout(): void
     {
         $this->session->remove('admin_logged_in');

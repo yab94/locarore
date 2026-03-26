@@ -6,6 +6,7 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Search\SearchUseCase;
 use Rore\Framework\PageMeta;
+use Rore\Framework\Route;
 
 class SearchController extends SiteController
 {
@@ -16,6 +17,7 @@ class SearchController extends SiteController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/recherche')]
     public function index(): void
     {
         $q       = trim((string) ($_GET['q'] ?? ''));

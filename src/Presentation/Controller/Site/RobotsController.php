@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
+use Rore\Framework\Route;
 class RobotsController extends SiteController
 {
     public function __construct(
@@ -11,6 +12,7 @@ class RobotsController extends SiteController
     ) {
         parent::__construct(...$parentDeps);
     }
+    #[Route('GET', '/robots.txt')]
     public function index(): void
     {
         $baseUrl = $this->config->getString('seo.site_url');

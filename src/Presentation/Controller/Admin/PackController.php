@@ -12,6 +12,7 @@ use Rore\Application\Catalog\GetPackByIdUseCase;
 use Rore\Application\Catalog\UpdatePackUseCase;
 use Rore\Application\Catalog\TogglePackUseCase;
 
+use Rore\Framework\Route;
 class PackController extends AdminController
 {
     public function __construct(
@@ -27,6 +28,7 @@ class PackController extends AdminController
         parent::__construct(...$parentDeps);
     }
 
+    #[Route('GET', '/admin/packs')]
     public function index(): void
     {
         $data = $this->getAllPacksWithPricingUseCase->execute();
@@ -40,6 +42,7 @@ class PackController extends AdminController
         ]);
     }
 
+    #[Route('GET', '/admin/packs/creer')]
     public function create(): void
     {
         $this->render('admin/packs/form', [
@@ -50,6 +53,7 @@ class PackController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/packs/creer')]
     public function store(): void
     {
         $this->requirePost();
@@ -72,6 +76,7 @@ class PackController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('GET', '/admin/packs/{id}/modifier')]
     public function edit(string $id): void
     {
         $pack = $this->getPackByIdUseCase->execute((int) $id);
@@ -86,6 +91,7 @@ class PackController extends AdminController
         ]);
     }
 
+    #[Route('POST', '/admin/packs/{id}/modifier')]
     public function update(string $id): void
     {
         $this->requirePost();
@@ -109,6 +115,7 @@ class PackController extends AdminController
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
     }
 
+    #[Route('POST', '/admin/packs/{id}/toggle')]
     public function toggle(string $id): void
     {
         $this->requirePost();
