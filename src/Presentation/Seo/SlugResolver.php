@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
-use Rore\Framework\Config;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
@@ -18,7 +17,12 @@ final class SlugResolver
 {
     use Castable;
 
-    public function __construct(readonly Config $config) {
+    public function __construct(
+        private string $siteUrl,
+        private string $categoriesBaseUrl,
+        private string $productsBaseUrl,
+        private string $tagsBaseUrl,
+    ) {
     }
     
     /**
@@ -26,7 +30,7 @@ final class SlugResolver
      */
     public function siteUrl(): string
     {
-        return $this->config->getString('seo.site_url');
+        return $this->siteUrl;
     }
 
     /**
@@ -61,7 +65,7 @@ final class SlugResolver
      */
     public function categoryUrl(Category $category, array $allCategories): string
     {
-        return $this->config->getString('seo.categories_base_url') . '/' . $this->categoryPath($category, $allCategories);
+        return $this->categoriesBaseUrl . '/' . $this->categoryPath($category, $allCategories);
     }
 
     /**
@@ -80,10 +84,10 @@ final class SlugResolver
         }
 
         if ($category === null) {
-            return $this->config->getString('seo.products_base_url') . '/' . $product->getSlug();
+            return $this->productsBaseUrl . '/' . $product->getSlug();
         }
 
-        return $this->config->getString('seo.products_base_url') . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
+        return $this->productsBaseUrl . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
     }
 
     /**
@@ -91,6 +95,6 @@ final class SlugResolver
      */
     public function tagUrl(Tag $tag): string
     {
-        return $this->config->getString('seo.tags_base_url') . '/' . $tag->getSlug();
+        return $this->tagsBaseUrl . '/' . $tag->getSlug();
     }
 }

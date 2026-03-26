@@ -217,7 +217,12 @@ final class Container
 
                 $type = $param->getType();
 
-                if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                $fromAttrs = $param->getAttributes(From::class);
+                if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                    /** @var From $from */
+                    $from = $fromAttrs[0]->newInstance();
+                    $parentDeps[] = $this->resolveFromAttribute($from, $type->getName());
+                } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     $parentDeps[] = $this->get($type->getName());
                 } elseif ($param->isDefaultValueAvailable()) {
                     $parentDeps[] = $param->getDefaultValue();
