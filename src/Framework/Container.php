@@ -49,14 +49,6 @@ final class Container
     }
 
     /**
-     * Enregistre une instance déjà construite.
-     */
-    public function instance(string $abstract, object $instance): void
-    {
-        $this->instances[$abstract] = $instance;
-    }
-
-    /**
      * Résout une dépendance, en construisant l'instance si nécessaire.
      *
      * @template T of object
