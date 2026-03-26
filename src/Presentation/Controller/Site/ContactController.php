@@ -31,6 +31,11 @@ final class ContactController extends SiteController
     {
         $this->requirePost();
 
+        // Honeypot anti-bot
+        if ($this->request->body->getString('_trap') !== '') {
+            $this->redirect($this->urlResolver->resolve('Site\Contact.confirmation'));
+        }
+
         $firstName = trim($this->request->body->getString('first_name'));
         $lastName  = trim($this->request->body->getString('last_name'));
         $email     = trim($this->request->body->getString('email'));

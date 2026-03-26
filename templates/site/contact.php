@@ -19,6 +19,7 @@ $settings = GetSettingUseCase::cast($tpl->get('settings'));
     <form method="post" action="<?= $url('Site\Contact.send') ?>"
           class="bg-white rounded-2xl border border-gray-200 p-8 space-y-5">
         <?= $partial('partials/csrf') ?>
+        <input type="text" name="_trap" value="" style="display:none" tabindex="-1" autocomplete="off">
 
         <div class="grid grid-cols-2 gap-4">
             <div>
