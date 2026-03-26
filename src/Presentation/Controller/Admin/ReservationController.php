@@ -42,6 +42,25 @@ class ReservationController extends AdminController
         ]);
     }
 
+    #[Route('GET', '/admin/reservations/calendrier')]
+    public function calendar(): void
+    {
+        $month = $this->request->queryString->getInt('month', (int) date('n'));
+        $year  = $this->request->queryString->getInt('year', (int) date('Y'));
+
+        $data = $this->getCalendarDataUseCase->execute($month, $year);
+
+        $this->render('admin/reservations/calendar', [
+            'title'        => 'Calendrier',
+            'reservations' => $data['reservations'],
+            'products'     => $data['products'],
+            'month'        => $data['month'],
+            'year'         => $data['year'],
+            'start'        => $data['start'],
+            'end'          => $data['end'],
+        ]);
+    }
+
     #[Route('GET', '/admin/reservations/{id}')]
     public function show(string $id): void
     {
@@ -115,24 +134,5 @@ class ReservationController extends AdminController
             $this->flash('error', $e->getMessage());
         }
         $this->redirect($this->urlResolver->resolve(self::class . '.show', ['id' => $id]));
-    }
-
-    #[Route('GET', '/admin/reservations/calendrier')]
-    public function calendar(): void
-    {
-        $month = $this->request->queryString->getInt('month', (int) date('n'));
-        $year  = $this->request->queryString->getInt('year', (int) date('Y'));
-
-        $data = $this->getCalendarDataUseCase->execute($month, $year);
-
-        $this->render('admin/reservations/calendar', [
-            'title'        => 'Calendrier',
-            'reservations' => $data['reservations'],
-            'products'     => $data['products'],
-            'month'        => $data['month'],
-            'year'         => $data['year'],
-            'start'        => $data['start'],
-            'end'          => $data['end'],
-        ]);
     }
 }
