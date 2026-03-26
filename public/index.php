@@ -25,7 +25,7 @@ $container->bind(\Rore\Framework\SessionStorageInterface::class,   \Rore\Framewo
 $container->bind(\Rore\Framework\CsrfTokenManagerInterface::class, \Rore\Framework\CsrfTokenManager::class);
 $container->bind(\Rore\Framework\MailerInterface::class,           \Rore\Framework\SmtpMailer::class);
 $container->bind(\Rore\Framework\FileManagerInterface::class, fn() => new \Rore\Framework\FileUploader(
-    uploadDir:    $config->getString('app.root_dir') . '/public' . $config->getString('upload.upload_path'),
+    uploadDir:    BASE_PATH . '/public' . $config->getString('upload.upload_path'),
     maxSize:      (int) $config->getString('upload.max_size'),
     allowedTypes: $config->getString('upload.allowed_types'),
 ));
