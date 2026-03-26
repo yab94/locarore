@@ -57,6 +57,7 @@ final class AvailabilityServiceTest
             name:                'Vase',
             slug:                'vase',
             description:         null,
+            descriptionShort:    null,
             stock:               $stock,
             stockOnDemand:       $stockOnDemand,
             fabricationTimeDays: $fabricationTimeDays,
@@ -269,6 +270,7 @@ final class AvailabilityServiceTest
             name:               'Pack Test',
             slug:               'pack-test',
             description:        null,
+            descriptionShort:   null,
             pricePerDay:        100.0,
             priceExtraWeekend:  0.0,
             priceExtraWeekday:  0.0,
@@ -293,6 +295,7 @@ final class AvailabilityServiceTest
         // Produit 1 : stock=5 (besoin de 2) → OK
         $product1 = new Product(
             id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            descriptionShort: null,
             stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -302,6 +305,7 @@ final class AvailabilityServiceTest
         // Produit 2 : stock=10 (besoin de 3) → OK
         $product2 = new Product(
             id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            descriptionShort: null,
             stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -327,6 +331,7 @@ final class AvailabilityServiceTest
         // Produit 1 : stock=5 (besoin de 2) → OK
         $product1 = new Product(
             id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            descriptionShort: null,
             stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -336,6 +341,7 @@ final class AvailabilityServiceTest
         // Produit 2 : stock=2 (besoin de 3) → INSUFFISANT
         $product2 = new Product(
             id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            descriptionShort: null,
             stock: 2, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -361,6 +367,7 @@ final class AvailabilityServiceTest
         // Seulement produit 1, produit 2 manquant
         $product1 = new Product(
             id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            descriptionShort: null,
             stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -385,6 +392,7 @@ final class AvailabilityServiceTest
 
         $product1 = new Product(
             id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            descriptionShort: null,
             stock: 5, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -394,6 +402,7 @@ final class AvailabilityServiceTest
         // Produit 2 inactif
         $product2 = new Product(
             id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            descriptionShort: null,
             stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: false,
@@ -419,6 +428,7 @@ final class AvailabilityServiceTest
         // Produit 1 : stock=1 (besoin 2) → doit utiliser 1 on-demand (délai 3j)
         $product1 = new Product(
             id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            descriptionShort: null,
             stock: 1, stockOnDemand: 5, fabricationTimeDays: 3.0,
             priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -428,6 +438,7 @@ final class AvailabilityServiceTest
         // Produit 2 : stock suffisant
         $product2 = new Product(
             id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            descriptionShort: null,
             stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -453,6 +464,7 @@ final class AvailabilityServiceTest
         // Produit 1 : stock=1 (besoin 2) → doit fabriquer 1 (délai 3j requis)
         $product1 = new Product(
             id: 1, categoryId: 1, name: 'P1', slug: 'p1', description: null,
+            descriptionShort: null,
             stock: 1, stockOnDemand: 5, fabricationTimeDays: 3.0,
             priceBase: 10.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,
@@ -461,6 +473,7 @@ final class AvailabilityServiceTest
 
         $product2 = new Product(
             id: 2, categoryId: 1, name: 'P2', slug: 'p2', description: null,
+            descriptionShort: null,
             stock: 10, stockOnDemand: 0, fabricationTimeDays: 0.0,
             priceBase: 20.0, priceExtraWeekend: 0.0, priceExtraWeekday: 0.0,
             isActive: true,

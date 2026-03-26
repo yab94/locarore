@@ -24,6 +24,7 @@ class ProductPriceTest
             name:                'Test',
             slug:                'test',
             description:         null,
+            descriptionShort:    null,
             stock:               10,
             stockOnDemand:       0,
             fabricationTimeDays: 0.0,
