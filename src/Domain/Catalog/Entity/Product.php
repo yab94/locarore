@@ -24,6 +24,7 @@ class Product implements PricableInterface
         private string              $name,
         private string              $slug,
         private ?string             $description,
+        private ?string             $descriptionShort,
         private int                 $stock,
         private int                 $stockOnDemand,   // unités fabricables à la commande
         private float               $fabricationTimeDays, // temps de fabrication unitaire (jours)
@@ -40,6 +41,7 @@ class Product implements PricableInterface
     public function getName(): string                  { return $this->name; }
     public function getSlug(): string                  { return $this->slug; }
     public function getDescription(): ?string          { return $this->description; }
+    public function getDescriptionShort(): ?string      { return $this->descriptionShort; }
     public function getStock(): int                    { return $this->stock; }
     public function getStockOnDemand(): int            { return $this->stockOnDemand; }
     public function getFabricationTimeDays(): float    { return $this->fabricationTimeDays; }
@@ -67,6 +69,7 @@ class Product implements PricableInterface
     public function setName(string $name): void        { $this->name = $name; }
     public function setSlug(string $slug): void        { $this->slug = $slug; }
     public function setDescription(?string $d): void   { $this->description = $d; }
+    public function setDescriptionShort(?string $d): void { $this->descriptionShort = $d; }
     public function setStock(int $stock): void         { $this->stock = $stock; }
     public function setStockOnDemand(int $s): void     { $this->stockOnDemand = $s; }
     public function setFabricationTimeDays(float $d): void  { $this->fabricationTimeDays = max(0.0, $d); }

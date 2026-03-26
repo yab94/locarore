@@ -32,7 +32,7 @@ $_packUrl       = $config->getString('seo.packs_base_url') . '/' . $pack->getSlu
     <div class="p-4">
         <div class="inline-flex items-center gap-1 bg-brand-50 text-brand-700 border border-brand-200 rounded-full px-2 py-0.5 text-xs font-medium mb-2">Pack</div>
         <h3 class="font-semibold text-gray-900 mb-1" style="font-family:'Roboto Slab',serif"><?= $html($pack->getName()) ?></h3>
-        <p class="text-sm text-gray-500 mb-3 line-clamp-2"><?= $html($pack->getDescription() ?? '') ?></p>
+        <p class="text-sm text-gray-500 mb-3 line-clamp-2"><?= $html($pack->getDescriptionShort() ?? strip_tags($pack->getDescription() ?? '')) ?></p>
         <div class="flex items-center justify-between">
             <span class="text-brand-600 font-bold text-sm">
                 <?= number_format($pack->getPricePerDay(), 0, ',', ' ') ?> € / jour

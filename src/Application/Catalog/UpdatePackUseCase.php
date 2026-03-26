@@ -29,8 +29,9 @@ class UpdatePackUseCase
         float   $priceExtraWeekend,
         float   $priceExtraWeekday,
         array   $items,
-        array   $slots = [],
-        ?string $customSlug = null,
+        array   $slots            = [],
+        ?string $customSlug       = null,
+        ?string $descriptionShort = null,
     ): void {
         $pack = $this->packRepository->findById($id);
         if (!$pack) {
@@ -47,6 +48,7 @@ class UpdatePackUseCase
         $pack->setName($name);
         $pack->setSlug($slug);
         $pack->setDescription($description);
+        $pack->setDescriptionShort($descriptionShort);
         $pack->setPricePerDay($pricePerDay);
         $pack->setPriceExtraWeekend($priceExtraWeekend);
         $pack->setPriceExtraWeekday($priceExtraWeekday);

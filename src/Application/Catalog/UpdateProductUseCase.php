@@ -24,13 +24,14 @@ class UpdateProductUseCase
         ?string $description,
         int     $stock,
         float   $priceBase,
-        int     $stockOnDemand    = 0,
+        int     $stockOnDemand       = 0,
         float   $fabricationTimeDays = 0.0,
-        float   $priceExtraWeekend = 0.0,
-        float   $priceExtraWeekday = 15.0,
-        array   $extraCategoryIds = [],
-        ?string $customSlug       = null,
-        array   $tagNames         = [],
+        float   $priceExtraWeekend   = 0.0,
+        float   $priceExtraWeekday   = 15.0,
+        array   $extraCategoryIds    = [],
+        ?string $customSlug          = null,
+        array   $tagNames            = [],
+        ?string $descriptionShort    = null,
     ): void {
         $product = $this->productRepository->findById($id);
         if ($product === null) {
@@ -48,6 +49,7 @@ class UpdateProductUseCase
         $product->setName($name);
         $product->setSlug($slug);
         $product->setDescription($description);
+        $product->setDescriptionShort($descriptionShort);
         $product->setStock($stock);
         $product->setStockOnDemand($stockOnDemand);
         $product->setFabricationTimeDays($fabricationTimeDays);

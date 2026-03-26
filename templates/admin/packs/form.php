@@ -44,6 +44,15 @@ $categories = Cast::array($tpl->tryGet('categories', []));
             </div>
         </div>
 
+        <!-- Description courte (texte brut, pour les cards) -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Description courte <span class="text-gray-400 font-normal">(cards, résultats de recherche)</span></label>
+            <textarea name="description_short" rows="2"
+                      placeholder="Résumé en 1-2 phrases, sans mise en forme…"
+                      class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600 resize-y"><?= $html($pack?->getDescriptionShort() ?? '') ?></textarea>
+            <p class="text-xs text-gray-400 mt-1">Texte brut uniquement — affiché dans les cartes pack</p>
+        </div>
+
         <!-- Description WYSIWYG -->
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>

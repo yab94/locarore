@@ -17,6 +17,7 @@ class Pack implements PricableInterface
         private string              $name,
         private string              $slug,
         private ?string             $description,
+        private ?string             $descriptionShort,
         private float               $pricePerDay,
         private float               $priceExtraWeekend,
         private float               $priceExtraWeekday,
@@ -29,6 +30,7 @@ class Pack implements PricableInterface
     public function getName(): string                  { return $this->name; }
     public function getSlug(): string                  { return $this->slug; }
     public function getDescription(): ?string          { return $this->description; }
+    public function getDescriptionShort(): ?string      { return $this->descriptionShort; }
     public function getPricePerDay(): float            { return $this->pricePerDay; }
     public function getPriceExtraWeekend(): float      { return $this->priceExtraWeekend; }
     public function getPriceExtraWeekday(): float      { return $this->priceExtraWeekday; }
@@ -42,6 +44,7 @@ class Pack implements PricableInterface
     public function setName(string $name): void        { $this->name = $name; }
     public function setSlug(string $slug): void        { $this->slug = $slug; }
     public function setDescription(?string $d): void   { $this->description = $d; }
+    public function setDescriptionShort(?string $d): void { $this->descriptionShort = $d; }
     public function setPricePerDay(float $p): void     { $this->pricePerDay = $p; }
     public function setPriceExtraWeekend(float $p): void { $this->priceExtraWeekend = $p; }
     public function setPriceExtraWeekday(float $p): void { $this->priceExtraWeekday = $p; }

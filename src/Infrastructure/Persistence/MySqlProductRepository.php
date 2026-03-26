@@ -101,14 +101,15 @@ class MySqlProductRepository implements ProductRepositoryInterface
         if ($product->getId() === null) {
             $stmt = $this->connection->prepare(
                 'INSERT INTO products
-                    (category_id, name, slug, description, stock, stock_on_demand, fabrication_time_days, price_base, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                    (category_id, name, slug, description, description_short, stock, stock_on_demand, fabrication_time_days, price_base, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $product->getCategoryId(),
                 $product->getName(),
                 $product->getSlug(),
                 $product->getDescription(),
+                $product->getDescriptionShort(),
                 $product->getStock(),
                 $product->getStockOnDemand(),
                 $product->getFabricationTimeDays(),
@@ -123,7 +124,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
         } else {
             $stmt = $this->connection->prepare(
                 'UPDATE products
-                    SET category_id = ?, name = ?, slug = ?, description = ?,
+                    SET category_id = ?, name = ?, slug = ?, description = ?, description_short = ?,
                         stock = ?, stock_on_demand = ?, fabrication_time_days = ?, price_base = ?, price_extra_weekend = ?, price_extra_weekday = ?,
                         is_active = ?, updated_at = ?
                   WHERE id = ?'
@@ -133,6 +134,7 @@ class MySqlProductRepository implements ProductRepositoryInterface
                 $product->getName(),
                 $product->getSlug(),
                 $product->getDescription(),
+                $product->getDescriptionShort(),
                 $product->getStock(),
                 $product->getStockOnDemand(),
                 $product->getFabricationTimeDays(),
@@ -301,8 +303,9 @@ class MySqlProductRepository implements ProductRepositoryInterface
             categoryId:    (int) $row['category_id'],
             name:          $row['name'],
             slug:          $row['slug'],
-            description:   $row['description'],
-            stock:         (int) $row['stock'],
+            description:        $row['description'],
+            descriptionShort:   $row['description_short'] ?? null,
+            stock:              (int) $row['stock'],
             stockOnDemand: (int) ($row['stock_on_demand'] ?? 0),
             fabricationTimeDays: (float) ($row['fabrication_time_days'] ?? 0.0),
             priceBase:     (float) $row['price_base'],

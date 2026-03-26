@@ -1,11 +1,10 @@
 Features
 
 - systeme anti captcha formulaire contact 
+- cookies
 
 - generation catalogue PDF en admin uniquement
 
 - Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
 
 - more test on each Domain Service
-
-Le pageMetaBuilder avec ses method forCeci forCela n'est pas bon, il faut que les Controller gere ça directement je pense

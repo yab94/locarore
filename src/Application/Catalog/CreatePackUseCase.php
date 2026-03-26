@@ -28,8 +28,9 @@ class CreatePackUseCase
         float   $priceExtraWeekend,
         float   $priceExtraWeekday,
         array   $items,
-        array   $slots = [],
-        ?string $customSlug = null,
+        array   $slots            = [],
+        ?string $customSlug       = null,
+        ?string $descriptionShort = null,
     ): int {
         $now  = new \DateTimeImmutable();
         $slug = Slug::from($customSlug ?? $name)->getValue();
@@ -53,6 +54,7 @@ class CreatePackUseCase
             name:              $name,
             slug:              $slug,
             description:       $description,
+            descriptionShort:  $descriptionShort,
             pricePerDay:       $pricePerDay,
             priceExtraWeekend: $priceExtraWeekend,
             priceExtraWeekday: $priceExtraWeekday,

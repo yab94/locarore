@@ -102,13 +102,14 @@ class MySqlPackRepository implements PackRepositoryInterface
     {
         if ($pack->getId() === null) {
             $stmt = $this->connection->prepare(
-                'INSERT INTO packs (name, slug, description, price_per_day, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+                'INSERT INTO packs (name, slug, description, description_short, price_per_day, price_extra_weekend, price_extra_weekday, is_active, created_at, updated_at)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
             );
             $stmt->execute([
                 $pack->getName(),
                 $pack->getSlug(),
                 $pack->getDescription(),
+                $pack->getDescriptionShort(),
                 $pack->getPricePerDay(),
                 $pack->getPriceExtraWeekend(),
                 $pack->getPriceExtraWeekday(),
@@ -120,13 +121,14 @@ class MySqlPackRepository implements PackRepositoryInterface
         } else {
             $stmt = $this->connection->prepare(
                 'UPDATE packs
-                    SET name = ?, slug = ?, description = ?, price_per_day = ?, price_extra_weekend = ?, price_extra_weekday = ?, is_active = ?, updated_at = ?
+                    SET name = ?, slug = ?, description = ?, description_short = ?, price_per_day = ?, price_extra_weekend = ?, price_extra_weekday = ?, is_active = ?, updated_at = ?
                   WHERE id = ?'
             );
             $stmt->execute([
                 $pack->getName(),
                 $pack->getSlug(),
                 $pack->getDescription(),
+                $pack->getDescriptionShort(),
                 $pack->getPricePerDay(),
                 $pack->getPriceExtraWeekend(),
                 $pack->getPriceExtraWeekday(),
@@ -199,6 +201,7 @@ class MySqlPackRepository implements PackRepositoryInterface
             name:               $row['name'],
             slug:               $row['slug'],
             description:        $row['description'],
+            descriptionShort:   $row['description_short'] ?? null,
             pricePerDay:        (float) $row['price_per_day'],
             priceExtraWeekend:  (float) ($row['price_extra_weekend'] ?? 0),
             priceExtraWeekday:  (float) ($row['price_extra_weekday'] ?? 0),

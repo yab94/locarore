@@ -57,6 +57,7 @@ class PackController extends AdminController
             $this->createPackUseCase->execute(
                 name:               $this->request->body->getString('name'),
                 description:        $this->request->body->getString('description') ?: null,
+                descriptionShort:   $this->request->body->getString('description_short') ?: null,
                 pricePerDay:        $this->request->body->getFloat('price_per_day'),
                 priceExtraWeekend:  $this->request->body->getFloat('price_extra_weekend'),
                 priceExtraWeekday:  $this->request->body->getFloat('price_extra_weekday'),
@@ -93,6 +94,7 @@ class PackController extends AdminController
                 id:                 (int) $id,
                 name:               $this->request->body->getString('name'),
                 description:        $this->request->body->getString('description') ?: null,
+                descriptionShort:   $this->request->body->getString('description_short') ?: null,
                 pricePerDay:        $this->request->body->getFloat('price_per_day'),
                 priceExtraWeekend:  $this->request->body->getFloat('price_extra_weekend'),
                 priceExtraWeekday:  $this->request->body->getFloat('price_extra_weekday'),

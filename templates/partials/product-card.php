@@ -32,7 +32,7 @@ $_productUrl = $productContextPath !== null
     <?php endif; ?>
     <div class="p-4">
         <h3 class="font-semibold text-gray-900 mb-1" style="font-family:'Roboto Slab',serif"><?= $html($product->getName()) ?></h3>
-        <p class="text-sm text-gray-500 mb-3 line-clamp-2"><?= $html($product->getDescription() ?? '') ?></p>
+        <p class="text-sm text-gray-500 mb-3 line-clamp-2"><?= $html($product->getDescriptionShort() ?? strip_tags($product->getDescription() ?? '')) ?></p>
         <div class="flex items-center justify-between">
             <span class="text-brand-600 font-bold text-sm">
                 à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
