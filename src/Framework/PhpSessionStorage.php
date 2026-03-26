@@ -6,6 +6,13 @@ namespace Rore\Framework;
 
 final class PhpSessionStorage implements SessionStorageInterface
 {
+    public function __construct()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         return $_SESSION[$key] ?? $default;

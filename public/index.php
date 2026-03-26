@@ -16,9 +16,6 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 
 \Rore\Framework\PhpRuntime::apply($config->getArray('php') ?? []);
 
-// ─── Session ───────────────────────────────────────────────────────────────
-session_start();
-
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \Rore\Framework\Container();
 $container->instance(\Rore\Framework\Config::class, $config);
