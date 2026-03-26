@@ -19,7 +19,10 @@ abstract class Controller extends \Rore\Framework\Controller
         UrlResolver $urlResolver,
         ...$parentDeps
     ) {
-        parent::__construct( ...$parentDeps, urlResolver: $urlResolver);
+        parent::__construct(
+            ...$parentDeps,
+            urlResolver: $urlResolver,
+        );
     }
 
     protected function render(
@@ -32,16 +35,8 @@ abstract class Controller extends \Rore\Framework\Controller
             'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
             'csrfToken'   => $this->csrfTokenManager->token(),
             'settings'    => $this->settings,
-            'urlResolver' => $this->urlResolver,
-            'url'         => $this->urlResolver,
             ...$data,  // Les données spécifiques ont priorité
         ], $layout);
-    }
-
-    protected function redirect(string $url): never
-    {
-        $this->response->redirect($url);
-        exit;
     }
 
     protected function flash(string $type, string $message): void
