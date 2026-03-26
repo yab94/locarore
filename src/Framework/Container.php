@@ -114,10 +114,10 @@ final class Container
                 continue;
             }
 
-            // Paramètre annoté #[From] → closure auto-wirée fournit les args
-            $fromAttrs = $param->getAttributes(From::class);
+            // Paramètre annoté #[Bind] → closure auto-wirée fournit les args
+            $fromAttrs = $param->getAttributes(Bind::class);
             if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
-                /** @var From $from */
+                /** @var Bind $from */
                 $from   = $fromAttrs[0]->newInstance();
                 $args[] = $this->resolveFromAttribute($from, $type->getName());
                 continue;
@@ -141,15 +141,15 @@ final class Container
     }
 
     /**
-     * Résout un paramètre annoté #[From] :
+     * Résout un paramètre annoté #[Bind] :
      * - appelle la closure avec ses dépendances auto-wirées
      * - construit (ou récupère depuis le cache) l'instance cible
      *
      * Clé de cache = FQCN + ':' + md5(serialize(args))
-     * → deux #[From] produisant des résultats différents donnent
+     * → deux #[Bind] produisant des résultats différents donnent
      *   deux instances distinctes (ex: connexion principale vs réplique).
      */
-    private function resolveFromAttribute(From $from, string $className): object
+    private function resolveFromAttribute(Bind $from, string $className): object
     {
         // 1. Auto-wirer les dépendances de la closure
         $refFn      = new ReflectionFunction($from->resolver);
@@ -220,9 +220,9 @@ final class Container
 
                 $type = $param->getType();
 
-                $fromAttrs = $param->getAttributes(From::class);
+                $fromAttrs = $param->getAttributes(Bind::class);
                 if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
-                    /** @var From $from */
+                    /** @var Bind $from */
                     $from = $fromAttrs[0]->newInstance();
                     $parentDeps[] = $this->resolveFromAttribute($from, $type->getName());
                 } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {

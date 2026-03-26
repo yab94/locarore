@@ -9,8 +9,8 @@ use Rore\Application\Catalog\GetCategoryByIdUseCase;
 use Rore\Application\Catalog\CreateCategoryUseCase;
 use Rore\Application\Catalog\ToggleCategoryUseCase;
 use Rore\Application\Catalog\UpdateCategoryUseCase;
-
 use Rore\Framework\Route;
+
 class CategoryController extends AdminController
 {
     public function __construct(

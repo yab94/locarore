@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller;
 
 use Rore\Application\Settings\GetSettingUseCase;
-use Rore\Framework\From;
+use Rore\Framework\Bind;
 use Rore\Framework\Config;
 use Rore\Presentation\Seo\SlugResolver;
 
@@ -13,7 +13,7 @@ abstract class Controller extends \Rore\Framework\Controller
 {
     public function __construct(
         readonly GetSettingUseCase $settings,
-        #[From(static function(Config $config) { return [
+        #[Bind(static function(Config $config) { return [
             'siteUrl' => $config->getString('seo.site_url'),
             'categoriesBaseUrl' => $config->getString('seo.categories_base_url'),
             'productsBaseUrl' => $config->getString('seo.products_base_url'),
