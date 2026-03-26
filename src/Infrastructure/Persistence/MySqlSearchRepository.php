@@ -10,11 +10,11 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Domain\Catalog\Repository\SearchRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
+use Rore\Framework\Database;
 
 class MySqlSearchRepository implements SearchRepositoryInterface
 {
-    public function __construct(private readonly Connection $connection) {}
+    public function __construct(private readonly Database $connection) {}
 
     /**
      * Recherche LIKE sur produits et packs.

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Infrastructure\Database\Connection;
+use Rore\Framework\Database;
 use Rore\Domain\Settings\Entity\Setting;
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 
@@ -15,7 +15,7 @@ class MySqlSettingsRepository implements SettingsRepositoryInterface
 
 
 
-    public function __construct(private readonly Connection $connection)
+    public function __construct(private readonly Database $connection)
     {
     }
 

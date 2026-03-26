@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Infrastructure\Database\Connection;
+use Rore\Framework\Database;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
@@ -13,7 +13,7 @@ class MySqlPackRepository implements PackRepositoryInterface
 {
 
 
-    public function __construct(private readonly Connection $connection)
+    public function __construct(private readonly Database $connection)
     {
     }
 

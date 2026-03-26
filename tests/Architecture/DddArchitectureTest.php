@@ -170,6 +170,49 @@ final class DddArchitectureTest
         );
     }
 
+    public function testInfrastructureClassesAreAdapters(): void
+    {
+        $violations = [];
+
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Infrastructure') as $file) {
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
+
+            try {
+                require_once $file;
+                if (!class_exists($className)) continue;
+                $ref = new ReflectionClass($className);
+            } catch (Throwable) {
+                continue;
+            }
+
+            if ($ref->isAbstract() || $ref->isInterface()) continue;
+
+            // Chaque classe concrète Infrastructure doit implémenter au moins un port
+            // défini hors Infrastructure (Domain, Application ou Framework)
+            $externalPorts = array_filter(
+                $ref->getInterfaceNames(),
+                fn(string $iface) => str_starts_with($iface, 'Rore\\')
+                    && !str_starts_with($iface, 'Rore\\Infrastructure\\'),
+            );
+
+            if (empty($externalPorts)) {
+                $violations[] = sprintf(
+                    '%s — classe Infrastructure sans port externe (Domain/Application/Framework)'
+                        . "\n   → n'implémente aucune interface hors Infrastructure",
+                    $className,
+                );
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nInfrastructure doit uniquement contenir des adaptateurs (classes implémentant un port externe) :\n\n"
+                . implode("\n\n", $violations)
+        );
+    }
+
     public function testDiBindingsRespectDddLayers(): void
     {
         $ini      = parse_ini_file(BASE_PATH . '/config/default.ini', true);

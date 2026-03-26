@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Infrastructure\Database\Connection;
+use Rore\Framework\Database;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
@@ -13,7 +13,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 {
 
 
-    public function __construct(private readonly Connection $connection)
+    public function __construct(private readonly Database $connection)
     {
     }
 

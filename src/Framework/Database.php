@@ -6,7 +6,6 @@ namespace Rore\Framework;
 
 use PDO;
 use PDOException;
-use Rore\Framework\Config;
 
 class Database extends PDO
 {

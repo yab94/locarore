@@ -6,11 +6,11 @@ namespace Rore\Infrastructure\Persistence;
 
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
-use Rore\Infrastructure\Database\Connection;
+use Rore\Framework\Database;
 
 final class MySqlContactMessageRepository implements ContactMessageRepositoryInterface
 {
-    public function __construct(private readonly Connection $connection) {}
+    public function __construct(private readonly Database $connection) {}
 
     public function findAll(): array
     {
