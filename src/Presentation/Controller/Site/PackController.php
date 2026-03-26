@@ -69,7 +69,7 @@ class PackController extends SiteController
             'breadcrumb'        => [ ...$breadcrumb, $pack ],
             'allCategories'     => $allCategories,
             'slotsWithProducts' => $result['slotsWithProducts'],
-            'packSelections'    => $this->cart->getPackSelections($pack->getId()),
+            'packSelections'    => $this->cartState()->getPackSelections($pack->getId()),
         ]);
     }
 

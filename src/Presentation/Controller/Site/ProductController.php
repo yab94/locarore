@@ -45,8 +45,8 @@ class ProductController extends SiteController
             : [];
         $breadcrumb[] = $product;   // Le produit lui-même en dernier
 
-        $startDate = $this->cart->getStartDate();
-        $endDate   = $this->cart->getEndDate();
+        $startDate = $this->cartState()->getStartDate();
+        $endDate   = $this->cartState()->getEndDate();
 
         $availableQty = $product->getTotalStock();
         if ($startDate && $endDate) {

@@ -4,14 +4,14 @@ use Rore\Framework\UrlResolver;
 use Rore\Framework\Cast;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Framework\Config;
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Domain\Cart\ValueObject\CartState;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
 $product       = Product::cast($tpl->get('product'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
-$cart          = CartService::cast($tpl->get('cart'));
+$cart          = CartState::cast($tpl->get('cart'));
 $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
 // $partial is injected by the Template engine — not a param
 ?>

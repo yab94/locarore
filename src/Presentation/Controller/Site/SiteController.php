@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Domain\Cart\ValueObject\CartState;
+use Rore\Application\Cart\GetCartStateUseCase;
 use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Presentation\Controller\Controller;
@@ -15,12 +16,19 @@ use Rore\Presentation\Controller\Controller;
  */
 abstract class SiteController extends Controller
 {
+    private ?CartState $cartStateCache = null;
+
     public function __construct(
-        readonly CartService                    $cart,
+        readonly GetCartStateUseCase           $getCartState,
         readonly GetAllActiveCategoriesUseCase $getActiveCategories,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
+    }
+
+    protected function cartState(): CartState
+    {
+        return $this->cartStateCache ??= $this->getCartState->execute();
     }
 
     protected function render(
@@ -28,10 +36,11 @@ abstract class SiteController extends Controller
         array  $data   = [],
         ?string $layout = null
     ): void {
-        $data['cartItemCount']    = $this->cart->getItemCount();
-        $data['cart']             = $this->cart;
-        $data['cartDateRange']    = $this->cart->hasDates()
-            ? new DateRange($this->cart->getStartDate(), $this->cart->getEndDate())
+        $cart = $this->cartState();
+        $data['cartItemCount']    = $cart->getItemCount();
+        $data['cart']             = $cart;
+        $data['cartDateRange']    = $cart->hasDates()
+            ? new DateRange($cart->getStartDate(), $cart->getEndDate())
             : null;
         $data['headerCategories'] = $this->getActiveCategories->execute();
         parent::render($template, $data, $layout ?? 'layout/site');

@@ -1,10 +1,10 @@
 <?php
 use Rore\Framework\UrlResolver;
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Domain\Cart\ValueObject\CartState;
 use Rore\Domain\Shared\ValueObject\DateRange;
 
 $url           = UrlResolver::cast($tpl->get('url'));
-$cart          = CartService::cast($tpl->get('cart'));
+$cart          = CartState::cast($tpl->get('cart'));
 $cartDateRange = DateRange::cast($tpl->get('cartDateRange'));
 // $partial is injected by the Template engine — not a param
 ?>

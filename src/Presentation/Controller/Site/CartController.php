@@ -11,11 +11,13 @@ use Rore\Application\Cart\CheckoutUseCase;
 use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\RemovePackFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
+use Rore\Domain\Cart\Service\CartService;
 use Rore\Framework\PageMeta;
 
 class CartController extends SiteController
 {
     public function __construct(
+        private readonly CartService                 $cartService,
         private readonly GetCartDataUseCase          $getCartDataUseCase,
         private readonly SetCartDatesUseCase         $setCartDatesUseCase,
         private readonly AddToCartUseCase            $addToCartUseCase,
@@ -30,16 +32,13 @@ class CartController extends SiteController
 
     public function index(): void
     {
-        $startDate = $this->cart->hasDates() 
-            ? new \DateTimeImmutable($this->cart->getStartDate()) 
-            : null;
-        $endDate = $this->cart->hasDates() 
-            ? new \DateTimeImmutable($this->cart->getEndDate()) 
-            : null;
+        $cart      = $this->cartState();
+        $startDate = $cart->hasDates() ? new \DateTimeImmutable($cart->getStartDate()) : null;
+        $endDate   = $cart->hasDates() ? new \DateTimeImmutable($cart->getEndDate())   : null;
 
         $data = $this->getCartDataUseCase->execute(
-            $this->cart->getItems(),
-            $this->cart->getPacks(),
+            $cart->getItems(),
+            $cart->getPacks(),
             $startDate,
             $endDate
         );
@@ -52,7 +51,6 @@ class CartController extends SiteController
                 );
                 return $meta;
             })(),
-            'cart'          => $this->cart,
             'cartProducts'  => $data['cartProducts'],
             'cartPacks'     => $data['cartPacks'],
             'productPrices' => $data['productPrices'],
@@ -71,7 +69,7 @@ class CartController extends SiteController
 
         // Dates vides = intention de réinitialiser le panier
         if ($startDate === '' || $endDate === '') {
-            $this->cart->clear();
+            $this->cartService->clear();
             $this->redirect($this->urlResolver->resolve(self::class . '.index'));
             return;
         }
@@ -140,7 +138,8 @@ class CartController extends SiteController
 
     public function checkout(): void
     {
-        if (!$this->cart->hasDates() || $this->cart->isEmpty()) {
+        $cart = $this->cartState();
+        if (!$cart->hasDates() || $cart->isEmpty()) {
             $this->redirect($this->urlResolver->resolve(self::class . '.index'));
         }
 
@@ -152,7 +151,6 @@ class CartController extends SiteController
                 );
                 return $meta;
             })(),
-            'cart' => $this->cart,
         ]);
     }
 
