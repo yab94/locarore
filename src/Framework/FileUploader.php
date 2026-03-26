@@ -5,24 +5,21 @@ declare(strict_types=1);
 namespace Rore\Framework;
 
 use Rore\Framework\FileManagerInterface;
-use Rore\Framework\Config;
 
 class FileUploader implements FileManagerInterface
 {
-    private string $uploadDir;
-    private int    $maxSize;
-    private array  $allowedTypes;
+    private array $allowedTypes;
 
-    public function __construct(Config $config)
-    {
-        $this->uploadDir    = $config->getString('app.root_dir') . '/public' . $config->getString('upload.upload_path');
-        $this->maxSize      = (int) $config->getString('upload.max_size');
-        $this->allowedTypes = array_map('trim', explode(',', $config->getString('upload.allowed_types')));
+    public function __construct(
+        private string $uploadDir,
+        private int    $maxSize,
+        string         $allowedTypes,
+    ) {
+        $this->allowedTypes = array_map('trim', explode(',', $allowedTypes));
 
-         // Crée le dossier d'upload s'il n'existe pas
-         if (!is_dir($this->uploadDir)) {
-             mkdir($this->uploadDir, 0755, true);
-         }
+        if (!is_dir($this->uploadDir)) {
+            mkdir($this->uploadDir, 0755, true);
+        }
     }
 
     /**

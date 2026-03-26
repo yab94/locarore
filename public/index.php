@@ -19,9 +19,29 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \Rore\Framework\Container();
 $container->instance(\Rore\Framework\Config::class, $config);
-foreach ($config->getArray('di.bind') ?? [] as $abstract => $concrete) {
-    $container->bind($abstract, fn($c) => $c->get($concrete));
-}
+
+// ── Framework ────────────────────────────────────────────────────────────────
+$container->bind(\Rore\Framework\SessionStorageInterface::class,   fn($c) => $c->get(\Rore\Framework\PhpSessionStorage::class));
+$container->bind(\Rore\Framework\CsrfTokenManagerInterface::class, fn($c) => $c->get(\Rore\Framework\CsrfTokenManager::class));
+$container->bind(\Rore\Framework\MailerInterface::class,           fn($c) => $c->get(\Rore\Framework\SmtpMailer::class));
+$container->bind(\Rore\Framework\FileManagerInterface::class, function($c) {
+    $cfg = $c->get(\Rore\Framework\Config::class);
+    return new \Rore\Framework\FileUploader(
+        uploadDir:    $cfg->getString('app.root_dir') . '/public' . $cfg->getString('upload.upload_path'),
+        maxSize:      (int) $cfg->getString('upload.max_size'),
+        allowedTypes: array_map('trim', explode(',', $cfg->getString('upload.allowed_types'))),
+    );
+});
+
+// ── Repositories ─────────────────────────────────────────────────────────────
+$container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlCategoryRepository::class));
+$container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlProductRepository::class));
+$container->bind(\Rore\Domain\Catalog\Repository\PackRepositoryInterface::class,           fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlPackRepository::class));
+$container->bind(\Rore\Domain\Catalog\Repository\TagRepositoryInterface::class,            fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlTagRepository::class));
+$container->bind(\Rore\Domain\Reservation\Repository\ReservationRepositoryInterface::class,fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlReservationRepository::class));
+$container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::class,      fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlSettingsRepository::class));
+$container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class));
+$container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        fn($c) => $c->get(\Rore\Infrastructure\Persistence\MySqlSearchRepository::class));
 
 // ─── Router ────────────────────────────────────────────────────────────────
 $router = $container->get(\Rore\Framework\Router::class);
