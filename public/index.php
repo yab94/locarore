@@ -28,6 +28,7 @@ $container->bind(\Rore\Framework\Storage\FileManagerInterface::class, fn() => ne
     uploadDir:    BASE_PATH . '/public' . $config->getString('upload.upload_path'),
     maxSize:      (int) $config->getString('upload.max_size'),
     allowedTypes: $config->getString('upload.allowed_types'),
+    maxDimensions: [1200, 1200], // Redimensionnement max (largeur, hauteur)
 ));
 $container->bind(\Rore\Framework\Mail\SmtpMailer::class, fn() => new \Rore\Framework\Mail\SmtpMailer(
     host:       $config->getString('smtp.host'),

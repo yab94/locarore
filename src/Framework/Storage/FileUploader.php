@@ -9,13 +9,24 @@ use Rore\Framework\Storage\FileManagerInterface;
 class FileUploader implements FileManagerInterface
 {
     private array $allowedTypes;
+    private int $maxWidth;
+    private int $maxHeight;
 
+    /**
+     * @param string $uploadDir
+     * @param int $maxSize
+     * @param string $allowedTypes
+     * @param array|null $maxDimensions [width, height] (ex: [1200, 1200])
+     */
     public function __construct(
         private string $uploadDir,
         private int    $maxSize,
         string         $allowedTypes,
+        ?array         $maxDimensions = null,
     ) {
         $this->allowedTypes = array_map('trim', explode(',', $allowedTypes));
+        $this->maxWidth  = $maxDimensions[0] ?? 1200;
+        $this->maxHeight = $maxDimensions[1] ?? 1200;
 
         if (!is_dir($this->uploadDir)) {
             mkdir($this->uploadDir, 0755, true);
@@ -61,12 +72,50 @@ class FileUploader implements FileManagerInterface
             throw new \RuntimeException('Impossible de déplacer le fichier uploadé.');
         }
 
+        // Resize image if needed (except webp, already optimized)
+        if ($mimeType === 'image/jpeg' || $mimeType === 'image/png') {
+            $this->resizeImage($destination, $mimeType, $this->maxWidth, $this->maxHeight);
+        }
+
         // Conversion WebP via GD natif (sauf si déjà webp)
         if ($mimeType !== 'image/webp') {
             $filename = $this->convertToWebp($destination, $mimeType);
         }
 
         return $filename;
+    }
+    /**
+     * Redimensionne une image à l'intérieur des dimensions max (conserve le ratio).
+     */
+    private function resizeImage(string $filePath, string $mimeType, int $maxWidth, int $maxHeight): void
+    {
+        [$width, $height] = getimagesize($filePath);
+        if ($width <= $maxWidth && $height <= $maxHeight) {
+            return; // Pas besoin de resize
+        }
+
+        $srcImg = match($mimeType) {
+            'image/jpeg' => imagecreatefromjpeg($filePath),
+            'image/png'  => imagecreatefrompng($filePath),
+            default      => null,
+        };
+        if (!$srcImg) return;
+
+        $ratio = min($maxWidth / $width, $maxHeight / $height);
+        $newWidth  = (int) round($width * $ratio);
+        $newHeight = (int) round($height * $ratio);
+
+        $dstImg = imagecreatetruecolor($newWidth, $newHeight);
+        if ($mimeType === 'image/png') {
+            imagealphablending($dstImg, false);
+            imagesavealpha($dstImg, true);
+        }
+        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+
+        match($mimeType) {
+            'image/jpeg' => imagejpeg($dstImg, $filePath, 90),
+            'image/png'  => imagepng($dstImg, $filePath, 6),
+        };
     }
 
     /**
