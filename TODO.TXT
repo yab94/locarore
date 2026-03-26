@@ -1,10 +1,4 @@
 Features
 
-- systeme anti captcha formulaire contact 
-- cookies
-
-- generation catalogue PDF en admin uniquement
-
-- Parser les tempaltes et voir s'il y a des partials à créer en fonction d ecode redondant
-
-- more test on each Domain Service
+- enlever le fabrication à la demande disponible.
+- splitter image manager / fiel manager
