@@ -8,7 +8,6 @@ use Rore\Infrastructure\Session\CartSession;
 
 $html          = HtmlHelper::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
-$urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
 $config        = Config::cast($tpl->get('config'));
 $product       = Product::cast($tpl->get('product'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));

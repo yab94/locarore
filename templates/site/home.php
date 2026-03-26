@@ -8,7 +8,6 @@ use Rore\Framework\Config;
 $html          = HtmlHelper::cast($tpl->get('html'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $url           = UrlResolver::cast($tpl->get('url'));
-$urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
 $config        = Config::cast($tpl->get('config'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
 $categories    = Cast::array($tpl->tryGet('categories', []));

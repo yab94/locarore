@@ -4,7 +4,6 @@ use Rore\Framework\HtmlHelper;
 use Rore\Framework\UrlResolver;
 
 $html        = HtmlHelper::cast($tpl->get('html'));
-$urlResolver = UrlResolver::cast($tpl->get('urlResolver'));
 $query       = Cast::string($tpl->tryGet('query', ''));
 $products    = Cast::array($tpl->get('products'));
 $packs       = Cast::array($tpl->get('packs'));

@@ -1,7 +1,6 @@
 <?php
 $html            = Rore\Framework\HtmlHelper::cast($tpl->get('html'));
 $url             = Rore\Framework\UrlResolver::cast($tpl->get('url'));
-$urlResolver     = Rore\Framework\UrlResolver::cast($tpl->get('urlResolver'));
 $headerCategories = \Rore\Framework\Cast::array($tpl->get('headerCategories'));
 $settings        = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));
 $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);

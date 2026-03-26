@@ -32,7 +32,6 @@ abstract class Controller extends \Rore\Framework\Controller
             'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
             'csrfToken'   => $this->csrfTokenManager->token(),
             'settings'    => $this->settings,
-            'slugResolver'    => $this->slugResolver,
             'slug'    => $this->slugResolver,
             ...$data,  // Les données spécifiques ont priorité
         ], $layout);

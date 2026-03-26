@@ -11,7 +11,6 @@ $html          = HtmlHelper::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));
-$urlResolver   = UrlResolver::cast($tpl->get('urlResolver'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
 $cart          = CartSession::cast($tpl->get('cart'));
 $cartDateRange = DateRange::castOrNull($tpl->tryGet('cartDateRange'));

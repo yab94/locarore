@@ -28,7 +28,6 @@ abstract class Controller
         $shared = [
             'config'      => $this->config,
             'html'        => $this->html,
-            'urlResolver' => $this->urlResolver,
             'url'         => $this->urlResolver,
         ];
 

@@ -8,7 +8,6 @@ use Rore\Infrastructure\Session\CartSession;
 
 $html            = HtmlHelper::cast($tpl->get('html'));
 $url             = UrlResolver::cast($tpl->get('url'));
-$urlResolver     = UrlResolver::cast($tpl->get('urlResolver'));
 $pack            = Pack::cast($tpl->get('pack'));
 $allCategories   = Cast::array($tpl->tryGet('allCategories', []));
 $productsById    = Cast::array($tpl->tryGet('productsById', []));
@@ -109,7 +108,7 @@ $cart            = CartSession::cast($tpl->get('cart'));
                     <span class="flex-1 block text-center bg-green-100 text-green-800 font-semibold py-3 rounded-xl border border-green-200">
                         ✓ Pack dans le panier
                     </span>
-                    <form method="post" action="<?= $html($urlResolver->resolve('Site\Cart.removePack')) ?>">
+                    <form method="post" action="<?= $html($url('Site\Cart.removePack')) ?>">
                         <?= $partial('partials/csrf') ?>
                         <input type="hidden" name="pack_id" value="<?= $pack->getId() ?>">
                         <button type="submit"
@@ -118,7 +117,7 @@ $cart            = CartSession::cast($tpl->get('cart'));
                     </form>
                 </div>
             <?php else: ?>
-                <form method="post" action="<?= $html($urlResolver->resolve('Site\Cart.addPack')) ?>">
+                <form method="post" action="<?= $html($url('Site\Cart.addPack')) ?>">
                     <?= $partial('partials/csrf') ?>
                     <input type="hidden" name="pack_id" value="<?= $pack->getId() ?>">
                     <?php foreach ($slotsWithProducts as $slotId => $slotData): ?>
@@ -149,7 +148,7 @@ $cart            = CartSession::cast($tpl->get('cart'));
                 </form>
             <?php endif; ?>
         <?php else: ?>
-            <a href="<?= $html($urlResolver->resolve('Site\Cart.index')) ?>"
+            <a href="<?= $html($url('Site\Cart.index')) ?>"
                class="block w-full text-center bg-brand-600 text-white font-semibold py-3 rounded-xl hover:bg-brand-700 transition">
                 Choisir mes dates pour réserver
             </a>

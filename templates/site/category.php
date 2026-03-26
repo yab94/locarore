@@ -43,7 +43,7 @@
     <h2 class="text-lg font-semibold text-gray-700 mb-4">Produits</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php
-        $productContextPath = $urlResolver->categoryPath($category, $allCategories);
+        $productContextPath = $slug->categoryPath($category, $allCategories);
         foreach ($products as $product): ?>
             <?= $partial('partials/product-card', ['product' => $product, 'productContextPath' => $productContextPath]) ?>
         <?php endforeach; ?>

@@ -7,7 +7,6 @@ use Rore\Framework\Config;
 
 $product            = Product::cast($tpl->get('product'));
 $html               = HtmlHelper::cast($tpl->get('html'));
-$urlResolver        = UrlResolver::cast($tpl->get('urlResolver'));
 $config             = Config::cast($tpl->get('config'));
 $allCategories      = Cast::array($tpl->tryGet('allCategories', []));
 /** @var string|null $productContextPath */

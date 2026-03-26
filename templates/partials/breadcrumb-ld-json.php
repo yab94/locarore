@@ -1,18 +1,6 @@
 <?php
-/**
- * Partial pour générer le script LD+JSON avec breadcrumb
- * 
- * Variables attendues :
- * - $meta : PageMeta object
- * - $breadcrumb : array des éléments du breadcrumb  
- * - $allCategories : array de toutes les catégories (pour les URLs)
- * - $urlResolver : UrlResolver
- * - $item : (optionnel) Product ou Pack object - si fourni, génère aussi les données Product
- * - $type : (optionnel) 'product' ou 'pack' - requis si $item est fourni
- * - $mainPhoto : (optionnel) Photo object pour les packs
- */
 
-$slug = \Rore\Presentation\Seo\SlugResolver::cast($tpl->get('slugResolver'));
+$slug = \Rore\Presentation\Seo\SlugResolver::cast($tpl->get('slug'));
 $_meta = \Rore\Framework\PageMeta::cast($tpl->get('meta'));
 $_crumbs = array_values(\Rore\Framework\Cast::array($tpl->get('breadcrumb')));
 $_item = $tpl->tryGet('item'); // Product ou Pack (optionnel)
