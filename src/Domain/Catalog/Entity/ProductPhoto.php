@@ -30,6 +30,6 @@ class ProductPhoto
      */
     public function getPublicPath(): string
     {
-        return '/assets/uploads/products/' . $this->filename;
+        return '/uploads/products/' . $this->filename;
     }
 }

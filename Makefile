@@ -35,7 +35,13 @@ db-schema:
 	docker compose exec -T mysql sh -lc 'mysql -uroot -p"$$MYSQL_ROOT_PASSWORD" "$$MYSQL_DATABASE"' < ./sql/schema.sql
 
 mep-ovh:
-	docker compose exec php lftp ${FTP_LOGIN}:${FTP_PASSWORD}@${FTP_HOST}:/ -e "mirror -e -R -x docs* -x TODO* -x tailwind* -x node_modules -x tests -x .env -x .git* -x sql* -x Makefile -x package* -x docker* -x README.md -x public/uploads* . /locarore ; quit"
+	docker compose exec php lftp ${FTP_LOGIN}:${FTP_PASSWORD}@${FTP_HOST}:/ -e "\
+		mirror -e -R src /locarore/src ; \
+		mirror -e -R templates /locarore/templates ; \
+		mirror -e -R config /locarore/config ; \
+		mirror -e -R public/assets /locarore/public/assets ; \
+		put public/index.php -o /locarore/public/index.php ; \
+		quit"
 
 php:
 	docker compose exec php bash
