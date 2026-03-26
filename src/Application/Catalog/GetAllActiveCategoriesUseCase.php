@@ -20,6 +20,6 @@ final class GetAllActiveCategoriesUseCase
      */
     public function execute(): array
     {
-        return $this->categoryRepo->findAllActive();
+        return $this->categoryRepo->findRootsWithChildren();
     }
 }
