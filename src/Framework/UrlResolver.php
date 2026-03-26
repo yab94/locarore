@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Framework;
 
-use Rore\Framework\Config;
 use Rore\Framework\Castable;
 
 /**
@@ -24,7 +23,7 @@ class UrlResolver
      */
     private array $handlerToPath = [];
 
-    public function __construct(readonly Config $config)
+    public function __construct(private string $controllerNamespace)
     {}
 
     /**
@@ -90,11 +89,10 @@ class UrlResolver
      */
     protected function buildRouteName(string $handler): string
     {
-        $ns = $this->config->getString('routes.controller_namespace', '');
-        if ($ns === '' || !str_starts_with($handler, $ns . '\\')) {
+        if ($this->controllerNamespace === '' || !str_starts_with($handler, $this->controllerNamespace . '\\')) {
             return $handler;
         }
-        $short = substr($handler, strlen($ns) + 1);
+        $short = substr($handler, strlen($this->controllerNamespace) + 1);
         return (string) preg_replace('/Controller(\.[a-zA-Z]+)$/', '$1', $short);
     }
 }
