@@ -6,10 +6,10 @@ declare(strict_types=1);
  * Vérifie les règles de dépendances inter-couches DDD.
  *
  * Règles :
- *   Presentation\Controller  →  Application, Presentation, Support
- *   Application              →  Application, Domain, Support
- *   Domain                   →  Domain, Support
- *   Infrastructure           →  Domain, Infrastructure, Application, Support
+ *   Presentation\Controller  →  Application, Presentation, Framework
+ *   Application              →  Application, Domain, Framework
+ *   Domain                   →  Domain, Framework
+ *   Infrastructure           →  Domain, Infrastructure, Application, Framework
  *                               (les adaptateurs Infrastructure implémentent des ports Application)
  *
  * Framework : Couche framework de base accessible par toutes les couches
