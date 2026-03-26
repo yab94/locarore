@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Application\Storage;
+namespace Rore\Framework;
 
 interface FileManagerInterface
 {

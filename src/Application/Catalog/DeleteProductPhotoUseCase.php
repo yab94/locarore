@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog;
 
-use Rore\Application\Storage\FileManagerInterface;
+use Rore\Framework\FileManagerInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 
 class DeleteProductPhotoUseCase

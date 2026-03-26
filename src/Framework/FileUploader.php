@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rore\Infrastructure\Storage;
+namespace Rore\Framework;
 
-use Rore\Application\Storage\FileManagerInterface;
+use Rore\Framework\FileManagerInterface;
 use Rore\Framework\Config;
 
 class FileUploader implements FileManagerInterface
