@@ -35,26 +35,31 @@ final class RouteScanner
                 continue;
             }
 
-            $ref = new ReflectionClass($fqcn);
-            if (!$ref->isInstantiable()) {
-                continue;
+            $this->scanController($fqcn);
+        }
+    }
+
+    public function scanController(string $fqcn): void
+    {
+        $ref = new ReflectionClass($fqcn);
+        if (!$ref->isInstantiable()) {
+            return;
+        }
+
+        foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->getDeclaringClass()->getName() !== $fqcn) {
+                continue; // ignorer les méthodes héritées
             }
 
-            foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-                if ($method->getDeclaringClass()->getName() !== $fqcn) {
-                    continue; // ignorer les méthodes héritées
-                }
-
-                $attrs = $method->getAttributes(Route::class);
-                foreach ($attrs as $attr) {
-                    /** @var Route $route */
-                    $route          = $attr->newInstance();
-                    $this->routes[] = [
-                        'method'  => $route->method,
-                        'path'    => $route->path,
-                        'handler' => $fqcn . '.' . $method->getName(),
-                    ];
-                }
+            $attrs = $method->getAttributes(Route::class);
+            foreach ($attrs as $attr) {
+                /** @var Route $route */
+                $route          = $attr->newInstance();
+                $this->routes[] = [
+                    'method'  => $route->method,
+                    'path'    => $route->path,
+                    'handler' => $fqcn . '.' . $method->getName(),
+                ];
             }
         }
     }

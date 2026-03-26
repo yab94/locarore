@@ -53,10 +53,7 @@ $container->bind(\Rore\Presentation\Seo\SlugResolver::class, fn() => new \Rore\P
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \Rore\Framework\RouteScanner();
-$scanner->scan(
-    baseDir:       BASE_PATH . '/src/Presentation/Controller',
-    baseNamespace: 'Rore\Presentation\Controller',
-);
+$scanner->scan(BASE_PATH . '/src/Presentation/Controller', 'Rore\Presentation\Controller');
 $routes = $scanner->getRoutes();
 
 $router = $container->get(\Rore\Framework\Router::class);
