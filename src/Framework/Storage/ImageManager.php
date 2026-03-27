@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Storage;
 
-class ImageManager
+class ImageManager extends FileManager
 {
     /**
      * Redimensionne une image si elle dépasse les dimensions max (conserve le ratio).
-     * Le mime type est détecté automatiquement à partir du fichier.
+     *
+     * @param string $filename  Nom du fichier relatif à baseDir
      */
-    public function resize(string $filePath, int $maxWidth, int $maxHeight): void
+    public function resize(string $filename, int $maxWidth, int $maxHeight): void
     {
-        $mimeType = $this->getMimeType($filePath);
+        $filePath = $this->baseDir . '/' . $filename;
+        $mimeType = $this->mimeType($filePath);
         [$width, $height] = getimagesize($filePath);
 
         if ($width <= $maxWidth && $height <= $maxHeight) {
@@ -40,24 +42,27 @@ class ImageManager
             'image/gif'  => imagegif($dst, $filePath),
             'image/tiff' => null,
         };
-
     }
 
     /**
      * Convertit une image en WebP. Supprime l'original et retourne le nouveau nom de fichier.
-     * Si l'image est déjà en WebP, retourne simplement le basename sans rien faire.
+     * Si l'image est déjà en WebP, retourne simplement le nom sans rien faire.
+     *
+     * @param string $filename  Nom du fichier relatif à baseDir
+     * @return string           Nom du fichier WebP résultant
      */
-    public function convertToWebp(string $filePath): string
+    public function convertToWebp(string $filename): string
     {
-        $mimeType = $this->getMimeType($filePath);
+        $filePath = $this->baseDir . '/' . $filename;
+        $mimeType = $this->mimeType($filePath);
 
         if ($mimeType === 'image/webp') {
-            return basename($filePath);
+            return $filename;
         }
 
         $img = $this->loadGdImage($filePath, $mimeType);
         if ($img === null) {
-            return basename($filePath);
+            return $filename;
         }
 
         if (in_array($mimeType, ['image/png', 'image/gif'], true)) {
@@ -71,11 +76,6 @@ class ImageManager
         unlink($filePath);
 
         return basename((string) $webpPath);
-    }
-
-    private function getMimeType(string $filePath): string
-    {
-        return (new \finfo(FILEINFO_MIME_TYPE))->file($filePath);
     }
 
     private function loadGdImage(string $filePath, string $mimeType): ?\GdImage

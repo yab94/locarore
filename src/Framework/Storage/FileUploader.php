@@ -4,30 +4,31 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Storage;
 
-class FileUploader implements FileManagerInterface
+class FileUploader extends FileManager
 {
     private array $allowedTypes;
 
     public function __construct(
-        private string $uploadDir,
-        private int    $maxSize,
-        string         $allowedTypes,
+        string $baseDir,
+        private int $maxSize,
+        string $allowedTypes,
     ) {
+        parent::__construct($baseDir);
         $this->allowedTypes = array_map('trim', explode(',', $allowedTypes));
 
-        if (!is_dir($this->uploadDir)) {
-            mkdir($this->uploadDir, 0755, true);
+        if (!is_dir($this->baseDir)) {
+            mkdir($this->baseDir, 0755, true);
         }
     }
 
     /**
-     * Valide et déplace le fichier uploadé. Retourne le chemin absolu du fichier.
+     * Valide et déplace le fichier uploadé vers la destination indiquée.
      *
-     * @param  array $file  Entrée $_FILES['field']
-     * @return string       Chemin absolu du fichier déposé
+     * @param  array  $file                Entrée $_FILES['field']
+     * @param  string $relativeDestination Chemin relatif à baseDir
      * @throws \RuntimeException
      */
-    public function upload(array $file): string
+    public function upload(array $file, string $relativeDestination): void
     {
         if (!isset($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
             throw new \RuntimeException('Erreur lors de l\'upload (code : ' . ($file['error'] ?? '?') . ').');
@@ -38,33 +39,21 @@ class FileUploader implements FileManagerInterface
             throw new \RuntimeException("Fichier trop volumineux. Maximum : {$max} Mo.");
         }
 
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($file['tmp_name']);
+        $mimeType = $this->mimeType($file['tmp_name']);
 
         if (!in_array($mimeType, $this->allowedTypes, true)) {
             throw new \RuntimeException("Type de fichier non autorisé : $mimeType.");
         }
 
-        $ext = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
-        if ($ext === '') {
-            throw new \RuntimeException("Impossible de déterminer l'extension du fichier.");
+        $absoluteDestination = $this->baseDir . '/' . $relativeDestination;
+        $dstDir = realpath(dirname($absoluteDestination));
+
+        if ($dstDir === false || !str_starts_with($dstDir . '/', $this->baseDir . '/')) {
+            throw new \RuntimeException("Destination non autorisée : $relativeDestination.");
         }
 
-        $filename    = uniqid('file_', true) . '.' . $ext;
-        $destination = $this->uploadDir . '/' . $filename;
-
-        if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        if (!move_uploaded_file($file['tmp_name'], $absoluteDestination)) {
             throw new \RuntimeException('Impossible de déplacer le fichier uploadé.');
-        }
-
-        return $destination;
-    }
-
-    public function delete(string $filename): void
-    {
-        $filePath = $this->uploadDir . '/' . $filename;
-        if (file_exists($filePath)) {
-            unlink($filePath);
         }
     }
 }

@@ -113,12 +113,24 @@ final class Container
             // Paramètre annoté #[Bind] → closure auto-wirée fournit la valeur ou les args DI
             $fromAttrs = $param->getAttributes(Bind::class);
             if ($fromAttrs !== []) {
+                $binds = array_map(fn($a) => $a->newInstance(), $fromAttrs);
+
+                // Mode multi-nommé : chaque #[Bind('param', fn)] fournit un scalaire nommé
+                if ($binds[0]->paramName !== null) {
+                    $scalarArgs = [];
+                    foreach ($binds as $bind) {
+                        $scalarArgs[$bind->paramName] = $this->resolveScalarBind($bind);
+                    }
+                    $args[] = $this->buildWithScalarArgs($type->getName(), $scalarArgs);
+                    continue;
+                }
+
                 /** @var Bind $from */
-                $from = $fromAttrs[0]->newInstance();
+                $from = $binds[0];
                 $from->validate($param);
 
                 if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
-                    // Paramètre objet → DI augmentation (closure retourne un array de scalaires)
+                    // Paramètre objet → closure retourne une instance ou un tableau de scalaires
                     $args[] = $this->resolveBindAttribute($from, $type->getName());
                 } else {
                     // Paramètre scalaire → closure retourne la valeur directement
@@ -186,23 +198,33 @@ final class Container
             }
         }
 
-        // 2. Appeler la closure → scalaires pour le constructeur cible
-        $scalarArgs = ($from->resolver)(...$closureArgs);
-        if (!is_array($scalarArgs)) {
-            $scalarArgs = [$scalarArgs];
+        // 2. Appeler la closure → instance directe ou scalaires pour le constructeur cible
+        $result = ($from->resolver)(...$closureArgs);
+
+        // Cas 1 : la closure retourne directement une instance du type cible
+        if ($result instanceof $className) {
+            return $result;
         }
 
-        // 3. Clé de cache — ksort pour que l'ordre des clés n'influe pas sur l'identité de l'instance
+        $scalarArgs = is_array($result) ? $result : [$result];
+
+        return $this->buildWithScalarArgs($className, $scalarArgs);
+    }
+
+    /**
+     * Construit une instance de $className en fusionnant les $scalarArgs fournis
+     * avec les dépendances objet auto-wirées. Utilise un cache par clé scalaire.
+     */
+    private function buildWithScalarArgs(string $className, array $scalarArgs): object
+    {
+        // Clé de cache — ksort pour que l'ordre des clés n'influe pas sur l'identité de l'instance
         ksort($scalarArgs);
         $cacheKey = $className . ':' . md5(serialize($scalarArgs));
         if (isset($this->instances[$cacheKey])) {
             return $this->instances[$cacheKey];
         }
 
-        // 4. Construire les args du constructeur cible :
-        //    - param dont le nom est dans le tableau de la closure → valeur de la closure (priorité)
-        //    - param absent du tableau et typé objet               → auto-wiré par le container
-        //    - param avec valeur par défaut                        → défaut
+        // Fusionner : scalaires fournis (priorité) + dépendances objet auto-wirées + défauts
         $ref         = new ReflectionClass($className);
         $constructor = $ref->getConstructor();
         $args        = [];

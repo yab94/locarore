@@ -19,10 +19,24 @@ use Attribute;
  *       #[Bind(static function(Config $c) { return $c->getArray('database'); })] Database $db,
  *   ) {}
  */
-#[Attribute(Attribute::TARGET_PARAMETER)]
+#[Attribute(Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
 final class Bind
 {
-    public function __construct(public readonly \Closure $resolver) {}
+    public readonly ?string  $paramName;
+    public readonly \Closure $resolver;
+
+    public function __construct(string|\Closure $nameOrResolver, ?\Closure $resolver = null)
+    {
+        if (is_string($nameOrResolver)) {
+            $this->paramName = $nameOrResolver;
+            $this->resolver  = $resolver ?? throw new \LogicException(
+                '#[Bind] avec un nom de paramètre requiert une closure en second argument.'
+            );
+        } else {
+            $this->paramName = null;
+            $this->resolver  = $nameOrResolver;
+        }
+    }
 
     /**
      * Vérifie que le type de retour déclaré de la closure est compatible
@@ -34,6 +48,11 @@ final class Bind
      */
     public function validate(\ReflectionParameter $param): void
     {
+        // Mode nommé : la closure résout un scalaire pour un param du constructeur cible,
+        // pas pour le type du paramètre annoté — validation de type non applicable.
+        if ($this->paramName !== null) {
+            return;
+        }
         $returnType = (new \ReflectionFunction($this->resolver))->getReturnType();
 
         if ($returnType === null || !$returnType instanceof \ReflectionNamedType) {

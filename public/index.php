@@ -24,11 +24,6 @@ $container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
 $container->bind(\Rore\Framework\Session\SessionStorageInterface::class,   \Rore\Framework\Session\PhpSessionStorage::class);
 $container->bind(\Rore\Framework\Security\CsrfTokenManagerInterface::class, \Rore\Framework\Security\CsrfTokenManager::class);
 $container->bind(\Rore\Framework\Mail\MailerInterface::class,           \Rore\Framework\Mail\SmtpMailer::class);
-$container->bind(\Rore\Framework\Storage\FileManagerInterface::class, fn() => new \Rore\Framework\Storage\FileUploader(
-    uploadDir:    BASE_PATH . '/public' . $config->getString('upload.upload_path'),
-    maxSize:      (int) $config->getString('upload.max_size'),
-    allowedTypes: $config->getString('upload.allowed_types'),
-));
 $container->bind(\Rore\Framework\Mail\SmtpMailer::class, fn() => new \Rore\Framework\Mail\SmtpMailer(
     host:       $config->getString('smtp.host'),
     port:       $config->getInt('smtp.port', 587),
