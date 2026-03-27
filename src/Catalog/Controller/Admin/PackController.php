@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Catalog\Controller\Admin;
 
 use Rore\Catalog\UseCase\CreatePackUseCase;
 use Rore\Catalog\UseCase\GetAllCategoriesUseCase;
@@ -13,6 +13,8 @@ use Rore\Catalog\UseCase\UpdatePackUseCase;
 use Rore\Catalog\UseCase\TogglePackUseCase;
 
 use Rore\Framework\Http\Route;
+use Rore\Shared\Controller\AdminController;
+
 class PackController extends AdminController
 {
     public function __construct(

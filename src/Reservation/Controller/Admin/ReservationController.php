@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Reservation\Controller\Admin;
 
 use Rore\Reservation\UseCase\CancelReservationUseCase;
 use Rore\Reservation\UseCase\ConfirmReservationUseCase;
@@ -12,6 +12,8 @@ use Rore\Reservation\UseCase\GetReservationsUseCase;
 use Rore\Reservation\UseCase\SetReservationStatusUseCase;
 use Rore\Shared\ValueObject\DateRange;
 use Rore\Framework\Http\Route;
+
+use Rore\Shared\Controller\AdminController;
 
 class ReservationController extends AdminController
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Seo;
+namespace Rore\Catalog\Seo;
 
 use Rore\Catalog\Entity\Category;
 use Rore\Catalog\Entity\Product;

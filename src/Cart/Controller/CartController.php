@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Cart\Controller;
 
 use Rore\Cart\UseCase\AddToCartUseCase;
 use Rore\Cart\UseCase\AddPackToCartUseCase;
@@ -16,6 +16,8 @@ use Rore\Cart\Port\CartServiceInterface;
 use Rore\Framework\Di\BindAdapter;
 use Rore\Framework\Http\Route;
 use Rore\Framework\View\PageMeta;
+
+use Rore\Catalog\Controller\SiteController;
 
 class CartController extends SiteController
 {

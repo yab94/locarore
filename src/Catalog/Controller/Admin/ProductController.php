@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Catalog\Controller\Admin;
 
 use Rore\Catalog\UseCase\CreateProductUseCase;
 use Rore\Catalog\UseCase\DeleteProductPhotoUseCase;
@@ -15,6 +15,8 @@ use Rore\Catalog\UseCase\UpdatePhotoDescriptionUseCase;
 use Rore\Catalog\UseCase\UpdateProductUseCase;
 use Rore\Catalog\UseCase\UploadProductPhotoUseCase;
 use Rore\Framework\Http\Route;
+
+use Rore\Shared\Controller\AdminController;
 
 class ProductController extends AdminController
 {

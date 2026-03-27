@@ -21,14 +21,31 @@ $container = new \Rore\Framework\Di\Container();
 $container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
-$scanner = new \Rore\Framework\Http\RouteScanner();
-$scanner->scan(BASE_PATH . '/src/Presentation/Controller', 'Rore\Presentation\Controller');
-$routes = $scanner->getRoutes();
+// Scan par module + Presentation (Auth, Dashboard, Legal, Robots, Sitemap)
+$_scans = [
+    ['src/Presentation/Controller', 'Rore\Presentation\Controller'],
+    ['src/Catalog/Controller',      'Rore\Catalog\Controller'],
+    ['src/Cart/Controller',         'Rore\Cart\Controller'],
+    ['src/Contact/Controller',      'Rore\Contact\Controller'],
+    ['src/Search/Controller',       'Rore\Search\Controller'],
+    ['src/Reservation/Controller',  'Rore\Reservation\Controller'],
+    ['src/Settings/Controller',     'Rore\Settings\Controller'],
+];
+
+$_urlResolver = $container->get(\Rore\Framework\Http\UrlResolver::class);
+$_allRoutes   = [];
+foreach ($_scans as [$_dir, $_ns]) {
+    $_scanner = new \Rore\Framework\Http\RouteScanner();
+    if (is_dir(BASE_PATH . '/' . $_dir)) {
+        $_scanner->scan(BASE_PATH . '/' . $_dir, $_ns);
+    }
+    $_routes    = $_scanner->getRoutes();
+    $_allRoutes = array_merge($_allRoutes, $_routes);
+    $_urlResolver->loadRoutes($_ns, $_routes);
+}
 
 $router = $container->get(\Rore\Framework\Http\Router::class);
-$router->loadRoutes($routes);
-
-$container->get(\Rore\Framework\Http\UrlResolver::class)->loadRoutes('Rore\Presentation\Controller', $routes);
+$router->loadRoutes($_allRoutes);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

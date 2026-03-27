@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Catalog\Controller\Site;
 
 use Rore\Catalog\UseCase\GetAllActiveCategoriesUseCase;
 use Rore\Catalog\UseCase\GetCategoryWithItemsUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;
+use Rore\Catalog\Controller\SiteController;
+
 class CategoryController extends SiteController
 {
     public function __construct(

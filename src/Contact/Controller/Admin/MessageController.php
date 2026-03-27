@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Contact\Controller\Admin;
 
 use Rore\Contact\UseCase\DeleteContactMessageUseCase;
 use Rore\Contact\UseCase\GetContactMessageUseCase;
@@ -11,7 +11,9 @@ use Rore\Contact\UseCase\MarkMessageReadUseCase;
 use Rore\Contact\UseCase\MarkMessageUnreadUseCase;
 use Rore\Framework\Http\Route;
 
-final class MessageController extends AdminController
+final use Rore\Shared\Controller\AdminController;
+
+class MessageController extends AdminController
 {
     public function __construct(
         private readonly GetContactMessagesUseCase $getMessages,

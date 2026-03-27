@@ -9,6 +9,8 @@ use Rore\Catalog\UseCase\GetAllProductsUseCase;
 use Rore\Reservation\UseCase\GetReservationsUseCase;
 
 use Rore\Framework\Http\Route;
+use Rore\Shared\Controller\AdminController;
+
 class DashboardController extends AdminController
 {
     public function __construct(

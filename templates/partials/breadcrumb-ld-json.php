@@ -1,6 +1,6 @@
 <?php
 
-$slug = \Rore\Presentation\Seo\SlugResolver::cast($tpl->get('slug'));
+$slug = \Rore\Catalog\Seo\SlugResolver::cast($tpl->get('slug'));
 $_meta = \Rore\Framework\View\PageMeta::cast($tpl->get('meta'));
 $_crumbs = array_values(\Rore\Framework\Type\Cast::array($tpl->get('breadcrumb')));
 $_item = $tpl->tryGet('item'); // Product ou Pack (optionnel)

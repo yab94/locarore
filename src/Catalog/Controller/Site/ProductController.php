@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Catalog\Controller\Site;
 
 use Rore\Catalog\UseCase\GetProductWithDetailsUseCase;
 use Rore\Reservation\UseCase\GetReservedQuantityForProductUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;
+use Rore\Catalog\Controller\SiteController;
+
 class ProductController extends SiteController
 {
     public function __construct(

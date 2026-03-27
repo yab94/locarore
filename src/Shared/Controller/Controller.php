@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller;
+namespace Rore\Shared\Controller;
 
-use Rore\Presentation\Seo\SlugResolver;
+use Rore\Catalog\Seo\SlugResolver;
 use Rore\Settings\UseCase\GetSettingUseCase;
 
 abstract class Controller extends \Rore\Framework\Http\Controller

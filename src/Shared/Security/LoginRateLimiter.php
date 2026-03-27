@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Security;
+namespace Rore\Shared\Security;
 
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Di\BindAdapter;

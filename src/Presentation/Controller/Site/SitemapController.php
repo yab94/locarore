@@ -7,6 +7,8 @@ namespace Rore\Presentation\Controller\Site;
 use Rore\Catalog\UseCase\GetAllCatalogItemsUseCase;
 use Rore\Framework\Http\Route;
 
+use Rore\Catalog\Controller\SiteController;
+
 class SitemapController extends SiteController
 {
     public function __construct(

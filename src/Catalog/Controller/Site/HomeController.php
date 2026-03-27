@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Catalog\Controller\Site;
 
 use Rore\Catalog\UseCase\GetHomePageDataUseCase;
 use Rore\Framework\View\PageMeta;
 use Rore\Framework\Http\Route;
+
+use Rore\Catalog\Controller\SiteController;
 
 class HomeController extends SiteController
 {

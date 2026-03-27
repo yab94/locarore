@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Shared\Controller;
 
-use Rore\Presentation\Controller\Controller;
 
 abstract class AdminController extends Controller
 {
@@ -13,7 +12,7 @@ abstract class AdminController extends Controller
     ) {
         parent::__construct(...$parentDeps);
         if (empty($this->session->get('admin_logged_in'))) {
-            $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
+            $this->redirect($this->urlResolver->resolve('/admin'));
         }
     }
 

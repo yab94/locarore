@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Settings\Controller\Admin;
 
 use Rore\Settings\UseCase\GetAllSettingsUseCase;
 use Rore\Settings\UseCase\SaveSettingsUseCase;
 
 use Rore\Framework\Http\Route;
+use Rore\Shared\Controller\AdminController;
+
 class SettingsController extends AdminController
 {
     public function __construct(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Admin;
+namespace Rore\Catalog\Controller\Admin;
 
 use Rore\Catalog\UseCase\GetAllCategoriesUseCase;
 use Rore\Catalog\UseCase\GetCategoryByIdUseCase;
@@ -10,6 +10,8 @@ use Rore\Catalog\UseCase\CreateCategoryUseCase;
 use Rore\Catalog\UseCase\ToggleCategoryUseCase;
 use Rore\Catalog\UseCase\UpdateCategoryUseCase;
 use Rore\Framework\Http\Route;
+
+use Rore\Shared\Controller\AdminController;
 
 class CategoryController extends AdminController
 {

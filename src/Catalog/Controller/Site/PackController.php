@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Catalog\Controller\Site;
 
 use Rore\Catalog\UseCase\GetPackWithDetailsUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;
+use Rore\Catalog\Controller\SiteController;
+
 class PackController extends SiteController
 {
     public function __construct(

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Catalog\Controller;
 
 use Rore\Cart\ValueObject\CartState;
 use Rore\Cart\UseCase\GetCartStateUseCase;
 use Rore\Catalog\UseCase\GetAllActiveCategoriesUseCase;
 use Rore\Shared\ValueObject\DateRange;
-use Rore\Presentation\Controller\Controller;
+use Rore\Shared\Controller\Controller;
 
 /**
  * Base pour tous les contrôleurs du site public.

@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Controller\Site;
+namespace Rore\Contact\Controller\Site;
 
 use Rore\Contact\UseCase\SendContactMessageUseCase;
 use Rore\Framework\Http\Route;
 
-final class ContactController extends SiteController
+final use Rore\Catalog\Controller\SiteController;
+
+class ContactController extends SiteController
 {
     public function __construct(
         private readonly SendContactMessageUseCase $sendContactMessage,
