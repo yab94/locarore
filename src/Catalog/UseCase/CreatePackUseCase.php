@@ -1,0 +1,72 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Rore\Catalog\UseCase;
+
+use Rore\Catalog\Entity\Pack;
+use Rore\Catalog\Entity\PackItem;
+use Rore\Catalog\Port\PackRepositoryInterface;
+use Rore\Catalog\ValueObject\Slug;
+use Rore\Catalog\UseCase\SlugUniquenessService;
+use Rore\Catalog\Adapter\MySqlPackRepository;
+use Rore\Framework\Di\BindAdapter;
+
+class CreatePackUseCase
+{
+    public function __construct(
+        #[BindAdapter(MySqlPackRepository::class)]
+        private PackRepositoryInterface $packRepository,
+        private SlugUniquenessService   $slugChecker,
+    ) {}
+
+    /**
+     * @param array<int, int> $items [productId => quantity]
+     * @param array<int, int> $slots [categoryId => quantity]
+     */
+    public function execute(
+        string  $name,
+        ?string $description,
+        float   $pricePerDay,
+        float   $priceExtraWeekend,
+        float   $priceExtraWeekday,
+        array   $items,
+        array   $slots            = [],
+        ?string $customSlug       = null,
+        ?string $descriptionShort = null,
+    ): int {
+        $now  = new \DateTimeImmutable();
+        $slug = Slug::from($customSlug ?? $name)->getValue();
+
+        if ($this->slugChecker->isTaken($slug, 'pack')) {
+            throw new \DomainException("Le slug « $slug » est déjà utilisé.");
+        }
+
+        $packItems = [];
+        foreach ($items as $productId => $qty) {
+            if ((int) $qty < 1) continue;
+            $packItems[] = new PackItem(null, 0, (int) $productId, null, (int) $qty);
+        }
+        foreach ($slots as $categoryId => $qty) {
+            if ((int) $qty < 1) continue;
+            $packItems[] = new PackItem(null, 0, null, (int) $categoryId, (int) $qty);
+        }
+
+        $pack = new Pack(
+            id:                null,
+            name:              $name,
+            slug:              $slug,
+            description:       $description,
+            descriptionShort:  $descriptionShort,
+            pricePerDay:       $pricePerDay,
+            priceExtraWeekend: $priceExtraWeekend,
+            priceExtraWeekday: $priceExtraWeekday,
+            isActive:          true,
+            createdAt:         $now,
+            updatedAt:         $now,
+        );
+        $pack->setItems($packItems);
+
+        return $this->packRepository->save($pack);
+    }
+}

@@ -1,7 +1,7 @@
 <?php
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
+use Rore\Settings\UseCase\GetSettingUseCase;
 
 $html     = HtmlEncoder::cast($tpl->get('html'));
 $url      = UrlResolver::cast($tpl->get('url'));

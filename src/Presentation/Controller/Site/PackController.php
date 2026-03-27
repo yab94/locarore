@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Catalog\UseCase\GetPackWithDetailsUseCase;
+use Rore\Catalog\UseCase\GetPackWithDetailsUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;
@@ -75,7 +75,7 @@ class PackController extends SiteController
         ]);
     }
 
-    private function findCategoryById(int $categoryId, array $allCategories): ?\Rore\Domain\Catalog\Entity\Category
+    private function findCategoryById(int $categoryId, array $allCategories): ?\Rore\Catalog\Entity\Category
     {
         foreach ($allCategories as $cat) {
             if ($cat->getId() === $categoryId) {
@@ -85,7 +85,7 @@ class PackController extends SiteController
         return null;
     }
 
-    /** @param \Rore\Domain\Catalog\Entity\Category[] $allCategories */
+    /** @param \Rore\Catalog\Entity\Category[] $allCategories */
     private function buildCategoryBreadcrumb($category, array $allCategories): array
     {
         if ($category === null) {

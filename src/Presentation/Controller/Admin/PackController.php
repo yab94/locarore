@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Catalog\UseCase\CreatePackUseCase;
-use Rore\Application\Catalog\UseCase\GetAllCategoriesUseCase;
-use Rore\Application\Catalog\UseCase\GetAllPacksWithPricingUseCase;
-use Rore\Application\Catalog\UseCase\GetAllProductsUseCase;
-use Rore\Application\Catalog\UseCase\GetPackByIdUseCase;
-use Rore\Application\Catalog\UseCase\UpdatePackUseCase;
-use Rore\Application\Catalog\UseCase\TogglePackUseCase;
+use Rore\Catalog\UseCase\CreatePackUseCase;
+use Rore\Catalog\UseCase\GetAllCategoriesUseCase;
+use Rore\Catalog\UseCase\GetAllPacksWithPricingUseCase;
+use Rore\Catalog\UseCase\GetAllProductsUseCase;
+use Rore\Catalog\UseCase\GetPackByIdUseCase;
+use Rore\Catalog\UseCase\UpdatePackUseCase;
+use Rore\Catalog\UseCase\TogglePackUseCase;
 
 use Rore\Framework\Http\Route;
 class PackController extends AdminController

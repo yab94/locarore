@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Domain\Catalog\Entity\PackItem;
-use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Service\PricingService;
+use Rore\Catalog\Entity\Pack;
+use Rore\Catalog\Entity\PackItem;
+use Rore\Catalog\Entity\Product;
+use Rore\Catalog\Service\PricingService;
 
 /**
  * Pack composé de 4× Produit A (20 €/base) + 6× Produit B (30 €/base).

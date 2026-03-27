@@ -2,7 +2,7 @@
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
+use Rore\Settings\UseCase\GetSettingUseCase;
 use Rore\Framework\Bootstrap\Config;
 
 $html          = HtmlEncoder::cast($tpl->get('html'));

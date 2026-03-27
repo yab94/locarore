@@ -2,7 +2,7 @@
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
-use Rore\Domain\Catalog\Entity\Product;
+use Rore\Catalog\Entity\Product;
 use Rore\Framework\Bootstrap\Config;
 
 $html       = HtmlEncoder::cast($tpl->get('html'));

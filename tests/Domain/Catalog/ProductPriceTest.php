@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Service\PricingService;
+use Rore\Catalog\Entity\Product;
+use Rore\Catalog\Service\PricingService;
 
 class ProductPriceTest
 {

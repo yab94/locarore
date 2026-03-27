@@ -1,7 +1,7 @@
 <?php
 use Rore\Framework\Http\UrlResolver;
-use Rore\Domain\Cart\ValueObject\CartState;
-use Rore\Domain\Shared\ValueObject\DateRange;
+use Rore\Cart\ValueObject\CartState;
+use Rore\Shared\ValueObject\DateRange;
 
 $url           = UrlResolver::cast($tpl->get('url'));
 $cart          = CartState::cast($tpl->get('cart'));

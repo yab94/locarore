@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Cart\UseCase\AddToCartUseCase;
-use Rore\Application\Cart\UseCase\AddPackToCartUseCase;
-use Rore\Application\Cart\UseCase\GetCartDataUseCase;
-use Rore\Application\Cart\UseCase\CheckoutUseCase;
-use Rore\Application\Cart\UseCase\RemoveFromCartUseCase;
-use Rore\Application\Cart\UseCase\RemovePackFromCartUseCase;
-use Rore\Application\Cart\UseCase\SetCartDatesUseCase;
-use Rore\Application\Cart\Service\CartService;
+use Rore\Cart\UseCase\AddToCartUseCase;
+use Rore\Cart\UseCase\AddPackToCartUseCase;
+use Rore\Cart\UseCase\GetCartDataUseCase;
+use Rore\Cart\UseCase\CheckoutUseCase;
+use Rore\Cart\UseCase\RemoveFromCartUseCase;
+use Rore\Cart\UseCase\RemovePackFromCartUseCase;
+use Rore\Cart\UseCase\SetCartDatesUseCase;
+use Rore\Cart\Adapter\CartService;
+use Rore\Cart\Port\CartServiceInterface;
+use Rore\Framework\Di\BindAdapter;
 use Rore\Framework\Http\Route;
 use Rore\Framework\View\PageMeta;
 
 class CartController extends SiteController
 {
     public function __construct(
-        private readonly CartService                 $cartService,
+        #[BindAdapter(CartService::class)]
+        private readonly CartServiceInterface                 $cartService,
         private readonly GetCartDataUseCase          $getCartDataUseCase,
         private readonly SetCartDatesUseCase         $setCartDatesUseCase,
         private readonly AddToCartUseCase            $addToCartUseCase,

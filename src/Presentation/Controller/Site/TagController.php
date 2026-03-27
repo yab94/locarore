@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Catalog\UseCase\GetAllActiveCategoriesUseCase;
-use Rore\Application\Catalog\UseCase\GetTagWithItemsUseCase;
+use Rore\Catalog\UseCase\GetAllActiveCategoriesUseCase;
+use Rore\Catalog\UseCase\GetTagWithItemsUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;

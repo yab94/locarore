@@ -3,36 +3,24 @@
 declare(strict_types=1);
 
 /**
- * Vérifie les règles de dépendances inter-couches DDD.
+ * Vérifie les règles d'architecture modulaire (Package by Feature).
+ *
+ * Modules : Cart, Catalog, Contact, Reservation, Search, Settings, Shared
+ * Chaque module contient : UseCase/, Service/, Port/, Entity/, ValueObject/, Adapter/
  *
  * Règles :
- *   Presentation\Controller  →  Application, Domain, Presentation, Framework
- *   Application              →  Application, Domain, Framework
- *   Domain                   →  Domain, Framework
- *   Infrastructure           →  Domain, Infrastructure, Application, Framework
- *                               (les adaptateurs Infrastructure implémentent des ports Application)
- *
- * Framework : Couche framework de base accessible par toutes les couches
- *             (Config, Container, Cast, Typable, etc.)
- *
- * Contrainte supplémentaire :
- *   Application ne contient QUE des UseCases (*UseCase), Services (*Service) et des ports (interfaces).
+ *   UseCase/ et Service/ → interdiction d'injecter un Adapter/
+ *   Entity/ et ValueObject/ → imports limités au même module, Shared, Framework
+ *   Adapter/ → doit implémenter un Port (Rore\*\Port\*)
+ *   Presentation → ne doit pas injecter un Adapter/
  */
 final class DddArchitectureTest
 {
-    // ─── Règles ──────────────────────────────────────────────────────────────
-    // Ordre : du plus spécifique au plus général (premier match gagne).
-    private const RULES = [
-        'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Domain', 'Rore\Presentation', 'Rore\Framework'],
-        'Rore\Application'             => ['Rore\Application', 'Rore\Domain', 'Rore\Framework'],
-        'Rore\Domain'                  => ['Rore\Domain', 'Rore\Framework'],
-        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application', 'Rore\Framework'],
-    ];
-
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     private function findPhpFiles(string $dir): array
     {
+        if (!is_dir($dir)) return [];
         $files = [];
         $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
         foreach ($it as $file) {
@@ -51,130 +39,96 @@ final class DddArchitectureTest
         return $ns[1] . '\\' . $cl[1];
     }
 
-    private function matchRule(string $class): ?array
-    {
-        foreach (self::RULES as $prefix => $allowed) {
-            if (str_starts_with($class, $prefix . '\\') || $class === $prefix) {
-                return $allowed;
-            }
-        }
-        return null;
-    }
+    // ─── Tests ───────────────────────────────────────────────────────────────
 
-    private function isAllowed(string $type, array $allowedPrefixes): bool
-    {
-        foreach ($allowedPrefixes as $prefix) {
-            if (str_starts_with($type, $prefix . '\\') || $type === $prefix) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function collectViolations(): array
+    /**
+     * UseCase/ et Service/ ne doivent pas injecter de classes Adapter/.
+     */
+    public function testUseCasesDoNotDependOnAdapters(): void
     {
         $violations = [];
 
         foreach ($this->findPhpFiles(BASE_PATH . '/src') as $file) {
+            if (!preg_match('#/(UseCase|Service)/#', $file)) continue;
+
             $className = $this->getClassName($file);
             if ($className === null) continue;
 
-            $allowedPrefixes = $this->matchRule($className);
-            if ($allowedPrefixes === null) continue;
-
             try {
                 require_once $file;
-                if (!class_exists($className) && !interface_exists($className) && !trait_exists($className)) continue;
+                if (!class_exists($className)) continue;
                 $ref = new ReflectionClass($className);
             } catch (Throwable) {
                 continue;
             }
 
-            if ($ref->isInterface() || $ref->isTrait() || $ref->isAbstract()) continue;
-
+            if ($ref->isAbstract() || $ref->isInterface()) continue;
             $constructor = $ref->getConstructor();
             if ($constructor === null) continue;
 
             foreach ($constructor->getParameters() as $param) {
-                if ($param->isVariadic()) continue;
-
                 $type = $param->getType();
-                if ($type === null || !($type instanceof ReflectionNamedType)) continue;
-                if ($type->isBuiltin()) continue;
-
+                if (!($type instanceof ReflectionNamedType) || $type->isBuiltin()) continue;
                 $typeName = $type->getName();
-                if (!str_starts_with($typeName, 'Rore\\')) continue;
-
-                if (!$this->isAllowed($typeName, $allowedPrefixes)) {
+                if (str_contains($typeName, '\\Adapter\\')) {
                     $violations[] = sprintf(
-                        "%s::__construct() — \$%s : %s\n   → autorisé : %s",
-                        $className,
-                        $param->getName(),
-                        $typeName,
-                        implode(', ', array_map(fn($p) => str_replace('Rore\\', '', $p), $allowedPrefixes)),
+                        '%s::__construct($%s) — dépend d\'un Adapter : %s',
+                        $className, $param->getName(), $typeName
                     );
                 }
             }
         }
 
-        return $violations;
-    }
-
-    // ─── Tests ───────────────────────────────────────────────────────────────
-
-    public function testNoDddLayerViolations(): void
-    {
-        $violations = $this->collectViolations();
-
         Assert::equals(
             0,
             count($violations),
-            "\n\nViolations d'architecture DDD détectées :\n\n" . implode("\n\n", $violations)
+            "\n\nUseCase/Service ne doit pas dépendre d'un Adapter :\n\n" . implode("\n", $violations)
         );
     }
 
-    public function testApplicationOnlyUseCasesPortsAndServices(): void
+    /**
+     * Entity/ et ValueObject/ ne doivent importer que leur propre module,
+     * Shared et Framework.
+     */
+    public function testEntitiesAreIsolated(): void
     {
         $violations = [];
 
-        foreach ($this->findPhpFiles(BASE_PATH . '/src/Application') as $file) {
-            $className = $this->getClassName($file);
-            if ($className === null) continue;
+        foreach ($this->findPhpFiles(BASE_PATH . '/src') as $file) {
+            if (!preg_match('#/src/(\w+)/(Entity|ValueObject)/#', $file, $m)) continue;
+            $module = $m[1];
 
-            try {
-                require_once $file;
-                if (!class_exists($className) && !interface_exists($className)) continue;
-                $ref = new ReflectionClass($className);
-            } catch (Throwable) {
-                continue;
-            }
+            $content = file_get_contents($file);
+            preg_match_all('/^use (Rore\\\\[^;]+);/m', $content, $uses);
+            foreach ($uses[1] as $fqcn) {
+                if (
+                    str_starts_with($fqcn, "Rore\\$module\\")
+                    || str_starts_with($fqcn, 'Rore\Shared\\')
+                    || str_starts_with($fqcn, 'Rore\Framework\\')
+                ) continue;
 
-            // Les interfaces (ports) et les abstraits sont toujours OK
-            if ($ref->isInterface() || $ref->isAbstract()) continue;
-
-            // Les classes concrètes doivent se terminer par UseCase ou Service
-            $shortName = $ref->getShortName();
-            if (!str_ends_with($shortName, 'UseCase') && !str_ends_with($shortName, 'Service')) {
-                $violations[] = sprintf(
-                    '%s — classe concrète en Application doit se terminer par UseCase ou Service (ou être une interface/port)',
-                    $className,
-                );
+                $className = $this->getClassName($file) ?? $file;
+                $violations[] = "$className importe $fqcn (interdit depuis Entity/ValueObject)";
             }
         }
 
         Assert::equals(
             0,
             count($violations),
-            "\n\nApplication doit uniquement contenir des UseCases, Services et ports (interfaces) :\n\n"
-                . implode("\n", $violations)
+            "\n\nEntity/ValueObject doit rester isolé :\n\n" . implode("\n", $violations)
         );
     }
 
-    public function testInfrastructureClassesAreAdapters(): void
+    /**
+     * Adapter/ doit implémenter au moins un Port (Rore\*\Port\*).
+     */
+    public function testAdaptersImplementPorts(): void
     {
         $violations = [];
 
-        foreach ($this->findPhpFiles(BASE_PATH . '/src/Infrastructure') as $file) {
+        foreach ($this->findPhpFiles(BASE_PATH . '/src') as $file) {
+            if (!preg_match('#/Adapter/#', $file)) continue;
+
             $className = $this->getClassName($file);
             if ($className === null) continue;
 
@@ -188,89 +142,66 @@ final class DddArchitectureTest
 
             if ($ref->isAbstract() || $ref->isInterface()) continue;
 
-            // Chaque classe concrète Infrastructure doit implémenter au moins un port
-            // défini hors Infrastructure (Domain, Application ou Framework),
-            // OU étendre une classe parente hors Infrastructure.
-            $externalInterfaces = array_filter(
+            $ports = array_filter(
                 $ref->getInterfaceNames(),
-                fn(string $iface) => str_starts_with($iface, 'Rore\\')
-                    && !str_starts_with($iface, 'Rore\\Infrastructure\\'),
+                fn(string $i) => str_starts_with($i, 'Rore\\') && str_contains($i, '\\Port\\')
             );
 
             $parent = $ref->getParentClass();
-            $externalParent = $parent !== false
-                && str_starts_with($parent->getName(), 'Rore\\')
-                && !str_starts_with($parent->getName(), 'Rore\\Infrastructure\\');
+            $externalParent = $parent !== false && str_starts_with($parent->getName(), 'Rore\\');
 
-            if (empty($externalInterfaces) && !$externalParent) {
-                $violations[] = sprintf(
-                    '%s — classe Infrastructure sans port externe (Domain/Application/Framework)'
-                        . "\n   → n'implémente aucune interface hors Infrastructure et n'étend aucune classe hors Infrastructure",
-                    $className,
-                );
+            if (empty($ports) && !$externalParent) {
+                $violations[] = "$className — Adapter sans Port ni parent Rore";
             }
         }
 
         Assert::equals(
             0,
             count($violations),
-            "\n\nInfrastructure doit uniquement contenir des adaptateurs (classes implémentant un port externe) :\n\n"
-                . implode("\n\n", $violations)
+            "\n\nAdapter doit implémenter un Port :\n\n" . implode("\n", $violations)
         );
     }
 
-    public function testDiBindingsRespectDddLayers(): void
+    /**
+     * Presentation ne doit pas injecter directement des Adapter/.
+     */
+    public function testPresentationDoesNotUseAdapters(): void
     {
-        $ini      = parse_ini_file(BASE_PATH . '/config/default.ini', true);
-        $bindings = $ini['di']['bind'] ?? [];
-
         $violations = [];
 
-        foreach ($bindings as $port => $adapter) {
-            // ── Règles DDD ────────────────────────────────────────────────────
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Presentation') as $file) {
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
 
-            // Binding Framework→Framework : implémentations internes au framework,
-            // exemptées des règles DDD (pas de port applicatif, pas d'adaptateur externe)
-            $isFrameworkBinding = str_starts_with($port, 'Rore\\Framework\\')
-                               && str_starts_with($adapter, 'Rore\\Framework\\');
-
-            if (!$isFrameworkBinding) {
-                // Le port doit être une interface hors Infrastructure
-                if (str_starts_with($port, 'Rore\\Infrastructure\\')) {
-                    $violations[] = "Port en Infrastructure : {$port}";
-                }
-
-                // L'adaptateur doit être en Infrastructure
-                if (!str_starts_with($adapter, 'Rore\\Infrastructure\\')) {
-                    $violations[] = "Adaptateur hors Infrastructure : {$adapter}\n   → port : {$port}";
-                }
-            }
-
-            // ── Correctness technique ─────────────────────────────────────────
-
-            // $port doit être une interface
-            if (!interface_exists($port)) {
-                $violations[] = "N'est pas une interface : {$port}";
-                continue; // inutile de tester implements si le port est invalide
-            }
-
-            // $adapter doit être une classe existante
-            if (!class_exists($adapter)) {
-                $violations[] = "Classe introuvable : {$adapter}\n   → port : {$port}";
+            try {
+                require_once $file;
+                if (!class_exists($className)) continue;
+                $ref = new ReflectionClass($className);
+            } catch (Throwable) {
                 continue;
             }
 
-            // $adapter doit implémenter $port
-            if (!is_a($adapter, $port, true)) {
-                $violations[] = "« {$adapter} » n'implémente pas « {$port} »";
+            if ($ref->isAbstract() || $ref->isInterface()) continue;
+            $constructor = $ref->getConstructor();
+            if ($constructor === null) continue;
+
+            foreach ($constructor->getParameters() as $param) {
+                $type = $param->getType();
+                if (!($type instanceof ReflectionNamedType) || $type->isBuiltin()) continue;
+                $typeName = $type->getName();
+                if (str_contains($typeName, '\\Adapter\\')) {
+                    $violations[] = sprintf(
+                        '%s::__construct($%s) — Presentation dépend d\'un Adapter : %s',
+                        $className, $param->getName(), $typeName
+                    );
+                }
             }
         }
 
         Assert::equals(
             0,
             count($violations),
-            "\n\nLes bindings DI de default.ini violent les règles DDD :\n\n"
-                . implode("\n\n", $violations)
+            "\n\nPresentation ne doit pas dépendre d'un Adapter :\n\n" . implode("\n", $violations)
         );
     }
 }

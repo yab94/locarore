@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-use Rore\Application\Catalog\UseCase\CreateProductUseCase;
-use Rore\Domain\Catalog\Entity\Category;
-use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Entity\ProductPhoto;
-use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
-use Rore\Application\Catalog\Port\PackRepositoryInterface;
-use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Application\Catalog\Port\TagRepositoryInterface;
-use Rore\Application\Catalog\Service\SlugUniquenessService;
+use Rore\Catalog\UseCase\CreateProductUseCase;
+use Rore\Catalog\Entity\Category;
+use Rore\Catalog\Entity\Pack;
+use Rore\Catalog\Entity\Product;
+use Rore\Catalog\Entity\ProductPhoto;
+use Rore\Catalog\Entity\Tag;
+use Rore\Catalog\Port\CategoryRepositoryInterface;
+use Rore\Catalog\Port\PackRepositoryInterface;
+use Rore\Catalog\Port\ProductRepositoryInterface;
+use Rore\Catalog\Port\TagRepositoryInterface;
+use Rore\Catalog\UseCase\SlugUniquenessService;
 
 // ─── Stubs ───────────────────────────────────────────────────────────────────
 

@@ -1,5 +1,5 @@
 <?php
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
+use Rore\Settings\UseCase\GetSettingUseCase;
 
 $settings = GetSettingUseCase::cast($tpl->get('settings'));
 ?>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Contact\UseCase\SendContactMessageUseCase;
+use Rore\Contact\UseCase\SendContactMessageUseCase;
 use Rore\Framework\Http\Route;
 
 final class ContactController extends SiteController

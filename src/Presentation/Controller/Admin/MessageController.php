@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Contact\UseCase\DeleteContactMessageUseCase;
-use Rore\Application\Contact\UseCase\GetContactMessageUseCase;
-use Rore\Application\Contact\UseCase\GetContactMessagesUseCase;
-use Rore\Application\Contact\UseCase\MarkMessageReadUseCase;
-use Rore\Application\Contact\UseCase\MarkMessageUnreadUseCase;
+use Rore\Contact\UseCase\DeleteContactMessageUseCase;
+use Rore\Contact\UseCase\GetContactMessageUseCase;
+use Rore\Contact\UseCase\GetContactMessagesUseCase;
+use Rore\Contact\UseCase\MarkMessageReadUseCase;
+use Rore\Contact\UseCase\MarkMessageUnreadUseCase;
 use Rore\Framework\Http\Route;
 
 final class MessageController extends AdminController

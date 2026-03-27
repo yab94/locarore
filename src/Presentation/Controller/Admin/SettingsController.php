@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Settings\UseCase\GetAllSettingsUseCase;
-use Rore\Application\Settings\UseCase\SaveSettingsUseCase;
+use Rore\Settings\UseCase\GetAllSettingsUseCase;
+use Rore\Settings\UseCase\SaveSettingsUseCase;
 
 use Rore\Framework\Http\Route;
 class SettingsController extends AdminController

@@ -1,7 +1,7 @@
 <?php
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Type\Cast;
-use Rore\Domain\Catalog\Entity\Tag;
+use Rore\Catalog\Entity\Tag;
 
 $html     = HtmlEncoder::cast($tpl->get('html'));
 $tag      = Tag::cast($tpl->get('tag'));

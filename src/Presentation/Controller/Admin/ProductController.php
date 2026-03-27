@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Catalog\UseCase\CreateProductUseCase;
-use Rore\Application\Catalog\UseCase\DeleteProductPhotoUseCase;
-use Rore\Application\Catalog\UseCase\GetAllCategoriesUseCase;
-use Rore\Application\Catalog\UseCase\GetAllProductsUseCase;
-use Rore\Application\Catalog\UseCase\GetProductEditDataUseCase;
-use Rore\Application\Catalog\UseCase\ReorderProductPhotosUseCase;
-use Rore\Application\Catalog\UseCase\ToggleProductUseCase;
-use Rore\Application\Catalog\UseCase\UpdatePhotoDescriptionUseCase;
-use Rore\Application\Catalog\UseCase\UpdateProductUseCase;
-use Rore\Application\Catalog\UseCase\UploadProductPhotoUseCase;
+use Rore\Catalog\UseCase\CreateProductUseCase;
+use Rore\Catalog\UseCase\DeleteProductPhotoUseCase;
+use Rore\Catalog\UseCase\GetAllCategoriesUseCase;
+use Rore\Catalog\UseCase\GetAllProductsUseCase;
+use Rore\Catalog\UseCase\GetProductEditDataUseCase;
+use Rore\Catalog\UseCase\ReorderProductPhotosUseCase;
+use Rore\Catalog\UseCase\ToggleProductUseCase;
+use Rore\Catalog\UseCase\UpdatePhotoDescriptionUseCase;
+use Rore\Catalog\UseCase\UpdateProductUseCase;
+use Rore\Catalog\UseCase\UploadProductPhotoUseCase;
 use Rore\Framework\Http\Route;
 
 class ProductController extends AdminController

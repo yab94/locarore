@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Search\UseCase\SearchUseCase;
+use Rore\Search\UseCase\SearchUseCase;
 use Rore\Framework\View\PageMeta;
 use Rore\Framework\Http\Route;
 

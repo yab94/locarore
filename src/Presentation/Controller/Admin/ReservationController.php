@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Reservation\UseCase\CancelReservationUseCase;
-use Rore\Application\Reservation\UseCase\ConfirmReservationUseCase;
-use Rore\Application\Reservation\UseCase\GetCalendarDataUseCase;
-use Rore\Application\Reservation\UseCase\GetReservationDetailsUseCase;
-use Rore\Application\Reservation\UseCase\GetReservationsUseCase;
-use Rore\Application\Reservation\UseCase\SetReservationStatusUseCase;
-use Rore\Domain\Shared\ValueObject\DateRange;
+use Rore\Reservation\UseCase\CancelReservationUseCase;
+use Rore\Reservation\UseCase\ConfirmReservationUseCase;
+use Rore\Reservation\UseCase\GetCalendarDataUseCase;
+use Rore\Reservation\UseCase\GetReservationDetailsUseCase;
+use Rore\Reservation\UseCase\GetReservationsUseCase;
+use Rore\Reservation\UseCase\SetReservationStatusUseCase;
+use Rore\Shared\ValueObject\DateRange;
 use Rore\Framework\Http\Route;
 
 class ReservationController extends AdminController

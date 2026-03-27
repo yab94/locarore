@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Application\Cart\Service\CartService;
+use Rore\Cart\Adapter\CartService;
 use Rore\Framework\Session\SessionInterface;
 
 // ─── Stub SessionStorage in-memory ────────────────────────────────────────────

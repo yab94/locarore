@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Catalog\UseCase\GetProductWithDetailsUseCase;
-use Rore\Application\Reservation\UseCase\GetReservedQuantityForProductUseCase;
+use Rore\Catalog\UseCase\GetProductWithDetailsUseCase;
+use Rore\Reservation\UseCase\GetReservedQuantityForProductUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;
@@ -104,7 +104,7 @@ class ProductController extends SiteController
         ]);
     }
 
-    private function findCategoryById(int $categoryId, array $allCategories): ?\Rore\Domain\Catalog\Entity\Category
+    private function findCategoryById(int $categoryId, array $allCategories): ?\Rore\Catalog\Entity\Category
     {
         foreach ($allCategories as $cat) {
             if ($cat->getId() === $categoryId) {
@@ -114,7 +114,7 @@ class ProductController extends SiteController
         return null;
     }
 
-    private function findCategoryBySlugOrId(?string $slug, int $fallbackId, array $allCategories): ?\Rore\Domain\Catalog\Entity\Category
+    private function findCategoryBySlugOrId(?string $slug, int $fallbackId, array $allCategories): ?\Rore\Catalog\Entity\Category
     {
         if ($slug) {
             foreach ($allCategories as $cat) {
@@ -127,8 +127,8 @@ class ProductController extends SiteController
     }
 
     /**
-     * @param \Rore\Domain\Catalog\Entity\Category[] $allCategories
-     * @return \Rore\Domain\Catalog\Entity\Category[]
+     * @param \Rore\Catalog\Entity\Category[] $allCategories
+     * @return \Rore\Catalog\Entity\Category[]
      */
     private function buildCategoryBreadcrumb($category, array $allCategories): array
     {

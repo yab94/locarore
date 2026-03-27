@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Catalog\UseCase\GetAllActiveCategoriesUseCase;
-use Rore\Application\Catalog\UseCase\GetCategoryWithItemsUseCase;
+use Rore\Catalog\UseCase\GetAllActiveCategoriesUseCase;
+use Rore\Catalog\UseCase\GetCategoryWithItemsUseCase;
 use Rore\Framework\View\PageMeta;
 
 use Rore\Framework\Http\Route;
@@ -84,8 +84,8 @@ class CategoryController extends SiteController
     }
 
     /**
-     * @param \Rore\Domain\Catalog\Entity\Category[] $allCategories
-     * @return \Rore\Domain\Catalog\Entity\Category[]
+     * @param \Rore\Catalog\Entity\Category[] $allCategories
+     * @return \Rore\Catalog\Entity\Category[]
      */
     private function buildBreadcrumb($category, array $allCategories): array
     {
