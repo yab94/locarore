@@ -8,12 +8,13 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use RRB\Di\BindAdapter;
+use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 
 /**
  * Calcule la disponibilité d'un produit sur une plage de dates.
  * Seules les réservations au statut "confirmed" consomment du stock.
  */
-class AvailabilityService
+class AvailabilityService implements AvailabilityServiceInterface
 {
     public function __construct(
         #[BindAdapter(MySqlReservationRepository::class)]

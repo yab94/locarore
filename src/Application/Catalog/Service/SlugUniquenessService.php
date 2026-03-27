@@ -11,12 +11,13 @@ use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;
+use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;
 
 /**
  * Vérifie qu'un slug est unique sur l'ensemble du catalogue
  * (catégories, produits ET packs partagent le même espace d'URL).
  */
-final class SlugUniquenessService
+final class SlugUniquenessService implements SlugUniquenessServiceInterface
 {
     public function __construct(
         #[BindAdapter(MySqlCategoryRepository::class)]

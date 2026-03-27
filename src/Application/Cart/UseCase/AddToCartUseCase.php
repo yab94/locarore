@@ -4,19 +4,23 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart\UseCase;
 
+use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
+use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use RRB\Di\BindAdapter;
 
 class AddToCartUseCase
 {
     public function __construct(
-        private CartService                 $cart,
+        #[BindAdapter(CartService::class)]
+        private CartServiceInterface                 $cart,
         #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
-        private AvailabilityService        $availabilityService,
+        #[BindAdapter(AvailabilityService::class)]
+        private AvailabilityServiceInterface   $availabilityService,
     ) {}
 
     public function execute(int $productId, int $quantity): void

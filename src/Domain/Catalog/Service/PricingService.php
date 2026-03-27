@@ -7,6 +7,7 @@ namespace Rore\Domain\Catalog\Service;
 use Rore\Domain\Catalog\Entity\PricableInterface;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
+use Rore\Application\Catalog\Port\PricingServiceInterface;
 
 /**
  * Service de domaine : calcul du prix d'une entité tarifable pour une période.
@@ -16,7 +17,7 @@ use Rore\Domain\Catalog\Entity\Product;
  * - Week-end (sam+dim présents ET ≤ 4 jours) → supplément getPriceExtraWeekend() €/j au-delà de 2j.
  * - Sinon → supplément getPriceExtraWeekday() €/j au-delà de 2j.
  */
-final class PricingService
+final class PricingService implements PricingServiceInterface
 {
     public function calculate(
         PricableInterface             $item,

@@ -7,6 +7,7 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Application\Catalog\Service\SlugUniquenessService;
+use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use RRB\Di\BindAdapter;
 
@@ -15,7 +16,8 @@ class UpdateCategoryUseCase
     public function __construct(
         #[BindAdapter(MySqlCategoryRepository::class)]
         private CategoryRepositoryInterface $categoryRepository,
-        private SlugUniquenessService       $slugChecker,
+        #[BindAdapter(SlugUniquenessService::class)]
+        private SlugUniquenessServiceInterface $slugChecker,
     ) {}
 
     public function execute(

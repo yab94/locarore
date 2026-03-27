@@ -11,14 +11,17 @@ use Rore\Application\Cart\UseCase\CheckoutUseCase;
 use Rore\Application\Cart\UseCase\RemoveFromCartUseCase;
 use Rore\Application\Cart\UseCase\RemovePackFromCartUseCase;
 use Rore\Application\Cart\UseCase\SetCartDatesUseCase;
+use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
+use RRB\Di\BindAdapter;
 use RRB\Http\Route;
 use RRB\View\PageMeta;
 
 class CartController extends SiteController
 {
     public function __construct(
-        private readonly CartService                 $cartService,
+        #[BindAdapter(CartService::class)]
+        private readonly CartServiceInterface                 $cartService,
         private readonly GetCartDataUseCase          $getCartDataUseCase,
         private readonly SetCartDatesUseCase         $setCartDatesUseCase,
         private readonly AddToCartUseCase            $addToCartUseCase,

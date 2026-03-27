@@ -7,6 +7,7 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
+use Rore\Application\Catalog\Port\PricingServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;
@@ -22,7 +23,8 @@ final class GetAllPacksWithPricingUseCase
         private readonly PackRepositoryInterface $packRepo,
         #[BindAdapter(MySqlProductRepository::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        private readonly PricingService             $pricingService,
+        #[BindAdapter(PricingService::class)]
+        private readonly PricingServiceInterface    $pricingService,
     ) {}
 
     /**

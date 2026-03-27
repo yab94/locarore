@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Rore\Application\Cart\UseCase;
 
 use Rore\Application\Reservation\UseCase\CreateReservationUseCase;
+use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
+use Rore\Application\Catalog\Port\PricingServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;
@@ -16,13 +18,15 @@ use RRB\Di\BindAdapter;
 class CheckoutUseCase
 {
     public function __construct(
-        private CartService                 $cart,
+        #[BindAdapter(CartService::class)]
+        private CartServiceInterface                 $cart,
         #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
         #[BindAdapter(MySqlPackRepository::class)]
         private PackRepositoryInterface $packRepository,
         private CreateReservationUseCase   $createReservation,
-        private PricingService          $pricing,
+        #[BindAdapter(PricingService::class)]
+        private PricingServiceInterface $pricing,
     ) {}
 
     public function execute(

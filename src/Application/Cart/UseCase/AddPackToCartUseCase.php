@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart\UseCase;
 
+use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
+use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;
@@ -15,12 +17,14 @@ use RRB\Di\BindAdapter;
 class AddPackToCartUseCase
 {
     public function __construct(
-        private CartService                 $cart,
+        #[BindAdapter(CartService::class)]
+        private CartServiceInterface                 $cart,
         #[BindAdapter(MySqlPackRepository::class)]
         private PackRepositoryInterface $packRepository,
         #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
-        private AvailabilityService        $availabilityService,
+        #[BindAdapter(AvailabilityService::class)]
+        private AvailabilityServiceInterface   $availabilityService,
     ) {}
 
     public function execute(int $packId, array $selections = []): void

@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart\UseCase;
 
+use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
+use RRB\Di\BindAdapter;
 
 class SetCartDatesUseCase
 {
     public function __construct(
-        private CartService $cart,
+        #[BindAdapter(CartService::class)]
+        private CartServiceInterface $cart,
     ) {}
 
     public function execute(string $startDate, string $endDate): void

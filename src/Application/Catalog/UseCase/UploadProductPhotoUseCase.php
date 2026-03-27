@@ -8,7 +8,9 @@ use RRB\Bootstrap\Config;
 use RRB\Di\Bind;
 use RRB\Di\BindConfig;
 use RRB\File\FileUploader;
+use RRB\File\FileUploaderInterface;
 use RRB\File\ImageManager;
+use RRB\File\ImageManagerInterface;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
@@ -19,20 +21,20 @@ class UploadProductPhotoUseCase
     public function __construct(
         #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
-        #[Bind(static function (Config $c): FileUploader {
+        #[Bind(static function (Config $c): FileUploaderInterface {
             return new FileUploader(
                 baseDir:      $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
                 maxSize:      $c->getInt('upload.max_size'),
                 allowedTypes: $c->getString('upload.allowed_types'),
             );
         })]
-        private FileUploader               $fileUploader,
-        #[Bind(static function (Config $c): ImageManager {
+        private FileUploaderInterface      $fileUploader,
+        #[Bind(static function (Config $c): ImageManagerInterface {
             return new ImageManager(
                 baseDir: $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
             );
         })]
-        private ImageManager               $imageManager,
+        private ImageManagerInterface      $imageManager,
         #[BindConfig('upload.max_width')]
         private int                        $maxWidth,
         #[BindConfig('upload.max_height')]

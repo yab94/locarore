@@ -170,6 +170,103 @@ final class DddArchitectureTest
         );
     }
 
+    public function testDomainOnlyAllowedSubdirectories(): void
+    {
+        // Sous-dossiers autorisés dans Domain (par module)
+        $allowedDirs = ['Entity', 'ValueObject', 'Repository', 'Service'];
+
+        $violations = [];
+
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Domain') as $file) {
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
+
+            // Extraire le sous-dossier immédiatement sous Domain/{Module}/
+            // Exemple : src/Domain/Catalog/Entity/Product.php → "Entity"
+            $relative = str_replace(BASE_PATH . '/src/Domain/', '', $file);
+            $parts    = explode('/', $relative);
+
+            // parts[0] = module (Catalog, Cart…), parts[1] = sous-dossier, parts[2] = fichier
+            if (count($parts) < 3) {
+                $violations[] = sprintf(
+                    '%s — fichier à la racine d\'un module Domain (doit être dans Entity/, ValueObject/, Repository/ ou Service/)',
+                    $className,
+                );
+                continue;
+            }
+
+            $subDir = $parts[1];
+            if (!in_array($subDir, $allowedDirs, true)) {
+                $violations[] = sprintf(
+                    '%s — sous-dossier Domain non autorisé : "%s" (autorisés : %s)',
+                    $className,
+                    $subDir,
+                    implode(', ', $allowedDirs),
+                );
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nDomain doit uniquement contenir Entity/, ValueObject/, Repository/, Service/ :\n\n"
+                . implode("\n", $violations)
+        );
+    }
+
+    public function testDomainServicesArePure(): void
+    {
+        $violations = [];
+
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Domain') as $file) {
+            // Seuls les fichiers dans un sous-dossier Service/ sont concernés
+            if (!str_contains($file, '/Domain/') || !str_contains($file, '/Service/')) continue;
+
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
+
+            try {
+                require_once $file;
+                if (!class_exists($className)) continue;
+                $ref = new ReflectionClass($className);
+            } catch (Throwable) {
+                continue;
+            }
+
+            if ($ref->isInterface() || $ref->isAbstract()) continue;
+
+            $constructor = $ref->getConstructor();
+            if ($constructor === null) continue;
+
+            foreach ($constructor->getParameters() as $param) {
+                if ($param->isVariadic()) continue;
+
+                $type = $param->getType();
+                if ($type === null || !($type instanceof ReflectionNamedType)) continue;
+                if ($type->isBuiltin()) continue;
+
+                $typeName = $type->getName();
+
+                // Un service Domain ne peut injecter que des types Rore\Domain\*
+                if (!str_starts_with($typeName, 'Rore\Domain\\')) {
+                    $violations[] = sprintf(
+                        "%s::__construct() — \$%s : %s\n   → les services Domain ne peuvent injecter que des types Rore\\Domain\\*",
+                        $className,
+                        $param->getName(),
+                        $typeName,
+                    );
+                }
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nLes services Domain doivent être purs (pas d'injection hors Domain) :\n\n"
+                . implode("\n\n", $violations)
+        );
+    }
+
     public function testInfrastructureClassesAreAdapters(): void
     {
         $violations = [];

@@ -8,6 +8,7 @@ use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
+use Rore\Application\Catalog\Port\PricingServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
@@ -25,7 +26,8 @@ final class GetCartDataUseCase
         private readonly PackRepositoryInterface $packRepo,
         #[BindAdapter(MySqlCategoryRepository::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
-        private readonly PricingService              $pricingService,
+        #[BindAdapter(PricingService::class)]
+        private readonly PricingServiceInterface     $pricingService,
     ) {}
 
     /**

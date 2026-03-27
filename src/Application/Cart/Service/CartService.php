@@ -8,8 +8,9 @@ use RRB\Di\BindAdapter;
 use RRB\Type\Castable;
 use RRB\Session\PhpSession;
 use RRB\Session\SessionInterface;
+use Rore\Application\Cart\Port\CartServiceInterface;
 
-final class CartService
+final class CartService implements CartServiceInterface
 {
     use Castable;
     private const KEY = 'rore_cart';

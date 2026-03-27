@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RRB\File;
 
-class FileManager
+class FileManager implements FileManagerInterface
 {
     public function __construct(protected readonly string $baseDir) {}
 

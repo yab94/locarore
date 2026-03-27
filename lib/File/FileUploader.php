@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RRB\File;
 
-class FileUploader extends FileManager
+class FileUploader extends FileManager implements FileUploaderInterface
 {
     private array $allowedTypes;
 
