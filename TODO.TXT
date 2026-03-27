@@ -1,5 +1,0 @@
-Features
-
-- enlever le fabrication à la demande disponible.
-
-- pouvoir ordonner les images (position)
