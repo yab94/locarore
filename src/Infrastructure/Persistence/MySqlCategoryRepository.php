@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Framework\Database\Database;
+use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 
 class MySqlCategoryRepository implements CategoryRepositoryInterface
 {
     public function __construct(
-        private readonly Database $connection
+        private readonly MysqlDatabase $connection
     ) {}
 
     public function findAll(): array

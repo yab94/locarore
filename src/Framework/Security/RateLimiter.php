@@ -18,7 +18,7 @@ use Rore\Framework\Storage\StorageInterface;
  *   })]
  *   private readonly RateLimiter $rateLimiter,
  */
-final class RateLimiter
+class RateLimiter
 {
     private const PREFIX = 'rate_limit.';
 

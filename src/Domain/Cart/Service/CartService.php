@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Cart\Service;
 
+use Rore\Framework\Di\Bind;
 use Rore\Framework\Type\Castable;
+use Rore\Framework\Storage\PhpSessionStorage;
 use Rore\Framework\Storage\StorageInterface;
 
 final class CartService
@@ -13,6 +15,7 @@ final class CartService
     private const KEY = 'rore_cart';
 
     public function __construct(
+        #[Bind(static function (PhpSessionStorage $s): StorageInterface { return $s; })]
         private readonly StorageInterface $session,
     ) {}
 

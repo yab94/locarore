@@ -20,23 +20,6 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 $container = new \Rore\Framework\Di\Container();
 $container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
 
-// ── Framework ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\Storage\StorageInterface::class,   \Rore\Framework\Storage\PhpSessionStorage::class);
-$container->bind(\Rore\Framework\Security\CsrfTokenManagerInterface::class, \Rore\Framework\Security\CsrfTokenManager::class);
-$container->bind(\Rore\Framework\Mail\MailerInterface::class,           \Rore\Framework\Mail\SmtpMailer::class);
-$container->bind(\Rore\Framework\Mail\SmtpMailer::class, fn() => new \Rore\Framework\Mail\SmtpMailer(
-    host:       $config->getString('smtp.host'),
-    port:       $config->getInt('smtp.port', 587),
-    encryption: strtolower($config->getString('smtp.encryption', 'tls')),
-    user:       $config->getString('smtp.user'),
-    password:   $config->getString('smtp.password'),
-    fromEmail:  $config->getString('smtp.from_email'),
-    fromName:   $config->getString('smtp.from_name', $config->getString('smtp.from_email')),
-));
-
-// ── Database ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\Database\Database::class, fn() => new \Rore\Framework\Database\Database(...$config->getArray('database')));
-
 // ── Repositories ─────────────────────────────────────────────────────────────
 $container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       \Rore\Infrastructure\Persistence\MySqlCategoryRepository::class);
 $container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlProductRepository::class);
@@ -46,14 +29,6 @@ $container->bind(\Rore\Domain\Reservation\Repository\ReservationRepositoryInterf
 $container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::class,      \Rore\Infrastructure\Persistence\MySqlSettingsRepository::class);
 $container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, \Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class);
 $container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlSearchRepository::class);
-
-// ── Services spécifiques ─────────────────────────────────────────────────────
-$container->bind(\Rore\Presentation\Seo\SlugResolver::class, fn() => new \Rore\Presentation\Seo\SlugResolver(
-    siteUrl: $config->getString('seo.site_url'),
-    categoriesBaseUrl: $config->getString('seo.categories_base_url'),
-    productsBaseUrl: $config->getString('seo.products_base_url'),
-    tagsBaseUrl: $config->getString('seo.tags_base_url'),
-));
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \Rore\Framework\Http\RouteScanner();

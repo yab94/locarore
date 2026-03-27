@@ -15,11 +15,19 @@ class UploadProductPhotoUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        #[Bind('baseDir', static function (Config $c): string { return $c->getString('upload.base_path') . $c->getString('upload.upload_path'); })]
-        #[Bind('maxSize', static function (Config $c): int { return $c->getInt('upload.max_size'); })]
-        #[Bind('allowedTypes', static function (Config $c): string { return $c->getString('upload.allowed_types'); })]
+        #[Bind(static function (Config $c): FileUploader {
+            return new FileUploader(
+                baseDir:      $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
+                maxSize:      $c->getInt('upload.max_size'),
+                allowedTypes: $c->getString('upload.allowed_types'),
+            );
+        })]
         private FileUploader               $fileUploader,
-        #[Bind('baseDir', static function (Config $c): string { return $c->getString('upload.base_path') . $c->getString('upload.upload_path'); })]
+        #[Bind(static function (Config $c): ImageManager {
+            return new ImageManager(
+                baseDir: $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
+            );
+        })]
         private ImageManager               $imageManager,
         #[Bind(static function (Config $c): int { return $c->getInt('upload.max_width'); })]
         private int                        $maxWidth,

@@ -13,7 +13,11 @@ class DeleteProductPhotoUseCase
 {
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        #[Bind('baseDir', static function (Config $c): string { return $c->getString('upload.base_path') . $c->getString('upload.upload_path'); })]
+        #[Bind(static function (Config $c): FileManager {
+            return new FileManager(
+                baseDir: $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
+            );
+        })]
         private FileManager                $fileManager,
     ) {}
 

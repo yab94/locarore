@@ -10,12 +10,12 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Domain\Catalog\Repository\SearchRepositoryInterface;
-use Rore\Framework\Database\Database;
+use Rore\Infrastructure\Database\MysqlDatabase;
 
 class MySqlSearchRepository implements SearchRepositoryInterface
 {
     public function __construct(
-        private readonly Database $connection
+        private readonly MysqlDatabase $connection
     ) {}
 
     /**

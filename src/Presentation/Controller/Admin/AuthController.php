@@ -4,19 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Di\Bind;
 use Rore\Framework\Http\Route;
-use Rore\Framework\Security\RateLimiter;
 use Rore\Presentation\Controller\Controller;
+use Rore\Presentation\Security\LoginRateLimiter;
 
 class AuthController extends Controller
 {
     public function __construct(
-        #[Bind('key', static function (): string { return 'admin_login'; })]
-        #[Bind('maxAttempts', static function (Config $c): int { return $c->getInt('admin.login_attempts'); })]
-        #[Bind('lockoutSeconds', static function (Config $c): int { return $c->getInt('admin.lockout_seconds'); })]
-        private readonly RateLimiter $rateLimiter,
+        private readonly LoginRateLimiter $rateLimiter,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);

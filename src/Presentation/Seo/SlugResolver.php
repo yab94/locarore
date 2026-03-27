@@ -7,6 +7,8 @@ namespace Rore\Presentation\Seo;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
+use Rore\Framework\Bootstrap\Config;
+use Rore\Framework\Di\Bind;
 use Rore\Framework\Type\Castable;
 
 /**
@@ -18,9 +20,13 @@ final class SlugResolver
     use Castable;
 
     public function __construct(
+        #[Bind(static function (Config $c): string { return $c->getString('seo.site_url'); })]
         private string $siteUrl,
+        #[Bind(static function (Config $c): string { return $c->getString('seo.categories_base_url'); })]
         private string $categoriesBaseUrl,
+        #[Bind(static function (Config $c): string { return $c->getString('seo.products_base_url'); })]
         private string $productsBaseUrl,
+        #[Bind(static function (Config $c): string { return $c->getString('seo.tags_base_url'); })]
         private string $tagsBaseUrl,
     ) {
     }

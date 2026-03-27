@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Persistence;
 
-use Rore\Framework\Database\Database;
+use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
@@ -14,7 +14,7 @@ class MySqlReservationRepository implements ReservationRepositoryInterface
 
 
     public function __construct(
-        private readonly Database $connection
+        private readonly MysqlDatabase $connection
     ) {}
 
     public function findAll(): array

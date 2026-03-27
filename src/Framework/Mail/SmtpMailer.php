@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Rore\Framework\Mail;
 
 use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Mail\MailerInterface;
 use RuntimeException;
 
 /**
@@ -26,7 +25,7 @@ use RuntimeException;
  *   smtp.from_email  → adresse expéditeur
  *   smtp.from_name   → nom expéditeur
  */
-final class SmtpMailer implements MailerInterface
+final class SmtpMailer
 {
     private const TIMEOUT = 15;
 

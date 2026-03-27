@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Rore\Framework\Http;
 
 use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Security\CsrfTokenManagerInterface;
-use Rore\Framework\Storage\StorageInterface;
+use Rore\Framework\Security\CsrfTokenManager;
+use Rore\Framework\Storage\PhpSessionStorage;
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\View\PageMeta;
 use Rore\Framework\View\Template;
@@ -19,8 +19,8 @@ abstract class Controller
         readonly Config $config,
         readonly HtmlEncoder $html,
         readonly UrlResolver $urlResolver,
-        readonly StorageInterface $session,
-        readonly CsrfTokenManagerInterface $csrfTokenManager,
+        readonly PhpSessionStorage $session,
+        readonly CsrfTokenManager $csrfTokenManager,
     ) {}
 
     protected function render(

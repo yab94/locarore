@@ -189,17 +189,23 @@ final class DddArchitectureTest
             if ($ref->isAbstract() || $ref->isInterface()) continue;
 
             // Chaque classe concrète Infrastructure doit implémenter au moins un port
-            // défini hors Infrastructure (Domain, Application ou Framework)
-            $externalPorts = array_filter(
+            // défini hors Infrastructure (Domain, Application ou Framework),
+            // OU étendre une classe parente hors Infrastructure.
+            $externalInterfaces = array_filter(
                 $ref->getInterfaceNames(),
                 fn(string $iface) => str_starts_with($iface, 'Rore\\')
                     && !str_starts_with($iface, 'Rore\\Infrastructure\\'),
             );
 
-            if (empty($externalPorts)) {
+            $parent = $ref->getParentClass();
+            $externalParent = $parent !== false
+                && str_starts_with($parent->getName(), 'Rore\\')
+                && !str_starts_with($parent->getName(), 'Rore\\Infrastructure\\');
+
+            if (empty($externalInterfaces) && !$externalParent) {
                 $violations[] = sprintf(
                     '%s — classe Infrastructure sans port externe (Domain/Application/Framework)'
-                        . "\n   → n'implémente aucune interface hors Infrastructure",
+                        . "\n   → n'implémente aucune interface hors Infrastructure et n'étend aucune classe hors Infrastructure",
                     $className,
                 );
             }

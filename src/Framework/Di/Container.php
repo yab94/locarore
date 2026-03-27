@@ -64,7 +64,7 @@ final class Container
 
         $instance = isset($this->bindings[$abstract])
             ? ($this->bindings[$abstract])($this)
-            : $this->build($abstract);
+            : $this->make($abstract);
 
         $this->instances[$abstract] = $instance;
 
@@ -74,13 +74,15 @@ final class Container
     // ─────────────────────────────────────────────────────────────────────
 
     /**
-     * Construit une instance en résolvant ses dépendances par réflexion.
+     * Construit une nouvelle instance sans la mettre en cache,
+     * en surchargeant certains paramètres du constructeur par nom.
      *
      * @template T of object
-     * @param class-string<T> $class
+     * @param class-string<T>      $class
+     * @param array<string, mixed> $overrides Surcharges par nom de paramètre
      * @return T
      */
-    private function build(string $class): object
+    public function make(string $class, array $overrides = []): object
     {
         $ref = new ReflectionClass($class);
 
@@ -110,34 +112,19 @@ final class Container
                 continue;
             }
 
-            // Paramètre annoté #[Bind] → closure auto-wirée fournit la valeur ou les args DI
+            // Override explicite par nom (via make())
+            if (array_key_exists($param->getName(), $overrides)) {
+                $args[] = $overrides[$param->getName()];
+                continue;
+            }
+
+            // Paramètre annoté #[Bind] → closure auto-wirée fournit la valeur
             $fromAttrs = $param->getAttributes(Bind::class);
             if ($fromAttrs !== []) {
-                $binds = array_map(fn($a) => $a->newInstance(), $fromAttrs);
-
-                // Mode multi-nommé : chaque #[Bind('param', fn)] fournit un scalaire nommé
-                if ($binds[0]->paramName !== null) {
-                    $targetClass = $type->getName();
-                    $this->validateNamedBinds($targetClass, $binds);
-                    $scalarArgs = [];
-                    foreach ($binds as $bind) {
-                        $scalarArgs[$bind->paramName] = $this->resolveScalarBind($bind);
-                    }
-                    $args[] = $this->buildWithScalarArgs($targetClass, $scalarArgs);
-                    continue;
-                }
-
                 /** @var Bind $from */
-                $from = $binds[0];
+                $from = $fromAttrs[0]->newInstance();
                 $from->validate($param);
-
-                if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
-                    // Paramètre objet → closure retourne une instance ou un tableau de scalaires
-                    $args[] = $this->resolveBindAttribute($from, $type->getName());
-                } else {
-                    // Paramètre scalaire → closure retourne la valeur directement
-                    $args[] = $this->resolveScalarBind($from);
-                }
+                $args[] = $this->resolveBind($from);
                 continue;
             }
 
@@ -159,10 +146,9 @@ final class Container
     }
 
     /**
-     * Résout un #[Bind] sur un paramètre scalaire :
-     * auto-wire les dépendances de la closure puis retourne sa valeur directement.
+     * Résout un #[Bind] : auto-wire les dépendances de la closure puis retourne sa valeur.
      */
-    private function resolveScalarBind(Bind $from): mixed
+    private function resolveBind(Bind $from): mixed
     {
         $refFn       = new ReflectionFunction($from->resolver);
         $closureArgs = [];
@@ -175,140 +161,6 @@ final class Container
             }
         }
         return ($from->resolver)(...$closureArgs);
-    }
-
-    /**
-     * Résout un paramètre annoté #[Bind] :
-     * - les dépendances typées objet du constructeur cible sont auto-wirées par le container
-     * - la closure fournit uniquement les arguments scalaires (par position ou par nom)
-     * - les deux sont fusionnés pour construire l'instance
-     *
-     * Clé de cache = FQCN + ':' + md5(serialize(args scalaires))
-     * → deux #[Bind] produisant des scalaires différents donnent deux instances distinctes.
-     */
-    private function resolveBindAttribute(Bind $from, string $className): object
-    {
-        // 1. Auto-wirer les dépendances de la closure elle-même
-        $refFn       = new ReflectionFunction($from->resolver);
-        $closureArgs = [];
-        foreach ($refFn->getParameters() as $p) {
-            $t = $p->getType();
-            if ($t instanceof ReflectionNamedType && !$t->isBuiltin()) {
-                $closureArgs[] = $this->get($t->getName());
-            } elseif ($p->isDefaultValueAvailable()) {
-                $closureArgs[] = $p->getDefaultValue();
-            }
-        }
-
-        // 2. Appeler la closure → doit retourner une instance du type cible
-        $result = ($from->resolver)(...$closureArgs);
-
-        if (!$result instanceof $className) {
-            throw new \LogicException(
-                "#[Bind] : la closure doit retourner une instance de \"$className\"."
-                . ' Pour injecter des scalaires, utilisez #[Bind(\'param\', fn)] répété.'
-            );
-        }
-
-        return $result;
-    }
-
-    /**
-     * Vérifie que chaque #[Bind('param', fn)] nommé correspond bien
-     * à un paramètre existant dans le constructeur de la classe cible,
-     * et que le type de retour déclaré de la closure est compatible avec ce paramètre.
-     *
-     * @param Bind[] $binds
-     */
-    private function validateNamedBinds(string $className, array $binds): void
-    {
-        $ref         = new ReflectionClass($className);
-        $constructor = $ref->getConstructor();
-        if ($constructor === null) {
-            return;
-        }
-
-        $paramsByName = [];
-        foreach ($constructor->getParameters() as $p) {
-            $paramsByName[$p->getName()] = $p;
-        }
-
-        foreach ($binds as $bind) {
-            $paramName = $bind->paramName;
-
-            if (!isset($paramsByName[$paramName])) {
-                throw new \LogicException(
-                    "#[Bind] : le paramètre '\${$paramName}' n'existe pas"
-                    . " dans le constructeur de {$className}."
-                );
-            }
-
-            $returnType = (new ReflectionFunction($bind->resolver))->getReturnType();
-            if ($returnType === null || !$returnType instanceof ReflectionNamedType) {
-                continue; // pas de type de retour déclaré → pas de validation possible
-            }
-
-            $targetParamType = $paramsByName[$paramName]->getType();
-            if (!$targetParamType instanceof ReflectionNamedType) {
-                continue;
-            }
-
-            $returnName = $returnType->getName();
-            $targetName = $targetParamType->getName();
-
-            $compatible = $returnName === $targetName
-                || (!$targetParamType->isBuiltin() && is_a($returnName, $targetName, true));
-
-            if (!$compatible) {
-                throw new \LogicException(
-                    "#[Bind('$paramName')] sur {$className} : la closure retourne '{$returnName}'"
-                    . " mais le paramètre attend '{$targetName}'."
-                );
-            }
-        }
-    }
-
-    /**
-     * Construit une instance de $className en fusionnant les $scalarArgs fournis
-     * avec les dépendances objet auto-wirées. Utilise un cache par clé scalaire.
-     */
-    private function buildWithScalarArgs(string $className, array $scalarArgs): object
-    {
-        // Clé de cache — ksort pour que l'ordre des clés n'influe pas sur l'identité de l'instance
-        ksort($scalarArgs);
-        $cacheKey = $className . ':' . md5(serialize($scalarArgs));
-        if (isset($this->instances[$cacheKey])) {
-            return $this->instances[$cacheKey];
-        }
-
-        // Fusionner : scalaires fournis (priorité) + dépendances objet auto-wirées + défauts
-        $ref         = new ReflectionClass($className);
-        $constructor = $ref->getConstructor();
-        $args        = [];
-
-        if ($constructor !== null) {
-            foreach ($constructor->getParameters() as $param) {
-                $type = $param->getType();
-
-                if (array_key_exists($param->getName(), $scalarArgs)) {
-                    $args[] = $scalarArgs[$param->getName()];
-                } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
-                    $args[] = $this->get($type->getName());
-                } elseif ($param->isDefaultValueAvailable()) {
-                    $args[] = $param->getDefaultValue();
-                } else {
-                    throw new RuntimeException(
-                        "Container #[Bind] : impossible de résoudre le paramètre"
-                        . " « \${$param->getName()} » de « {$className} »."
-                    );
-                }
-            }
-        }
-
-        $instance = $ref->newInstanceArgs($args);
-        $this->instances[$cacheKey] = $instance;
-
-        return $instance;
     }
 
     /**
@@ -352,10 +204,10 @@ final class Container
                 $type = $param->getType();
 
                 $fromAttrs = $param->getAttributes(Bind::class);
-                if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                if ($fromAttrs !== []) {
                     /** @var Bind $from */
                     $from = $fromAttrs[0]->newInstance();
-                    $parentDeps[] = $this->resolveBindAttribute($from, $type->getName());
+                    $parentDeps[] = $this->resolveBind($from);
                 } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     $parentDeps[] = $this->get($type->getName());
                 } elseif ($param->isDefaultValueAvailable()) {

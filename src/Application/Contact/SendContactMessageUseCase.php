@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Application\Contact;
 
-use Rore\Framework\Mail\MailerInterface;
+use Rore\Framework\Bootstrap\Config;
+use Rore\Framework\Di\Bind;
+use Rore\Framework\Mail\SmtpMailer;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
@@ -13,7 +15,18 @@ final class SendContactMessageUseCase
 {
     public function __construct(
         private readonly ContactMessageRepositoryInterface $repo,
-        private readonly MailerInterface                   $mailer,
+        #[Bind(static function (Config $c): SmtpMailer {
+            return new SmtpMailer(
+                host:       $c->getString('smtp.host'),
+                port:       $c->getInt('smtp.port', 587),
+                encryption: strtolower($c->getString('smtp.encryption', 'tls')),
+                user:       $c->getString('smtp.user'),
+                password:   $c->getString('smtp.password'),
+                fromEmail:  $c->getString('smtp.from_email'),
+                fromName:   $c->getString('smtp.from_name', $c->getString('smtp.from_email')),
+            );
+        })]
+        private readonly SmtpMailer                        $mailer,
         private readonly GetSettingUseCase                 $setting,
     ) {}
 
