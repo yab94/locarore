@@ -6,73 +6,89 @@ namespace Rore\Framework\Storage;
 
 class ImageManager
 {
-    private function getGDImage($imagePath): ?\GdImage
+    /**
+     * Redimensionne une image si elle dépasse les dimensions max (conserve le ratio).
+     * Le mime type est détecté automatiquement à partir du fichier.
+     */
+    public function resize(string $filePath, int $maxWidth, int $maxHeight): void
     {
-        if (!extension_loaded('gd')) {
-            return null;
-        }
+        $mimeType = $this->getMimeType($filePath);
+        [$width, $height] = getimagesize($filePath);
 
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($imagePath);
-
-        return match($mimeType) {
-            'image/jpeg' => imagecreatefromjpeg($imagePath),
-            'image/png'  => imagecreatefrompng($imagePath),
-            'image/bmp'  => function_exists('imagecreatefrombmp') ? imagecreatefrombmp($imagePath) : throw new \RuntimeException("Format d'image non supporté : $mimeType."),
-            'image/gif'  => imagecreatefromgif($imagePath),
-            'image/tiff' => function_exists('imagecreatefromtiff') ? imagecreatefromtiff($imagePath) : throw new \RuntimeException("Format d'image non supporté : $mimeType."), 
-            default      => throw new \RuntimeException("Format d'image non supporté : $mimeType."),
-        };
-    }
-
-    public function resizeImage(string $imagePath, int $maxWidth, int $maxHeight): void
-    {
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($imagePath);
-        
-        [$width, $height] = getimagesize($imagePath);
         if ($width <= $maxWidth && $height <= $maxHeight) {
-            return; // Pas besoin de resize
+            return;
         }
 
-        $srcImg = $this->getGDImage($imagePath);
-        $ratio = min($maxWidth / $width, $maxHeight / $height);
+        $src = $this->loadGdImage($filePath, $mimeType);
+        if ($src === null) return;
+
+        $ratio     = min($maxWidth / $width, $maxHeight / $height);
         $newWidth  = (int) round($width * $ratio);
         $newHeight = (int) round($height * $ratio);
 
-        $dstImg = imagecreatetruecolor($newWidth, $newHeight);
-        if ($mimeType === 'image/png') {
-            imagealphablending($dstImg, false);
-            imagesavealpha($dstImg, true);
+        $dst = imagecreatetruecolor($newWidth, $newHeight);
+        if (in_array($mimeType, ['image/png', 'image/gif'], true)) {
+            imagealphablending($dst, false);
+            imagesavealpha($dst, true);
         }
-        imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
 
         match($mimeType) {
-            'image/jpeg' => imagejpeg($dstImg, $imagePath, 90),
-            'image/png'  => imagepng($dstImg, $imagePath, 6),
-            'image/bmp'  => function_exists('imagebmp') ? imagebmp($dstImg, $imagePath) : throw new \RuntimeException("Format d'image non supporté : $mimeType."),
-            'image/gif'  => imagegif($dstImg, $imagePath),
-            'image/tiff' => null, // Pas de support natif
+            'image/jpeg' => imagejpeg($dst, $filePath, 90),
+            'image/png'  => imagepng($dst, $filePath, 6),
+            'image/bmp'  => function_exists('imagebmp') ? imagebmp($dst, $filePath) : null,
+            'image/gif'  => imagegif($dst, $filePath),
+            'image/tiff' => null,
         };
+
     }
 
-    public function convertToWebp(string $imagePath): string
+    /**
+     * Convertit une image en WebP. Supprime l'original et retourne le nouveau nom de fichier.
+     * Si l'image est déjà en WebP, retourne simplement le basename sans rien faire.
+     */
+    public function convertToWebp(string $filePath): string
     {
-        $img = $this->getGDImage($imagePath);
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->file($imagePath);
+        $mimeType = $this->getMimeType($filePath);
 
-        // Préserver la transparence PNG et GIF
+        if ($mimeType === 'image/webp') {
+            return basename($filePath);
+        }
+
+        $img = $this->loadGdImage($filePath, $mimeType);
+        if ($img === null) {
+            return basename($filePath);
+        }
+
         if (in_array($mimeType, ['image/png', 'image/gif'], true)) {
             imagepalettetotruecolor($img);
             imagealphablending($img, true);
             imagesavealpha($img, true);
         }
 
-        $webpPath = preg_replace('/\.([a-zA-Z0-9]+)$/i', '.webp', $imagePath);
+        $webpPath = preg_replace('/\.[a-zA-Z0-9]+$/', '.webp', $filePath);
         imagewebp($img, $webpPath, 82);
-        unlink($imagePath);
+        unlink($filePath);
 
         return basename((string) $webpPath);
+    }
+
+    private function getMimeType(string $filePath): string
+    {
+        return (new \finfo(FILEINFO_MIME_TYPE))->file($filePath);
+    }
+
+    private function loadGdImage(string $filePath, string $mimeType): ?\GdImage
+    {
+        $img = match($mimeType) {
+            'image/jpeg' => imagecreatefromjpeg($filePath),
+            'image/png'  => imagecreatefrompng($filePath),
+            'image/bmp'  => function_exists('imagecreatefrombmp') ? imagecreatefrombmp($filePath) : null,
+            'image/gif'  => imagecreatefromgif($filePath),
+            'image/tiff' => function_exists('imagecreatefromtiff') ? imagecreatefromtiff($filePath) : null,
+            default      => null,
+        };
+
+        return ($img instanceof \GdImage) ? $img : null;
     }
 }

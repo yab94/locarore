@@ -7,10 +7,10 @@ namespace Rore\Framework\Storage;
 interface FileManagerInterface
 {
     /**
-     * Traite un fichier uploadé et retourne son nom final.
+     * Valide et déplace le fichier uploadé.
      *
      * @param  array $file  Entrée $_FILES['field']
-     * @return string       Nom du fichier (sans chemin)
+     * @return string       Chemin absolu du fichier déposé
      * @throws \RuntimeException
      */
     public function upload(array $file): string;

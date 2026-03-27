@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog;
 
 use Rore\Framework\Storage\FileManagerInterface;
+use Rore\Framework\Storage\ImageManager;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 
@@ -13,6 +14,7 @@ class UploadProductPhotoUseCase
     public function __construct(
         private ProductRepositoryInterface $productRepository,
         private FileManagerInterface       $fileManager,
+        private ImageManager               $imageManager,
     ) {}
 
     /**
@@ -28,7 +30,11 @@ class UploadProductPhotoUseCase
         $existingPhotos = $this->productRepository->findPhotosByProductId($productId);
         $sortOrder = count($existingPhotos);
 
-        $filename = $this->fileManager->upload($file);
+        $filePath = $this->fileManager->upload($file);
+
+        $this->imageManager->resize($filePath, 1200, 1200);
+        $filePath = rtrim(dirname($filePath), '/') . '/' . $this->imageManager->convertToWebp($filePath);
+        $filename = basename($filePath);
 
         $photo = new ProductPhoto(
             id:          null,
