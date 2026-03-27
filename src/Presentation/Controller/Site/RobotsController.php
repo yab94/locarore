@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 class RobotsController extends SiteController
 {
     public function __construct(

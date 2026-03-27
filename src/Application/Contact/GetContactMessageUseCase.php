@@ -8,7 +8,7 @@ use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
 use RuntimeException;
 use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 final class GetContactMessageUseCase
 {

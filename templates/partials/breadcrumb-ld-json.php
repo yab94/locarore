@@ -1,8 +1,8 @@
 <?php
 
 $slug = \Rore\Presentation\Seo\SlugResolver::cast($tpl->get('slug'));
-$_meta = \Rore\Framework\View\PageMeta::cast($tpl->get('meta'));
-$_crumbs = array_values(\Rore\Framework\Type\Cast::array($tpl->get('breadcrumb')));
+$_meta = \RRB\View\PageMeta::cast($tpl->get('meta'));
+$_crumbs = array_values(\RRB\Type\Cast::array($tpl->get('breadcrumb')));
 $_item = $tpl->tryGet('item'); // Product ou Pack (optionnel)
 $_type = $tpl->tryGet('type', 'product'); // 'product' ou 'pack'
 $_mainPhoto = $tpl->tryGet('mainPhoto'); // Pour les packs

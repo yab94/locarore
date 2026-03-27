@@ -6,7 +6,7 @@ namespace Rore\Application\Contact;
 
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 final class DeleteContactMessageUseCase
 {

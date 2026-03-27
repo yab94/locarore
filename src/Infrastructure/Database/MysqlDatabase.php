@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Infrastructure\Database;
 
-use Rore\Framework\Database\Database;
-use Rore\Framework\Di\BindConfig;
+use RRB\Database\Database;
+use RRB\Di\BindConfig;
 
 final class MysqlDatabase extends Database
 {

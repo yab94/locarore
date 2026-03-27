@@ -1,6 +1,6 @@
 <?php
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
 use Rore\Domain\Contact\Entity\ContactMessage;
 
 $html    = HtmlEncoder::cast($tpl->get('html'));

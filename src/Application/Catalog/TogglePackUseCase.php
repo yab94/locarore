@@ -6,7 +6,7 @@ namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class TogglePackUseCase
 {

@@ -1,8 +1,8 @@
 <?php
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
-use Rore\Framework\Type\Cast;
-use Rore\Framework\Bootstrap\Config;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
+use RRB\Type\Cast;
+use RRB\Bootstrap\Config;
 
 $html       = HtmlEncoder::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));

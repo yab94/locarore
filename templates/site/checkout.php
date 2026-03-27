@@ -1,5 +1,5 @@
 <?php
-use Rore\Framework\Http\UrlResolver;
+use RRB\Http\UrlResolver;
 use Rore\Domain\Cart\ValueObject\CartState;
 use Rore\Domain\Shared\ValueObject\DateRange;
 

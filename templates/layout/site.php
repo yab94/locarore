@@ -1,7 +1,7 @@
 <?php
-$html    = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
-$flash   = \Rore\Framework\Type\Cast::array($tpl->tryGet('flash', []));
-$content = \Rore\Framework\Type\Cast::string($tpl->get('content'));
+$html    = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$flash   = \RRB\Type\Cast::array($tpl->tryGet('flash', []));
+$content = \RRB\Type\Cast::string($tpl->get('content'));
 ?>
 <!DOCTYPE html>
 <html lang="fr" class="h-full">

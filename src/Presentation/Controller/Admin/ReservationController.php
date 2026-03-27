@@ -11,7 +11,7 @@ use Rore\Application\Reservation\GetReservationDetailsUseCase;
 use Rore\Application\Reservation\GetReservationsUseCase;
 use Rore\Application\Reservation\SetReservationStatusUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 
 class ReservationController extends AdminController
 {

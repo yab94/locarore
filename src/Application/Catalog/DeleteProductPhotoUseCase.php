@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog;
 
-use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Di\Bind;
-use Rore\Framework\File\FileManager;
+use RRB\Bootstrap\Config;
+use RRB\Di\Bind;
+use RRB\File\FileManager;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class DeleteProductPhotoUseCase
 {

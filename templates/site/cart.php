@@ -1,8 +1,8 @@
 <?php
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
-use Rore\Framework\Type\Cast;
-use Rore\Framework\Bootstrap\Config;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
+use RRB\Type\Cast;
+use RRB\Bootstrap\Config;
 use Rore\Domain\Cart\ValueObject\CartState;
 use Rore\Domain\Shared\ValueObject\DateRange;
 

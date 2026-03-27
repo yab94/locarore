@@ -1,5 +1,5 @@
 <?php
-use Rore\Framework\Http\UrlResolver;
+use RRB\Http\UrlResolver;
 
 $url = UrlResolver::cast($tpl->get('url'));
 // $partial is injected by the Template engine — not a param

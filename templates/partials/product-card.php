@@ -1,9 +1,9 @@
 <?php
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
-use Rore\Framework\Type\Cast;
-use Rore\Framework\Bootstrap\Config;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
+use RRB\Type\Cast;
+use RRB\Bootstrap\Config;
 
 $product            = Product::cast($tpl->get('product'));
 $html               = HtmlEncoder::cast($tpl->get('html'));

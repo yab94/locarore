@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
-use Rore\Framework\Type\Cast;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
+use RRB\Type\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
-use Rore\Framework\Bootstrap\Config;
+use RRB\Bootstrap\Config;
 
 $html          = HtmlEncoder::cast($tpl->get('html'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));

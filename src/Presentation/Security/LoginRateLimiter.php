@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Security;
 
-use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Di\BindAdapter;
-use Rore\Framework\Di\BindConfig;
-use Rore\Framework\Security\RateLimiter;
-use Rore\Framework\Session\PhpSession;
-use Rore\Framework\Session\SessionInterface;
+use RRB\Bootstrap\Config;
+use RRB\Di\BindAdapter;
+use RRB\Di\BindConfig;
+use RRB\Security\RateLimiter;
+use RRB\Session\PhpSession;
+use RRB\Session\SessionInterface;
 
 final class LoginRateLimiter extends RateLimiter
 {

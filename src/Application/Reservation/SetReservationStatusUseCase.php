@@ -6,7 +6,7 @@ namespace Rore\Application\Reservation;
 
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Transitions manuelles de statut (retours arrière, corrections admin).

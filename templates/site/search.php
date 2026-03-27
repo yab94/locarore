@@ -1,7 +1,7 @@
 <?php
-use Rore\Framework\Type\Cast;
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
+use RRB\Type\Cast;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
 
 $html        = HtmlEncoder::cast($tpl->get('html'));
 $query       = Cast::string($tpl->tryGet('query', ''));

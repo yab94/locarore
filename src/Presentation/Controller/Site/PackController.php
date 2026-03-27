@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetPackWithDetailsUseCase;
-use Rore\Framework\View\PageMeta;
+use RRB\View\PageMeta;
 
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 class PackController extends SiteController
 {
     public function __construct(

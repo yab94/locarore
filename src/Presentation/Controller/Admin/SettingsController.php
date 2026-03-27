@@ -7,7 +7,7 @@ namespace Rore\Presentation\Controller\Admin;
 use Rore\Application\Settings\GetAllSettingsUseCase;
 use Rore\Application\Settings\SaveSettingsUseCase;
 
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 class SettingsController extends AdminController
 {
     public function __construct(

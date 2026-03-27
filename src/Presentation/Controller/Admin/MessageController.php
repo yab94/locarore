@@ -9,7 +9,7 @@ use Rore\Application\Contact\GetContactMessageUseCase;
 use Rore\Application\Contact\GetContactMessagesUseCase;
 use Rore\Application\Contact\MarkMessageReadUseCase;
 use Rore\Application\Contact\MarkMessageUnreadUseCase;
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 
 final class MessageController extends AdminController
 {

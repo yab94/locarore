@@ -36,6 +36,7 @@ db-schema:
 
 mep-ovh:
 	docker compose exec php lftp ${FTP_LOGIN}:${FTP_PASSWORD}@${FTP_HOST}:/ -e "\
+		mirror -e -R lib /locarore/lib ; \
 		mirror -e -R src /locarore/src ; \
 		mirror -e -R templates /locarore/templates ; \
 		mirror -e -R config /locarore/config ; \

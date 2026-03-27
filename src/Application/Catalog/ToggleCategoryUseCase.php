@@ -6,7 +6,7 @@ namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class ToggleCategoryUseCase
 {

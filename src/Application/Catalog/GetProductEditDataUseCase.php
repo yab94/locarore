@@ -12,7 +12,7 @@ use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 final class GetProductEditDataUseCase
 {

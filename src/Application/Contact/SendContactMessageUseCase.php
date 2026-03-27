@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Rore\Application\Contact;
 
-use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Di\Bind;
-use Rore\Framework\Mail\SmtpMailer;
+use RRB\Bootstrap\Config;
+use RRB\Di\Bind;
+use RRB\Mail\SmtpMailer;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 final class SendContactMessageUseCase
 {

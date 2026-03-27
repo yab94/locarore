@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetAllCatalogItemsUseCase;
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 
 class SitemapController extends SiteController
 {

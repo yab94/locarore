@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Shared\ValueObject;
 
-use Rore\Framework\Type\Castable;
+use RRB\Type\Castable;
 
 /**
  * Intervalle de dates inclusif (granularité journalière).

@@ -9,7 +9,7 @@ use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Domain\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class ConfirmReservationUseCase
 {
