@@ -16,7 +16,9 @@ use Attribute;
  *
  * @example
  *   public function __construct(
- *       #[Bind(static function(Config $c) { return $c->getArray('database'); })] Database $db,
+ *       #[Bind('host', static function(Config $c): string { return $c->getString('db.host'); })]
+ *       #[Bind('port', static function(Config $c): int    { return $c->getInt('db.port'); })]
+ *       Database $db,
  *   ) {}
  */
 #[Attribute(Attribute::TARGET_PARAMETER | Attribute::IS_REPEATABLE)]
@@ -42,7 +44,7 @@ final class Bind
      * Vérifie que le type de retour déclaré de la closure est compatible
      * avec le type du paramètre sur lequel l'attribut est posé.
      *
-     * - Param objet     → closure doit retourner la classe (ou sous-classe) ou array (pattern DI augmentation)
+     * - Param objet     → closure doit retourner une instance de la classe (ou sous-classe)
      * - Param scalaire  → closure doit retourner exactement le même type builtin
      * - Pas de return type déclaré → pas de validation possible, skip
      */
@@ -68,9 +70,6 @@ final class Bind
         $paramName  = $paramType->getName();
 
         if (!$paramType->isBuiltin()) {
-            if ($returnName === 'array') {
-                return;
-            }
             if ($returnName !== $paramName && !is_a($returnName, $paramName, true)) {
                 throw new \LogicException(
                     "#[Bind] sur \"\${$param->getName()}\" : la closure retourne \"{$returnName}\""

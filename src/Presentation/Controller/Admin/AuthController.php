@@ -13,9 +13,9 @@ use Rore\Presentation\Controller\Controller;
 class AuthController extends Controller
 {
     public function __construct(
-        #[Bind(static function (Config $c) {
-            return ['key' => 'admin_login', 'maxAttempts' => $c->getInt('admin.login_attempts'), 'lockoutSeconds' => $c->getInt('admin.lockout_seconds')];
-        })]
+        #[Bind('key', static function (): string { return 'admin_login'; })]
+        #[Bind('maxAttempts', static function (Config $c): int { return $c->getInt('admin.login_attempts'); })]
+        #[Bind('lockoutSeconds', static function (Config $c): int { return $c->getInt('admin.lockout_seconds'); })]
         private readonly RateLimiter $rateLimiter,
         ...$parentDeps
     ) {

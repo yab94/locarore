@@ -41,7 +41,7 @@ class UploadProductPhotoUseCase
         $sortOrder = count($existingPhotos);
 
         $ext      = strtolower(pathinfo($file['name'] ?? '', PATHINFO_EXTENSION));
-        $filename = bin2hex(random_bytes(8)) . '.' . $ext;
+        $filename = 'photo_'.bin2hex(random_bytes(8)) . '.' . $ext;
         $this->fileUploader->upload($file, $filename);
 
         $this->imageManager->resize($filename, $this->maxWidth, $this->maxHeight);

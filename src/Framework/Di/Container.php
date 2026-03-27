@@ -198,17 +198,17 @@ final class Container
             }
         }
 
-        // 2. Appeler la closure → instance directe ou scalaires pour le constructeur cible
+        // 2. Appeler la closure → doit retourner une instance du type cible
         $result = ($from->resolver)(...$closureArgs);
 
-        // Cas 1 : la closure retourne directement une instance du type cible
-        if ($result instanceof $className) {
-            return $result;
+        if (!$result instanceof $className) {
+            throw new \LogicException(
+                "#[Bind] : la closure doit retourner une instance de \"$className\"."
+                . ' Pour injecter des scalaires, utilisez #[Bind(\'param\', fn)] répété.'
+            );
         }
 
-        $scalarArgs = is_array($result) ? $result : [$result];
-
-        return $this->buildWithScalarArgs($className, $scalarArgs);
+        return $result;
     }
 
     /**
