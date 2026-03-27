@@ -211,6 +211,16 @@ class MySqlProductRepository implements ProductRepositoryInterface
         return array_map([$this, 'hydratePhoto'], $stmt->fetchAll());
     }
 
+    public function updatePhotoSortOrders(array $photoIdToOrder): void
+    {
+        $stmt = $this->connection->prepare(
+            'UPDATE product_photos SET sort_order = ? WHERE id = ?'
+        );
+        foreach ($photoIdToOrder as $photoId => $sortOrder) {
+            $stmt->execute([(int) $sortOrder, (int) $photoId]);
+        }
+    }
+
     // --- Private helpers ---------------------------------------------------
 
     /** @param Product[] $products */

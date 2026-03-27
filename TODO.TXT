@@ -1,5 +1,5 @@
 Features
 
 - enlever le fabrication à la demande disponible.
-- splitter image manager / fiel manager
+
 - pouvoir ordonner les images (position)

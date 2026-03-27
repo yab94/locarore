@@ -54,12 +54,6 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
         <p class="text-2xl font-semibold text-brand-600 mb-4">
             à partir de <?= number_format($product->getPriceBase(), 0, ',', ' ') ?> €
         </p>
-        <?php if ($product->getStockOnDemand() > 0): ?>
-            <p class="inline-flex items-center gap-1.5 text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 mb-4">
-                ⚙ Fabrication à la demande disponible
-            </p>
-        <?php endif; ?>
-
         <?php if ($product->getDescription()): ?>
             <div class="text-gray-600 mb-4 leading-relaxed prose prose-sm max-w-none">
                 <?= $product->getDescription() ?>

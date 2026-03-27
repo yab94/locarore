@@ -9,6 +9,7 @@ use Rore\Application\Catalog\DeleteProductPhotoUseCase;
 use Rore\Application\Catalog\GetAllCategoriesUseCase;
 use Rore\Application\Catalog\GetAllProductsUseCase;
 use Rore\Application\Catalog\GetProductEditDataUseCase;
+use Rore\Application\Catalog\ReorderProductPhotosUseCase;
 use Rore\Application\Catalog\ToggleProductUseCase;
 use Rore\Application\Catalog\UpdatePhotoDescriptionUseCase;
 use Rore\Application\Catalog\UpdateProductUseCase;
@@ -27,6 +28,7 @@ class ProductController extends AdminController
         private readonly UploadProductPhotoUseCase    $uploadProductPhotoUseCase,
         private readonly DeleteProductPhotoUseCase    $deleteProductPhotoUseCase,
         private readonly UpdatePhotoDescriptionUseCase $updatePhotoDescriptionUseCase,
+        private readonly ReorderProductPhotosUseCase  $reorderProductPhotosUseCase,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -183,5 +185,19 @@ class ProductController extends AdminController
             $this->flash('error', $e->getMessage());
         }
         $this->redirect($this->urlResolver->resolve(self::class . '.index'));
+    }
+
+    #[Route('POST', '/admin/produits/{id}/photos/reordonner')]
+    public function reorderPhotos(string $id): void
+    {
+        $this->requirePost();
+        try {
+            $orderedIds = $this->request->body->getArray('photo_ids', []);
+            $this->reorderProductPhotosUseCase->execute((int) $id, array_map('intval', $orderedIds));
+            $this->flash('success', 'Ordre des photos mis à jour.');
+        } catch (\Throwable $e) {
+            $this->flash('error', $e->getMessage());
+        }
+        $this->redirect($this->urlResolver->resolve(self::class . '.edit', ['id' => $id]));
     }
 }

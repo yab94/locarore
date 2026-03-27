@@ -39,4 +39,7 @@ interface ProductRepositoryInterface
 
     /** @return ProductPhoto[] */
     public function findPhotosByProductId(int $productId): array;
+
+    /** @param array<int,int> $photoIdToOrder  photoId => new sort_order */
+    public function updatePhotoSortOrders(array $photoIdToOrder): void;
 }

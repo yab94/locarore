@@ -205,43 +205,73 @@ $allTags    = Cast::array($tpl->tryGet('allTags', []));
         <?php if (!empty($photos)): ?>
             <div class="bg-white rounded-xl border border-gray-200 p-6">
                 <h3 class="font-semibold text-gray-700 mb-4">Photos (<?= count($photos) ?>)</h3>
-                <div class="space-y-4">
-                    <?php foreach ($photos as $photo): ?>
-                        <div class="border border-gray-100 rounded-xl overflow-hidden">
-                            <div class="flex gap-3 p-3 items-start">
-                                <img src="<?= $html($photo->getPublicPath()) ?>"
-                                     alt="<?= $html($photo->getDescription() ?? '') ?>"
-                                     class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
-                                <div class="flex-1 min-w-0 space-y-2">
-                                    <!-- Formulaire description -->
-                                    <form method="post"
-                                          action="<?= $url('Admin\Product.updatePhotoDescription', ['photoId' => $photo->getId()]) ?>"
-                                          class="flex gap-2">
-                                        <?= $partial('partials/csrf') ?>
-                                        <input type="text" name="description"
-                                               value="<?= $html($photo->getDescription() ?? '') ?>"
-                                               placeholder="Description (alt/title SEO)..."
-                                               class="flex-1 border border-gray-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-brand-600">
-                                        <button type="submit"
-                                                class="bg-brand-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-brand-700 transition flex-shrink-0">
-                                            ✓
-                                        </button>
-                                    </form>
-                                    <!-- Formulaire suppression -->
-                                    <form method="post"
-                                          action="<?= $url('Admin\Product.deletePhoto', ['photoId' => $photo->getId()]) ?>">
-                                        <?= $partial('partials/csrf') ?>
-                                        <button type="submit"
-                                                class="text-red-600 text-xs hover:underline"
-                                                data-confirm="Supprimer cette photo ?">
-                                            Supprimer
-                                        </button>
-                                    </form>
-                                </div>
+                <div class="space-y-4" id="photos-list">
+                <?php foreach ($photos as $i => $photo): ?>
+                    <div class="border border-gray-100 rounded-xl overflow-hidden" data-photo-id="<?= $photo->getId() ?>">
+                        <div class="flex gap-3 p-3 items-start">
+                            <div class="flex flex-col gap-1 justify-center flex-shrink-0">
+                                <?php if ($i > 0): ?>
+                                    <button type="button"
+                                            class="photo-up text-gray-400 hover:text-gray-700 leading-none text-base"
+                                            title="Monter">▲</button>
+                                <?php else: ?>
+                                    <span class="text-base leading-none invisible">▲</span>
+                                <?php endif; ?>
+                                <?php if ($i < count($photos) - 1): ?>
+                                    <button type="button"
+                                            class="photo-down text-gray-400 hover:text-gray-700 leading-none text-base"
+                                            title="Descendre">▼</button>
+                                <?php else: ?>
+                                    <span class="text-base leading-none invisible">▼</span>
+                                <?php endif; ?>
+                            </div>
+                            <img src="<?= $html($photo->getPublicPath()) ?>"
+                                 alt="<?= $html($photo->getDescription() ?? '') ?>"
+                                 class="w-20 h-20 object-cover rounded-lg flex-shrink-0">
+                            <div class="flex-1 min-w-0 space-y-2">
+                                <!-- Formulaire description -->
+                                <form method="post"
+                                      action="<?= $url('Admin\Product.updatePhotoDescription', ['photoId' => $photo->getId()]) ?>"
+                                      class="flex gap-2">
+                                    <?= $partial('partials/csrf') ?>
+                                    <input type="text" name="description"
+                                           value="<?= $html($photo->getDescription() ?? '') ?>"
+                                           placeholder="Description (alt/title SEO)..."
+                                           class="flex-1 border border-gray-300 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-brand-600">
+                                    <button type="submit"
+                                            class="bg-brand-600 text-white text-xs px-3 py-1 rounded-lg hover:bg-brand-700 transition flex-shrink-0">
+                                        ✓
+                                    </button>
+                                </form>
+                                <!-- Formulaire suppression -->
+                                <form method="post"
+                                      action="<?= $url('Admin\Product.deletePhoto', ['photoId' => $photo->getId()]) ?>">
+                                    <?= $partial('partials/csrf') ?>
+                                    <button type="submit"
+                                            class="text-red-600 text-xs hover:underline"
+                                            data-confirm="Supprimer cette photo ?">
+                                        Supprimer
+                                    </button>
+                                </form>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
                 </div>
+                <?php if (count($photos) > 1): ?>
+                    <form method="post"
+                          action="<?= $url('Admin\Product.reorderPhotos', ['id' => $product->getId()]) ?>"
+                          id="photos-reorder-form">
+                        <?= $partial('partials/csrf') ?>
+                        <?php foreach ($photos as $photo): ?>
+                            <input type="hidden" name="photo_ids[]" value="<?= $photo->getId() ?>">
+                        <?php endforeach; ?>
+                        <button type="submit"
+                        class="mt-4 w-full bg-gray-800 text-white text-sm font-medium py-2 rounded-lg hover:bg-gray-900 transition">
+                            Enregistrer l'ordre
+                        </button>
+                    </form>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
     </div>
@@ -270,6 +300,45 @@ document.getElementById('product-form').addEventListener('submit', function () {
     document.getElementById('description-input').value =
         document.querySelector('#description-editor .ql-editor').innerHTML;
 });
+
+// Réordonnancement des photos par flèches
+(function () {
+    const list = document.getElementById('photos-list');
+    if (!list) return;
+
+    function updateButtons() {
+        const items = list.querySelectorAll('[data-photo-id]');
+        items.forEach(function (item, idx) {
+            const up   = item.querySelector('.photo-up');
+            const down = item.querySelector('.photo-down');
+            if (up)   up.closest('button,span').classList.toggle('invisible', idx === 0);
+            if (down) down.closest('button,span').classList.toggle('invisible', idx === items.length - 1);
+        });
+    }
+
+    list.addEventListener('click', function (e) {
+        const btn = e.target.closest('.photo-up, .photo-down');
+        if (!btn) return;
+        const item = btn.closest('[data-photo-id]');
+        if (!item) return;
+        if (btn.classList.contains('photo-up') && item.previousElementSibling) {
+            list.insertBefore(item, item.previousElementSibling);
+        } else if (btn.classList.contains('photo-down') && item.nextElementSibling) {
+            list.insertBefore(item.nextElementSibling, item);
+        }
+        // Sync hidden inputs order
+        const form = document.getElementById('photos-reorder-form');
+        form.querySelectorAll('input[name="photo_ids[]"]').forEach(function (inp) { inp.remove(); });
+        list.querySelectorAll('[data-photo-id]').forEach(function (el) {
+            const inp = document.createElement('input');
+            inp.type  = 'hidden';
+            inp.name  = 'photo_ids[]';
+            inp.value = el.dataset.photoId;
+            form.appendChild(inp);
+        });
+        updateButtons();
+    });
+})();
 </script>
 
 <?php if ($product && isset($calendarEvents)): ?>
