@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Domain\Catalog\Entity\PackItem;
-use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Reservation\Entity\Reservation;
-use Rore\Domain\Reservation\Entity\ReservationItem;
-use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
-use Rore\Domain\Reservation\Service\AvailabilityService;
+use Rore\Entity\Pack;
+use Rore\Entity\PackItem;
+use Rore\Entity\Product;
+use Rore\Entity\Reservation;
+use Rore\Entity\ReservationItem;
+use Rore\Port\ReservationRepositoryInterface;
+use Rore\Service\AvailabilityService;
 
 // ─── Stub ReservationRepository in-memory ───────────────────────────────────
 

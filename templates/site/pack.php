@@ -2,9 +2,9 @@
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
-use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Cart\ValueObject\CartState;
+use Rore\Entity\Pack;
+use Rore\Entity\Product;
+use Rore\ValueObject\CartState;
 
 $html            = HtmlEncoder::cast($tpl->get('html'));
 $url             = UrlResolver::cast($tpl->get('url'));

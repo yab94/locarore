@@ -2,7 +2,7 @@
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
-use Rore\Domain\Catalog\Entity\Pack;
+use Rore\Entity\Pack;
 
 $html       = HtmlEncoder::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));

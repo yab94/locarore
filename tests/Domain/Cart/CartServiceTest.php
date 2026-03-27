@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Service\CartService;
 use RRB\Session\SessionInterface;
 
 // ─── Stub SessionStorage in-memory ────────────────────────────────────────────

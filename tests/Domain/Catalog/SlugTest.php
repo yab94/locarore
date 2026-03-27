@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Domain\Catalog\ValueObject\Slug;
+use Rore\ValueObject\Slug;
 
 class SlugTest
 {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Seo;
 
-use Rore\Domain\Catalog\Entity\Category;
-use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Entity\Tag;
+use Rore\Entity\Category;
+use Rore\Entity\Product;
+use Rore\Entity\Tag;
 use RRB\Di\BindConfig;
 use RRB\Type\Castable;
 

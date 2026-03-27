@@ -1,5 +1,5 @@
 <?php
-use Rore\Domain\Catalog\Entity\Pack;
+use Rore\Entity\Pack;
 use RRB\View\HtmlEncoder;
 use RRB\Type\Cast;
 use RRB\Bootstrap\Config;

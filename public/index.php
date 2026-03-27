@@ -23,13 +23,13 @@ $container->bind(\RRB\Bootstrap\Config::class, $config);
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \RRB\Http\RouteScanner();
-$scanner->scan(BASE_PATH . '/src/Presentation/Controller', 'Rore\Presentation\Controller');
+$scanner->scan(BASE_PATH . '/src/Controller', 'Rore\Controller');
 $routes = $scanner->getRoutes();
 
 $router = $container->get(\RRB\Http\Router::class);
 $router->loadRoutes($routes);
 
-$container->get(\RRB\Http\UrlResolver::class)->loadRoutes('Rore\Presentation\Controller', $routes);
+$container->get(\RRB\Http\UrlResolver::class)->loadRoutes('Rore\Controller', $routes);
 
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

@@ -25,7 +25,7 @@ final class RouteScanner
      * Scanne $baseDir et accumule les routes trouvées.
      *
      * @param string $baseDir       Chemin absolu du répertoire racine des controllers
-     * @param string $baseNamespace Namespace PHP correspondant (ex: "Rore\Presentation\Controller")
+     * @param string $baseNamespace Namespace PHP correspondant (ex: "Rore\Controller")
      */
     public function scan(string $baseDir, string $baseNamespace): void
     {

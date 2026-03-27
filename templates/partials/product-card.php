@@ -1,5 +1,5 @@
 <?php
-use Rore\Domain\Catalog\Entity\Product;
+use Rore\Entity\Product;
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;

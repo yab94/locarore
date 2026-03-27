@@ -23,7 +23,7 @@ final class DddArchitectureTest
     // ─── Règles ──────────────────────────────────────────────────────────────
     // Ordre : du plus spécifique au plus général (premier match gagne).
     private const RULES = [
-        'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Domain', 'Rore\Presentation', 'Rore\Framework'],
+        'Rore\Controller' => ['Rore\Application', 'Rore\Domain', 'Rore\Presentation', 'Rore\Framework'],
         'Rore\Application'             => ['Rore\Application', 'Rore\Domain', 'Rore\Framework'],
         'Rore\Domain'                  => ['Rore\Domain', 'Rore\Framework'],
         'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application', 'Rore\Framework'],

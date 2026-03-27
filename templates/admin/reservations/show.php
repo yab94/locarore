@@ -2,8 +2,8 @@
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
-use Rore\Domain\Reservation\Entity\Reservation;
-use Rore\Domain\Shared\ValueObject\DateRange;
+use Rore\Entity\Reservation;
+use Rore\ValueObject\DateRange;
 
 $html                 = HtmlEncoder::cast($tpl->get('html'));
 $url                  = UrlResolver::cast($tpl->get('url'));

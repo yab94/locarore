@@ -3,8 +3,8 @@ use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
 use RRB\Bootstrap\Config;
-use Rore\Domain\Cart\ValueObject\CartState;
-use Rore\Domain\Shared\ValueObject\DateRange;
+use Rore\ValueObject\CartState;
+use Rore\ValueObject\DateRange;
 
 $html          = HtmlEncoder::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));

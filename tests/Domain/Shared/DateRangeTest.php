@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Domain\Shared\ValueObject\DateRange;
+use Rore\ValueObject\DateRange;
 
 class DateRangeTest
 {

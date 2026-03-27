@@ -3,7 +3,7 @@ use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
 use RRB\Bootstrap\Config;
-use Rore\Domain\Catalog\Entity\Category;
+use Rore\Entity\Category;
 
 $html       = HtmlEncoder::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));
