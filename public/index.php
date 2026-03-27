@@ -20,6 +20,9 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 $container = new \Rore\Framework\Di\Container();
 $container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
 
+// ── Framework ────────────────────────────────────────────────────────────────
+$container->bind(\Rore\Framework\Session\SessionInterface::class,                          \Rore\Framework\Session\PhpSession::class);
+
 // ── Repositories ─────────────────────────────────────────────────────────────
 $container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       \Rore\Infrastructure\Persistence\MySqlCategoryRepository::class);
 $container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlProductRepository::class);

@@ -7,12 +7,12 @@ namespace Rore\Presentation\Security;
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Di\Bind;
 use Rore\Framework\Security\RateLimiter;
-use Rore\Framework\Storage\PhpSessionStorage;
+use Rore\Framework\Session\SessionInterface;
 
 final class LoginRateLimiter extends RateLimiter
 {
     public function __construct(
-        PhpSessionStorage $session,
+        SessionInterface $session,
         #[Bind(static function (Config $c): int { return $c->getInt('admin.login_attempts'); })]
         int $maxAttempts,
         #[Bind(static function (Config $c): int { return $c->getInt('admin.lockout_seconds'); })]

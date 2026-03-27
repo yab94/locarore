@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Security;
 
-use Rore\Framework\Di\Bind;
-use Rore\Framework\Storage\PhpSessionStorage;
-use Rore\Framework\Storage\StorageInterface;
+use Rore\Framework\Session\SessionInterface;
 
 /**
  * Gestion du token CSRF basé sur la session.
@@ -20,23 +18,22 @@ final class CsrfTokenManager
     private const POST_KEY    = '_csrf';
 
     public function __construct(
-        #[Bind(static function (PhpSessionStorage $s): StorageInterface { return $s; })]
-        private readonly StorageInterface $storage,
+        private readonly SessionInterface $session,
     ) {}
 
     public function token(): string
     {
-        $current = $this->storage->get(self::SESSION_KEY);
+        $current = $this->session->get(self::SESSION_KEY);
         if (!is_string($current) || $current === '') {
             $current = bin2hex(random_bytes(32));
-            $this->storage->set(self::SESSION_KEY, $current);
+            $this->session->set(self::SESSION_KEY, $current);
         }
         return $current;
     }
 
     public function validate(string $postedToken): bool
     {
-        $sessionToken = $this->storage->get(self::SESSION_KEY, '');
+        $sessionToken = $this->session->get(self::SESSION_KEY, '');
 
         if (!is_string($sessionToken) || $sessionToken === '' || $postedToken === '') {
             return false;
