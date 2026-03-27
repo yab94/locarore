@@ -7,12 +7,17 @@ namespace Rore\Application\Reservation;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Domain\Reservation\Service\AvailabilityService;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 class ConfirmReservationUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private ReservationRepositoryInterface $reservationRepository,
-        private ProductRepositoryInterface     $productRepository,
+        #[BindAdapter(MySqlProductRepository::class)]
+        private ProductRepositoryInterface $productRepository,
         private AvailabilityService            $availabilityService,
     ) {}
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Domain\Catalog\Repository;
 
 use Rore\Domain\Catalog\Entity\Tag;
+use Rore\Infrastructure\Persistence\MySqlTagRepository;
 
 interface TagRepositoryInterface
 {

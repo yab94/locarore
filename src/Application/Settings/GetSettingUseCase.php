@@ -6,11 +6,14 @@ namespace Rore\Application\Settings;
 
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 use Rore\Framework\Type\Castable;
+use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
+use Rore\Framework\Di\BindAdapter;
 
 final class GetSettingUseCase
 {
     use Castable;
     public function __construct(
+        #[BindAdapter(MySqlSettingsRepository::class)]
         private readonly SettingsRepositoryInterface $repo,
     ) {}
 

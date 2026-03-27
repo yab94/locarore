@@ -8,10 +8,13 @@ use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Domain\Catalog\Service\SlugUniquenessService;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Framework\Di\BindAdapter;
 
 class UpdatePackUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlPackRepository::class)]
         private PackRepositoryInterface $packRepository,
         private SlugUniquenessService   $slugChecker,
     ) {}

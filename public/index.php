@@ -19,14 +19,6 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \Rore\Framework\Di\Container();
 $container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
-$container->bind(\Rore\Domain\Catalog\Repository\CategoryRepositoryInterface::class,       \Rore\Infrastructure\Persistence\MySqlCategoryRepository::class);
-$container->bind(\Rore\Domain\Catalog\Repository\ProductRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlProductRepository::class);
-$container->bind(\Rore\Domain\Catalog\Repository\PackRepositoryInterface::class,           \Rore\Infrastructure\Persistence\MySqlPackRepository::class);
-$container->bind(\Rore\Domain\Catalog\Repository\TagRepositoryInterface::class,            \Rore\Infrastructure\Persistence\MySqlTagRepository::class);
-$container->bind(\Rore\Domain\Reservation\Repository\ReservationRepositoryInterface::class,\Rore\Infrastructure\Persistence\MySqlReservationRepository::class);
-$container->bind(\Rore\Domain\Settings\Repository\SettingsRepositoryInterface::class,      \Rore\Infrastructure\Persistence\MySqlSettingsRepository::class);
-$container->bind(\Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface::class, \Rore\Infrastructure\Persistence\MySqlContactMessageRepository::class);
-$container->bind(\Rore\Domain\Catalog\Repository\SearchRepositoryInterface::class,        \Rore\Infrastructure\Persistence\MySqlSearchRepository::class);
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \Rore\Framework\Http\RouteScanner();

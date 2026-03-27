@@ -8,10 +8,13 @@ use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Di\Bind;
 use Rore\Framework\File\FileManager;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Framework\Di\BindAdapter;
 
 class DeleteProductPhotoUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
         #[Bind(static function (Config $c): FileManager {
             return new FileManager(

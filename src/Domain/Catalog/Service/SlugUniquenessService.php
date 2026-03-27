@@ -7,6 +7,10 @@ namespace Rore\Domain\Catalog\Service;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Vérifie qu'un slug est unique sur l'ensemble du catalogue
@@ -15,9 +19,12 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 final class SlugUniquenessService
 {
     public function __construct(
+        #[BindAdapter(MySqlCategoryRepository::class)]
         private CategoryRepositoryInterface $categoryRepo,
-        private ProductRepositoryInterface  $productRepo,
-        private PackRepositoryInterface     $packRepo,
+        #[BindAdapter(MySqlProductRepository::class)]
+        private ProductRepositoryInterface $productRepo,
+        #[BindAdapter(MySqlPackRepository::class)]
+        private PackRepositoryInterface $packRepo,
     ) {}
 
     /**

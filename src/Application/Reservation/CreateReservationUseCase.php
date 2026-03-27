@@ -7,10 +7,13 @@ namespace Rore\Application\Reservation;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 class CreateReservationUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private ReservationRepositoryInterface $reservationRepository,
     ) {}
 

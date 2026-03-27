@@ -7,6 +7,10 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Infrastructure\Persistence\MySqlTagRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Récupère un tag avec ses produits et packs associés.
@@ -14,9 +18,12 @@ use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 final class GetTagWithItemsUseCase
 {
     public function __construct(
-        private readonly TagRepositoryInterface     $tagRepo,
+        #[BindAdapter(MySqlTagRepository::class)]
+        private readonly TagRepositoryInterface $tagRepo,
+        #[BindAdapter(MySqlProductRepository::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        private readonly PackRepositoryInterface    $packRepo,
+        #[BindAdapter(MySqlPackRepository::class)]
+        private readonly PackRepositoryInterface $packRepo,
     ) {}
 
     /**

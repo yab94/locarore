@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Domain\Contact\Repository;
 
 use Rore\Domain\Contact\Entity\ContactMessage;
+use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
 
 interface ContactMessageRepositoryInterface
 {

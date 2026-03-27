@@ -6,6 +6,7 @@ namespace Rore\Domain\Catalog\Repository;
 
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
 
 interface ProductRepositoryInterface
 {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Domain\Catalog\Repository;
 
 use Rore\Domain\Catalog\Entity\Category;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 
 interface CategoryRepositoryInterface
 {

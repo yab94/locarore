@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation;
 
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Transitions manuelles de statut (retours arrière, corrections admin).
@@ -15,6 +17,7 @@ class SetReservationStatusUseCase
     private const ALLOWED = ['pending', 'quoted', 'confirmed', 'cancelled'];
 
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private ReservationRepositoryInterface $repo,
     ) {}
 

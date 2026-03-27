@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation;
 
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Récupère la quantité réservée pour un produit sur une période.
@@ -12,6 +14,7 @@ use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 final class GetReservedQuantityForProductUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private readonly ReservationRepositoryInterface $reservationRepo,
     ) {}
 

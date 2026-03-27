@@ -8,10 +8,13 @@ use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Domain\Catalog\Service\SlugUniquenessService;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Framework\Di\BindAdapter;
 
 class CreateCategoryUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlCategoryRepository::class)]
         private CategoryRepositoryInterface $categoryRepository,
         private SlugUniquenessService       $slugChecker,
     ) {}

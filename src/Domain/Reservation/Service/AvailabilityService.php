@@ -6,6 +6,8 @@ namespace Rore\Domain\Reservation\Service;
 
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Calcule la disponibilité d'un produit sur une plage de dates.
@@ -14,6 +16,7 @@ use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 class AvailabilityService
 {
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private ReservationRepositoryInterface $reservationRepository,
     ) {}
 

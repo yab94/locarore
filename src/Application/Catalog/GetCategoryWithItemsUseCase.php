@@ -7,6 +7,10 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Récupère une catégorie avec ses produits et packs.
@@ -14,9 +18,12 @@ use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 final class GetCategoryWithItemsUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlCategoryRepository::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
-        private readonly ProductRepositoryInterface  $productRepo,
-        private readonly PackRepositoryInterface     $packRepo,
+        #[BindAdapter(MySqlProductRepository::class)]
+        private readonly ProductRepositoryInterface $productRepo,
+        #[BindAdapter(MySqlPackRepository::class)]
+        private readonly PackRepositoryInterface $packRepo,
     ) {}
 
     /**

@@ -8,13 +8,20 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 final class GetReservationDetailsUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private readonly ReservationRepositoryInterface $reservationRepo,
-        private readonly ProductRepositoryInterface     $productRepo,
-        private readonly PackRepositoryInterface        $packRepo,
+        #[BindAdapter(MySqlProductRepository::class)]
+        private readonly ProductRepositoryInterface $productRepo,
+        #[BindAdapter(MySqlPackRepository::class)]
+        private readonly PackRepositoryInterface $packRepo,
         private readonly PricingService                 $pricing,
     ) {}
 

@@ -7,6 +7,10 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlTagRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Récupère les données pour la page d'accueil.
@@ -14,9 +18,12 @@ use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 final class GetHomePageDataUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlCategoryRepository::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
-        private readonly ProductRepositoryInterface  $productRepo,
-        private readonly TagRepositoryInterface      $tagRepo,
+        #[BindAdapter(MySqlProductRepository::class)]
+        private readonly ProductRepositoryInterface $productRepo,
+        #[BindAdapter(MySqlTagRepository::class)]
+        private readonly TagRepositoryInterface $tagRepo,
     ) {}
 
     /**

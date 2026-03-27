@@ -7,6 +7,9 @@ namespace Rore\Application\Catalog;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
+use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Framework\Di\BindAdapter;
 
 /**
  * Récupère tous les packs avec leurs prix (base 1 jour).
@@ -15,7 +18,9 @@ use Rore\Domain\Catalog\Service\PricingService;
 final class GetAllPacksWithPricingUseCase
 {
     public function __construct(
-        private readonly PackRepositoryInterface    $packRepo,
+        #[BindAdapter(MySqlPackRepository::class)]
+        private readonly PackRepositoryInterface $packRepo,
+        #[BindAdapter(MySqlProductRepository::class)]
         private readonly ProductRepositoryInterface $productRepo,
         private readonly PricingService             $pricingService,
     ) {}

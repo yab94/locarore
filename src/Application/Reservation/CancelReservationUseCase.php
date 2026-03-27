@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation;
 
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Framework\Di\BindAdapter;
 
 class CancelReservationUseCase
 {
     public function __construct(
+        #[BindAdapter(MySqlReservationRepository::class)]
         private ReservationRepositoryInterface $reservationRepository,
     ) {}
 
