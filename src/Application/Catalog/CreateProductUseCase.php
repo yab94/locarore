@@ -11,7 +11,7 @@ use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Domain\Catalog\Service\SlugUniquenessService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class CreateProductUseCase
 {

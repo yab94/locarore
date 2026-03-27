@@ -1,7 +1,7 @@
 <?php
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Http\UrlResolver;
-use Rore\Framework\Type\Cast;
+use RRB\View\HtmlEncoder;
+use RRB\Http\UrlResolver;
+use RRB\Type\Cast;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Shared\ValueObject\DateRange;
 

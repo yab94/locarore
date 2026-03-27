@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog;
 
-use Rore\Framework\Bootstrap\Config;
-use Rore\Framework\Di\Bind;
-use Rore\Framework\Di\BindConfig;
-use Rore\Framework\File\FileUploader;
-use Rore\Framework\File\ImageManager;
+use RRB\Bootstrap\Config;
+use RRB\Di\Bind;
+use RRB\Di\BindConfig;
+use RRB\File\FileUploader;
+use RRB\File\ImageManager;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class UploadProductPhotoUseCase
 {

@@ -1,6 +1,6 @@
 <?php
-$html = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
-$meta = Rore\Framework\View\PageMeta::cast($tpl->get('meta'));
+$html = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$meta = RRB\View\PageMeta::cast($tpl->get('meta'));
 ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

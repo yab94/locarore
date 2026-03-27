@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Framework\View\Template;
+use RRB\View\Template;
 
 /**
  * Tests unitaires de Template.
@@ -22,7 +22,7 @@ final class TemplateTest
 
     public function testRenderExposesTplVariable(): void
     {
-        $tpl = $this->make('<?= ($tpl instanceof \Rore\Framework\View\Template) ? "ok" : "ko" ?>');
+        $tpl = $this->make('<?= ($tpl instanceof \RRB\View\Template) ? "ok" : "ko" ?>');
         Assert::equals('ok', $tpl->render());
     }
 
@@ -36,7 +36,7 @@ final class TemplateTest
     {
         // EXTR_SKIP doit protéger $tpl
         $tpl = $this->make(
-            '<?= ($tpl instanceof \Rore\Framework\View\Template) ? "ok" : "ko" ?>',
+            '<?= ($tpl instanceof \RRB\View\Template) ? "ok" : "ko" ?>',
             ['tpl' => 'overridden']
         );
         Assert::equals('ok', $tpl->render());

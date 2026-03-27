@@ -10,7 +10,7 @@ use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Récupère un tag avec ses produits et packs associés.

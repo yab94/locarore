@@ -10,7 +10,7 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Domain\Catalog\Service\SlugUniquenessService;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class CreatePackUseCase
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Catalog\Entity;
 
-use Rore\Framework\Type\Castable;
+use RRB\Type\Castable;
 
 class Product implements PricableInterface
 {

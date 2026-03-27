@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Rore\Application\Settings;
 
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
-use Rore\Framework\Type\Castable;
+use RRB\Type\Castable;
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 final class GetSettingUseCase
 {

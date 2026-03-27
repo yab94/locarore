@@ -6,7 +6,7 @@ namespace Rore\Application\Catalog;
 
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Récupère tous les produits du catalogue.

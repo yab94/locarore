@@ -1,6 +1,6 @@
 <?php
-use Rore\Framework\View\HtmlEncoder;
-use Rore\Framework\Type\Cast;
+use RRB\View\HtmlEncoder;
+use RRB\Type\Cast;
 
 $html           = HtmlEncoder::cast($tpl->get('html'));
 $reservationId  = Cast::int($tpl->get('reservationId'));

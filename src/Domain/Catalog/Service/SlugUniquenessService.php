@@ -10,7 +10,7 @@ use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Vérifie qu'un slug est unique sur l'ensemble du catalogue

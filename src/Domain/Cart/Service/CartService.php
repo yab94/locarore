@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Cart\Service;
 
-use Rore\Framework\Di\BindAdapter;
-use Rore\Framework\Type\Castable;
-use Rore\Framework\Session\PhpSession;
-use Rore\Framework\Session\SessionInterface;
+use RRB\Di\BindAdapter;
+use RRB\Type\Castable;
+use RRB\Session\PhpSession;
+use RRB\Session\SessionInterface;
 
 final class CartService
 {

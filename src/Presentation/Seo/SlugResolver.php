@@ -7,8 +7,8 @@ namespace Rore\Presentation\Seo;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Framework\Di\BindConfig;
-use Rore\Framework\Type\Castable;
+use RRB\Di\BindConfig;
+use RRB\Type\Castable;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.

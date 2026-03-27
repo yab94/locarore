@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 use Rore\Presentation\Controller\Controller;
 use Rore\Presentation\Security\LoginRateLimiter;
 

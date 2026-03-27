@@ -6,9 +6,9 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Catalog\GetProductWithDetailsUseCase;
 use Rore\Application\Reservation\GetReservedQuantityForProductUseCase;
-use Rore\Framework\View\PageMeta;
+use RRB\View\PageMeta;
 
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 class ProductController extends SiteController
 {
     public function __construct(

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Search\SearchUseCase;
-use Rore\Framework\View\PageMeta;
-use Rore\Framework\Http\Route;
+use RRB\View\PageMeta;
+use RRB\Http\Route;
 
 class SearchController extends SiteController
 {

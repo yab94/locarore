@@ -6,7 +6,7 @@ namespace Rore\Application\Search;
 
 use Rore\Domain\Catalog\Repository\SearchRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlSearchRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class SearchUseCase
 {

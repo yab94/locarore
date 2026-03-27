@@ -11,7 +11,7 @@ use Rore\Domain\Catalog\Service\PricingService;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Récupère les données du panier avec les prix calculés.

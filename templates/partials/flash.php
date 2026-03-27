@@ -1,6 +1,6 @@
 <?php
-$html  = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
-$flash = \Rore\Framework\Type\Cast::array($tpl->tryGet('flash', []));
+$html  = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$flash = \RRB\Type\Cast::array($tpl->tryGet('flash', []));
 ?>
 <?php if (!empty($flash)): ?>
     <?php foreach ($flash as $type => $msg): ?>

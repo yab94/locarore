@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Framework\Type\Typable;
+use RRB\Type\Typable;
 
 class TypableTest
 {

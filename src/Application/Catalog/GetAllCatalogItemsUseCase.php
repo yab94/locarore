@@ -12,7 +12,7 @@ use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Récupère toutes les entités du catalogue pour le sitemap.

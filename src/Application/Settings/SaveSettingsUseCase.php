@@ -6,7 +6,7 @@ namespace Rore\Application\Settings;
 
 use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 class SaveSettingsUseCase
 {

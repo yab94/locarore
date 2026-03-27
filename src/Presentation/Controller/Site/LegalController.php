@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Framework\Http\Route;
+use RRB\Http\Route;
 class LegalController extends SiteController
 {
     #[Route('GET', '/mentions-legales')]

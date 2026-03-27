@@ -1,9 +1,9 @@
 <?php
-$html    = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
-$url     = Rore\Framework\Http\UrlResolver::cast($tpl->get('url'));
-$title   = \Rore\Framework\Type\Cast::string($tpl->tryGet('title', 'Admin — Locarore'));
-$flash   = \Rore\Framework\Type\Cast::array($tpl->tryGet('flash', []));
-$content = \Rore\Framework\Type\Cast::string($tpl->get('content'));
+$html    = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$url     = RRB\Http\UrlResolver::cast($tpl->get('url'));
+$title   = \RRB\Type\Cast::string($tpl->tryGet('title', 'Admin — Locarore'));
+$flash   = \RRB\Type\Cast::array($tpl->tryGet('flash', []));
+$content = \RRB\Type\Cast::string($tpl->get('content'));
 ?>
 <!DOCTYPE html>
 <html lang="fr" class="h-full">

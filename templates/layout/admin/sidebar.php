@@ -1,6 +1,6 @@
 <?php
-$html = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
-$url  = Rore\Framework\Http\UrlResolver::cast($tpl->get('url'));
+$html = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$url  = RRB\Http\UrlResolver::cast($tpl->get('url'));
 ?>
     <!-- Sidebar -->
     <aside class="w-56 bg-gray-900 text-white flex flex-col min-h-screen">

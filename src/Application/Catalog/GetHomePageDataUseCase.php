@@ -10,7 +10,7 @@ use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 /**
  * Récupère les données pour la page d'accueil.

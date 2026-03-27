@@ -8,7 +8,7 @@ use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
-use Rore\Framework\Di\BindAdapter;
+use RRB\Di\BindAdapter;
 
 final class GetCalendarDataUseCase
 {
