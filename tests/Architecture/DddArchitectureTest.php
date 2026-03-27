@@ -235,6 +235,17 @@ final class DddArchitectureTest
 
             if ($ref->isInterface() || $ref->isAbstract()) continue;
 
+            // Vérifier les interfaces implémentées
+            foreach ($ref->getInterfaceNames() as $iface) {
+                if (str_starts_with($iface, 'Rore\\') && !str_starts_with($iface, 'Rore\Domain\\')) {
+                    $violations[] = sprintf(
+                        "%s implements %s\n   → les classes Domain ne peuvent implémenter que des interfaces Rore\\Domain\\*",
+                        $className,
+                        $iface,
+                    );
+                }
+            }
+
             $constructor = $ref->getConstructor();
             if ($constructor === null) continue;
 
