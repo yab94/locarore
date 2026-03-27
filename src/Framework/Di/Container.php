@@ -117,11 +117,13 @@ final class Container
 
                 // Mode multi-nommé : chaque #[Bind('param', fn)] fournit un scalaire nommé
                 if ($binds[0]->paramName !== null) {
+                    $targetClass = $type->getName();
+                    $this->validateNamedBinds($targetClass, $binds);
                     $scalarArgs = [];
                     foreach ($binds as $bind) {
                         $scalarArgs[$bind->paramName] = $this->resolveScalarBind($bind);
                     }
-                    $args[] = $this->buildWithScalarArgs($type->getName(), $scalarArgs);
+                    $args[] = $this->buildWithScalarArgs($targetClass, $scalarArgs);
                     continue;
                 }
 
@@ -209,6 +211,61 @@ final class Container
         }
 
         return $result;
+    }
+
+    /**
+     * Vérifie que chaque #[Bind('param', fn)] nommé correspond bien
+     * à un paramètre existant dans le constructeur de la classe cible,
+     * et que le type de retour déclaré de la closure est compatible avec ce paramètre.
+     *
+     * @param Bind[] $binds
+     */
+    private function validateNamedBinds(string $className, array $binds): void
+    {
+        $ref         = new ReflectionClass($className);
+        $constructor = $ref->getConstructor();
+        if ($constructor === null) {
+            return;
+        }
+
+        $paramsByName = [];
+        foreach ($constructor->getParameters() as $p) {
+            $paramsByName[$p->getName()] = $p;
+        }
+
+        foreach ($binds as $bind) {
+            $paramName = $bind->paramName;
+
+            if (!isset($paramsByName[$paramName])) {
+                throw new \LogicException(
+                    "#[Bind] : le paramètre '\${$paramName}' n'existe pas"
+                    . " dans le constructeur de {$className}."
+                );
+            }
+
+            $returnType = (new ReflectionFunction($bind->resolver))->getReturnType();
+            if ($returnType === null || !$returnType instanceof ReflectionNamedType) {
+                continue; // pas de type de retour déclaré → pas de validation possible
+            }
+
+            $targetParamType = $paramsByName[$paramName]->getType();
+            if (!$targetParamType instanceof ReflectionNamedType) {
+                continue;
+            }
+
+            $returnName = $returnType->getName();
+            $targetName = $targetParamType->getName();
+
+            $compatible = $returnName === $targetName
+                || (!$targetParamType->isBuiltin() && is_a($returnName, $targetName, true));
+
+            if (!$compatible) {
+                throw new \LogicException(
+                    "#[Bind('$paramName')] sur {$className} : la closure retourne '{$returnName}'"
+                    . " mais le paramètre attend '{$targetName}'."
+                );
+            }
+        }
     }
 
     /**
