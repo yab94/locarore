@@ -14,7 +14,7 @@ use InvalidArgumentException;
  *   - $partial → callable : fn(string $file, array $extra = []): string
  *
  * Usage dans un template :
- *   $html = HtmlHelper::cast($tpl->get('html'));
+ *   $html = HtmlEncoder::cast($tpl->get('html'));
  *   $items = Cast::array($tpl->tryGet('items', []));
  *   <?= $partial('partials/card', ['item' => $item]) ?>
  */

@@ -1,5 +1,5 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
@@ -7,7 +7,7 @@ use Rore\Framework\Bootstrap\Config;
 use Rore\Domain\Cart\ValueObject\CartState;
 use Rore\Domain\Shared\ValueObject\DateRange;
 
-$html          = HtmlHelper::cast($tpl->get('html'));
+$html          = HtmlEncoder::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));

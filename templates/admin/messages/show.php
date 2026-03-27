@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Domain\Contact\Entity\ContactMessage;
 
-$html    = HtmlHelper::cast($tpl->get('html'));
+$html    = HtmlEncoder::cast($tpl->get('html'));
 $url     = UrlResolver::cast($tpl->get('url'));
 $message = ContactMessage::cast($tpl->get('message'));
 // $partial is injected by the Template engine — not a param

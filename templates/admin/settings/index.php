@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 
-$html      = HtmlHelper::cast($tpl->get('html'));
+$html      = HtmlEncoder::cast($tpl->get('html'));
 $url       = UrlResolver::cast($tpl->get('url'));
 $texts     = Cast::array($tpl->tryGet('texts', []));
 $richtexts = Cast::array($tpl->tryGet('richtexts', []));

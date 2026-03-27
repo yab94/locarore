@@ -1,11 +1,11 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Framework\Bootstrap\Config;
 
-$html          = HtmlHelper::cast($tpl->get('html'));
+$html          = HtmlEncoder::cast($tpl->get('html'));
 $settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));

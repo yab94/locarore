@@ -1,9 +1,9 @@
 <?php
 use Rore\Framework\Type\Cast;
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 
-$html        = HtmlHelper::cast($tpl->get('html'));
+$html        = HtmlEncoder::cast($tpl->get('html'));
 $query       = Cast::string($tpl->tryGet('query', ''));
 $products    = Cast::array($tpl->get('products'));
 $packs       = Cast::array($tpl->get('packs'));

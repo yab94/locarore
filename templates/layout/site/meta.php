@@ -1,5 +1,5 @@
 <?php
-$html = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
+$html = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
 $meta = Rore\Framework\View\PageMeta::cast($tpl->get('meta'));
 ?>
     <meta charset="UTF-8">

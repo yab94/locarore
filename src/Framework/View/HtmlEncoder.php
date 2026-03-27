@@ -10,7 +10,7 @@ use Rore\Framework\Type\Castable;
  * Encodeur HTML injectable dans les templates.
  * Utilisation : $html($value)  ou  $html->encode($value)
  */
-final class HtmlHelper
+final class HtmlEncoder
 {
     use Castable;
 

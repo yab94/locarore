@@ -1,13 +1,13 @@
 <?php
 use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Type\Cast;
 use Rore\Framework\Bootstrap\Config;
 
 $pack          = Pack::cast($tpl->get('pack'));
 $productsById  = Cast::array($tpl->get('productsById'));
 $config        = Config::cast($tpl->get('config'));
-$html          = HtmlHelper::cast($tpl->get('html'));
+$html          = HtmlEncoder::cast($tpl->get('html'));
 // $productsById : array<int, Product> (tous les produits du pack indexés par id)
 // Détermine la photo via le produit principal
 $_mainProductId = $pack->getMainProductId($productsById);

@@ -1,11 +1,11 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 use Rore\Framework\Bootstrap\Config;
 use Rore\Domain\Catalog\Entity\Category;
 
-$html       = HtmlHelper::cast($tpl->get('html'));
+$html       = HtmlEncoder::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));
 $config     = Config::cast($tpl->get('config'));
 $category   = Category::castOrNull($tpl->tryGet('category'));

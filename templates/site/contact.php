@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Application\Settings\GetSettingUseCase;
 
-$html     = HtmlHelper::cast($tpl->get('html'));
+$html     = HtmlEncoder::cast($tpl->get('html'));
 $url      = UrlResolver::cast($tpl->get('url'));
 $settings = GetSettingUseCase::cast($tpl->get('settings'));
 // $partial is injected by the Template engine — not a param

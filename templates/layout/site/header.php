@@ -1,5 +1,5 @@
 <?php
-$html            = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
+$html            = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
 $url             = Rore\Framework\Http\UrlResolver::cast($tpl->get('url'));
 $headerCategories = \Rore\Framework\Type\Cast::array($tpl->get('headerCategories'));
 $settings        = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));

@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Type\Cast;
 use Rore\Domain\Catalog\Entity\Tag;
 
-$html     = HtmlHelper::cast($tpl->get('html'));
+$html     = HtmlEncoder::cast($tpl->get('html'));
 $tag      = Tag::cast($tpl->get('tag'));
 $products = Cast::array($tpl->tryGet('products', []));
 $packs    = Cast::array($tpl->tryGet('packs', []));

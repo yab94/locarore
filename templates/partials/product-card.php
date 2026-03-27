@@ -1,12 +1,12 @@
 <?php
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 use Rore\Framework\Bootstrap\Config;
 
 $product            = Product::cast($tpl->get('product'));
-$html               = HtmlHelper::cast($tpl->get('html'));
+$html               = HtmlEncoder::cast($tpl->get('html'));
 $config             = Config::cast($tpl->get('config'));
 $allCategories      = Cast::array($tpl->tryGet('allCategories', []));
 /** @var string|null $productContextPath */

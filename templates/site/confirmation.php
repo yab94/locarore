@@ -1,9 +1,9 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Type\Cast;
 use Rore\Application\Settings\GetSettingUseCase;
 
-$html           = HtmlHelper::cast($tpl->get('html'));
+$html           = HtmlEncoder::cast($tpl->get('html'));
 $settings       = GetSettingUseCase::cast($tpl->get('settings'));
 $reservationId  = Cast::int($tpl->get('reservationId'));
 ?>

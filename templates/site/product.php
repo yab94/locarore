@@ -1,12 +1,12 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Framework\Bootstrap\Config;
 use Rore\Domain\Cart\ValueObject\CartState;
 
-$html          = HtmlHelper::cast($tpl->get('html'));
+$html          = HtmlEncoder::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
 $product       = Product::cast($tpl->get('product'));

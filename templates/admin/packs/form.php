@@ -1,10 +1,10 @@
 <?php
-use Rore\Framework\View\HtmlHelper;
+use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
 use Rore\Domain\Catalog\Entity\Pack;
 
-$html       = HtmlHelper::cast($tpl->get('html'));
+$html       = HtmlEncoder::cast($tpl->get('html'));
 $url        = UrlResolver::cast($tpl->get('url'));
 $pack       = Pack::castOrNull($tpl->tryGet('pack', null));
 $products   = Cast::array($tpl->tryGet('products', []));
