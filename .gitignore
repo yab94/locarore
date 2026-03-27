@@ -3,11 +3,11 @@
 /node_modules/
 
 # Uploads (fichiers ignorés, mais la structure de dossiers est trackée via .gitkeep)
-/public/assets/uploads/*
-!/public/assets/uploads/.gitkeep
-!/public/assets/uploads/products/
-/public/assets/uploads/products/*
-!/public/assets/uploads/products/.gitkeep
+/public/uploads/*
+!/public/uploads/.gitkeep
+!/public/uploads/products/
+/public/uploads/products/*
+!/public/uploads/products/.gitkeep
 
 # Docker volumes
 /docker/mysql-data/
