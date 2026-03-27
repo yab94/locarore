@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Infrastructure\Persistence;
 
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
+use Rore\Application\Catalog\Port\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Infrastructure\Database\MysqlDatabase;
 

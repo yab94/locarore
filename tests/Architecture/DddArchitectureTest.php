@@ -16,7 +16,7 @@ declare(strict_types=1);
  *             (Config, Container, Cast, Typable, etc.)
  *
  * Contrainte supplémentaire :
- *   Application ne contient QUE des UseCases (*UseCase) et des ports (interfaces).
+ *   Application ne contient QUE des UseCases (*UseCase), Services (*Service) et des ports (interfaces).
  */
 final class DddArchitectureTest
 {
@@ -133,7 +133,7 @@ final class DddArchitectureTest
         );
     }
 
-    public function testApplicationOnlyUseCasesAndPorts(): void
+    public function testApplicationOnlyUseCasesPortsAndServices(): void
     {
         $violations = [];
 
@@ -152,11 +152,11 @@ final class DddArchitectureTest
             // Les interfaces (ports) et les abstraits sont toujours OK
             if ($ref->isInterface() || $ref->isAbstract()) continue;
 
-            // Les classes concrètes doivent se terminer par UseCase
+            // Les classes concrètes doivent se terminer par UseCase ou Service
             $shortName = $ref->getShortName();
-            if (!str_ends_with($shortName, 'UseCase')) {
+            if (!str_ends_with($shortName, 'UseCase') && !str_ends_with($shortName, 'Service')) {
                 $violations[] = sprintf(
-                    '%s — classe concrète non-UseCase en Application (renommer en *UseCase ou déplacer en Infrastructure)',
+                    '%s — classe concrète en Application doit se terminer par UseCase ou Service (ou être une interface/port)',
                     $className,
                 );
             }
@@ -165,7 +165,7 @@ final class DddArchitectureTest
         Assert::equals(
             0,
             count($violations),
-            "\n\nApplication doit uniquement contenir des UseCases et des ports (interfaces) :\n\n"
+            "\n\nApplication doit uniquement contenir des UseCases, Services et ports (interfaces) :\n\n"
                 . implode("\n", $violations)
         );
     }

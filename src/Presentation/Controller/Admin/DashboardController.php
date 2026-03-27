@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Catalog\GetAllCategoriesUseCase;
-use Rore\Application\Catalog\GetAllProductsUseCase;
-use Rore\Application\Reservation\GetReservationsUseCase;
+use Rore\Application\Catalog\UseCase\GetAllCategoriesUseCase;
+use Rore\Application\Catalog\UseCase\GetAllProductsUseCase;
+use Rore\Application\Reservation\UseCase\GetReservationsUseCase;
 
 use Rore\Framework\Http\Route;
 class DashboardController extends AdminController

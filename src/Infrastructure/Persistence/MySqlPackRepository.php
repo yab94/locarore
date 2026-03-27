@@ -7,7 +7,7 @@ namespace Rore\Infrastructure\Persistence;
 use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
+use Rore\Application\Catalog\Port\PackRepositoryInterface;
 
 class MySqlPackRepository implements PackRepositoryInterface
 {

@@ -9,7 +9,7 @@ use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Domain\Catalog\Repository\SearchRepositoryInterface;
+use Rore\Application\Search\Port\SearchRepositoryInterface;
 use Rore\Infrastructure\Database\MysqlDatabase;
 
 class MySqlSearchRepository implements SearchRepositoryInterface

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Site;
 
 use Rore\Domain\Cart\ValueObject\CartState;
-use Rore\Application\Cart\GetCartStateUseCase;
-use Rore\Application\Catalog\GetAllActiveCategoriesUseCase;
+use Rore\Application\Cart\UseCase\GetCartStateUseCase;
+use Rore\Application\Catalog\UseCase\GetAllActiveCategoriesUseCase;
 use Rore\Domain\Shared\ValueObject\DateRange;
 use Rore\Presentation\Controller\Controller;
 

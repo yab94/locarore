@@ -8,7 +8,7 @@ use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 
 class MySqlProductRepository implements ProductRepositoryInterface
 {

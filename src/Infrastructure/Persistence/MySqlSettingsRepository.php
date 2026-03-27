@@ -6,7 +6,7 @@ namespace Rore\Infrastructure\Persistence;
 
 use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Settings\Entity\Setting;
-use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
+use Rore\Application\Settings\Port\SettingsRepositoryInterface;
 
 class MySqlSettingsRepository implements SettingsRepositoryInterface
 {
