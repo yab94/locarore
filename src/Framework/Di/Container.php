@@ -110,12 +110,20 @@ final class Container
                 continue;
             }
 
-            // Paramètre annoté #[Bind] → closure auto-wirée fournit les args
+            // Paramètre annoté #[Bind] → closure auto-wirée fournit la valeur ou les args DI
             $fromAttrs = $param->getAttributes(Bind::class);
-            if ($fromAttrs !== [] && $type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+            if ($fromAttrs !== []) {
                 /** @var Bind $from */
-                $from   = $fromAttrs[0]->newInstance();
-                $args[] = $this->resolveBindAttribute($from, $type->getName());
+                $from = $fromAttrs[0]->newInstance();
+                $from->validate($param);
+
+                if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                    // Paramètre objet → DI augmentation (closure retourne un array de scalaires)
+                    $args[] = $this->resolveBindAttribute($from, $type->getName());
+                } else {
+                    // Paramètre scalaire → closure retourne la valeur directement
+                    $args[] = $this->resolveScalarBind($from);
+                }
                 continue;
             }
 
@@ -134,6 +142,25 @@ final class Container
 
         /** @var T */
         return $ref->newInstanceArgs($args);
+    }
+
+    /**
+     * Résout un #[Bind] sur un paramètre scalaire :
+     * auto-wire les dépendances de la closure puis retourne sa valeur directement.
+     */
+    private function resolveScalarBind(Bind $from): mixed
+    {
+        $refFn       = new ReflectionFunction($from->resolver);
+        $closureArgs = [];
+        foreach ($refFn->getParameters() as $p) {
+            $t = $p->getType();
+            if ($t instanceof ReflectionNamedType && !$t->isBuiltin()) {
+                $closureArgs[] = $this->get($t->getName());
+            } elseif ($p->isDefaultValueAvailable()) {
+                $closureArgs[] = $p->getDefaultValue();
+            }
+        }
+        return ($from->resolver)(...$closureArgs);
     }
 
     /**
