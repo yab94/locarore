@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace RRB\File;
 
-class ImageManager extends FileManager implements ImageManagerInterface
+class ImageManager extends FileManager
 {
     /**
      * Redimensionne une image si elle dépasse les dimensions max (conserve le ratio).

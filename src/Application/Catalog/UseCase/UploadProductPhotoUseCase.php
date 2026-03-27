@@ -7,12 +7,12 @@ namespace Rore\Application\Catalog\UseCase;
 use RRB\Bootstrap\Config;
 use RRB\Di\Bind;
 use RRB\Di\BindConfig;
-use RRB\File\FileUploader;
-use RRB\File\FileUploaderInterface;
-use RRB\File\ImageManager;
-use RRB\File\ImageManagerInterface;
+use Rore\Application\Catalog\Port\FileUploaderInterface;
+use Rore\Application\Catalog\Port\ImageManagerInterface;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Infrastructure\File\FileUploaderAdapter;
+use Rore\Infrastructure\File\ImageManagerAdapter;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use RRB\Di\BindAdapter;
 
@@ -22,7 +22,7 @@ class UploadProductPhotoUseCase
         #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
         #[Bind(static function (Config $c): FileUploaderInterface {
-            return new FileUploader(
+            return new FileUploaderAdapter(
                 baseDir:      $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
                 maxSize:      $c->getInt('upload.max_size'),
                 allowedTypes: $c->getString('upload.allowed_types'),
@@ -30,7 +30,7 @@ class UploadProductPhotoUseCase
         })]
         private FileUploaderInterface      $fileUploader,
         #[Bind(static function (Config $c): ImageManagerInterface {
-            return new ImageManager(
+            return new ImageManagerAdapter(
                 baseDir: $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
             );
         })]

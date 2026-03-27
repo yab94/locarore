@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RRB\File;
+namespace Rore\Application\Catalog\Port;
 
 interface FileUploaderInterface extends FileManagerInterface
 {

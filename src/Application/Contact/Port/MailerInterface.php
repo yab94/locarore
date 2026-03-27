@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RRB\Mail;
+namespace Rore\Application\Contact\Port;
 
 interface MailerInterface
 {
