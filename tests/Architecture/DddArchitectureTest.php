@@ -373,4 +373,55 @@ final class DddArchitectureTest
                 . implode("\n\n", $violations)
         );
     }
+
+    public function testUseCaseConstructorsOnlyAcceptInterfaces(): void
+    {
+        $violations = [];
+
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Application') as $file) {
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
+            if (!str_ends_with($className, 'UseCase')) continue;
+
+            try {
+                require_once $file;
+                if (!class_exists($className)) continue;
+                $ref = new ReflectionClass($className);
+            } catch (Throwable) {
+                continue;
+            }
+
+            $constructor = $ref->getConstructor();
+            if ($constructor === null) continue;
+
+            foreach ($constructor->getParameters() as $param) {
+                if ($param->isVariadic()) continue;
+
+                $type = $param->getType();
+                if ($type === null || !($type instanceof ReflectionNamedType)) continue;
+                if ($type->isBuiltin()) continue; // scalaires OK (#[BindConfig])
+
+                $typeName = $type->getName();
+
+                // Interfaces → OK
+                if (interface_exists($typeName)) continue;
+
+                // UseCase → UseCase : orchestration autorisée
+                if (str_ends_with($typeName, 'UseCase')) continue;
+
+                $violations[] = sprintf(
+                    "%s::__construct() — \$%s : %s\n   → les UseCases ne doivent injecter que des interfaces (ou d'autres *UseCase)",
+                    $className,
+                    $param->getName(),
+                    $typeName,
+                );
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nUseCases avec injection de classe concrète :\n\n" . implode("\n\n", $violations)
+        );
+    }
 }
