@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Cart\UseCase;
 
 use Rore\Domain\Cart\ValueObject\CartState;
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Application\Cart\Service\CartService;
 
 /**
  * Retourne un snapshot read-only de l'état du panier.

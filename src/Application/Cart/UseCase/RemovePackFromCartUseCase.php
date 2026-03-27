@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart\UseCase;
 
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Application\Cart\Service\CartService;
 
 class RemovePackFromCartUseCase
 {

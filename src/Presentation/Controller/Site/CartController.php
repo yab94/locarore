@@ -11,7 +11,7 @@ use Rore\Application\Cart\UseCase\CheckoutUseCase;
 use Rore\Application\Cart\UseCase\RemoveFromCartUseCase;
 use Rore\Application\Cart\UseCase\RemovePackFromCartUseCase;
 use Rore\Application\Cart\UseCase\SetCartDatesUseCase;
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Application\Cart\Service\CartService;
 use RRB\Http\Route;
 use RRB\View\PageMeta;
 

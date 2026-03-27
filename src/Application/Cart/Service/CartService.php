@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Domain\Cart\Service;
+namespace Rore\Application\Cart\Service;
 
 use RRB\Di\BindAdapter;
 use RRB\Type\Castable;

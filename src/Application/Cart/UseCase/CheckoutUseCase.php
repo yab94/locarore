@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Cart\UseCase;
 
 use Rore\Application\Reservation\UseCase\CreateReservationUseCase;
-use Rore\Domain\Cart\Service\CartService;
+use Rore\Application\Cart\Service\CartService;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
