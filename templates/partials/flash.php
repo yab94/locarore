@@ -1,6 +1,6 @@
 <?php
 $html  = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
-$flash = \Rore\Framework\Support\Cast::array($tpl->tryGet('flash', []));
+$flash = \Rore\Framework\Type\Cast::array($tpl->tryGet('flash', []));
 ?>
 <?php if (!empty($flash)): ?>
     <?php foreach ($flash as $type => $msg): ?>

@@ -21,7 +21,7 @@ $container = new \Rore\Framework\Di\Container();
 $container->bind(\Rore\Framework\Bootstrap\Config::class, $config);
 
 // ── Framework ────────────────────────────────────────────────────────────────
-$container->bind(\Rore\Framework\Session\SessionStorageInterface::class,   \Rore\Framework\Session\PhpSessionStorage::class);
+$container->bind(\Rore\Framework\Storage\StorageInterface::class,   \Rore\Framework\Storage\PhpSessionStorage::class);
 $container->bind(\Rore\Framework\Security\CsrfTokenManagerInterface::class, \Rore\Framework\Security\CsrfTokenManager::class);
 $container->bind(\Rore\Framework\Mail\MailerInterface::class,           \Rore\Framework\Mail\SmtpMailer::class);
 $container->bind(\Rore\Framework\Mail\SmtpMailer::class, fn() => new \Rore\Framework\Mail\SmtpMailer(

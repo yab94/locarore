@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Framework\Support;
+namespace Rore\Framework\Type;
 
 use InvalidArgumentException;
 

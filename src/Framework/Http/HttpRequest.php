@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Http;
 
-use Rore\Framework\Support\Typable;
+use Rore\Framework\Type\Typable;
 
 /**
  * Requête HTTP avec propriétés hooks pour accès aux super-globales.

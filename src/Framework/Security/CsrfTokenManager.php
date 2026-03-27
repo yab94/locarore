@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Security;
 
-use Rore\Framework\Session\SessionStorageInterface;
+use Rore\Framework\Storage\StorageInterface;
 
 /**
  * Gestion du token CSRF basé sur la session.
@@ -18,7 +18,7 @@ final class CsrfTokenManager implements CsrfTokenManagerInterface
     private const POST_KEY    = '_csrf';
 
     public function __construct(
-        private readonly SessionStorageInterface $session,
+        private readonly StorageInterface $session,
     ) {}
 
     public function token(): string

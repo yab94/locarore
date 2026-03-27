@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Bootstrap;
 
-use Rore\Framework\Support\Castable;
-use Rore\Framework\Support\Typable;
+use Rore\Framework\Type\Castable;
+use Rore\Framework\Type\Typable;
 
 final class Config extends Typable
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Security;
 
-use Rore\Framework\Session\SessionStorageInterface;
+use Rore\Framework\Storage\StorageInterface;
 
 /**
  * Limiteur de tentatives générique basé sur la session.
@@ -13,7 +13,7 @@ use Rore\Framework\Session\SessionStorageInterface;
  * La session ne stocke que l'état pur : attempts + locked_until.
  *
  * Usage (injection via #[Bind]) :
- *   #[Bind(static function(SessionStorageInterface $s) {
+ *   #[Bind(static function(StorageInterface $s) {
  *       return [$s, 'admin_login', maxAttempts: 5, lockoutSeconds: 900];
  *   })]
  *   private readonly RateLimiter $rateLimiter,
@@ -23,7 +23,7 @@ final class RateLimiter
     private const PREFIX = 'rate_limit.';
 
     public function __construct(
-        private readonly SessionStorageInterface $session,
+        private readonly StorageInterface $session,
         private readonly string $key,
         private readonly int    $maxAttempts    = 5,
         private readonly int    $lockoutSeconds = 900,

@@ -6,7 +6,7 @@ namespace Rore\Framework\Http;
 
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Security\CsrfTokenManagerInterface;
-use Rore\Framework\Session\SessionStorageInterface;
+use Rore\Framework\Storage\StorageInterface;
 use Rore\Framework\View\HtmlHelper;
 use Rore\Framework\View\PageMeta;
 use Rore\Framework\View\Template;
@@ -19,7 +19,7 @@ abstract class Controller
         readonly Config $config,
         readonly HtmlHelper $html,
         readonly UrlResolver $urlResolver,
-        readonly SessionStorageInterface $session,
+        readonly StorageInterface $session,
         readonly CsrfTokenManagerInterface $csrfTokenManager,
     ) {}
 

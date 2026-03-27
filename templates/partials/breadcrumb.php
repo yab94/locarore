@@ -1,6 +1,6 @@
 <?php
-$breadcrumb = Rore\Framework\Support\Cast::array($tpl->get('breadcrumb'));
-$allCategories = Rore\Framework\Support\Cast::array($tpl->get('allCategories'));
+$breadcrumb = Rore\Framework\Type\Cast::array($tpl->get('breadcrumb'));
+$allCategories = Rore\Framework\Type\Cast::array($tpl->get('allCategories'));
 $html = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
 $finalCrumb = array_pop($breadcrumb);
 ?>

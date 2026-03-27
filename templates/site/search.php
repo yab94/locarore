@@ -1,5 +1,5 @@
 <?php
-use Rore\Framework\Support\Cast;
+use Rore\Framework\Type\Cast;
 use Rore\Framework\View\HtmlHelper;
 use Rore\Framework\Http\UrlResolver;
 

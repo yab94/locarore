@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Cart\Service;
 
-use Rore\Framework\Support\Castable;
-use Rore\Framework\Session\SessionStorageInterface;
+use Rore\Framework\Type\Castable;
+use Rore\Framework\Storage\StorageInterface;
 
 final class CartService
 {
@@ -13,7 +13,7 @@ final class CartService
     private const KEY = 'rore_cart';
 
     public function __construct(
-        private readonly SessionStorageInterface $session,
+        private readonly StorageInterface $session,
     ) {}
 
     // --- Dates -------------------------------------------------------------------

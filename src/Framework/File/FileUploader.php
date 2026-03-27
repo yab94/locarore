@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Framework\Storage;
+namespace Rore\Framework\File;
 
 class FileUploader extends FileManager
 {

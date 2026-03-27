@@ -1,7 +1,7 @@
 <?php
 $html    = Rore\Framework\View\HtmlHelper::cast($tpl->get('html'));
-$flash   = \Rore\Framework\Support\Cast::array($tpl->tryGet('flash', []));
-$content = \Rore\Framework\Support\Cast::string($tpl->get('content'));
+$flash   = \Rore\Framework\Type\Cast::array($tpl->tryGet('flash', []));
+$content = \Rore\Framework\Type\Cast::string($tpl->get('content'));
 ?>
 <!DOCTYPE html>
 <html lang="fr" class="h-full">

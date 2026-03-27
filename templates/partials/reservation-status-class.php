@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$status = \Rore\Framework\Support\Cast::string($tpl->get('status'));
+$status = \Rore\Framework\Type\Cast::string($tpl->get('status'));
 
 echo match ($status) {
     'pending'   => 'bg-yellow-100 text-yellow-800',

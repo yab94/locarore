@@ -6,7 +6,7 @@ namespace Rore\Framework\Http;
 
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Di\Container;
-use Rore\Framework\Support\Typable;
+use Rore\Framework\Type\Typable;
 use Rore\Framework\View\Template;
 
 /**

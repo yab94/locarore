@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Http;
 
-use Rore\Framework\Support\Castable;
+use Rore\Framework\Type\Castable;
 
 /**
  * Résout les URLs canoniques des entités du catalogue.

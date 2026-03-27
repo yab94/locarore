@@ -1,7 +1,7 @@
 <?php
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Framework\View\HtmlHelper;
-use Rore\Framework\Support\Cast;
+use Rore\Framework\Type\Cast;
 use Rore\Framework\Bootstrap\Config;
 
 $pack          = Pack::cast($tpl->get('pack'));

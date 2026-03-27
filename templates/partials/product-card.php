@@ -2,7 +2,7 @@
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Framework\View\HtmlHelper;
 use Rore\Framework\Http\UrlResolver;
-use Rore\Framework\Support\Cast;
+use Rore\Framework\Type\Cast;
 use Rore\Framework\Bootstrap\Config;
 
 $product            = Product::cast($tpl->get('product'));

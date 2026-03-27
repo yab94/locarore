@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Rore\Framework\Session;
+namespace Rore\Framework\Storage;
 
-final class PhpSessionStorage implements SessionStorageInterface
+final class PhpSessionStorage implements StorageInterface
 {
     public function __construct()
     {

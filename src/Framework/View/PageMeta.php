@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Framework\View;
 
-use Rore\Framework\Support\Castable;
+use Rore\Framework\Type\Castable;
 
 /**
  * Value Object avec property hooks pour les métadonnées SEO.

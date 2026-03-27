@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use Rore\Domain\Cart\Service\CartService;
-use Rore\Framework\Session\SessionStorageInterface;
+use Rore\Framework\Storage\StorageInterface;
 
 // ─── Stub SessionStorage in-memory ──────────────────────────────────────────
 
-final class InMemorySession implements SessionStorageInterface
+final class InMemorySession implements StorageInterface
 {
     private array $data = [];
 

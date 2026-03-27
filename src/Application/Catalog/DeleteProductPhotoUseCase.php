@@ -6,7 +6,7 @@ namespace Rore\Application\Catalog;
 
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Di\Bind;
-use Rore\Framework\Storage\FileManager;
+use Rore\Framework\File\FileManager;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 
 class DeleteProductPhotoUseCase

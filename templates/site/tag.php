@@ -1,6 +1,6 @@
 <?php
 use Rore\Framework\View\HtmlHelper;
-use Rore\Framework\Support\Cast;
+use Rore\Framework\Type\Cast;
 use Rore\Domain\Catalog\Entity\Tag;
 
 $html     = HtmlHelper::cast($tpl->get('html'));
