@@ -7,7 +7,7 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
-use Rore\Application\Catalog\Port\PricingServiceInterface;
+use Rore\Domain\Catalog\Service\PricingServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;

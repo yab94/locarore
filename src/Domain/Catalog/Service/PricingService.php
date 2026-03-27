@@ -7,7 +7,7 @@ namespace Rore\Domain\Catalog\Service;
 use Rore\Domain\Catalog\Entity\PricableInterface;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Application\Catalog\Port\PricingServiceInterface;
+use Rore\Domain\Catalog\Service\PricingServiceInterface;
 
 /**
  * Service de domaine : calcul du prix d'une entité tarifable pour une période.

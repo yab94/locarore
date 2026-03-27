@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Application\Catalog\Port;
+namespace Rore\Domain\Catalog\Service;
 
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PricableInterface;
