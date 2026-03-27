@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Application\Contact\UseCase;
 
-use RRB\Bootstrap\Config;
-use RRB\Di\Bind;
 use Rore\Application\Contact\Port\MailerInterface;
 use Rore\Application\Settings\UseCase\GetSettingUseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
@@ -19,17 +17,7 @@ final class SendContactMessageUseCase
     public function __construct(
         #[BindAdapter(MySqlContactMessageRepository::class)]
         private readonly ContactMessageRepositoryInterface $repo,
-        #[Bind(static function (Config $c): MailerInterface {
-            return new SmtpMailerAdapter(new \RRB\Mail\SmtpMailer(
-                host:       $c->getString('smtp.host'),
-                port:       $c->getInt('smtp.port', 587),
-                encryption: strtolower($c->getString('smtp.encryption', 'tls')),
-                user:       $c->getString('smtp.user'),
-                password:   $c->getString('smtp.password'),
-                fromEmail:  $c->getString('smtp.from_email'),
-                fromName:   $c->getString('smtp.from_name', $c->getString('smtp.from_email')),
-            ));
-        })]
+        #[BindAdapter(SmtpMailerAdapter::class)]
         private readonly MailerInterface                   $mailer,
         private readonly GetSettingUseCase                 $setting,
     ) {}

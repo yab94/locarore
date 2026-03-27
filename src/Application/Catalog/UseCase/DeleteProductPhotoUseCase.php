@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog\UseCase;
 
-use RRB\Bootstrap\Config;
-use RRB\Di\Bind;
 use Rore\Application\Catalog\Port\FileManagerInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Infrastructure\File\FileManagerAdapter;
@@ -17,11 +15,7 @@ class DeleteProductPhotoUseCase
     public function __construct(
         #[BindAdapter(MySqlProductRepository::class)]
         private ProductRepositoryInterface $productRepository,
-        #[Bind(static function (Config $c): FileManagerInterface {
-            return new FileManagerAdapter(
-                baseDir: $c->getString('upload.base_path') . $c->getString('upload.upload_path'),
-            );
-        })]
+        #[BindAdapter(FileManagerAdapter::class)]
         private FileManagerInterface       $fileManager,
     ) {}
 
