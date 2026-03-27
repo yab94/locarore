@@ -138,17 +138,17 @@ final class Container
 
     /**
      * Résout un paramètre annoté #[Bind] :
-     * - appelle la closure avec ses dépendances auto-wirées
-     * - construit (ou récupère depuis le cache) l'instance cible
+     * - les dépendances typées objet du constructeur cible sont auto-wirées par le container
+     * - la closure fournit uniquement les arguments scalaires (par position ou par nom)
+     * - les deux sont fusionnés pour construire l'instance
      *
-     * Clé de cache = FQCN + ':' + md5(serialize(args))
-     * → deux #[Bind] produisant des résultats différents donnent
-     *   deux instances distinctes (ex: connexion principale vs réplique).
+     * Clé de cache = FQCN + ':' + md5(serialize(args scalaires))
+     * → deux #[Bind] produisant des scalaires différents donnent deux instances distinctes.
      */
     private function resolveBindAttribute(Bind $from, string $className): object
     {
-        // 1. Auto-wirer les dépendances de la closure
-        $refFn      = new ReflectionFunction($from->resolver);
+        // 1. Auto-wirer les dépendances de la closure elle-même
+        $refFn       = new ReflectionFunction($from->resolver);
         $closureArgs = [];
         foreach ($refFn->getParameters() as $p) {
             $t = $p->getType();
@@ -159,18 +159,46 @@ final class Container
             }
         }
 
-        // 2. Appeler la closure → tableau d'args nommés pour le constructeur cible
-        $constructorArgs = ($from->resolver)(...$closureArgs);
+        // 2. Appeler la closure → scalaires pour le constructeur cible
+        $scalarArgs = ($from->resolver)(...$closureArgs);
+        if (!is_array($scalarArgs)) {
+            $scalarArgs = [$scalarArgs];
+        }
 
-        // 3. Clé de cache : FQCN + empreinte des args
-        $cacheKey = $className . ':' . md5(serialize($constructorArgs));
-
+        // 3. Clé de cache
+        $cacheKey = $className . ':' . md5(serialize($scalarArgs));
         if (isset($this->instances[$cacheKey])) {
             return $this->instances[$cacheKey];
         }
 
-        // 4. Construire l'instance avec named args spread (PHP 8+)
-        $instance = (new ReflectionClass($className))->newInstance(...$constructorArgs);
+        // 4. Construire les args du constructeur cible :
+        //    - param dont le nom est dans le tableau de la closure → valeur de la closure (priorité)
+        //    - param absent du tableau et typé objet               → auto-wiré par le container
+        //    - param avec valeur par défaut                        → défaut
+        $ref         = new ReflectionClass($className);
+        $constructor = $ref->getConstructor();
+        $args        = [];
+
+        if ($constructor !== null) {
+            foreach ($constructor->getParameters() as $param) {
+                $type = $param->getType();
+
+                if (array_key_exists($param->getName(), $scalarArgs)) {
+                    $args[] = $scalarArgs[$param->getName()];
+                } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                    $args[] = $this->get($type->getName());
+                } elseif ($param->isDefaultValueAvailable()) {
+                    $args[] = $param->getDefaultValue();
+                } else {
+                    throw new RuntimeException(
+                        "Container #[Bind] : impossible de résoudre le paramètre"
+                        . " « \${$param->getName()} » de « {$className} »."
+                    );
+                }
+            }
+        }
+
+        $instance = $ref->newInstanceArgs($args);
         $this->instances[$cacheKey] = $instance;
 
         return $instance;

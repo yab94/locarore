@@ -12,9 +12,9 @@ use Rore\Application\Cart\RemoveFromCartUseCase;
 use Rore\Application\Cart\RemovePackFromCartUseCase;
 use Rore\Application\Cart\SetCartDatesUseCase;
 use Rore\Domain\Cart\Service\CartService;
+use Rore\Framework\Http\Route;
 use Rore\Framework\View\PageMeta;
 
-use Rore\Framework\Http\Route;
 class CartController extends SiteController
 {
     public function __construct(
@@ -166,6 +166,8 @@ class CartController extends SiteController
     public function processCheckout(): void
     {
         $this->requirePost();
+
+
         try {
             $reservationId = $this->checkoutUseCase->execute(
                 customerName:    $this->request->body->getString('customer_name'),
