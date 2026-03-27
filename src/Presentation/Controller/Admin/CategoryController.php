@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Admin;
 
-use Rore\Application\Catalog\GetAllCategoriesUseCase;
-use Rore\Application\Catalog\GetCategoryByIdUseCase;
-use Rore\Application\Catalog\CreateCategoryUseCase;
-use Rore\Application\Catalog\ToggleCategoryUseCase;
-use Rore\Application\Catalog\UpdateCategoryUseCase;
+use Rore\Application\Catalog\UseCase\GetAllCategoriesUseCase;
+use Rore\Application\Catalog\UseCase\GetCategoryByIdUseCase;
+use Rore\Application\Catalog\UseCase\CreateCategoryUseCase;
+use Rore\Application\Catalog\UseCase\ToggleCategoryUseCase;
+use Rore\Application\Catalog\UseCase\UpdateCategoryUseCase;
 use RRB\Http\Route;
 
 class CategoryController extends AdminController

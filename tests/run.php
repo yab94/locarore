@@ -19,6 +19,13 @@ spl_autoload_register(function (string $class): void {
     if (file_exists($file)) require_once $file;
 });
 
+spl_autoload_register(function (string $class): void {
+    $prefix = 'RRB\\';
+    if (!str_starts_with($class, $prefix)) return;
+    $file = BASE_PATH . '/lib/' . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
+    if (file_exists($file)) require_once $file;
+});
+
 // ─── Assertion helpers ──────────────────────────────────────────────────────
 
 final class Assert

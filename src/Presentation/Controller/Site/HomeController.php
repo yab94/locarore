@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Catalog\GetHomePageDataUseCase;
+use Rore\Application\Catalog\UseCase\GetHomePageDataUseCase;
 use RRB\View\PageMeta;
 use RRB\Http\Route;
 

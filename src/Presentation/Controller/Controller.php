@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller;
 
 use Rore\Presentation\Seo\SlugResolver;
-use Rore\Application\Settings\GetSettingUseCase;
+use Rore\Application\Settings\UseCase\GetSettingUseCase;
 
 abstract class Controller extends \RRB\Http\Controller
 {

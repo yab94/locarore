@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Presentation\Controller\Site;
 
-use Rore\Application\Catalog\GetProductWithDetailsUseCase;
-use Rore\Application\Reservation\GetReservedQuantityForProductUseCase;
+use Rore\Application\Catalog\UseCase\GetProductWithDetailsUseCase;
+use Rore\Application\Reservation\UseCase\GetReservedQuantityForProductUseCase;
 use RRB\View\PageMeta;
 
 use RRB\Http\Route;

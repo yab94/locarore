@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Rore\Application\Catalog\CreateProductUseCase;
+use Rore\Application\Catalog\UseCase\CreateProductUseCase;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;

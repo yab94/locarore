@@ -199,8 +199,11 @@ final class DddArchitectureTest
 
             $parent = $ref->getParentClass();
             $externalParent = $parent !== false
-                && str_starts_with($parent->getName(), 'Rore\\')
-                && !str_starts_with($parent->getName(), 'Rore\\Infrastructure\\');
+                && (
+                    str_starts_with($parent->getName(), 'RRB\\')
+                    || (str_starts_with($parent->getName(), 'Rore\\')
+                        && !str_starts_with($parent->getName(), 'Rore\\Infrastructure\\'))
+                );
 
             if (empty($externalInterfaces) && !$externalParent) {
                 $violations[] = sprintf(
