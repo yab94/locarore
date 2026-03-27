@@ -18,10 +18,10 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
 
 <!-- HERO -->
 <section class="bg-brand-600 text-white py-16 rounded-2xl mb-10 text-center">
-    <h1 class="text-4xl font-bold mb-3"><?= $html($settings->get('hero.title')) ?></h1>
-    <p class="text-lg opacity-90 mb-6"><?= $html($settings->get('hero.subtitle')) ?></p>
+    <h1 class="text-4xl font-bold mb-3">Location de décoration événementielle</h1>
+    <p class="text-lg opacity-90 mb-6">Lettres géantes, arches, vases lumineux et bien plus.</p>
     <a href="#categories" class="bg-white text-brand-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
-        <?= $html($settings->get('hero.cta')) ?>
+        Découvrir le catalogue
     </a>
 </section>
 
@@ -34,7 +34,7 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
 
 <!-- CATEGORIES -->
 <section id="categories" class="mb-12">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $html($settings->get('home.categories_title')) ?></h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Nos catégories</h2>
     <?php if (empty($categories)): ?>
         <p class="text-gray-500">Aucune catégorie disponible pour le moment.</p>
     <?php else: ?>
@@ -70,7 +70,7 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
 <!-- PRODUITS PHARES -->
 <?php if (!empty($featured)): ?>
 <section class="mb-12">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6"><?= $html($settings->get('home.featured_title')) ?></h2>
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Produits populaires</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($featured as $product): ?>
             <?= $partial('partials/product-card', ['product' => $product]) ?>

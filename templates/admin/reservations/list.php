@@ -2,11 +2,9 @@
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
-use Rore\Application\Settings\GetSettingUseCase;
 
 $html          = HtmlEncoder::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
-$settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $reservations  = Cast::array($tpl->tryGet('reservations', []));
 $currentStatus = Cast::string($tpl->tryGet('currentStatus', 'all'));
 // $partial is injected by the Template engine — not a param
@@ -14,16 +12,14 @@ $currentStatus = Cast::string($tpl->tryGet('currentStatus', 'all'));
 <!-- Filtres statut -->
 <div class="flex gap-2 mb-6 flex-wrap">
     <?php
-    $statusLabelsFallback = [
+    $statusLabels = [
         'all'       => 'Toutes',
         'pending'   => 'En attente',
         'quoted'    => 'Devis envoyé',
         'confirmed' => 'Confirmées',
         'cancelled' => 'Annulées',
     ];
-    foreach ($statusLabelsFallback as $val => $fallbackLabel):
-        $label = $settings->get('reservation.status.filter.' . $val);
-        $label = $label !== '' ? $label : $fallbackLabel;
+    foreach ($statusLabels as $val => $label):
     ?>
         <a href="<?= $url('Admin\Reservation.index') ?>?status=<?= $html((string) $val) ?>"
            class="px-3 py-1.5 rounded-lg text-sm font-medium border transition
@@ -64,8 +60,13 @@ $currentStatus = Cast::string($tpl->tryGet('currentStatus', 'all'));
                     <td class="px-6 py-4 text-center">
                         <?php
                         $status = $r->getStatus();
-                        $statusLabel = $settings->get('reservation.status.label.' . $status);
-                        $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
+                        $statusLabel = match($status) {
+                            'pending'   => 'En attente',
+                            'quoted'    => 'Devis envoyé',
+                            'confirmed' => 'Confirmée',
+                            'cancelled' => 'Annulée',
+                            default     => $status,
+                        };
                         ?>
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $partial('partials/reservation-status-class', ['status' => $status]) ?>">
                             <?= $html($statusLabel) ?>

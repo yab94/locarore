@@ -2,7 +2,6 @@
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
-use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Framework\Bootstrap\Config;
 use Rore\Domain\Cart\ValueObject\CartState;
 use Rore\Domain\Shared\ValueObject\DateRange;
@@ -10,7 +9,6 @@ use Rore\Domain\Shared\ValueObject\DateRange;
 $html          = HtmlEncoder::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
-$settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
 $cart          = CartState::cast($tpl->get('cart'));
 $cartDateRange = DateRange::castOrNull($tpl->tryGet('cartDateRange'));
@@ -181,7 +179,7 @@ $packPrices    = Cast::array($tpl->tryGet('packPrices', []));
                 Réserver →
             </a>
             <p class="text-xs text-gray-400 mt-3 text-center">
-                <?= $html($settings->get('cart.footer_note')) ?>
+                Votre demande sera confirmée par notre équipe.
             </p>
         </div>
     </div>

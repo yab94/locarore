@@ -2,13 +2,11 @@
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\Http\UrlResolver;
 use Rore\Framework\Type\Cast;
-use Rore\Application\Settings\GetSettingUseCase;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Shared\ValueObject\DateRange;
 
 $html                 = HtmlEncoder::cast($tpl->get('html'));
 $url                  = UrlResolver::cast($tpl->get('url'));
-$settings             = GetSettingUseCase::cast($tpl->get('settings'));
 $reservation          = Reservation::cast($tpl->get('reservation'));
 $dateRange            = DateRange::cast($tpl->get('dateRange'));
 $products             = Cast::array($tpl->tryGet('products', []));
@@ -60,8 +58,13 @@ $productCurrentPrices = Cast::array($tpl->tryGet('productCurrentPrices', []));
                     <dd>
                         <?php
                         $status = $reservation->getStatus();
-                        $statusLabel = $settings->get('reservation.status.label.' . $status);
-                        $statusLabel = $statusLabel !== '' ? $statusLabel : $status;
+                        $statusLabel = match($status) {
+                            'pending'   => 'En attente',
+                            'quoted'    => 'Devis envoyé',
+                            'confirmed' => 'Confirmée',
+                            'cancelled' => 'Annulée',
+                            default     => $status,
+                        };
                         ?>
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $partial('partials/reservation-status-class', ['status' => $status]) ?>">
                             <?= $html($statusLabel) ?>

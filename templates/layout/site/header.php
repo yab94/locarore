@@ -2,7 +2,6 @@
 $html            = Rore\Framework\View\HtmlEncoder::cast($tpl->get('html'));
 $url             = Rore\Framework\Http\UrlResolver::cast($tpl->get('url'));
 $headerCategories = \Rore\Framework\Type\Cast::array($tpl->get('headerCategories'));
-$settings        = Rore\Application\Settings\GetSettingUseCase::cast($tpl->get('settings'));
 $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);
 
 $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() === null);
@@ -13,8 +12,8 @@ $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() ==
         <!-- Logo -->
         <a href="/" class="shrink-0">
             <img src="/assets/images/logo-latyana-evenements.png"
-                 alt="<?= $html($settings->get('site.name')) ?>"
-                 title="<?= $html($settings->get('site.name')) ?>"
+                 alt="Locarore"
+                 title="Locarore"
                  class="h-14 w-auto" width="auto" height="56" fetchpriority="high">
         </a>
 
