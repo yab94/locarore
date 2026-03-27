@@ -192,7 +192,8 @@ final class Container
             $scalarArgs = [$scalarArgs];
         }
 
-        // 3. Clé de cache
+        // 3. Clé de cache — ksort pour que l'ordre des clés n'influe pas sur l'identité de l'instance
+        ksort($scalarArgs);
         $cacheKey = $className . ':' . md5(serialize($scalarArgs));
         if (isset($this->instances[$cacheKey])) {
             return $this->instances[$cacheKey];

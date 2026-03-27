@@ -44,20 +44,52 @@ final class Config extends Typable
      * Résout les références de config internes @{section.key} dans toutes les valeurs.
      * NOTE: array_walk_recursive ne modifie pas les CLÉS d'arrays associatifs,
      * donc on doit parcourir manuellement pour résoudre les clés de routes.
+     *
+     * Les passes sont répétées jusqu'à stabilisation (aucune substitution restante).
+     * Une référence non résolue après une passe complète sans changement indique
+     * soit une clé inexistante soit un cycle — une exception est levée dans ce cas.
      */
     private function resolveConfigReferences(array $data): array
     {
-        $maxIterations = 10;
-        
-        for ($iteration = 0; $iteration < $maxIterations; $iteration++) {
+        while (true) {
             $hasChanges = false;
             $data = $this->resolveArrayRecursive($data, $data, $hasChanges);
-            
+
             if (!$hasChanges) {
                 break;
             }
+
+            // Vérifie qu'il ne reste aucune référence non résolue après cette passe
+            $remaining = [];
+            array_walk_recursive($data, function ($value) use (&$remaining) {
+                if (is_string($value) && preg_match('/@\{[^}]+\}/', $value)) {
+                    $remaining[] = $value;
+                }
+            });
+
+            if ($remaining !== [] && !$hasChanges) {
+                throw new \RuntimeException(
+                    'Config : références circulaires ou inexistantes détectées : '
+                    . implode(', ', array_unique($remaining))
+                );
+            }
         }
-        
+
+        // Vérification finale : aucune @{} ne doit subsister
+        $unresolved = [];
+        array_walk_recursive($data, function ($value) use (&$unresolved) {
+            if (is_string($value) && preg_match_all('/@\{([^}]+)\}/', $value, $m)) {
+                array_push($unresolved, ...$m[0]);
+            }
+        });
+
+        if ($unresolved !== []) {
+            throw new \RuntimeException(
+                'Config : références non résolues (clé inexistante ou cycle) : '
+                . implode(', ', array_unique($unresolved))
+            );
+        }
+
         return $data;
     }
     
