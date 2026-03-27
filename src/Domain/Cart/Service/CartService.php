@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Rore\Domain\Cart\Service;
 
+use Rore\Framework\Di\BindAdapter;
 use Rore\Framework\Type\Castable;
+use Rore\Framework\Session\PhpSession;
 use Rore\Framework\Session\SessionInterface;
 
 final class CartService
@@ -13,6 +15,7 @@ final class CartService
     private const KEY = 'rore_cart';
 
     public function __construct(
+        #[BindAdapter(PhpSession::class)]
         private readonly SessionInterface $session,
     ) {}
 

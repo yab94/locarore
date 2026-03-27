@@ -6,6 +6,8 @@ namespace Rore\Framework\Http;
 
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Security\CsrfTokenManager;
+use Rore\Framework\Di\BindAdapter;
+use Rore\Framework\Session\PhpSession;
 use Rore\Framework\Session\SessionInterface;
 use Rore\Framework\View\HtmlEncoder;
 use Rore\Framework\View\PageMeta;
@@ -19,6 +21,7 @@ abstract class Controller
         readonly Config $config,
         readonly HtmlEncoder $html,
         readonly UrlResolver $urlResolver,
+        #[BindAdapter(PhpSession::class)]
         readonly SessionInterface $session,
         readonly CsrfTokenManager $csrfTokenManager,
     ) {}

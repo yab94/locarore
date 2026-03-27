@@ -8,6 +8,7 @@ use ReflectionClass;
 use ReflectionFunction;
 use ReflectionNamedType;
 use RuntimeException;
+use Rore\Framework\Bootstrap\Config;
 
 /**
  * Conteneur DI minimaliste avec auto-wiring par réflexion.
@@ -128,6 +129,24 @@ final class Container
                 continue;
             }
 
+            // Paramètre annoté #[BindConfig] → valeur lue dans la config
+            $configAttrs = $param->getAttributes(BindConfig::class);
+            if ($configAttrs !== []) {
+                /** @var BindConfig $cfg */
+                $cfg   = $configAttrs[0]->newInstance();
+                $args[] = $this->get(Config::class)->get($cfg->key);
+                continue;
+            }
+
+            // Paramètre annoté #[BindAdapter] → singleton résolu depuis le container
+            $adapterAttrs = $param->getAttributes(BindAdapter::class);
+            if ($adapterAttrs !== []) {
+                /** @var BindAdapter $adapter */
+                $adapter = $adapterAttrs[0]->newInstance();
+                $args[]  = $this->get($adapter->adapterClass);
+                continue;
+            }
+
             if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                 $args[] = $this->get($type->getName());
             } elseif ($param->isDefaultValueAvailable()) {
@@ -208,6 +227,14 @@ final class Container
                     /** @var Bind $from */
                     $from = $fromAttrs[0]->newInstance();
                     $parentDeps[] = $this->resolveBind($from);
+                } elseif ($param->getAttributes(BindConfig::class) !== []) {
+                    /** @var BindConfig $cfg */
+                    $cfg          = $param->getAttributes(BindConfig::class)[0]->newInstance();
+                    $parentDeps[] = $this->get(Config::class)->get($cfg->key);
+                } elseif ($param->getAttributes(BindAdapter::class) !== []) {
+                    /** @var BindAdapter $adapter */
+                    $adapter      = $param->getAttributes(BindAdapter::class)[0]->newInstance();
+                    $parentDeps[] = $this->get($adapter->adapterClass);
                 } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     $parentDeps[] = $this->get($type->getName());
                 } elseif ($param->isDefaultValueAvailable()) {

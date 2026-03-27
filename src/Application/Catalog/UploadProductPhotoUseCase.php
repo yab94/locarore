@@ -6,6 +6,7 @@ namespace Rore\Application\Catalog;
 
 use Rore\Framework\Bootstrap\Config;
 use Rore\Framework\Di\Bind;
+use Rore\Framework\Di\BindConfig;
 use Rore\Framework\File\FileUploader;
 use Rore\Framework\File\ImageManager;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
@@ -29,9 +30,9 @@ class UploadProductPhotoUseCase
             );
         })]
         private ImageManager               $imageManager,
-        #[Bind(static function (Config $c): int { return $c->getInt('upload.max_width'); })]
+        #[BindConfig('upload.max_width')]
         private int                        $maxWidth,
-        #[Bind(static function (Config $c): int { return $c->getInt('upload.max_height'); })]
+        #[BindConfig('upload.max_height')]
         private int                        $maxHeight,
     ) {}
 

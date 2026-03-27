@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rore\Framework\Security;
 
+use Rore\Framework\Di\BindAdapter;
+use Rore\Framework\Session\PhpSession;
 use Rore\Framework\Session\SessionInterface;
 
 /**
@@ -18,6 +20,7 @@ final class CsrfTokenManager
     private const POST_KEY    = '_csrf';
 
     public function __construct(
+        #[BindAdapter(PhpSession::class)]
         private readonly SessionInterface $session,
     ) {}
 
