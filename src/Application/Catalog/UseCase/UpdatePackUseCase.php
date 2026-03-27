@@ -7,7 +7,7 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessService;
+use Rore\Application\Catalog\Service\SlugUniquenessService;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;
 

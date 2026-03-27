@@ -6,7 +6,6 @@ namespace Rore\Domain\Catalog\Repository;
 
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Infrastructure\Persistence\MySqlSearchRepository;
 
 interface SearchRepositoryInterface
 {

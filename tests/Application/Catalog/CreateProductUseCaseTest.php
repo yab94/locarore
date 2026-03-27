@@ -12,7 +12,7 @@ use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
-use Rore\Domain\Catalog\Service\SlugUniquenessService;
+use Rore\Application\Catalog\Service\SlugUniquenessService;
 
 // ─── Stubs ───────────────────────────────────────────────────────────────────
 

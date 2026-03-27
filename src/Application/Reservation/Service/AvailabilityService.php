@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Domain\Reservation\Service;
+namespace Rore\Application\Reservation\Service;
 
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;

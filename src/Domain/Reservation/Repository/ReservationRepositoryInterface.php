@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Rore\Domain\Reservation\Repository;
 
 use Rore\Domain\Reservation\Entity\Reservation;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 
 interface ReservationRepositoryInterface
 {

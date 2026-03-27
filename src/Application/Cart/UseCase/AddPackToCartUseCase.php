@@ -7,7 +7,7 @@ namespace Rore\Application\Cart\UseCase;
 use Rore\Domain\Cart\Service\CartService;
 use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Domain\Reservation\Service\AvailabilityService;
+use Rore\Application\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;

@@ -7,7 +7,7 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessService;
+use Rore\Application\Catalog\Service\SlugUniquenessService;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use RRB\Di\BindAdapter;
 

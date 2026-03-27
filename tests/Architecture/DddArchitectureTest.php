@@ -152,11 +152,11 @@ final class DddArchitectureTest
             // Les interfaces (ports) et les abstraits sont toujours OK
             if ($ref->isInterface() || $ref->isAbstract()) continue;
 
-            // Les classes concrètes doivent se terminer par UseCase
+            // Les classes concrètes doivent se terminer par UseCase ou Service
             $shortName = $ref->getShortName();
-            if (!str_ends_with($shortName, 'UseCase')) {
+            if (!str_ends_with($shortName, 'UseCase') && !str_ends_with($shortName, 'Service')) {
                 $violations[] = sprintf(
-                    '%s — classe concrète non-UseCase en Application (renommer en *UseCase ou déplacer en Infrastructure)',
+                    '%s — classe concrète non-UseCase/Service en Application (renommer en *UseCase, *Service ou déplacer en Infrastructure)',
                     $className,
                 );
             }

@@ -8,7 +8,7 @@ use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
-use Rore\Domain\Catalog\Service\SlugUniquenessService;
+use Rore\Application\Catalog\Service\SlugUniquenessService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlTagRepository;
 use RRB\Di\BindAdapter;

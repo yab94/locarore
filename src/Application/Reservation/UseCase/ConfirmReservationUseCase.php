@@ -6,7 +6,7 @@ namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
 use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
-use Rore\Domain\Reservation\Service\AvailabilityService;
+use Rore\Application\Reservation\Service\AvailabilityService;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use RRB\Di\BindAdapter;

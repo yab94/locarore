@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Rore\Domain\Settings\Repository;
 
 use Rore\Domain\Settings\Entity\Setting;
-use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 
 interface SettingsRepositoryInterface
 {

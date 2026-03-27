@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Rore\Domain\Catalog\Repository;
 
 use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
 
 interface PackRepositoryInterface
 {
