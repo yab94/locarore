@@ -37,9 +37,15 @@ class ProductController extends AdminController
     #[Route('GET', '/admin/produits')]
     public function index(): void
     {
+        $categories = $this->getAllCategoriesUseCase->execute();
+        $categoriesById = [];
+        foreach ($categories as $cat) {
+            $categoriesById[$cat->getId()] = $cat;
+        }
         $this->render('admin/products/list', [
-            'title'    => 'Produits',
-            'products' => $this->getAllProductsUseCase->execute(),
+            'title'          => 'Produits',
+            'products'       => $this->getAllProductsUseCase->execute(),
+            'categoriesById' => $categoriesById,
         ]);
     }
 

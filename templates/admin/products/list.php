@@ -3,9 +3,10 @@ use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
 
-$html     = HtmlEncoder::cast($tpl->get('html'));
-$url      = UrlResolver::cast($tpl->get('url'));
-$products = Cast::array($tpl->tryGet('products', []));
+$html           = HtmlEncoder::cast($tpl->get('html'));
+$url            = UrlResolver::cast($tpl->get('url'));
+$products       = Cast::array($tpl->tryGet('products', []));
+$categoriesById = Cast::array($tpl->tryGet('categoriesById', []));
 // $partial is injected by the Template engine — not a param
 ?>
 <div class="flex items-center justify-between mb-6">
@@ -41,7 +42,9 @@ $products = Cast::array($tpl->tryGet('products', []));
                             <?= $html($p->getName()) ?>
                         </div>
                     </td>
-                    <td class="px-6 py-4 text-gray-500">—</td>
+                    <td class="px-6 py-4 text-gray-500">
+                        <?= $html(($categoriesById[$p->getCategoryId()] ?? null)?->getName() ?? '—') ?>
+                    </td>
                     <td class="px-6 py-4 text-right">
                         <?= $p->getStock() ?>
                         <?php if ($p->getStockOnDemand() > 0): ?>
