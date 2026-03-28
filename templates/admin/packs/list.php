@@ -43,9 +43,27 @@ $categories = Cast::array($tpl->tryGet('categories', []));
             </thead>
             <tbody class="divide-y divide-gray-100">
                 <?php foreach ($packs as $pack): ?>
-                <tr class="hover:bg-gray-50 transition">
+                <?php
+                $hasZeroStock = false;
+                foreach ($pack->getItems() as $item) {
+                    if (!$item->isFixed()) {
+                        continue;
+                    }
+                    $fixedProduct = $products[$item->getProductId()] ?? null;
+                    if ($fixedProduct !== null && $fixedProduct->getTotalStock() <= 0) {
+                        $hasZeroStock = true;
+                        break;
+                    }
+                }
+                ?>
+                <tr class="<?= $hasZeroStock ? 'bg-red-50/70 hover:bg-red-50' : 'hover:bg-gray-50' ?> transition">
                     <td class="px-6 py-4 font-medium text-gray-800">
                         <?= $html($pack->getName()) ?>
+                        <?php if ($hasZeroStock): ?>
+                            <span class="ml-2 inline-flex items-center gap-1 rounded-full bg-red-100 text-red-700 px-2 py-0.5 text-xs font-semibold ring-1 ring-red-200">
+                                ⚠ Stock 0
+                            </span>
+                        <?php endif; ?>
                         <div class="text-xs text-gray-400 font-normal"><?= $config->getString('seo.products_base_url'); ?>/<?= $html($pack->getSlug()) ?></div>
                     </td>
                     <td class="px-6 py-4 text-gray-500">
@@ -54,9 +72,19 @@ $categories = Cast::array($tpl->tryGet('categories', []));
                             <span class="text-gray-300">—</span>
                         <?php else: ?>
                             <?php foreach ($items as $item): ?>
-                                <span class="inline-flex items-center gap-1 bg-gray-100 rounded px-2 py-0.5 text-xs mr-1 mb-1">
+                                <?php
+                                $itemOutOfStock = false;
+                                if ($item->isFixed()) {
+                                    $fixedProduct = $products[$item->getProductId()] ?? null;
+                                    $itemOutOfStock = $fixedProduct !== null && $fixedProduct->getTotalStock() <= 0;
+                                }
+                                ?>
+                                <span class="inline-flex items-center gap-1 rounded px-2 py-0.5 text-xs mr-1 mb-1 <?= $itemOutOfStock ? 'bg-red-100 text-red-700 ring-1 ring-red-200 font-semibold' : 'bg-gray-100' ?>">
                                     <?php if ($item->isFixed()): ?>
                                         <?= $html($products[$item->getProductId()]?->getName() ?? 'Produit #' . $item->getProductId()) ?>
+                                        <?php if ($itemOutOfStock): ?>
+                                            <span title="Stock nul">⚠</span>
+                                        <?php endif; ?>
                                     <?php else: ?>
                                         Produit &quot;<?= $html($categories[$item->getCategoryId()]?->getName()) ?>&quot;</em>
                                     <?php endif; ?>

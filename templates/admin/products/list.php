@@ -31,7 +31,8 @@ $categoriesById = Cast::array($tpl->tryGet('categoriesById', []));
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php foreach ($products as $p): ?>
-                <tr class="hover:bg-gray-50">
+                <?php $isOutOfStock = $p->getTotalStock() <= 0; ?>
+                <tr class="<?= $isOutOfStock ? 'bg-red-50/70 hover:bg-red-50' : 'hover:bg-gray-50' ?>">
                     <td class="px-6 py-4 font-medium text-gray-800">
                         <div class="flex items-center gap-3">
                             <?php if ($photo = $p->getMainPhoto()): ?>
@@ -39,13 +40,18 @@ $categoriesById = Cast::array($tpl->tryGet('categoriesById', []));
                             <?php else: ?>
                                 <div class="w-10 h-10 bg-gray-100 rounded"></div>
                             <?php endif; ?>
-                            <?= $html($p->getName()) ?>
+                            <span><?= $html($p->getName()) ?></span>
+                            <?php if ($isOutOfStock): ?>
+                                <span class="inline-flex items-center gap-1 rounded-full bg-red-100 text-red-700 px-2 py-0.5 text-xs font-semibold ring-1 ring-red-200">
+                                    ⚠ Stock 0
+                                </span>
+                            <?php endif; ?>
                         </div>
                     </td>
                     <td class="px-6 py-4 text-gray-500">
                         <?= $html(($categoriesById[$p->getCategoryId()] ?? null)?->getName() ?? '—') ?>
                     </td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-6 py-4 text-right <?= $isOutOfStock ? 'text-red-700 font-semibold' : '' ?>">
                         <?= $p->getStock() ?>
                         <?php if ($p->getStockOnDemand() > 0): ?>
                             <span class="text-xs text-amber-600 font-medium">
