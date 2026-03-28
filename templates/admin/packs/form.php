@@ -64,23 +64,28 @@ $categories = Cast::array($tpl->tryGet('categories', []));
         </div>
 
         <!-- Prix -->
-        <div class="flex flex-wrap gap-4">
-            <div class="w-48">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Prix par jour (€) *</label>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Forfait de base (€) *</label>
+                <p class="text-xs text-gray-400 mb-1">Couvre 1 à 2 jours de location</p>
                 <input type="number" name="price_per_day" min="0" step="0.01" required
                        value="<?= number_format($pack?->getPricePerDay() ?? 0, 2, '.', '') ?>"
                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
             </div>
-            <div class="w-56">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Supplément semaine (€/j au-delà de 2j)</label>
-                <input type="number" name="price_extra_weekday" min="0" step="0.01"
-                       value="<?= number_format($pack?->getPriceExtraWeekday() ?? 0, 2, '.', '') ?>"
-                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
-            </div>
-            <div class="w-56">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Supplément week-end (€/j au-delà de 2j)</label>
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Supp./jour WE (€)</label>
+                <p class="text-xs text-gray-400 mb-1">Sam+dim inclus, ≤ 4 jours</p>
                 <input type="number" name="price_extra_weekend" min="0" step="0.01"
                        value="<?= number_format($pack?->getPriceExtraWeekend() ?? 0, 2, '.', '') ?>"
+                       class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Supp./jour semaine (€)</label>
+                <p class="text-xs text-gray-400 mb-1">Sinon (hors WE ou &gt; 4 jours)</p>
+                <input type="number" name="price_extra_weekday" min="0" step="0.01"
+                       value="<?= number_format($pack?->getPriceExtraWeekday() ?? 0, 2, '.', '') ?>"
                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-600">
             </div>
         </div>

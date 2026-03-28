@@ -131,8 +131,8 @@ class PackController extends AdminController
     private function parseItems(): array
     {
         $items = [];
-        $productIds = $this->request->body->getArray('item_product_id');
-        $quantities = $this->request->body->getArray('item_quantity');
+        $productIds = $this->request->body->getArray('item_product_id', []);
+        $quantities = $this->request->body->getArray('item_quantity', []);
         foreach ($productIds as $i => $pid) {
             $pid = (int) $pid;
             $qty = (int) ($quantities[$i] ?? 0);
@@ -147,8 +147,8 @@ class PackController extends AdminController
     private function parseSlots(): array
     {
         $slots = [];
-        $categoryIds = $this->request->body->getArray('slot_category_id');
-        $quantities  = $this->request->body->getArray('slot_quantity');
+        $categoryIds = $this->request->body->getArray('slot_category_id', []);
+        $quantities  = $this->request->body->getArray('slot_quantity', []);
         foreach ($categoryIds as $i => $cid) {
             $cid = (int) $cid;
             $qty = (int) ($quantities[$i] ?? 0);

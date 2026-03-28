@@ -13,6 +13,9 @@ On ne verra pas comme un problème les BindAdapter de la couche Application mêm
 
 
 
+- Param 'slot_category_id' is required. 
 
-- faire eressortir stock à zero
+
+
+
 - aligné les libelle prix dans pack sur produit
