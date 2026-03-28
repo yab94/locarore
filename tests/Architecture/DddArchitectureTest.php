@@ -453,8 +453,6 @@ final class DddArchitectureTest
                 continue;
             }
 
-            if ($ref->isAbstract()) continue;
-
             $constructor = $ref->getConstructor();
             if ($constructor === null) continue;
 
@@ -467,8 +465,11 @@ final class DddArchitectureTest
 
                 $typeName = $type->getName();
 
-                // Seuls les *UseCase (Rore\Application) sont autorisés comme injection concrète
+                // *UseCase (Application) → OK
                 if (str_ends_with($typeName, 'UseCase')) continue;
+
+                // Presentation → Presentation → OK (helpers de vue, SEO, etc.)
+                if (str_starts_with($typeName, 'Rore\\Presentation\\')) continue;
 
                 // Les types hors Rore\ (framework, PHP natif) sont tolérés
                 if (!str_starts_with($typeName, 'Rore\\')) continue;
