@@ -19,7 +19,7 @@ abstract class Controller
         readonly HttpRequest $request,
         readonly HttpResponse $response,
         readonly UrlResolver $urlResolver,
-        private readonly Config $config,
+        readonly Config $config,
         private readonly HtmlEncoder $html,
         #[BindAdapter(PhpSession::class)]
         private readonly SessionInterface $session,
