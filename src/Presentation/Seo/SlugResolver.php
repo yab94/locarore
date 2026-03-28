@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Presentation\Seo;
 
 use Rore\Domain\Catalog\Entity\Category;
+use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
 use RRB\Di\BindConfig;
@@ -25,6 +26,8 @@ final class SlugResolver
         private string $categoriesBaseUrl,
         #[BindConfig('seo.products_base_url')]
         private string $productsBaseUrl,
+        #[BindConfig('seo.packs_base_url')]
+        private string $packsBaseUrl,
         #[BindConfig('seo.tags_base_url')]
         private string $tagsBaseUrl,
     ) {
@@ -93,6 +96,14 @@ final class SlugResolver
         }
 
         return $this->productsBaseUrl . '/' . $this->categoryPath($category, $allCategories) . '/' . $product->getSlug();
+    }
+
+    /**
+     * URL canonique d'un pack.
+     */
+    public function packUrl(Pack $pack): string
+    {
+        return $this->packsBaseUrl . '/' . $pack->getSlug();
     }
 
     /**

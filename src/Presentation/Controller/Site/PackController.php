@@ -41,10 +41,9 @@ class PackController extends SiteController
             ? $this->findCategoryById($mainProduct->getCategoryId(), $allCategories)
             : null;
 
-        $breadcrumb = $this->buildCategoryBreadcrumb($mainCategory, $allCategories);
+        $catChain = $this->buildCategoryBreadcrumb($mainCategory, $allCategories);
 
-        $canonicalUrl = $this->slugResolver->siteUrl() . $this->config->getString('seo.packs_base_url', '/packs') . '/' . $pack->getSlug();
-
+        $canonicalUrl  = $this->slugResolver->siteUrl() . $this->slugResolver->packUrl($pack);
         $mainPhoto     = $mainProduct?->getMainPhoto();
         $ogImage       = $mainPhoto !== null
             ? $this->slugResolver->siteUrl() . $mainPhoto->getPublicPath()
@@ -52,9 +51,32 @@ class PackController extends SiteController
         $ogImageWidth  = $mainPhoto !== null ? 0 : 1200;
         $ogImageHeight = $mainPhoto !== null ? 0 : 630;
 
+        $titleParts = [$pack->getName()];
+        foreach (array_reverse($catChain) as $crumb) {
+            $titleParts[] = $crumb->getName();
+        }
+        $titleParts[] = $this->settings->get('site.name');
+
+        $descParts = [];
+        if ($pack->getDescription()) {
+            $descParts[] = $pack->getDescription();
+        }
+        foreach ($catChain as $crumb) {
+            if ($crumb->getDescriptionShort()) {
+                $descParts[] = $crumb->getDescriptionShort();
+            }
+        }
+        if (empty($descParts)) {
+            $descParts[] = $pack->getName()
+                . ($mainCategory ? ' — ' . $mainCategory->getName() : '')
+                . ' — ' . $this->settings->get('site.tagline');
+        }
+
+        $breadcrumb = [...$catChain, $pack];
+
         $meta = new PageMeta(
-            title:         $pack->getName() . ' — ' . $this->config->getString('app.name'),
-            description:   $pack->getDescription() ?? ($pack->getName() . ' — pack de location'),
+            title:         $titleParts,
+            description:   $descParts,
             canonicalUrl:  $canonicalUrl,
             ogImage:       $ogImage,
             ogImageWidth:  $ogImageWidth,
@@ -68,7 +90,7 @@ class PackController extends SiteController
             'productsById'      => $productsById,
             'mainProduct'       => $mainProduct,
             'mainCategory'      => $mainCategory,
-            'breadcrumb'        => [ ...$breadcrumb, $pack ],
+            'breadcrumb'        => $breadcrumb,
             'allCategories'     => $allCategories,
             'slotsWithProducts' => $result['slotsWithProducts'],
             'packSelections'    => $this->cartState()->getPackSelections($pack->getId()),
