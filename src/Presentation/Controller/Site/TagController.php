@@ -25,9 +25,7 @@ class TagController extends SiteController
         $result = $this->getTagWithItemsUseCase->execute($slug);
 
         if ($result === null) {
-            $this->response->setStatusCode(404);
-            require 'errors/404.php';
-            return;
+            $this->abort404();
         }
 
         $tag          = $result['tag'];

@@ -28,9 +28,7 @@ class CategoryController extends SiteController
         $result = $this->getCategoryWithItemsUseCase->execute($path);
 
         if ($result === null || !$result['category']->isActive()) {
-            $this->response->setStatusCode(404);
-            require 'errors/404.php';
-            return;
+            $this->abort404();
         }
 
         $category     = $result['category'];

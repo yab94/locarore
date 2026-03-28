@@ -46,6 +46,13 @@ abstract class SiteController extends Controller
         parent::render($template, $data, $layout === '' ? null : ($layout ?? 'layout/site'));
     }
 
+    protected function abort404(): never
+    {
+        $this->response->setStatusCode(404);
+        $this->render('errors/404');
+        exit;
+    }
+
     /** @return array{url: string, w: int, h: int} */
     protected function defaultOgImage(): array
     {

@@ -45,3 +45,5 @@ $packs    = Cast::array($tpl->tryGet('packs', []));
     </div>
 </section>
 <?php endif; ?>
+
+<?= $partial('partials/breadcrumb-ld-json') ?>

@@ -79,3 +79,5 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
         Contactez-nous
     </a>
 </section>
+
+<?= $partial('partials/ld-organization') ?>

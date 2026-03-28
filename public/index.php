@@ -31,5 +31,14 @@ $router->loadRoutes($routes);
 
 $container->get(\RRB\Http\UrlResolver::class)->loadRoutes('Rore\Presentation\Controller', $routes);
 
+// ─── Redirection HTTPS ────────────────────────────────────────────────────
+if ($config->getString('seo.force_https', '') === $config->getString('app.env', '')) {
+    $proto = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? $_SERVER['REQUEST_SCHEME'] ?? '';
+    if ($proto !== '' && $proto !== 'https') {
+        header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], true, 301);
+        exit;
+    }
+}
+
 // ─── Dispatch ──────────────────────────────────────────────────────────────
 $router->dispatch();

@@ -23,9 +23,7 @@ class PackController extends SiteController
         $result = $this->getPackWithDetailsUseCase->execute($slug);
 
         if ($result === null || !$result['pack']->isActive()) {
-            $this->response->setStatusCode(404);
-            require 'errors/404.php';
-            return;
+            $this->abort404();
         }
 
         $pack          = $result['pack'];

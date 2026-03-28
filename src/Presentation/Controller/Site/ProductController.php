@@ -29,9 +29,7 @@ class ProductController extends SiteController
         $result = $this->getProductWithDetailsUseCase->execute($slug);
 
         if ($result === null || !$result['product']->isActive()) {
-            $this->response->setStatusCode(404);
-            require 'errors/404.php';
-            return;
+            $this->abort404();
         }
 
         $product       = $result['product'];
