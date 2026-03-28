@@ -35,8 +35,8 @@ class CartController extends SiteController
     public function index(): void
     {
         $cart      = $this->cartState();
-        $startDate = $cart->hasDates() ? new \DateTimeImmutable($cart->getStartDate()) : null;
-        $endDate   = $cart->hasDates() ? new \DateTimeImmutable($cart->getEndDate())   : null;
+        $startDate = $cart->hasDates() ? $cart->getStartDate() : null;
+        $endDate   = $cart->hasDates() ? $cart->getEndDate()   : null;
 
         $data = $this->getCartDataUseCase->execute(
             $cart->getItems(),

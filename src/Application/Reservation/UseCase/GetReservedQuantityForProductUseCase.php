@@ -18,8 +18,12 @@ final class GetReservedQuantityForProductUseCase
         private readonly ReservationRepositoryInterface $reservationRepo,
     ) {}
 
-    public function execute(int $productId, string $startDate, string $endDate): int
+    public function execute(int $productId, \DateTimeImmutable $startDate, \DateTimeImmutable $endDate): int
     {
-        return $this->reservationRepo->countReservedQtyForProduct($productId, $startDate, $endDate);
+        return $this->reservationRepo->countReservedQtyForProduct(
+            $productId,
+            $startDate->format('Y-m-d'),
+            $endDate->format('Y-m-d'),
+        );
     }
 }

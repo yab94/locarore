@@ -19,9 +19,9 @@ final class CartState
      * @param array<int, mixed> $packs  [packId => ['selections' => [...]]]
      */
     public function __construct(
-        private readonly bool    $hasDates,
-        private readonly ?string $startDate,
-        private readonly ?string $endDate,
+        private readonly bool               $hasDates,
+        private readonly ?\DateTimeImmutable $startDate,
+        private readonly ?\DateTimeImmutable $endDate,
         private readonly bool    $isEmpty,
         private readonly int     $itemCount,
         private readonly array   $items,
@@ -29,8 +29,8 @@ final class CartState
     ) {}
 
     public function hasDates(): bool    { return $this->hasDates;  }
-    public function getStartDate(): ?string { return $this->startDate; }
-    public function getEndDate(): ?string   { return $this->endDate;   }
+    public function getStartDate(): ?\DateTimeImmutable { return $this->startDate; }
+    public function getEndDate(): ?\DateTimeImmutable   { return $this->endDate;   }
     public function isEmpty(): bool     { return $this->isEmpty;   }
     public function getItemCount(): int { return $this->itemCount; }
 

@@ -56,8 +56,8 @@ class AddPackToCartUseCase
             }
         }
 
-        $start = new \DateTimeImmutable($this->cart->getStartDate());
-        $end   = new \DateTimeImmutable($this->cart->getEndDate());
+        $start = $this->cart->getStartDate();
+        $end   = $this->cart->getEndDate();
 
         // Vérifier que tous les produits du pack sont disponibles
         if (!$this->availabilityService->isPackAvailable($pack, $productsById, $start, $end)) {

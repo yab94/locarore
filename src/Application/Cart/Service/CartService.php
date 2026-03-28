@@ -28,18 +28,18 @@ final class CartService implements CartServiceInterface
         return isset($cart['start_date'], $cart['end_date']);
     }
 
-    public function getStartDate(): ?string
+    public function getStartDate(): ?\DateTimeImmutable
     {
         $cart = $this->getCart();
         $v = $cart['start_date'] ?? null;
-        return is_string($v) ? $v : null;
+        return is_string($v) ? new \DateTimeImmutable($v) : null;
     }
 
-    public function getEndDate(): ?string
+    public function getEndDate(): ?\DateTimeImmutable
     {
         $cart = $this->getCart();
         $v = $cart['end_date'] ?? null;
-        return is_string($v) ? $v : null;
+        return is_string($v) ? new \DateTimeImmutable($v) : null;
     }
 
     /**
@@ -53,7 +53,7 @@ final class CartService implements CartServiceInterface
 
         if (
             $currentStart !== null
-            && ($currentStart !== $startDate || $currentEnd !== $endDate)
+            && ($currentStart->format('Y-m-d') !== $startDate || $currentEnd?->format('Y-m-d') !== $endDate)
             && (!empty($this->getItems()) || !empty($this->getPacks()))
         ) {
             $this->setCart([]);

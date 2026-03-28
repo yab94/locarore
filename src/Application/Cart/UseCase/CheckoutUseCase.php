@@ -44,6 +44,9 @@ class CheckoutUseCase
             throw new \RuntimeException("Le panier est vide.");
         }
 
+        $start = $this->cart->getStartDate();
+        $end   = $this->cart->getEndDate();
+
         // Calculer le prix unitaire par produit au moment du checkout
         $priceSnapshots = [];
         foreach ($this->cart->getItems() as $productId => $qty) {
@@ -51,8 +54,8 @@ class CheckoutUseCase
             if ($product) {
                 $priceSnapshots[$productId] = $this->pricing->calculate(
                     $product,
-                    $this->cart->getStartDate(),
-                    $this->cart->getEndDate(),
+                    $start,
+                    $end,
                 );
             }
         }
@@ -64,8 +67,8 @@ class CheckoutUseCase
             if ($pack && $pack->isActive()) {
                 $packSnapshots[(int) $packId] = $this->pricing->calculate(
                     $pack,
-                    $this->cart->getStartDate(),
-                    $this->cart->getEndDate(),
+                    $start,
+                    $end,
                 );
             }
         }
@@ -76,8 +79,8 @@ class CheckoutUseCase
             customerPhone:   $customerPhone,
             customerAddress: $customerAddress,
             eventAddress:    $eventAddress,
-            startDate:       $this->cart->getStartDate(),
-            endDate:         $this->cart->getEndDate(),
+            startDate:       $start->format('Y-m-d'),
+            endDate:         $end->format('Y-m-d'),
             items:           $this->cart->getItems(),
             packs:           $packSnapshots,
             notes:           $notes,

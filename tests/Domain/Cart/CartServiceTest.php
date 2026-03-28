@@ -69,8 +69,8 @@ final class CartServiceTest
         $this->cart->setDates('2026-04-01', '2026-04-07');
 
         Assert::true($this->cart->hasDates());
-        Assert::equals('2026-04-01', $this->cart->getStartDate());
-        Assert::equals('2026-04-07', $this->cart->getEndDate());
+        Assert::equals('2026-04-01', $this->cart->getStartDate()->format('Y-m-d'));
+        Assert::equals('2026-04-07', $this->cart->getEndDate()->format('Y-m-d'));
     }
 
     public function testSetDatesSameDatesKeepsItems(): void
@@ -91,7 +91,7 @@ final class CartServiceTest
         $this->cart->setDates('2026-05-01', '2026-05-07');
 
         Assert::equals([], $this->cart->getItems());
-        Assert::equals('2026-05-01', $this->cart->getStartDate());
+        Assert::equals('2026-05-01', $this->cart->getStartDate()->format('Y-m-d'));
     }
 
     public function testSetDatesChangedClearsPacksWhenPacksExist(): void

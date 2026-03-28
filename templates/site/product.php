@@ -94,7 +94,7 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
         <?php else: ?>
             <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6 text-sm text-green-800">
                 <div class="flex items-center justify-between mb-3">
-                    <span>📅 Du <?= htmlspecialchars($cart->getStartDate()) ?> au <?= htmlspecialchars($cart->getEndDate()) ?></span>
+                    <span>📅 Du <?= htmlspecialchars($cart->getStartDate()->format('d/m/Y')) ?> au <?= htmlspecialchars($cart->getEndDate()->format('d/m/Y')) ?></span>
                     <button type="button" onclick="document.getElementById('edit-dates-form').classList.toggle('hidden')"
                             class="ml-2 text-green-600 underline text-xs">
                         Modifier
@@ -104,11 +104,11 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
                       class="hidden flex-col sm:flex-row gap-3 flex">
                     <?= $partial('partials/csrf') ?>
                     <input type="date" name="start_date" required
-                           value="<?= htmlspecialchars($cart->getStartDate()) ?>"
+                           value="<?= htmlspecialchars($cart->getStartDate()->format('Y-m-d')) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
                     <input type="date" name="end_date" required
-                           value="<?= htmlspecialchars($cart->getEndDate()) ?>"
+                           value="<?= htmlspecialchars($cart->getEndDate()->format('Y-m-d')) ?>"
                            class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
                            min="<?= date('Y-m-d') ?>">
                     <input type="hidden" name="redirect" value="<?= $html($slug->productUrl($product, $allCategories)) ?>">

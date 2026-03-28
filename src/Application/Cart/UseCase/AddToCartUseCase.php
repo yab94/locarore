@@ -37,8 +37,8 @@ class AddToCartUseCase
             throw new \RuntimeException("Produit indisponible.");
         }
 
-        $start = new \DateTimeImmutable($this->cart->getStartDate());
-        $end   = new \DateTimeImmutable($this->cart->getEndDate());
+        $start = $this->cart->getStartDate();
+        $end   = $this->cart->getEndDate();
 
         // Quantité déjà dans le panier pour ce produit
         $alreadyInCart = $this->cart->getItems()[$productId] ?? 0;

@@ -10,9 +10,9 @@ interface CartServiceInterface
 
     public function hasDates(): bool;
 
-    public function getStartDate(): ?string;
+    public function getStartDate(): ?\DateTimeImmutable;
 
-    public function getEndDate(): ?string;
+    public function getEndDate(): ?\DateTimeImmutable;
 
     public function setDates(string $startDate, string $endDate): void;
 
