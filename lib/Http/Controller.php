@@ -18,7 +18,7 @@ abstract class Controller
     public function __construct(
         readonly HttpRequest $request,
         readonly HttpResponse $response,
-        private readonly Config $config,
+        readonly Config $config,
         private readonly HtmlEncoder $html,
         readonly UrlResolver $urlResolver,
         #[BindAdapter(PhpSession::class)]
