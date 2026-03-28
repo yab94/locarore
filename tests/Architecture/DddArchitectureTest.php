@@ -15,8 +15,9 @@ declare(strict_types=1);
  * Framework : Couche framework de base accessible par toutes les couches
  *             (Config, Container, Cast, Typable, etc.)
  *
- * Contrainte supplémentaire :
+ * Contraintes supplémentaires :
  *   Application ne contient QUE des UseCases (*UseCase) et des ports (interfaces).
+ *   Presentation\Controller n'injecte QUE des *UseCase (pas de service technique direct).
  */
 final class DddArchitectureTest
 {
@@ -433,6 +434,58 @@ final class DddArchitectureTest
             0,
             count($violations),
             "\n\nUseCases avec injection de classe concrète :\n\n" . implode("\n\n", $violations)
+        );
+    }
+
+    public function testControllerConstructorsOnlyInjectUseCases(): void
+    {
+        $violations = [];
+
+        foreach ($this->findPhpFiles(BASE_PATH . '/src/Presentation/Controller') as $file) {
+            $className = $this->getClassName($file);
+            if ($className === null) continue;
+
+            try {
+                require_once $file;
+                if (!class_exists($className)) continue;
+                $ref = new ReflectionClass($className);
+            } catch (Throwable) {
+                continue;
+            }
+
+            if ($ref->isAbstract()) continue;
+
+            $constructor = $ref->getConstructor();
+            if ($constructor === null) continue;
+
+            foreach ($constructor->getParameters() as $param) {
+                if ($param->isVariadic()) continue;
+
+                $type = $param->getType();
+                if ($type === null || !($type instanceof ReflectionNamedType)) continue;
+                if ($type->isBuiltin()) continue;
+
+                $typeName = $type->getName();
+
+                // Seuls les *UseCase (Rore\Application) sont autorisés comme injection concrète
+                if (str_ends_with($typeName, 'UseCase')) continue;
+
+                // Les types hors Rore\ (framework, PHP natif) sont tolérés
+                if (!str_starts_with($typeName, 'Rore\\')) continue;
+
+                $violations[] = sprintf(
+                    "%s::__construct() — \$%s : %s\n   → les contrôleurs ne doivent injecter que des *UseCase",
+                    $className,
+                    $param->getName(),
+                    $typeName,
+                );
+            }
+        }
+
+        Assert::equals(
+            0,
+            count($violations),
+            "\n\nContrôleurs avec injection de non-UseCase :\n\n" . implode("\n\n", $violations)
         );
     }
 }

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Rore\Presentation\Security;
+namespace Rore\Infrastructure\Security;
 
-use RRB\Bootstrap\Config;
+use Rore\Application\Auth\Port\AdminLoginRateLimiterInterface;
 use RRB\Di\BindAdapter;
 use RRB\Di\BindConfig;
 use RRB\Security\RateLimiter;
 use RRB\Session\PhpSession;
 use RRB\Session\SessionInterface;
 
-final class LoginRateLimiter extends RateLimiter
+final class LoginRateLimiterAdapter extends RateLimiter implements AdminLoginRateLimiterInterface
 {
     public function __construct(
         #[BindAdapter(PhpSession::class)]
@@ -24,4 +24,3 @@ final class LoginRateLimiter extends RateLimiter
         parent::__construct($session, 'admin_login', $maxAttempts, $lockoutSeconds);
     }
 }
-

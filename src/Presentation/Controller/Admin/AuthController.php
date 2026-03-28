@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller\Admin;
 
 use RRB\Http\Route;
+use Rore\Application\Auth\UseCase\AuthenticateAdminUseCase;
 use Rore\Presentation\Controller\Controller;
-use Rore\Presentation\Security\LoginRateLimiter;
 
 class AuthController extends Controller
 {
     public function __construct(
-        private readonly LoginRateLimiter $rateLimiter,
+        private readonly AuthenticateAdminUseCase $authenticateAdmin,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -31,24 +31,15 @@ class AuthController extends Controller
     {
         $this->requirePost();
 
-        if ($this->rateLimiter->isLocked()) {
-            $minutes = (int) ceil($this->rateLimiter->secondsUntilUnlock() / 60);
-            $this->flash('error', "Trop de tentatives. Réessayez dans $minutes min.");
-            $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
-        }
-
         $password = $this->request->body->getString('password');
-        $expected = (string) $this->config->getString('admin.password', '');
+        $result   = $this->authenticateAdmin->execute($password);
 
-        if ($password === $expected) {
-            $this->rateLimiter->reset();
+        if ($result['success']) {
             $this->session->set('admin_logged_in', true);
             $this->redirect($this->urlResolver->resolve(DashboardController::class . '.index'));
         }
 
-        $this->rateLimiter->hit();
-
-        $this->flash('error', 'Mot de passe incorrect.');
+        $this->flash('error', $result['error'] ?? 'Erreur inconnue.');
         $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
     }
 

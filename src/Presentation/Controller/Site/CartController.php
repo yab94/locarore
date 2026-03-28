@@ -6,22 +6,19 @@ namespace Rore\Presentation\Controller\Site;
 
 use Rore\Application\Cart\UseCase\AddToCartUseCase;
 use Rore\Application\Cart\UseCase\AddPackToCartUseCase;
+use Rore\Application\Cart\UseCase\ClearCartUseCase;
 use Rore\Application\Cart\UseCase\GetCartDataUseCase;
 use Rore\Application\Cart\UseCase\CheckoutUseCase;
 use Rore\Application\Cart\UseCase\RemoveFromCartUseCase;
 use Rore\Application\Cart\UseCase\RemovePackFromCartUseCase;
 use Rore\Application\Cart\UseCase\SetCartDatesUseCase;
-use Rore\Application\Cart\Port\CartServiceInterface;
-use Rore\Application\Cart\Service\CartService;
-use RRB\Di\BindAdapter;
 use RRB\Http\Route;
 use RRB\View\PageMeta;
 
 class CartController extends SiteController
 {
     public function __construct(
-        #[BindAdapter(CartService::class)]
-        private readonly CartServiceInterface                 $cartService,
+        private readonly ClearCartUseCase            $clearCartUseCase,
         private readonly GetCartDataUseCase          $getCartDataUseCase,
         private readonly SetCartDatesUseCase         $setCartDatesUseCase,
         private readonly AddToCartUseCase            $addToCartUseCase,
@@ -75,7 +72,7 @@ class CartController extends SiteController
 
         // Dates vides = intention de réinitialiser le panier
         if ($startDate === '' || $endDate === '') {
-            $this->cartService->clear();
+            $this->clearCartUseCase->execute();
             $this->redirect($this->urlResolver->resolve(self::class . '.index'));
             return;
         }
