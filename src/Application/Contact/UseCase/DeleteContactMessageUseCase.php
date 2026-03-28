@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Rore\Application\Contact\UseCase;
 
 use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
+use Rore\Infrastructure\Persistence\MySqlContactMessageRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 final class DeleteContactMessageUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlContactMessageRepository::class)]
+        #[BindAdapter(MySqlContactMessageRepositoryAdapter::class)]
         private readonly ContactMessageRepositoryInterface $repo,
     ) {}
 

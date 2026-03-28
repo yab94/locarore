@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 class ReorderProductPhotosUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
     ) {}
 

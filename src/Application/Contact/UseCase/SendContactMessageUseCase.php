@@ -9,13 +9,13 @@ use Rore\Application\Settings\UseCase\GetSettingUseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
 use Rore\Infrastructure\Mail\SmtpMailerAdapter;
-use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
+use Rore\Infrastructure\Persistence\MySqlContactMessageRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 final class SendContactMessageUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlContactMessageRepository::class)]
+        #[BindAdapter(MySqlContactMessageRepositoryAdapter::class)]
         private readonly ContactMessageRepositoryInterface $repo,
         #[BindAdapter(SmtpMailerAdapter::class)]
         private readonly MailerInterface                   $mailer,

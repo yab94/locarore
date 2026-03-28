@@ -10,8 +10,8 @@ use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
 use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 class AddPackToCartUseCase
@@ -19,9 +19,9 @@ class AddPackToCartUseCase
     public function __construct(
         #[BindAdapter(CartService::class)]
         private CartServiceInterface                 $cart,
-        #[BindAdapter(MySqlPackRepository::class)]
+        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private PackRepositoryInterface $packRepository,
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
         #[BindAdapter(AvailabilityService::class)]
         private AvailabilityServiceInterface   $availabilityService,

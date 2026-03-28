@@ -12,7 +12,7 @@ use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Application\Search\Port\SearchRepositoryInterface;
 use Rore\Infrastructure\Database\MysqlDatabase;
 
-class MySqlSearchRepository implements SearchRepositoryInterface
+class MySqlSearchRepositoryAdapter implements SearchRepositoryInterface
 {
     public function __construct(
         private readonly MysqlDatabase $connection

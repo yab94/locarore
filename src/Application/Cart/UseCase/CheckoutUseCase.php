@@ -11,8 +11,8 @@ use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
 use Rore\Domain\Catalog\Service\PricingServiceInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 class CheckoutUseCase
@@ -20,9 +20,9 @@ class CheckoutUseCase
     public function __construct(
         #[BindAdapter(CartService::class)]
         private CartServiceInterface                 $cart,
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
-        #[BindAdapter(MySqlPackRepository::class)]
+        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private PackRepositoryInterface $packRepository,
         private CreateReservationUseCase   $createReservation,
         #[BindAdapter(PricingService::class)]

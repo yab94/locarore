@@ -6,7 +6,7 @@ namespace Rore\Application\Reservation\Service;
 
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 
@@ -17,7 +17,7 @@ use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 class AvailabilityService implements AvailabilityServiceInterface
 {
     public function __construct(
-        #[BindAdapter(MySqlReservationRepository::class)]
+        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private ReservationRepositoryInterface $reservationRepository,
     ) {}
 

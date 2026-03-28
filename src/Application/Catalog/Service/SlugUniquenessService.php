@@ -7,9 +7,9 @@ namespace Rore\Application\Catalog\Service;
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Catalog\Port\PackRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
 use RRB\Di\BindAdapter;
 use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;
 
@@ -20,11 +20,11 @@ use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;
 final class SlugUniquenessService implements SlugUniquenessServiceInterface
 {
     public function __construct(
-        #[BindAdapter(MySqlCategoryRepository::class)]
+        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private CategoryRepositoryInterface $categoryRepo,
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlPackRepository::class)]
+        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private PackRepositoryInterface $packRepo,
     ) {}
 

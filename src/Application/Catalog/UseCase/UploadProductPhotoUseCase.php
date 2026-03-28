@@ -11,13 +11,13 @@ use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Infrastructure\File\FileUploaderAdapter;
 use Rore\Infrastructure\File\ImageManagerAdapter;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 class UploadProductPhotoUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
         #[BindAdapter(FileUploaderAdapter::class)]
         private FileUploaderInterface      $fileUploader,

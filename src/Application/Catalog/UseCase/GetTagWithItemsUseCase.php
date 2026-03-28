@@ -7,9 +7,9 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Catalog\Port\TagRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
-use Rore\Infrastructure\Persistence\MySqlTagRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlTagRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 /**
@@ -18,11 +18,11 @@ use RRB\Di\BindAdapter;
 final class GetTagWithItemsUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlTagRepository::class)]
+        #[BindAdapter(MySqlTagRepositoryAdapter::class)]
         private readonly TagRepositoryInterface $tagRepo,
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlPackRepository::class)]
+        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private readonly PackRepositoryInterface $packRepo,
     ) {}
 

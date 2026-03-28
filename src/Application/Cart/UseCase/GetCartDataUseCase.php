@@ -9,9 +9,9 @@ use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
 use Rore\Domain\Catalog\Service\PricingServiceInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlPackRepository;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 /**
@@ -20,11 +20,11 @@ use RRB\Di\BindAdapter;
 final class GetCartDataUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlPackRepository::class)]
+        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private readonly PackRepositoryInterface $packRepo,
-        #[BindAdapter(MySqlCategoryRepository::class)]
+        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
         #[BindAdapter(PricingService::class)]
         private readonly PricingServiceInterface     $pricingService,

@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 class ToggleCategoryUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlCategoryRepository::class)]
+        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private CategoryRepositoryInterface $categoryRepository,
     ) {}
 

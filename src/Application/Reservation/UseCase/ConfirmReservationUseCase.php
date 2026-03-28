@@ -8,16 +8,16 @@ use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
 use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 class ConfirmReservationUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlReservationRepository::class)]
+        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private ReservationRepositoryInterface $reservationRepository,
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
         #[BindAdapter(AvailabilityService::class)]
         private AvailabilityServiceInterface   $availabilityService,

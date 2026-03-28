@@ -8,22 +8,22 @@ use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Catalog\Port\TagRepositoryInterface;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
-use Rore\Infrastructure\Persistence\MySqlTagRepository;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlTagRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 final class GetProductEditDataUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlCategoryRepository::class)]
+        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
-        #[BindAdapter(MySqlReservationRepository::class)]
+        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private readonly ReservationRepositoryInterface $reservationRepo,
-        #[BindAdapter(MySqlTagRepository::class)]
+        #[BindAdapter(MySqlTagRepositoryAdapter::class)]
         private readonly TagRepositoryInterface $tagRepo,
     ) {}
 

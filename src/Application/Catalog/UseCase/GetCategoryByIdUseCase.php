@@ -6,7 +6,7 @@ namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 /**
@@ -15,7 +15,7 @@ use RRB\Di\BindAdapter;
 final class GetCategoryByIdUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlCategoryRepository::class)]
+        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
     ) {}
 

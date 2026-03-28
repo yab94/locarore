@@ -9,7 +9,7 @@ use Rore\Application\Catalog\Port\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Infrastructure\Database\MysqlDatabase;
 
-class MySqlTagRepository implements TagRepositoryInterface
+class MySqlTagRepositoryAdapter implements TagRepositoryInterface
 {
     public function __construct(
         private readonly MysqlDatabase $connection

@@ -7,8 +7,8 @@ namespace Rore\Application\Catalog\UseCase;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
-use Rore\Infrastructure\Persistence\MySqlProductRepository;
+use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
+use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 /**
@@ -17,9 +17,9 @@ use RRB\Di\BindAdapter;
 final class GetProductWithDetailsUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepository::class)]
+        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlCategoryRepository::class)]
+        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
     ) {}
 

@@ -9,7 +9,7 @@ use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Application\Catalog\Port\PackRepositoryInterface;
 
-class MySqlPackRepository implements PackRepositoryInterface
+class MySqlPackRepositoryAdapter implements PackRepositoryInterface
 {
 
 

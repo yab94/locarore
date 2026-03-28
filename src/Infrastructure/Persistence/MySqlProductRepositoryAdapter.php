@@ -10,7 +10,7 @@ use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 
-class MySqlProductRepository implements ProductRepositoryInterface
+class MySqlProductRepositoryAdapter implements ProductRepositoryInterface
 {
 
 

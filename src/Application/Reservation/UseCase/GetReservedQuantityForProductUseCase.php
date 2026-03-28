@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 /**
@@ -14,7 +14,7 @@ use RRB\Di\BindAdapter;
 final class GetReservedQuantityForProductUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlReservationRepository::class)]
+        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private readonly ReservationRepositoryInterface $reservationRepo,
     ) {}
 

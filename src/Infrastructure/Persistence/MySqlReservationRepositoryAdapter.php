@@ -9,7 +9,7 @@ use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 
-class MySqlReservationRepository implements ReservationRepositoryInterface
+class MySqlReservationRepositoryAdapter implements ReservationRepositoryInterface
 {
 
 

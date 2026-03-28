@@ -8,7 +8,7 @@ use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Catalog\Entity\Category;
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 
-class MySqlCategoryRepository implements CategoryRepositoryInterface
+class MySqlCategoryRepositoryAdapter implements CategoryRepositoryInterface
 {
     public function __construct(
         private readonly MysqlDatabase $connection

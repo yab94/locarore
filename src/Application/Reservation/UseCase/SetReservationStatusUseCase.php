@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlReservationRepository;
+use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
 /**
@@ -17,7 +17,7 @@ class SetReservationStatusUseCase
     private const ALLOWED = ['pending', 'quoted', 'confirmed', 'cancelled'];
 
     public function __construct(
-        #[BindAdapter(MySqlReservationRepository::class)]
+        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private ReservationRepositoryInterface $repo,
     ) {}
 

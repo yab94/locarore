@@ -8,7 +8,7 @@ use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Settings\Entity\Setting;
 use Rore\Application\Settings\Port\SettingsRepositoryInterface;
 
-class MySqlSettingsRepository implements SettingsRepositoryInterface
+class MySqlSettingsRepositoryAdapter implements SettingsRepositoryInterface
 {
     /** Cache statique — chargé une seule fois par requête */
     private static ?array $cache = null;

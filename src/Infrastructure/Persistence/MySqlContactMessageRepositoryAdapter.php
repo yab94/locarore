@@ -8,7 +8,7 @@ use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
 use Rore\Infrastructure\Database\MysqlDatabase;
 
-final class MySqlContactMessageRepository implements ContactMessageRepositoryInterface
+final class MySqlContactMessageRepositoryAdapter implements ContactMessageRepositoryInterface
 {
     public function __construct(
         private readonly MysqlDatabase $connection
