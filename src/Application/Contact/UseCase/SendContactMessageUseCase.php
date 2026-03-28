@@ -45,14 +45,12 @@ final class SendContactMessageUseCase
         $this->repo->save($message);
 
         $emailTo      = $this->setting->get('contact.email_to');
-        $subjectPrefix = $this->setting->get('contact.subject_prefix');
-        $fullSubject  = $subjectPrefix !== '' ? "[{$subjectPrefix}] {$subject}" : $subject;
 
         if ($emailTo !== '') {
             $body = $this->buildEmailBody($message);
             $this->mailer->send(
                 to:      $emailTo,
-                subject: $fullSubject,
+                subject: $subject,
                 body:    $body,
                 replyTo: $email,
                 isHtml:  true,

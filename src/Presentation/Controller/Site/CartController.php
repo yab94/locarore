@@ -49,7 +49,7 @@ class CartController extends SiteController
             'meta' => (function() {
                 $meta = new PageMeta(
                     robots: 'noindex, follow',
-                    title: ['Mon panier', $this->settings->get('site.name')],
+                    title: ['Mon panier', $this->config->getString('app.name')],
                 );
                 return $meta;
             })(),
@@ -155,7 +155,7 @@ class CartController extends SiteController
             'meta' => (function() {
                 $meta = new PageMeta(
                     robots: 'noindex, follow',
-                    title: ['Finaliser ma réservation', $this->settings->get('site.name')],
+                    title: ['Finaliser ma réservation', $this->config->getString('app.name')],
                 );
                 return $meta;
             })(),
@@ -193,7 +193,7 @@ class CartController extends SiteController
             'meta' => (function() {
                 $meta = new PageMeta(
                     robots: 'noindex, follow',
-                    title: ['Demande envoyée', $this->settings->get('site.name')],
+                    title: ['Demande envoyée', $this->config->getString('app.name')],
                 );
                 return $meta;
             })(),

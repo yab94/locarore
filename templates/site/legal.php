@@ -1,12 +1,12 @@
 <?php
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
+use RRB\Type\Cast;
 
-$settings = GetSettingUseCase::cast($tpl->get('settings'));
+$content = Cast::string($tpl->get('content'));
 ?>
 <div class="max-w-3xl mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Mentions légales</h1>
     <div class="prose prose-sm max-w-none text-gray-700 leading-relaxed">
-        <?= $settings->get('mentions.content') ?>
+        <?= $content ?>
     </div>
 
     <div class="prose prose-sm max-w-none text-gray-700 leading-relaxed mt-10">

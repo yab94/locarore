@@ -21,7 +21,7 @@ final class ContactController extends SiteController
     {
         $this->render('site/contact', [
             'meta' => (new \RRB\View\PageMeta(
-                title: $this->settings->get('contact.page_title') ?: 'Contact',
+                title: 'Contactez-nous — ' . $this->config->getString('app.name'),
             )),
         ]);
     }

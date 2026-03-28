@@ -5,12 +5,10 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller;
 
 use Rore\Presentation\Seo\SlugResolver;
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
 
 abstract class Controller extends \RRB\Http\Controller
 {
     public function __construct(
-        readonly GetSettingUseCase $settings,
         readonly SlugResolver $slugResolver,
         ...$parentDeps
     ) {
@@ -23,7 +21,6 @@ abstract class Controller extends \RRB\Http\Controller
         ?string $layout = null
     ): void {
         parent::render($template, [
-            'settings'    => $this->settings,
             'slug'    => $this->slugResolver,
             ...$data,  // Les données spécifiques ont priorité
         ], $layout);

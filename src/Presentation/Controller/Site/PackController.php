@@ -55,7 +55,7 @@ class PackController extends SiteController
         foreach (array_reverse($catChain) as $crumb) {
             $titleParts[] = $crumb->getName();
         }
-        $titleParts[] = $this->settings->get('site.name');
+        $titleParts[] = $this->config->getString('app.name');
 
         $descParts = [];
         if ($pack->getDescription()) {
@@ -69,7 +69,7 @@ class PackController extends SiteController
         if (empty($descParts)) {
             $descParts[] = $pack->getName()
                 . ($mainCategory ? ' — ' . $mainCategory->getName() : '')
-                . ' — ' . $this->settings->get('site.tagline');
+                . ' — ' . $this->config->getString('app.description');
         }
 
         $breadcrumb = [...$catChain, $pack];

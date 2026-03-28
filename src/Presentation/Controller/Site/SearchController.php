@@ -23,7 +23,7 @@ class SearchController extends SiteController
         $q       = trim((string) ($_GET['q'] ?? ''));
         $results = $this->searchUseCase->execute($q);
 
-        $siteName = $this->settings->get('site.name');
+        $siteName = $this->config->getString('app.name');
 
         $meta = new PageMeta(
             canonicalUrl: $this->slugResolver->siteUrl() . '/recherche?q=' . urlencode($q),

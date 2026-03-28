@@ -2,11 +2,9 @@
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
 use RRB\Bootstrap\Config;
 
 $html          = HtmlEncoder::cast($tpl->get('html'));
-$settings      = GetSettingUseCase::cast($tpl->get('settings'));
 $url           = UrlResolver::cast($tpl->get('url'));
 $config        = Config::cast($tpl->get('config'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
@@ -16,7 +14,6 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
 // $partial is injected by the Template engine — not a param
 ?>
 
-<!-- HERO -->
 <section class="bg-brand-600 text-white py-16 rounded-2xl mb-10 text-center">
     <h1 class="text-4xl font-bold mb-3">Location de décoration événementielle</h1>
     <p class="text-lg opacity-90 mb-6">Lettres géantes, arches, vases lumineux et bien plus.</p>
@@ -24,13 +21,6 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
         Découvrir le catalogue
     </a>
 </section>
-
-<?php $homeIntro = $settings->get('home.intro'); ?>
-<?php if ($homeIntro): ?>
-<section class="mb-10 prose prose-sm max-w-none text-gray-700">
-    <?= $homeIntro ?>
-</section>
-<?php endif; ?>
 
 <!-- CATEGORIES -->
 <section id="categories" class="mb-12">

@@ -26,8 +26,8 @@ class HomeController extends SiteController
         $tags       = $data['tags'];
         $featured   = array_slice($products, 0, 6);
 
-        $siteName  = $this->settings->get('site.name');
-        $descParts = [$this->settings->get('site.tagline')];
+        $siteName  = $this->config->getString('app.name');
+        $descParts = [$this->config->getString('app.description')];
         foreach (array_slice($categories, 0, 4) as $cat) {
             if ($cat->getDescriptionShort()) {
                 $descParts[] = $cat->getDescriptionShort();

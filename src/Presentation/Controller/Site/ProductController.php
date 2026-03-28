@@ -64,7 +64,7 @@ class ProductController extends SiteController
         foreach (array_reverse($catChain) as $crumb) {
             $titleParts[] = $crumb->getName();
         }
-        $titleParts[] = $this->settings->get('site.name');
+        $titleParts[] = $this->config->getString('app.name');
         $descParts = [];
         if ($product->getDescription()) {
             $descParts[] = $product->getDescription();
@@ -77,9 +77,9 @@ class ProductController extends SiteController
         if (empty($descParts)) {
             $descParts[] = $product->getName()
                 . ($category ? ' — ' . $category->getName() : '')
-                . ' — ' . $this->settings->get('site.tagline');
+                . ' — ' . $this->config->getString('app.description');
         }
-        $kw = [$product->getName(), 'location', $this->settings->get('site.name')];
+        $kw = [$product->getName(), 'location', $this->config->getString('app.name')];
         foreach ($catChain as $crumb) {
             $kw[] = $crumb->getName();
         }

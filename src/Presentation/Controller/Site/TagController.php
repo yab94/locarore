@@ -37,7 +37,7 @@ class TagController extends SiteController
 
         $allCategories = $this->getAllActiveCategoriesUseCase->execute();
 
-        $siteName = $this->settings->get('site.name');
+        $siteName = $this->config->getString('app.name');
         $_og = $this->defaultOgImage();
         
         $meta = new PageMeta(
@@ -46,7 +46,7 @@ class TagController extends SiteController
             ogImageWidth: $_og['w'],
             ogImageHeight: $_og['h'],
             title: [$tag->getName(), $siteName],
-            description: ['Location ' . $tag->getName() . ' — ' . ($this->settings->get('site.tagline') ?: $siteName)],
+            description: ['Location ' . $tag->getName() . ' — ' . ($this->config->getString('app.description') ?: $siteName)],
             keywords: ['location', $tag->getName(), $siteName],
         );
 

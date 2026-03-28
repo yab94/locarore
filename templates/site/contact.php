@@ -1,19 +1,17 @@
 <?php
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
-use Rore\Application\Settings\UseCase\GetSettingUseCase;
 
 $html     = HtmlEncoder::cast($tpl->get('html'));
 $url      = UrlResolver::cast($tpl->get('url'));
-$settings = GetSettingUseCase::cast($tpl->get('settings'));
 // $partial is injected by the Template engine — not a param
 ?>
 <div class="max-w-xl mx-auto">
     <h1 class="text-3xl font-bold text-gray-900 mb-2">
-        <?= $html($settings->get('contact.page_title') ?: 'Contactez-nous') ?>
+        <?= $html('Contactez-nous') ?>
     </h1>
     <p class="text-gray-500 mb-8 text-sm">
-        <?= $html($settings->get('contact.page_intro') ?: 'Une question ? Un projet ? Écrivez-nous.') ?>
+        <?= $html('Une question ? Un projet ? Écrivez-nous.') ?>
     </p>
 
     <form method="post" action="<?= $url('Site\Contact.send') ?>"

@@ -43,7 +43,7 @@ class CategoryController extends SiteController
         $breadcrumb    = $this->buildBreadcrumb($category, $allCategories);
 
         $titleParts   = array_map(fn($c) => $c->getName(), array_reverse($breadcrumb));
-        $titleParts[] = $this->settings->get('site.name');
+        $titleParts[] = $this->config->getString('app.name');
         $descParts = [];
         foreach ($breadcrumb as $crumb) {
             if ($crumb->getDescriptionShort()) $descParts[] = $crumb->getDescriptionShort();
@@ -52,9 +52,9 @@ class CategoryController extends SiteController
             $descParts[] = $category->getDescription();
         }
         if (empty($descParts)) {
-            $descParts[] = $category->getName() . ' — ' . $this->settings->get('site.tagline');
+            $descParts[] = $category->getName() . ' — ' . $this->config->getString('app.description');
         }
-        $kw = ['location', $this->settings->get('site.name')];
+        $kw = ['location', $this->config->getString('app.name')];
         foreach ($breadcrumb as $crumb) {
             $kw[] = $crumb->getName();
         }
