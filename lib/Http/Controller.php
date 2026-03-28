@@ -22,7 +22,7 @@ abstract class Controller
         readonly HtmlEncoder $html,
         readonly UrlResolver $urlResolver,
         #[BindAdapter(PhpSession::class)]
-        readonly SessionInterface $session,
+        private readonly SessionInterface $session,
         readonly CsrfTokenManager $csrfTokenManager,
     ) {}
 
