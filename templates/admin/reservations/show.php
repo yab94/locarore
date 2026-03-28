@@ -58,15 +58,9 @@ $productCurrentPrices = Cast::array($tpl->tryGet('productCurrentPrices', []));
                     <dd>
                         <?php
                         $status = $reservation->getStatus();
-                        $statusLabel = match($status) {
-                            'pending'   => 'En attente',
-                            'quoted'    => 'Devis envoyé',
-                            'confirmed' => 'Confirmée',
-                            'cancelled' => 'Annulée',
-                            default     => $status,
-                        };
+                        $statusLabel = $status->label();
                         ?>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $partial('partials/reservation-status-class', ['status' => $status]) ?>">
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $partial('partials/reservation-status-class', ['status' => $status->value]) ?>">
                             <?= $html($statusLabel) ?>
                         </span>
                     </dd>
@@ -183,7 +177,6 @@ $productCurrentPrices = Cast::array($tpl->tryGet('productCurrentPrices', []));
         <?php
         $s  = $reservation->getStatus();
         $id = $reservation->getId();
-        // Pré-résolution des URLs d'action
         $_urlDevis     = $url('Admin\Reservation.quote',     ['id' => $id]);
         $_urlConfirmer = $url('Admin\Reservation.confirm',   ['id' => $id]);
         $_urlAnnuler   = $url('Admin\Reservation.cancel',    ['id' => $id]);
@@ -204,26 +197,26 @@ $productCurrentPrices = Cast::array($tpl->tryGet('productCurrentPrices', []));
             . $label . '</button></form>';
         ?>
 
-        <?php if ($s === 'pending'): ?>
+        <?php if ($reservation->isPending()): ?>
             <?= $btn($_urlDevis,     '📄 Envoyer un devis', 'bg-orange-500 text-white hover:bg-orange-600') ?>
             <?= $btn($_urlConfirmer, '✓ Confirmer',          'bg-green-600 text-white hover:bg-green-700') ?>
         <?php endif; ?>
 
-        <?php if ($s === 'quoted'): ?>
+        <?php if ($reservation->isQuoted()): ?>
             <?= $btn($_urlConfirmer, '✓ Confirmer',                    'bg-green-600 text-white hover:bg-green-700') ?>
             <?= $btnStatus('pending', '↩ Remettre en attente',     'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
         <?php endif; ?>
 
-        <?php if ($s === 'confirmed'): ?>
+        <?php if ($reservation->isConfirmed()): ?>
             <?= $btnStatus('quoted',   '↩ Repasser en devis',      'bg-orange-100 text-orange-700 hover:bg-orange-200') ?>
             <?= $btnStatus('pending',  '↩ Remettre en attente',    'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
         <?php endif; ?>
 
-        <?php if ($s === 'cancelled'): ?>
+        <?php if ($reservation->isCancelled()): ?>
             <?= $btnStatus('pending', '↩ Remettre en attente',     'bg-gray-100 text-gray-700 hover:bg-gray-200') ?>
         <?php endif; ?>
 
-        <?php if ($s !== 'cancelled'): ?>
+        <?php if (!$reservation->isCancelled()): ?>
             <?= $btn($_urlAnnuler, '✕ Annuler', 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100', 'Annuler cette réservation ?') ?>
         <?php endif; ?>
 

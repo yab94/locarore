@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
@@ -25,7 +26,7 @@ class CancelReservationUseCase
             throw new \RuntimeException("La réservation est déjà annulée.");
         }
 
-        $reservation->setStatus('cancelled');
+        $reservation->setStatus(ReservationStatus::Cancelled);
         $reservation->setUpdatedAt(new \DateTimeImmutable());
 
         $this->reservationRepository->update($reservation);

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Domain\Reservation\Entity;
 
 use RRB\Type\Castable;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 
 class Reservation
 {
@@ -21,7 +22,7 @@ class Reservation
         private ?string            $eventAddress,
         private \DateTimeImmutable $startDate,
         private \DateTimeImmutable $endDate,
-        private string             $status,
+        private ReservationStatus  $status,
         private ?string            $notes,
         private \DateTimeImmutable $createdAt,
         private \DateTimeImmutable $updatedAt,
@@ -35,7 +36,7 @@ class Reservation
     public function getEventAddress(): ?string         { return $this->eventAddress; }
     public function getStartDate(): \DateTimeImmutable { return $this->startDate; }
     public function getEndDate(): \DateTimeImmutable   { return $this->endDate; }
-    public function getStatus(): string                { return $this->status; }
+    public function getStatus(): ReservationStatus            { return $this->status; }
     public function getNotes(): ?string                { return $this->notes; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
@@ -43,14 +44,14 @@ class Reservation
     /** @return ReservationItem[] */
     public function getItems(): array                  { return $this->items; }
 
-    public function setStatus(string $status): void                   { $this->status = $status; }
+    public function setStatus(ReservationStatus $status): void           { $this->status = $status; }
     public function setUpdatedAt(\DateTimeImmutable $dt): void        { $this->updatedAt = $dt; }
 
     /** @param ReservationItem[] $items */
     public function setItems(array $items): void       { $this->items = $items; }
 
-    public function isPending(): bool   { return $this->status === 'pending'; }
-    public function isQuoted(): bool    { return $this->status === 'quoted'; }
-    public function isConfirmed(): bool { return $this->status === 'confirmed'; }
-    public function isCancelled(): bool { return $this->status === 'cancelled'; }
+    public function isPending(): bool   { return $this->status === ReservationStatus::Pending; }
+    public function isQuoted(): bool    { return $this->status === ReservationStatus::Quoted; }
+    public function isConfirmed(): bool { return $this->status === ReservationStatus::Confirmed; }
+    public function isCancelled(): bool { return $this->status === ReservationStatus::Cancelled; }
 }

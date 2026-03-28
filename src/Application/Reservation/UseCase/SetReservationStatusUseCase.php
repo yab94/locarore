@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
@@ -14,8 +15,6 @@ use RRB\Di\BindAdapter;
  */
 class SetReservationStatusUseCase
 {
-    private const ALLOWED = ['pending', 'quoted', 'confirmed', 'cancelled'];
-
     public function __construct(
         #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private ReservationRepositoryInterface $repo,
@@ -23,7 +22,9 @@ class SetReservationStatusUseCase
 
     public function execute(int $id, string $newStatus): void
     {
-        if (!in_array($newStatus, self::ALLOWED, true)) {
+        try {
+            $status = ReservationStatus::from($newStatus);
+        } catch (\ValueError) {
             throw new \InvalidArgumentException("Statut invalide : $newStatus");
         }
 
@@ -32,7 +33,7 @@ class SetReservationStatusUseCase
             throw new \RuntimeException('Réservation introuvable.');
         }
 
-        $reservation->setStatus($newStatus);
+        $reservation->setStatus($status);
         $reservation->setUpdatedAt(new \DateTimeImmutable());
         $this->repo->update($reservation);
     }

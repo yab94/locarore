@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation\Port;
 
 use Rore\Domain\Reservation\Entity\Reservation;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 
 interface ReservationRepositoryInterface
 {
@@ -14,7 +15,7 @@ interface ReservationRepositoryInterface
     public function findById(int $id): ?Reservation;
 
     /** @return Reservation[] */
-    public function findByStatus(string $status): array;
+    public function findByStatus(ReservationStatus $status): array;
 
     /**
      * Retourne toutes les réservations confirmées dont la plage

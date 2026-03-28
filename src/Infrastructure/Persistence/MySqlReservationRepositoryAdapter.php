@@ -7,6 +7,7 @@ namespace Rore\Infrastructure\Persistence;
 use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 
 class MySqlReservationRepositoryAdapter implements ReservationRepositoryInterface
@@ -36,12 +37,12 @@ class MySqlReservationRepositoryAdapter implements ReservationRepositoryInterfac
         return $reservation;
     }
 
-    public function findByStatus(string $status): array
+    public function findByStatus(ReservationStatus $status): array
     {
         $stmt = $this->connection->prepare(
             'SELECT * FROM reservations WHERE status = ? ORDER BY created_at DESC'
         );
-        $stmt->execute([$status]);
+        $stmt->execute([$status->value]);
         $reservations = array_map([$this, 'hydrate'], $stmt->fetchAll());
         return $this->loadItems($reservations);
     }
@@ -80,7 +81,7 @@ class MySqlReservationRepositoryAdapter implements ReservationRepositoryInterfac
             $reservation->getEventAddress(),
             $reservation->getStartDate()->format('Y-m-d'),
             $reservation->getEndDate()->format('Y-m-d'),
-            $reservation->getStatus(),
+            $reservation->getStatus()->value,
             $reservation->getNotes(),
             $reservation->getCreatedAt()->format('Y-m-d H:i:s'),
             $reservation->getUpdatedAt()->format('Y-m-d H:i:s'),
@@ -103,7 +104,7 @@ class MySqlReservationRepositoryAdapter implements ReservationRepositoryInterfac
               WHERE id = ?'
         );
         $stmt->execute([
-            $reservation->getStatus(),
+            $reservation->getStatus()->value,
             $reservation->getNotes(),
             $reservation->getUpdatedAt()->format('Y-m-d H:i:s'),
             $reservation->getId(),
@@ -169,7 +170,7 @@ class MySqlReservationRepositoryAdapter implements ReservationRepositoryInterfac
             eventAddress:    $row['event_address'] ?? null,
             startDate:       new \DateTimeImmutable($row['start_date']),
             endDate:         new \DateTimeImmutable($row['end_date']),
-            status:          $row['status'],
+            status:          ReservationStatus::from($row['status']),
             notes:           $row['notes'],
             createdAt:       new \DateTimeImmutable($row['created_at']),
             updatedAt:       new \DateTimeImmutable($row['updated_at']),

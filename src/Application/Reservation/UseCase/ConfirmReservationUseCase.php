@@ -6,6 +6,7 @@ namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 use Rore\Application\Reservation\Service\AvailabilityService;
 use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
@@ -52,7 +53,7 @@ class ConfirmReservationUseCase
             }
         }
 
-        $reservation->setStatus('confirmed');
+        $reservation->setStatus(ReservationStatus::Confirmed);
         $reservation->setUpdatedAt(new \DateTimeImmutable());
 
         $this->reservationRepository->update($reservation);

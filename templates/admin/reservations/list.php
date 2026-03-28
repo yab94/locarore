@@ -60,16 +60,9 @@ $currentStatus = Cast::string($tpl->tryGet('currentStatus', 'all'));
                     <td class="px-6 py-4 text-center">
                         <?php
                         $status = $r->getStatus();
-                        $statusLabel = match($status) {
-                            'pending'   => 'En attente',
-                            'quoted'    => 'Devis envoyé',
-                            'confirmed' => 'Confirmée',
-                            'cancelled' => 'Annulée',
-                            default     => $status,
-                        };
                         ?>
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $partial('partials/reservation-status-class', ['status' => $status]) ?>">
-                            <?= $html($statusLabel) ?>
+                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $partial('partials/reservation-status-class', ['status' => $status->value]) ?>">
+                            <?= $html($status->label()) ?>
                         </span>
                     </td>
                     <td class="px-6 py-4 text-gray-400"><?= $html($r->getCreatedAt()->format('d/m/Y H:i')) ?></td>

@@ -9,6 +9,7 @@ use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 
 // ─── Stub ReservationRepository in-memory ───────────────────────────────────
 
@@ -19,7 +20,7 @@ final class StubReservationRepository implements ReservationRepositoryInterface
 
     public function findAll(): array { return []; }
     public function findById(int $id): ?Reservation { return null; }
-    public function findByStatus(string $status): array { return []; }
+    public function findByStatus(ReservationStatus $status): array { return []; }
     public function save(Reservation $r): int { return 0; }
     public function update(Reservation $r): void {}
     public function findByCustomerEmail(string $email): array { return []; }
@@ -86,7 +87,7 @@ final class AvailabilityServiceTest
             eventAddress:    null,
             startDate:       $start,
             endDate:         $end,
-            status:          'confirmed',
+            status:          ReservationStatus::Confirmed,
             notes:           null,
             createdAt:       $now,
             updatedAt:       $now,

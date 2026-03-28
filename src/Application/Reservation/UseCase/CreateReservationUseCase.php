@@ -7,6 +7,7 @@ namespace Rore\Application\Reservation\UseCase;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
+use Rore\Domain\Reservation\ValueObject\ReservationStatus;
 use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
 use RRB\Di\BindAdapter;
 
@@ -46,7 +47,7 @@ class CreateReservationUseCase
             eventAddress:    $eventAddress,
             startDate:       new \DateTimeImmutable($startDate),
             endDate:         new \DateTimeImmutable($endDate),
-            status:          'pending',
+            status:          ReservationStatus::Pending,
             notes:           $notes,
             createdAt:       $now,
             updatedAt:       $now,
