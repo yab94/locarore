@@ -6,12 +6,14 @@ namespace Rore\Presentation\Controller\Admin;
 
 use RRB\Http\Route;
 use Rore\Application\Auth\UseCase\AuthenticateAdminUseCase;
+use Rore\Application\Auth\UseCase\LogoutAdminUseCase;
 use Rore\Presentation\Controller\Controller;
 
 class AuthController extends Controller
 {
     public function __construct(
         private readonly AuthenticateAdminUseCase $authenticateAdmin,
+        private readonly LogoutAdminUseCase       $logoutAdmin,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -46,7 +48,7 @@ class AuthController extends Controller
     #[Route('POST', '/admin/deconnexion')]
     public function logout(): void
     {
-        $this->session->remove('admin_logged_in');
+        $this->logoutAdmin->execute();
         $this->redirect($this->urlResolver->resolve(AuthController::class . '.login'));
     }
 }
