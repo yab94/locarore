@@ -9,7 +9,7 @@ use RRB\Di\BindConfig;
 use RRB\Session\PhpSession;
 use RRB\Session\SessionInterface;
 
-class LogoutAdminUseCase
+class IsAdminAuthenticatedUseCase
 {
     public function __construct(
         #[BindAdapter(PhpSession::class)]
@@ -19,8 +19,8 @@ class LogoutAdminUseCase
     ) {
     }
 
-    public function execute(): void
+    public function execute(): bool
     {
-        $this->session->remove($this->sessionKey);
+        return !empty($this->session->get($this->sessionKey));
     }
 }

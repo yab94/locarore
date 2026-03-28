@@ -8,14 +8,20 @@ use Rore\Application\Auth\Port\AdminLoginRateLimiterInterface;
 use Rore\Infrastructure\Security\LoginRateLimiterAdapter;
 use RRB\Di\BindAdapter;
 use RRB\Di\BindConfig;
+use RRB\Session\PhpSession;
+use RRB\Session\SessionInterface;
 
 class AuthenticateAdminUseCase
 {
     public function __construct(
         #[BindAdapter(LoginRateLimiterAdapter::class)]
         private readonly AdminLoginRateLimiterInterface $rateLimiter,
+        #[BindAdapter(PhpSession::class)]
+        private readonly SessionInterface $session,
         #[BindConfig('admin.password')]
         private readonly string $adminPassword,
+        #[BindConfig('admin.session_key')]
+        private readonly string $sessionKey,
     ) {
     }
 
@@ -35,6 +41,7 @@ class AuthenticateAdminUseCase
 
         if ($password === $this->adminPassword) {
             $this->rateLimiter->reset();
+            $this->session->set($this->sessionKey, true);
             return ['success' => true];
         }
 

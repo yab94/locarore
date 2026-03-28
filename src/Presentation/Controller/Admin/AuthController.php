@@ -6,14 +6,16 @@ namespace Rore\Presentation\Controller\Admin;
 
 use RRB\Http\Route;
 use Rore\Application\Auth\UseCase\AuthenticateAdminUseCase;
+use Rore\Application\Auth\UseCase\IsAdminAuthenticatedUseCase;
 use Rore\Application\Auth\UseCase\LogoutAdminUseCase;
 use Rore\Presentation\Controller\Controller;
 
 class AuthController extends Controller
 {
     public function __construct(
-        private readonly AuthenticateAdminUseCase $authenticateAdmin,
-        private readonly LogoutAdminUseCase       $logoutAdmin,
+        private readonly AuthenticateAdminUseCase    $authenticateAdmin,
+        private readonly LogoutAdminUseCase          $logoutAdmin,
+        private readonly IsAdminAuthenticatedUseCase $isAdminAuthenticated,
         ...$parentDeps
     ) {
         parent::__construct(...$parentDeps);
@@ -22,7 +24,7 @@ class AuthController extends Controller
     #[Route('GET', '/admin')]
     public function login(): void
     {
-        if (!empty($this->session->get('admin_logged_in'))) {
+        if ($this->isAdminAuthenticated->execute()) {
             $this->redirect($this->urlResolver->resolve(DashboardController::class . '.index'));
         }
         $this->render('admin/login', ['title' => 'Administration'], 'layout/admin-login');
@@ -37,7 +39,6 @@ class AuthController extends Controller
         $result   = $this->authenticateAdmin->execute($password);
 
         if ($result['success']) {
-            $this->session->set('admin_logged_in', true);
             $this->redirect($this->urlResolver->resolve(DashboardController::class . '.index'));
         }
 
