@@ -19,47 +19,16 @@ class SitemapController extends SiteController
     #[Route('GET', '/sitemap.xml')]
     public function index(): void
     {
-        $baseUrl = $this->slugResolver->siteUrl();
-        
-        $data       = $this->getAllCatalogItemsUseCase->execute();
-        $categories = $data['categories'];
-        $products   = $data['products'];
-        $packs      = $data['packs'];
-        $tags       = $data['tags'];
+        $data = $this->getAllCatalogItemsUseCase->execute();
 
         $this->response->header('Content-Type', 'application/xml; charset=UTF-8');
-        
-        echo '<?xml version="1.0" encoding="UTF-8"?>';
-        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-        
-        // Home
-        echo '<url><loc>' . htmlspecialchars($baseUrl . '/') . '</loc><lastmod>' . date('Y-m-d') . '</lastmod><priority>1.0</priority></url>';
-        
-        // Categories
-        foreach ($categories as $cat) {
-            $url = $baseUrl . $this->slugResolver->categoryUrl($cat, $categories);
-            echo '<url><loc>' . htmlspecialchars($url) . '</loc><lastmod>' . $cat->getUpdatedAt()->format('Y-m-d') . '</lastmod><priority>0.8</priority></url>';
-        }
-        
-        // Products
-        foreach ($products as $product) {
-            $url = $baseUrl . $this->slugResolver->productUrl($product, $categories);
-            echo '<url><loc>' . htmlspecialchars($url) . '</loc><lastmod>' . $product->getUpdatedAt()->format('Y-m-d') . '</lastmod><priority>0.9</priority></url>';
-        }
-        
-        // Packs
-        foreach ($packs as $pack) {
-            $url = $baseUrl . $this->slugResolver->packUrl($pack);
-            echo '<url><loc>' . htmlspecialchars($url) . '</loc><lastmod>' . $pack->getUpdatedAt()->format('Y-m-d') . '</lastmod><priority>0.7</priority></url>';
-        }
-        
-        // Tags (pas de date en base — on omet lastmod)
-        foreach ($tags as $tag) {
-            $url = $baseUrl . $this->slugResolver->tagUrl($tag);
-            echo '<url><loc>' . htmlspecialchars($url) . '</loc><priority>0.6</priority></url>';
-        }
-        
-        echo '</urlset>';
-        exit;
+
+        $this->render('site/sitemap', [
+            'baseUrl'    => $this->slugResolver->siteUrl(),
+            'categories' => $data['categories'],
+            'products'   => $data['products'],
+            'packs'      => $data['packs'],
+            'tags'       => $data['tags'],
+        ], '');
     }
 }

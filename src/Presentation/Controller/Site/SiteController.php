@@ -43,7 +43,7 @@ abstract class SiteController extends Controller
             ? new DateRange($cart->getStartDate(), $cart->getEndDate())
             : null;
         $data['headerCategories'] = $this->getActiveCategories->execute();
-        parent::render($template, $data, $layout ?? 'layout/site');
+        parent::render($template, $data, $layout === '' ? null : ($layout ?? 'layout/site'));
     }
 
     /** @return array{url: string, w: int, h: int} */
