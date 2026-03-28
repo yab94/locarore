@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Reservation\Service;
 
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use RRB\Di\BindAdapter;
 use Rore\Application\Reservation\Port\AvailabilityServiceInterface;

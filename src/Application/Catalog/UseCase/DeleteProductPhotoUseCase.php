@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Application\Catalog\Port\FileManagerInterface;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Infrastructure\File\FileManagerAdapter;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;
 use RRB\Di\BindAdapter;

@@ -7,7 +7,7 @@ namespace Rore\Infrastructure\Persistence;
 use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
-use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 
 class MySqlReservationRepository implements ReservationRepositoryInterface
 {

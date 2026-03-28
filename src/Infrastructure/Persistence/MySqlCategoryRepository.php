@@ -6,7 +6,7 @@ namespace Rore\Infrastructure\Persistence;
 
 use Rore\Infrastructure\Database\MysqlDatabase;
 use Rore\Domain\Catalog\Entity\Category;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
+use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 
 class MySqlCategoryRepository implements CategoryRepositoryInterface
 {

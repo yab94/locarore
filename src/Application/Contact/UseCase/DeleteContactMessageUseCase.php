@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Contact\UseCase;
 
-use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
+use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
 use RRB\Di\BindAdapter;
 

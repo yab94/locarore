@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Domain\Reservation\Repository;
+namespace Rore\Application\Reservation\Port;
 
 use Rore\Domain\Reservation\Entity\Reservation;
 

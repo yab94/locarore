@@ -7,7 +7,7 @@ namespace Rore\Application\Contact\UseCase;
 use Rore\Application\Contact\Port\MailerInterface;
 use Rore\Application\Settings\UseCase\GetSettingUseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
-use Rore\Domain\Contact\Repository\ContactMessageRepositoryInterface;
+use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
 use Rore\Infrastructure\Mail\SmtpMailerAdapter;
 use Rore\Infrastructure\Persistence\MySqlContactMessageRepository;
 use RRB\Di\BindAdapter;

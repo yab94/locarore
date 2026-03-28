@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Domain\Catalog\Entity\Product;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
+use Rore\Application\Catalog\Port\ProductRepositoryInterface;
+use Rore\Application\Catalog\Port\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Application\Catalog\Service\SlugUniquenessService;
 use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;

@@ -8,10 +8,10 @@ use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Domain\Catalog\Entity\Tag;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
-use Rore\Domain\Catalog\Repository\TagRepositoryInterface;
+use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
+use Rore\Application\Catalog\Port\PackRepositoryInterface;
+use Rore\Application\Catalog\Port\ProductRepositoryInterface;
+use Rore\Application\Catalog\Port\TagRepositoryInterface;
 use Rore\Application\Catalog\Service\SlugUniquenessService;
 
 // ─── Stubs ───────────────────────────────────────────────────────────────────

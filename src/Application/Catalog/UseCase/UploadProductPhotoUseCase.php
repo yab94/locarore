@@ -8,7 +8,7 @@ use RRB\Di\BindConfig;
 use Rore\Application\Catalog\Port\FileUploaderInterface;
 use Rore\Application\Catalog\Port\ImageManagerInterface;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Infrastructure\File\FileUploaderAdapter;
 use Rore\Infrastructure\File\ImageManagerAdapter;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;

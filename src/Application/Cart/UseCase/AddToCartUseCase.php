@@ -6,7 +6,7 @@ namespace Rore\Application\Cart\UseCase;
 
 use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
-use Rore\Domain\Catalog\Repository\ProductRepositoryInterface;
+use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
 use Rore\Application\Reservation\Port\AvailabilityServiceInterface;
 use Rore\Infrastructure\Persistence\MySqlProductRepository;

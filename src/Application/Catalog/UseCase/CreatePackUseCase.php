@@ -6,7 +6,7 @@ namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\PackItem;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
+use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Application\Catalog\Service\SlugUniquenessService;
 use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;

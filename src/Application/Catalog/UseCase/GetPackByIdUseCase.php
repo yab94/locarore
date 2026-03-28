@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Domain\Catalog\Entity\Pack;
-use Rore\Domain\Catalog\Repository\PackRepositoryInterface;
+use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlPackRepository;
 use RRB\Di\BindAdapter;
 

@@ -7,7 +7,7 @@ use Rore\Domain\Catalog\Entity\PackItem;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Reservation\Entity\Reservation;
 use Rore\Domain\Reservation\Entity\ReservationItem;
-use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 use Rore\Application\Reservation\Service\AvailabilityService;
 
 // ─── Stub ReservationRepository in-memory ───────────────────────────────────

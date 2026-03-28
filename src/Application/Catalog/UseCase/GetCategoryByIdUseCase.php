@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Domain\Catalog\Entity\Category;
-use Rore\Domain\Catalog\Repository\CategoryRepositoryInterface;
+use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlCategoryRepository;
 use RRB\Di\BindAdapter;
 

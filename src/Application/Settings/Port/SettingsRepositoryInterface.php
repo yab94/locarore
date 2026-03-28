@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Domain\Settings\Repository;
+namespace Rore\Application\Settings\Port;
 
 use Rore\Domain\Settings\Entity\Setting;
 

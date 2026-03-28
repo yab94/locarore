@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Search\UseCase;
 
-use Rore\Domain\Catalog\Repository\SearchRepositoryInterface;
+use Rore\Application\Search\Port\SearchRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlSearchRepository;
 use RRB\Di\BindAdapter;
 

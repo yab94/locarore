@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Settings\UseCase;
 
-use Rore\Domain\Settings\Repository\SettingsRepositoryInterface;
+use Rore\Application\Settings\Port\SettingsRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlSettingsRepository;
 use RRB\Di\BindAdapter;
 

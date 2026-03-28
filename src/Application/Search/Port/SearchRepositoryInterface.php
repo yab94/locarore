@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Domain\Catalog\Repository;
+namespace Rore\Application\Search\Port;
 
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;

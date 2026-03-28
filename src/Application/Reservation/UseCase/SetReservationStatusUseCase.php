@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Reservation\UseCase;
 
-use Rore\Domain\Reservation\Repository\ReservationRepositoryInterface;
+use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 use Rore\Infrastructure\Persistence\MySqlReservationRepository;
 use RRB\Di\BindAdapter;
 

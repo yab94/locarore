@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rore\Domain\Contact\Repository;
+namespace Rore\Application\Contact\Port;
 
 use Rore\Domain\Contact\Entity\ContactMessage;
 
