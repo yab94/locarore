@@ -24,10 +24,10 @@ final class DddArchitectureTest
     // ─── Règles ──────────────────────────────────────────────────────────────
     // Ordre : du plus spécifique au plus général (premier match gagne).
     private const RULES = [
-        'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Domain', 'Rore\Presentation', 'Rore\Framework'],
-        'Rore\Application'             => ['Rore\Application', 'Rore\Domain', 'Rore\Framework'],
-        'Rore\Domain'                  => ['Rore\Domain', 'Rore\Framework'],
-        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application', 'Rore\Framework'],
+        'Rore\Presentation\Controller' => ['Rore\Application', 'Rore\Domain', 'Rore\Presentation', 'RRB'],
+        'Rore\Application'             => ['Rore\Application', 'Rore\Domain', 'RRB'],
+        'Rore\Domain'                  => ['Rore\Domain', 'RRB'],
+        'Rore\Infrastructure'          => ['Rore\Domain', 'Rore\Infrastructure', 'Rore\Application', 'RRB'],
     ];
 
     // ─── Helpers ─────────────────────────────────────────────────────────────
@@ -104,7 +104,7 @@ final class DddArchitectureTest
                 if ($type->isBuiltin()) continue;
 
                 $typeName = $type->getName();
-                if (!str_starts_with($typeName, 'Rore\\')) continue;
+                if (!str_starts_with($typeName, 'Rore\\') && !str_starts_with($typeName, 'RRB\\')) continue;
 
                 if (!$this->isAllowed($typeName, $allowedPrefixes)) {
                     $violations[] = sprintf(
@@ -343,8 +343,8 @@ final class DddArchitectureTest
 
             // Binding Framework→Framework : implémentations internes au framework,
             // exemptées des règles DDD (pas de port applicatif, pas d'adaptateur externe)
-            $isFrameworkBinding = str_starts_with($port, 'Rore\\Framework\\')
-                               && str_starts_with($adapter, 'Rore\\Framework\\');
+            $isFrameworkBinding = str_starts_with($port, 'RRB\\')
+                               && str_starts_with($adapter, 'RRB\\');
 
             if (!$isFrameworkBinding) {
                 // Le port doit être une interface hors Infrastructure

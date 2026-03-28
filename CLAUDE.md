@@ -5,17 +5,9 @@ analyse l'architecture de ce projet
 
 On ne verra pas comme un problème les BindAdapter de la couche Application même si cela donne à Application une connaissance de son implémentation on l'accepte car ce n'est que pour la DI, son code repose bien sur des interface. Par contre tout autre exception n'est pas accepté en dehors de BindAdapter.
 
-
-
-
-
-
-
-
-
-- Param 'slot_category_id' is required. 
-
-
-
-
-- aligné les libelle prix dans pack sur produit
+Dans l'idée:
+- Domain est pur (pas de dépendance)
+- Application n'importe que des interfaces (définies en tant que Port) ou du Domain
+- Infrastructure ne comporte que des classes "pures" infra ou des implémentations de Port applicatifs (Adapter)
+- Presentation ne comporte que des Controller et des classes "pures" presentation
+- Les controllers ne peuvent importer QUE des UseCase Applicatif
