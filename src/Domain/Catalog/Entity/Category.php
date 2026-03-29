@@ -22,6 +22,7 @@ class Category
         private bool                $isActive,
         private \DateTimeImmutable  $createdAt,
         private \DateTimeImmutable  $updatedAt,
+        private int                 $productCount = 0,
     ) {}
 
     public function getId(): ?int                      { return $this->id; }
@@ -30,6 +31,7 @@ class Category
     public function getSlug(): string                  { return $this->slug; }
     public function getDescriptionShort(): ?string     { return $this->descriptionShort; }
     public function getDescription(): ?string          { return $this->description; }
+    public function getProductCount(): int             { return $this->productCount; }
     public function isActive(): bool                   { return $this->isActive; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getUpdatedAt(): \DateTimeImmutable { return $this->updatedAt; }
@@ -43,6 +45,7 @@ class Category
     public function setSlug(string $slug): void        { $this->slug = $slug; }
     public function setDescriptionShort(?string $d): void { $this->descriptionShort = $d; }
     public function setDescription(?string $d): void   { $this->description = $d; }
+    public function setProductCount(int $count): void  { $this->productCount = $count; }
     public function setIsActive(bool $active): void    { $this->isActive = $active; }
     public function toggle(): void                     { $this->isActive = !$this->isActive; }
     public function setUpdatedAt(\DateTimeImmutable $dt): void { $this->updatedAt = $dt; }

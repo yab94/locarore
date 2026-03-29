@@ -16,7 +16,22 @@ class MySqlCategoryRepositoryAdapter implements CategoryRepositoryInterface
 
     public function findAll(): array
     {
-        $stmt = $this->connection->query('SELECT * FROM categories ORDER BY name');
+                $stmt = $this->connection->query(
+                        'SELECT c.*, COALESCE(pc.product_count, 0) AS product_count
+                             FROM categories c
+                             LEFT JOIN (
+                                     SELECT cp.category_id, COUNT(*) AS product_count
+                                         FROM (
+                                                 SELECT p.category_id, p.id AS product_id
+                                                     FROM products p
+                                                 UNION
+                                                 SELECT pc.category_id, pc.product_id
+                                                     FROM product_categories pc
+                                         ) cp
+                                        GROUP BY cp.category_id
+                             ) pc ON pc.category_id = c.id
+                            ORDER BY c.name'
+                );
         return array_map([$this, 'hydrate'], $stmt->fetchAll());
     }
 
@@ -130,6 +145,7 @@ class MySqlCategoryRepositoryAdapter implements CategoryRepositoryInterface
             isActive:         (bool) $row['is_active'],
             createdAt:        new \DateTimeImmutable($row['created_at']),
             updatedAt:        new \DateTimeImmutable($row['updated_at']),
+            productCount:     (int) ($row['product_count'] ?? 0),
         );
     }
 }

@@ -22,6 +22,7 @@ $categories = Cast::array($tpl->tryGet('categories', []));
             <tr>
                 <th class="px-6 py-3 text-left">Nom</th>
                 <th class="px-6 py-3 text-left">Slug</th>
+                <th class="px-6 py-3 text-center">Produits</th>
                 <th class="px-6 py-3 text-center">Statut</th>
                 <th class="px-6 py-3 text-right">Actions</th>
             </tr>
@@ -31,6 +32,7 @@ $categories = Cast::array($tpl->tryGet('categories', []));
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 font-medium text-gray-800"><?= $html($cat->getName()) ?></td>
                     <td class="px-6 py-4 text-gray-400 font-mono text-xs"><?= $html($cat->getSlug()) ?></td>
+                    <td class="px-6 py-4 text-center font-medium text-gray-700"><?= $cat->getProductCount() ?></td>
                     <td class="px-6 py-4 text-center">
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
                             <?= $cat->isActive() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">
