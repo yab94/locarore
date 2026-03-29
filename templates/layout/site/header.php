@@ -1,5 +1,6 @@
 <?php
 $html            = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$config         = RRB\Bootstrap\Config::cast($tpl->get('config'));
 $url             = RRB\Http\UrlResolver::cast($tpl->get('url'));
 $headerCategories = \RRB\Type\Cast::array($tpl->get('headerCategories'));
 $cartItemCount   = (int) $tpl->tryGet('cartItemCount', 0);
@@ -13,7 +14,7 @@ $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() ==
         <a href="/" class="shrink-0">
             <img src="/assets/images/logo-latyana-evenements.png"
                  alt="Latyana-Événements"
-                 title="Latyana-Événements - Location de décoration événementielle"
+                 title="Latyana-Événements - Location de décoration événementielle à <?=$html($config->getString('seo.location')) ?>"
                  class="h-14 w-auto" width="auto" height="56" fetchpriority="high">
         </a>
 

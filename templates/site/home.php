@@ -16,7 +16,8 @@ $featured      = Cast::array($tpl->tryGet('featured', []));
 
 <section class="bg-brand-600 text-white py-16 rounded-2xl mb-10 text-center">
     <h1 class="text-4xl font-bold mb-3">Location de décoration événementielle</h1>
-    <p class="text-lg opacity-90 mb-6">Lettres géantes, arches, vases lumineux et bien plus.</p>
+    <p class="text-lg opacity-90 mb-1">Lettres géantes, arches, vases lumineux et bien plus.</p>
+    <p class="text-sm opacity-75 mb-6">📍 <?= $html($config->getString('seo.city')) ?> – <?= $html($config->getString('seo.nearby_city')) ?> – <?= $html($config->getString('seo.region')) ?> (<?= substr($config->getString('seo.postal_code'), 0, 2) ?>) – <?= $html($config->getString('seo.region_full')) ?></p>
     <a href="#categories" class="bg-white text-brand-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition">
         Découvrir le catalogue
     </a>
