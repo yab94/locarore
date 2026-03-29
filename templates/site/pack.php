@@ -21,24 +21,28 @@ $cart            = CartState::cast($tpl->get('cart'));
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
 
-    <!-- Photo principale (produit principal du pack) -->
+    <!-- Carrousel photos (produit principal en premier, puis les autres) -->
     <div>
-        <?php $mainPhoto = $mainProduct?->getMainPhoto(); ?>
-        <?php if ($mainPhoto): ?>
-            <?php $photoAlt = $html($mainPhoto->getDescription() ?: $pack->getName()); ?>
-            <div class="rounded-2xl overflow-hidden bg-gray-100">
-                <img src="<?= $html($mainPhoto->getPublicPath()) ?>"
-                     alt="<?= $photoAlt ?>"
-                     title="<?= $photoAlt ?>"
-                     width="768" height="384"
-                     fetchpriority="high"
-                     class="w-full h-96 object-cover">
-            </div>
-        <?php else: ?>
-            <div class="rounded-2xl bg-gray-100 h-96 flex items-center justify-center text-gray-400">
-                Pas de photo
-            </div>
-        <?php endif; ?>
+        <?php
+        $carouselPhotos = [];
+        if ($mainProduct) {
+            foreach ($mainProduct->getPhotos() as $ph) {
+                $carouselPhotos[] = ['photo' => $ph, 'label' => $mainProduct->getName()];
+            }
+        }
+        foreach ($pack->getItems() as $item) {
+            if (!$item->isFixed()) continue;
+            $p = $productsById[$item->getProductId()] ?? null;
+            if (!$p || ($mainProduct && $p->getId() === $mainProduct->getId())) continue;
+            foreach ($p->getPhotos() as $ph) {
+                $carouselPhotos[] = ['photo' => $ph, 'label' => $p->getName()];
+            }
+        }
+        ?>
+        <?= $partial('partials/carousel', [
+            'carouselId'     => 'carousel-pack-' . $pack->getId(),
+            'carouselPhotos' => $carouselPhotos,
+        ]) ?>
     </div>
 
     <!-- Infos pack -->
@@ -48,7 +52,7 @@ $cart            = CartState::cast($tpl->get('cart'));
         </div>
         <h1 class="text-3xl font-bold text-gray-900 mb-2"><?= $html($pack->getName()) ?></h1>
         <p class="text-2xl font-semibold text-brand-600 mb-4">
-            <?= number_format($pack->getPricePerDay(), 0, ',', ' ') ?> € / jour
+            à partir de <?= number_format($pack->getPricePerDay(), 0, ',', ' ') ?> €
         </p>
 
         <?php if ($pack->getDescription()): ?>

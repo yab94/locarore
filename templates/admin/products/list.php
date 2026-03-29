@@ -31,7 +31,7 @@ $categoriesById = Cast::array($tpl->tryGet('categoriesById', []));
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php foreach ($products as $p): ?>
-                <?php $isOutOfStock = $p->getTotalStock() <= 0; ?>
+                <?php $isOutOfStock = $p->isActive() && $p->getTotalStock() <= 0; ?>
                 <tr class="<?= $isOutOfStock ? 'bg-red-50/70 hover:bg-red-50' : 'hover:bg-gray-50' ?>">
                     <td class="px-6 py-4 font-medium text-gray-800">
                         <div class="flex items-center gap-3">

@@ -29,10 +29,16 @@ $categories = Cast::array($tpl->tryGet('categories', []));
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php foreach ($categories as $cat): ?>
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 font-medium text-gray-800"><?= $html($cat->getName()) ?></td>
+                <?php $isEmpty = $cat->isActive() && $cat->getProductCount() === 0; ?>
+                <tr class="<?= $isEmpty ? 'bg-red-50/70 hover:bg-red-50' : 'hover:bg-gray-50' ?>">
+                    <td class="px-6 py-4 font-medium text-gray-800">
+                        <?= $html($cat->getName()) ?>
+                        <?php if ($isEmpty): ?>
+                            <span class="ml-2 inline-block px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-700">0 produit</span>
+                        <?php endif; ?>
+                    </td>
                     <td class="px-6 py-4 text-gray-400 font-mono text-xs"><?= $html($cat->getSlug()) ?></td>
-                    <td class="px-6 py-4 text-center font-medium text-gray-700"><?= $cat->getProductCount() ?></td>
+                    <td class="px-6 py-4 text-center font-medium <?= $isEmpty ? 'text-red-600' : 'text-gray-700' ?>"><?= $cat->getProductCount() ?></td>
                     <td class="px-6 py-4 text-center">
                         <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
                             <?= $cat->isActive() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">

@@ -113,7 +113,7 @@ class CartController extends SiteController
     {
         $this->requirePost();
         try {
-            $selections = $this->request->body->getArray('slot_selection');
+            $selections = $this->request->body->getArray('slot_selection', []);
             $this->addPackToCartUseCase->execute(
                 packId:     $this->request->body->getInt('pack_id'),
                 selections: is_array($selections) ? $selections : [],

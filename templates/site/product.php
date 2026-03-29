@@ -21,31 +21,16 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
 
     <!-- Carousel photos -->
     <div>
-        <?php $photos = $product->getPhotos(); ?>
-        <?php if (!empty($photos)): ?>
-            <div id="carousel" class="relative rounded-2xl overflow-hidden bg-gray-100">
-                <?php foreach ($photos as $i => $photo): ?>
-                    <?php $photoAlt = $html($photo->getDescription() ?: $product->getName()); ?>
-                    <img data-slide="<?= $i ?>"
-                         src="<?= $html($photo->getPublicPath()) ?>"
-                         alt="<?= $photoAlt ?>"
-                         title="<?= $photoAlt ?>"
-                         width="768" height="384"
-                         <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
-                         class="w-full h-96 object-cover <?= $i > 0 ? 'hidden' : '' ?>">
-                <?php endforeach; ?>
-                <?php if (count($photos) > 1): ?>
-                    <button id="carousel-prev"
-                            class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/60 transition">‹</button>
-                    <button id="carousel-next"
-                            class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-black/60 transition">›</button>
-                <?php endif; ?>
-            </div>
-        <?php else: ?>
-            <div class="rounded-2xl bg-gray-100 h-96 flex items-center justify-center text-gray-400">
-                Pas de photo
-            </div>
-        <?php endif; ?>
+        <?php
+        $carouselPhotos = array_map(
+            fn($ph) => ['photo' => $ph, 'label' => $product->getName()],
+            $product->getPhotos()
+        );
+        ?>
+        <?= $partial('partials/carousel', [
+            'carouselId'     => 'carousel-product-' . $product->getId(),
+            'carouselPhotos' => $carouselPhotos,
+        ]) ?>
     </div>
 
     <!-- Infos produit -->
@@ -153,20 +138,3 @@ echo $partial('partials/breadcrumb-ld-json', [
     'type' => 'product'
 ]);
 ?>
-
-<?php if (count($product->getPhotos() ?: []) > 1): ?>
-<script>
-(function () {
-    const slides = document.querySelectorAll('#carousel [data-slide]');
-    let current = 0;
-    function go(n) {
-        slides[current].classList.add('hidden');
-        current = (n + slides.length) % slides.length;
-        slides[current].classList.remove('hidden');
-    }
-    document.getElementById('carousel-prev').addEventListener('click', () => go(current - 1));
-    document.getElementById('carousel-next').addEventListener('click', () => go(current + 1));
-})();
-</script>
-<?php endif; ?>
-
