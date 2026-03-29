@@ -19,9 +19,12 @@ $cart            = CartState::cast($tpl->get('cart'));
 $config          = Config::cast($tpl->get('config'));
 // $partial is injected by the Template engine — not a param
 
-// Collecte des tags uniques de tous les produits du pack
+// Collecte des tags uniques des produits membres du pack uniquement
 $packTags = [];
-foreach ($productsById as $p) {
+foreach ($pack->getItems() as $item) {
+    if (!$item->isFixed()) continue;
+    $p = $productsById[$item->getProductId()] ?? null;
+    if ($p === null) continue;
     foreach ($p->getTags() as $tag) {
         $packTags[$tag->getSlug()] = $tag;
     }
