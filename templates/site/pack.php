@@ -2,6 +2,7 @@
 use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
+use RRB\Bootstrap\Config;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Cart\ValueObject\CartState;
@@ -15,7 +16,16 @@ $mainProduct     = Product::castOrNull($tpl->tryGet('mainProduct'));
 $slotsWithProducts = Cast::array($tpl->tryGet('slotsWithProducts', []));
 $packSelections  = Cast::array($tpl->tryGet('packSelections', []));
 $cart            = CartState::cast($tpl->get('cart'));
+$config          = Config::cast($tpl->get('config'));
 // $partial is injected by the Template engine — not a param
+
+// Collecte des tags uniques de tous les produits du pack
+$packTags = [];
+foreach ($productsById as $p) {
+    foreach ($p->getTags() as $tag) {
+        $packTags[$tag->getSlug()] = $tag;
+    }
+}
 ?>
 <?= $partial('partials/breadcrumb') ?>
 
@@ -60,6 +70,9 @@ $cart            = CartState::cast($tpl->get('cart'));
                 <?= $pack->getDescription() ?>
             </div>
         <?php endif; ?>
+
+        <!-- Tags -->
+        <?= $partial('partials/tag-list', ['tags' => $packTags]) ?>
 
         <!-- Contenu du pack -->
         <div class="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6">

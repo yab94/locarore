@@ -3,12 +3,10 @@ use RRB\View\HtmlEncoder;
 use RRB\Http\UrlResolver;
 use RRB\Type\Cast;
 use Rore\Domain\Catalog\Entity\Product;
-use RRB\Bootstrap\Config;
 use Rore\Domain\Cart\ValueObject\CartState;
 
 $html          = HtmlEncoder::cast($tpl->get('html'));
 $url           = UrlResolver::cast($tpl->get('url'));
-$config        = Config::cast($tpl->get('config'));
 $product       = Product::cast($tpl->get('product'));
 $allCategories = Cast::array($tpl->tryGet('allCategories', []));
 $cart          = CartState::cast($tpl->get('cart'));
@@ -46,16 +44,7 @@ $availableQty  = Cast::int($tpl->tryGet('availableQty', 0));
         <?php endif; ?>
 
         <!-- Tags -->
-        <?php if (!empty($product->getTags())): ?>
-            <div class="flex flex-wrap gap-2 mb-6">
-                <?php foreach ($product->getTags() as $tag): ?>
-                    <a href="<?= $config->getString('seo.tags_base_url'); ?>/<?= $html($tag->getSlug()) ?>"
-                       class="inline-flex items-center gap-1 bg-gray-100 text-gray-600 rounded-full px-3 py-1 text-xs font-medium hover:bg-brand-50 hover:text-brand-700 transition">
-                        🏷️ <?= $html($tag->getName()) ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
+        <?= $partial('partials/tag-list', ['tags' => $product->getTags()]) ?>
 
         <!-- Encadré dates -->
         <?php if (!$cart->hasDates()): ?>
