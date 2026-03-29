@@ -41,16 +41,22 @@ $total  = count($photos);
     <?php if ($total > 1): ?>
         <!-- Prev -->
         <button type="button" onclick="carouselMove('<?= $html($cid) ?>', -1)"
-                class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow transition opacity-0 group-hover:opacity-100">
-            <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                aria-label="Image précédente"
+                style="position:absolute;left:12px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(0,0,0,0.45);border:none;border-radius:9999px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s"
+                onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                onmouseout="this.style.background='rgba(0,0,0,0.45)'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
             </svg>
         </button>
         <!-- Next -->
         <button type="button" onclick="carouselMove('<?= $html($cid) ?>', 1)"
-                class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow transition opacity-0 group-hover:opacity-100">
-            <svg class="w-5 h-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                aria-label="Image suivante"
+                style="position:absolute;right:12px;top:50%;transform:translateY(-50%);z-index:10;background:rgba(0,0,0,0.45);border:none;border-radius:9999px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s"
+                onmouseover="this.style.background='rgba(0,0,0,0.7)'"
+                onmouseout="this.style.background='rgba(0,0,0,0.45)'">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
             </svg>
         </button>
         <!-- Dots -->

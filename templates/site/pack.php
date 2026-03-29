@@ -106,7 +106,52 @@ $cart            = CartState::cast($tpl->get('cart'));
         </div>
 
         <!-- CTA ajout panier -->
-        <?php if ($cart->hasDates()): ?>
+        <?php if (!$cart->hasDates()): ?>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
+                <p class="text-sm font-semibold text-yellow-800 mb-3">📅 Choisissez vos dates avant d'ajouter au panier</p>
+                <form method="post" action="<?= $url('Site\Cart.setDates') ?>" class="flex flex-col sm:flex-row gap-3">
+                    <?= $partial('partials/csrf') ?>
+                    <input type="date" name="start_date" required
+                           class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                           min="<?= date('Y-m-d') ?>">
+                    <input type="date" name="end_date" required
+                           class="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+                           min="<?= date('Y-m-d') ?>">
+                    <input type="hidden" name="redirect" value="<?= $html($slug->packUrl($pack)) ?>">
+                    <button type="submit"
+                            class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 transition">
+                        Valider
+                    </button>
+                </form>
+            </div>
+        <?php else: ?>
+            <div class="bg-green-50 border border-green-200 rounded-xl p-5 mb-6 text-sm text-green-800">
+                <div class="flex items-center justify-between mb-3">
+                    <span>📅 Du <?= htmlspecialchars($cart->getStartDate()->format('d/m/Y')) ?> au <?= htmlspecialchars($cart->getEndDate()->format('d/m/Y')) ?></span>
+                    <button type="button" onclick="document.getElementById('edit-dates-pack-<?= $pack->getId() ?>').classList.toggle('hidden')"
+                            class="ml-2 text-green-600 underline text-xs">
+                        Modifier
+                    </button>
+                </div>
+                <form id="edit-dates-pack-<?= $pack->getId() ?>" method="post" action="<?= $url('Site\Cart.setDates') ?>"
+                      class="hidden flex-col sm:flex-row gap-3 flex">
+                    <?= $partial('partials/csrf') ?>
+                    <input type="date" name="start_date" required
+                           value="<?= htmlspecialchars($cart->getStartDate()->format('Y-m-d')) ?>"
+                           class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
+                           min="<?= date('Y-m-d') ?>">
+                    <input type="date" name="end_date" required
+                           value="<?= htmlspecialchars($cart->getEndDate()->format('Y-m-d')) ?>"
+                           class="flex-1 border border-green-300 rounded-lg px-3 py-1.5 text-sm bg-white text-gray-800"
+                           min="<?= date('Y-m-d') ?>">
+                    <input type="hidden" name="redirect" value="<?= $html($slug->packUrl($pack)) ?>">
+                    <button type="submit"
+                            class="bg-green-700 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-800 transition">
+                        Valider
+                    </button>
+                </form>
+            </div>
+
             <?php if (isset($cart->getPacks()[$pack->getId()])): ?>
                 <div class="flex items-center gap-3">
                     <span class="flex-1 block text-center bg-green-100 text-green-800 font-semibold py-3 rounded-xl border border-green-200">
@@ -151,11 +196,6 @@ $cart            = CartState::cast($tpl->get('cart'));
                     </button>
                 </form>
             <?php endif; ?>
-        <?php else: ?>
-            <a href="<?= $html($url('Site\Cart.index')) ?>"
-               class="block w-full text-center bg-brand-600 text-white font-semibold py-3 rounded-xl hover:bg-brand-700 transition">
-                Choisir mes dates pour réserver
-            </a>
         <?php endif; ?>
         <p class="text-xs text-gray-400 mt-2 text-center">Réservation confirmée après validation de votre devis.</p>
     </div>
