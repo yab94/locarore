@@ -23,12 +23,20 @@ class SitemapController extends SiteController
 
         $this->response->header('Content-Type', 'application/xml; charset=UTF-8');
 
+        $baseUrl = $this->slugResolver->siteUrl();
+
         $this->render('site/sitemap', [
-            'baseUrl'    => $this->slugResolver->siteUrl(),
-            'categories' => $data['categories'],
-            'products'   => $data['products'],
-            'packs'      => $data['packs'],
-            'tags'       => $data['tags'],
+            'baseUrl'      => $baseUrl,
+            'staticUrls'   => [
+                ['loc' => $baseUrl . $this->urlResolver->resolve('Site\Home.index'),    'priority' => '1.0', 'lastmod' => date('Y-m-d')],
+                ['loc' => $baseUrl . $this->urlResolver->resolve('Site\Faq.index'),     'priority' => '0.5'],
+                ['loc' => $baseUrl . $this->urlResolver->resolve('Site\Contact.index'), 'priority' => '0.5'],
+                ['loc' => $baseUrl . $this->urlResolver->resolve('Site\Legal.mentions'),'priority' => '0.3'],
+            ],
+            'categories'   => $data['categories'],
+            'products'     => $data['products'],
+            'packs'        => $data['packs'],
+            'tags'         => $data['tags'],
         ], '');
     }
 }

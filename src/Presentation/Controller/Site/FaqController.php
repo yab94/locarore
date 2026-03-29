@@ -20,9 +20,13 @@ final class FaqController extends SiteController
     #[Route('GET', '/faq')]
     public function index(): void
     {
+        $appName = $this->config->getString('app.name');
+
         $this->render('site/faq', [
             'meta'  => new PageMeta(
-                title: 'FAQ — ' . $this->config->getString('app.name'),
+                title:        'FAQ — ' . $appName,
+                description:  'Retrouvez les réponses aux questions fréquentes sur la location de matériel événementiel ' . $appName . '.',
+                canonicalUrl: $this->slugResolver->siteUrl() . $this->urlResolver->resolve('Site\Faq.index'),
             ),
             'items' => $this->getVisibleFaqItems->execute(),
         ]);

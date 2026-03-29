@@ -3,6 +3,7 @@ use Rore\Presentation\Seo\SlugResolver;
 use RRB\Type\Cast;
 
 $baseUrl    = Cast::string($tpl->get('baseUrl'));
+$staticUrls = Cast::array($tpl->get('staticUrls'));
 $categories = Cast::array($tpl->get('categories'));
 $products   = Cast::array($tpl->get('products'));
 $packs      = Cast::array($tpl->get('packs'));
@@ -13,11 +14,13 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
+    <?php foreach ($staticUrls as $entry): ?>
     <url>
-        <loc><?= htmlspecialchars($baseUrl . '/') ?></loc>
-        <lastmod><?= date('Y-m-d') ?></lastmod>
-        <priority>1.0</priority>
+        <loc><?= htmlspecialchars($entry['loc']) ?></loc>
+        <?php if (isset($entry['lastmod'])): ?><lastmod><?= $entry['lastmod'] ?></lastmod><?php endif ?>
+        <priority><?= $entry['priority'] ?></priority>
     </url>
+    <?php endforeach ?>
 
     <?php foreach ($categories as $cat): ?>
     <url>

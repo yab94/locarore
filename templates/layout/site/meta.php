@@ -1,6 +1,8 @@
 <?php
-$html = RRB\View\HtmlEncoder::cast($tpl->get('html'));
-$meta = RRB\View\PageMeta::cast($tpl->get('meta'));
+$html     = RRB\View\HtmlEncoder::cast($tpl->get('html'));
+$meta     = RRB\View\PageMeta::cast($tpl->get('meta'));
+$config   = \RRB\Bootstrap\Config::cast($tpl->get('config'));
+$siteName = $config->getString('app.name', '');
 ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +20,9 @@ $meta = RRB\View\PageMeta::cast($tpl->get('meta'));
     <!-- Open Graph / Twitter Card -->
     <meta property="og:type"        content="<?= $html($meta->ogType) ?>">
     <meta property="og:locale"      content="fr_FR">
+    <?php if ($siteName !== ''): ?>
+    <meta property="og:site_name"   content="<?= $html($siteName) ?>">
+    <?php endif ?>
     <meta property="og:title"       content="<?= $html($meta->title) ?>">
     <?php if ($meta->description !== ''): ?>
     <meta property="og:description" content="<?= $html($meta->description) ?>">
