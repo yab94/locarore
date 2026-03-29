@@ -32,21 +32,17 @@ $items = Cast::array($tpl->tryGet('items', []));
                     <td class="px-6 py-4 text-gray-400 font-mono text-xs text-center"><?= $item->getPosition() ?></td>
                     <td class="px-6 py-4 font-medium text-gray-800"><?= $html($item->getQuestion()) ?></td>
                     <td class="px-6 py-4 text-center">
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
-                            <?= $item->isVisible() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">
-                            <?= $item->isVisible() ? 'Visible' : 'Masqué' ?>
-                        </span>
+                        <form method="post" action="<?= $url('Admin\\Faq.toggle', ['id' => $item->getId()]) ?>" class="inline">
+                            <?= $partial('partials/csrf') ?>
+                            <button type="submit"
+                                    class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $item->isVisible() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' ?> transition">
+                                <?= $item->isVisible() ? 'Visible' : 'Masqué' ?>
+                            </button>
+                        </form>
                     </td>
                     <td class="px-6 py-4 text-right space-x-3">
                         <a href="<?= $url('Admin\\Faq.edit', ['id' => $item->getId()]) ?>"
                            class="text-brand-600 hover:underline text-sm">Modifier</a>
-                        <form method="post" action="<?= $url('Admin\\Faq.toggle', ['id' => $item->getId()]) ?>"
-                              class="inline">
-                            <?= $partial('partials/csrf') ?>
-                            <button type="submit" class="text-gray-500 hover:text-gray-800 text-sm transition">
-                                <?= $item->isVisible() ? 'Masquer' : 'Afficher' ?>
-                            </button>
-                        </form>
                         <form method="post" action="<?= $url('Admin\\Faq.delete', ['id' => $item->getId()]) ?>"
                               class="inline"
                               onsubmit="return confirm('Supprimer cette question ?')">

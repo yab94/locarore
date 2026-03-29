@@ -40,21 +40,17 @@ $categories = Cast::array($tpl->tryGet('categories', []));
                     <td class="px-6 py-4 text-gray-400 font-mono text-xs"><?= $html($cat->getSlug()) ?></td>
                     <td class="px-6 py-4 text-center font-medium <?= $isEmpty ? 'text-red-600' : 'text-gray-700' ?>"><?= $cat->getProductCount() ?></td>
                     <td class="px-6 py-4 text-center">
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
-                            <?= $cat->isActive() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">
-                            <?= $cat->isActive() ? 'Actif' : 'Inactif' ?>
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-right space-x-3">
-                        <a href="<?= $url('Admin\\Category.edit', ['id' => $cat->getId()]) ?>"
-                           class="text-brand-600 hover:underline text-sm">Modifier</a>
-                        <form method="post" action="<?= $url('Admin\\Category.toggle', ['id' => $cat->getId()]) ?>"
-                              class="inline">
+                        <form method="post" action="<?= $url('Admin\\Category.toggle', ['id' => $cat->getId()]) ?>" class="inline">
                             <?= $partial('partials/csrf') ?>
-                            <button type="submit" class="text-gray-500 hover:text-gray-800 text-sm transition">
-                                <?= $cat->isActive() ? 'Désactiver' : 'Activer' ?>
+                            <button type="submit"
+                                    class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $cat->isActive() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' ?> transition">
+                                <?= $cat->isActive() ? 'Actif' : 'Inactif' ?>
                             </button>
                         </form>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="<?= $url('Admin\\Category.edit', ['id' => $cat->getId()]) ?>"
+                           class="text-brand-600 hover:underline text-sm">Modifier</a>
                     </td>
                 </tr>
             <?php endforeach; ?>

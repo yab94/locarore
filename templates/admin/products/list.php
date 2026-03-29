@@ -61,20 +61,17 @@ $categoriesById = Cast::array($tpl->tryGet('categoriesById', []));
                     </td>
                     <td class="px-6 py-4 text-right"><?= number_format($p->getPriceBase(), 2, ',', ' ') ?> €</td>
                     <td class="px-6 py-4 text-center">
-                        <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
-                            <?= $p->isActive() ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500' ?>">
-                            <?= $p->isActive() ? 'Actif' : 'Inactif' ?>
-                        </span>
-                    </td>
-                    <td class="px-6 py-4 text-right space-x-3">
-                        <a href="<?= $url('Admin\Product.edit', ['id' => $p->getId()]) ?>"
-                           class="text-brand-600 hover:underline">Modifier</a>
                         <form method="post" action="<?= $url('Admin\Product.toggle', ['id' => $p->getId()]) ?>" class="inline">
                             <?= $partial('partials/csrf') ?>
-                            <button type="submit" class="text-gray-500 hover:text-gray-800 transition">
-                                <?= $p->isActive() ? 'Désactiver' : 'Activer' ?>
+                            <button type="submit"
+                                    class="inline-block px-2 py-0.5 rounded-full text-xs font-medium <?= $p->isActive() ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' ?> transition">
+                                <?= $p->isActive() ? 'Actif' : 'Inactif' ?>
                             </button>
                         </form>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="<?= $url('Admin\Product.edit', ['id' => $p->getId()]) ?>"
+                           class="text-brand-600 hover:underline">Modifier</a>
                     </td>
                 </tr>
             <?php endforeach; ?>
