@@ -28,7 +28,13 @@ final class Container
     /** @var array<string, ServiceLifetime> Durée de vie des services bindés */
     private array $resolverLifetimes = [];
 
-    public function __construct() {
+    /** @var array<string, true> Services en cours de résolution (détection de cycles) */
+    private array $resolving = [];
+
+    /**
+     * @param bool $debug Active les validations coûteuses (à désactiver en prod).
+     */
+    public function __construct(private readonly bool $debug = false) {
         $this->instances[Container::class] = $this;
     }
 
@@ -69,11 +75,15 @@ final class Container
      */
     public function bind(string $class, string $parameter, \Closure $resolver): void
     {
+        if ($this->debug) {
+            $this->assertBindTarget($class, $parameter);
+        }
+
         $this->resolvers[$this->parameterResolverKey($class, $parameter)] = $resolver;
     }
 
     /**
-        * Résout un service nommé ou une classe, en construisant l'instance si nécessaire.
+     * Résout un service nommé ou une classe, en construisant l'instance si nécessaire.
      */
     public function get(string $idOrClass): object
     {
@@ -86,7 +96,13 @@ final class Container
                 return $this->instances[$serviceKey];
             }
 
-            $instance = $resolver($this);
+            $this->guardCycle($idOrClass);
+            $this->resolving[$idOrClass] = true;
+            try {
+                $instance = $resolver($this);
+            } finally {
+                unset($this->resolving[$idOrClass]);
+            }
 
             if ($lifetime === ServiceLifetime::SINGLETON) {
                 $this->instances[$serviceKey] = $instance;
@@ -100,7 +116,13 @@ final class Container
             return $this->instances[$idOrClass];
         }
 
-        $instance = $this->make($idOrClass);
+        $this->guardCycle($idOrClass);
+        $this->resolving[$idOrClass] = true;
+        try {
+            $instance = $this->make($idOrClass);
+        } finally {
+            unset($this->resolving[$idOrClass]);
+        }
 
         $this->instances[$idOrClass] = $instance;
 
@@ -217,6 +239,43 @@ final class Container
     private function resolveParameterResolver(string $class, string $parameter): ?\Closure
     {
         return $this->resolvers[$this->parameterResolverKey($class, $parameter)] ?? null;
+    }
+
+    private function guardCycle(string $id): void
+    {
+        if (isset($this->resolving[$id])) {
+            $chain = implode(' → ', array_keys($this->resolving)) . ' → ' . $id;
+            throw new RuntimeException(
+                "Container : dépendance circulaire détectée : {$chain}."
+            );
+        }
+    }
+
+    private function assertBindTarget(string $class, string $parameter): void
+    {
+        if (!class_exists($class)) {
+            throw new RuntimeException(
+                "Container : bind() — classe inconnue « {$class} »."
+            );
+        }
+
+        $constructor = (new ReflectionClass($class))->getConstructor();
+
+        if ($constructor === null) {
+            throw new RuntimeException(
+                "Container : bind() — « {$class} » n'a pas de constructeur."
+            );
+        }
+
+        foreach ($constructor->getParameters() as $param) {
+            if ($param->getName() === $parameter) {
+                return;
+            }
+        }
+
+        throw new RuntimeException(
+            "Container : bind() — paramètre « \${$parameter} » introuvable dans le constructeur de « {$class} »."
+        );
     }
 
     private function resolverKey(string $id): string

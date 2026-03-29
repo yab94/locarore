@@ -18,7 +18,7 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 \RRB\Bootstrap\PhpRuntime::apply($config->getArray('php') ?? []);
 
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
-$container = new \RRB\Di\Container();
+$container = new \RRB\Di\Container($config->getString('app.env') !== 'prod');
 $container->register(\RRB\Bootstrap\Config::class, $config);
 require BASE_PATH . '/config/bindings.php';
 
