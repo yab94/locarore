@@ -25,9 +25,6 @@ final class Container
     /** @var array<string, \Closure> Registre interne unique des resolvers */
     private array $resolvers = [];
 
-    /** @var array<string, ServiceLifetime> Durée de vie des services bindés */
-    private array $resolverLifetimes = [];
-
     /** @var array<string, true> Services en cours de résolution (détection de cycles) */
     private array $resolving = [];
 
@@ -39,43 +36,19 @@ final class Container
     }
 
     /**
-     * Déclare un binding DI unique (type ou service nommé).
+     * Déclare un binding DI.
      *
-     * @param string             $id       ID du service (FQCN ou nom métier)
-     * @param object|string      $factory  Closure(Container): object, FQCN cible, ou instance déjà construite
-     * @param ServiceLifetime    $lifetime Durée de vie du resolver (SINGLETON par défaut)
+     * La Closure reçoit le Container et retourne l'instance. Elle contrôle la durée de vie :
+     *   - Singleton : fn($c) => $c->get(Impl::class)   — get() met en cache
+     *   - Transient : fn($c) => $c->make(Impl::class)  — make() ne met pas en cache
+     *   - Instance  : fn()   => $monInstance            — retourne toujours le même objet
+     *
+     * @param string   $id      FQCN ou nom de service
+     * @param \Closure $factory function(Container): object
      */
-    public function register(
-        string $id,
-        object|string $factory,
-        ServiceLifetime $lifetime = ServiceLifetime::SINGLETON,
-    ): void
+    public function register(string $id, \Closure $factory): void
     {
-        if (!$factory instanceof \Closure && is_object($factory)) {
-            if ($this->debug) {
-                $this->assertRegisterImplements($id, $factory);
-            }
-            $this->instances[$id] = $factory;
-            return;
-        }
-
-        if (is_string($factory)) {
-            $target = $factory;
-            if ($this->debug) {
-                if (!class_exists($target) && !interface_exists($target)) {
-                    throw new RuntimeException(
-                        "Container : register() — classe ou interface inconnue « {$target} »."
-                    );
-                }
-                $this->assertRegisterImplements($id, $target);
-            }
-            $factory = fn(self $c) => $lifetime === ServiceLifetime::TRANSIENT && class_exists($target)
-                ? $c->make($target)
-                : $c->get($target);
-        }
-
         $this->resolvers[$this->resolverKey($id)] = $factory;
-        $this->resolverLifetimes[$id] = $lifetime;
     }
 
     /**
@@ -100,13 +73,6 @@ final class Container
     {
         $resolver = $this->resolveResolver($idOrClass);
         if ($resolver !== null) {
-            $serviceKey = $this->resolverInstanceKey($idOrClass);
-            $lifetime   = $this->resolverLifetimes[$idOrClass] ?? ServiceLifetime::SINGLETON;
-
-            if ($lifetime === ServiceLifetime::SINGLETON && isset($this->instances[$serviceKey])) {
-                return $this->instances[$serviceKey];
-            }
-
             $this->guardCycle($idOrClass);
             $this->resolving[$idOrClass] = true;
             try {
@@ -114,11 +80,6 @@ final class Container
             } finally {
                 unset($this->resolving[$idOrClass]);
             }
-
-            if ($lifetime === ServiceLifetime::SINGLETON) {
-                $this->instances[$serviceKey] = $instance;
-            }
-
             return $instance;
         }
 
@@ -265,22 +226,6 @@ final class Container
         }
     }
 
-    private function assertRegisterImplements(string $id, object|string $factory): void
-    {
-        // Si $id n'est pas un type connu (ex: nom de service arbitraire), pas de vérification.
-        if (!class_exists($id) && !interface_exists($id)) {
-            return;
-        }
-
-        $factoryType = is_object($factory) ? get_class($factory) : $factory;
-
-        if (!is_a($factoryType, $id, true)) {
-            throw new RuntimeException(
-                "Container : register() — « {$factoryType} » n'implémente pas / n'étend pas « {$id} »."
-            );
-        }
-    }
-
     private function assertBindTarget(string $class, string $parameter): void
     {
         if (!class_exists($class)) {
@@ -311,11 +256,6 @@ final class Container
     private function resolverKey(string $id): string
     {
         return 'id:' . $id;
-    }
-
-    private function resolverInstanceKey(string $id): string
-    {
-        return 'id-instance:' . $id;
     }
 
     private function parameterResolverKey(string $class, string $parameter): string

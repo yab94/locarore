@@ -19,7 +19,7 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \RRB\Di\Container($config->getString('app.env') !== 'prod');
-$container->register(\RRB\Bootstrap\Config::class, $config);
+$container->register(\RRB\Bootstrap\Config::class, fn() => $config);
 require BASE_PATH . '/config/bindings.php';
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
