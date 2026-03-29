@@ -23,6 +23,7 @@ $container->register(Rore\Application\Contact\Port\ContactMessageRepositoryInter
 $container->register(Rore\Application\Contact\Port\MailerInterface::class, Rore\Infrastructure\Mail\SmtpMailerAdapter::class);
 $container->register(Rore\Application\Search\Port\SearchRepositoryInterface::class, Rore\Infrastructure\Persistence\MySqlSearchRepositoryAdapter::class);
 $container->register(Rore\Application\Settings\Port\SettingsRepositoryInterface::class, Rore\Infrastructure\Persistence\MySqlSettingsRepositoryAdapter::class);
+$container->register(Rore\Application\Faq\Port\FaqRepositoryInterface::class, Rore\Infrastructure\Persistence\MySqlFaqRepositoryAdapter::class);
 
 $container->bind(Rore\Application\Auth\UseCase\AuthenticateAdminUseCase::class, 'adminPassword', fn(Config $cfg) => $cfg->getString('admin.password'));
 $container->bind(Rore\Application\Auth\UseCase\AuthenticateAdminUseCase::class, 'sessionKey', fn(Config $cfg) => $cfg->getString('admin.session_key'));

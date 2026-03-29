@@ -52,12 +52,23 @@ final class Container
     ): void
     {
         if (!$factory instanceof \Closure && is_object($factory)) {
+            if ($this->debug) {
+                $this->assertRegisterImplements($id, $factory);
+            }
             $this->instances[$id] = $factory;
             return;
         }
 
         if (is_string($factory)) {
             $target = $factory;
+            if ($this->debug) {
+                if (!class_exists($target) && !interface_exists($target)) {
+                    throw new RuntimeException(
+                        "Container : register() — classe ou interface inconnue « {$target} »."
+                    );
+                }
+                $this->assertRegisterImplements($id, $target);
+            }
             $factory = fn(self $c) => $lifetime === ServiceLifetime::TRANSIENT && class_exists($target)
                 ? $c->make($target)
                 : $c->get($target);
@@ -226,7 +237,10 @@ final class Container
         }
 
         $value = $this->resolveClosure($resolver);
-        $this->assertParameterValueType($class, $param, $value);
+
+        if ($this->debug) {
+            $this->assertParameterValueType($class, $param, $value);
+        }
 
         return ['matched' => true, 'value' => $value];
     }
@@ -247,6 +261,22 @@ final class Container
             $chain = implode(' → ', array_keys($this->resolving)) . ' → ' . $id;
             throw new RuntimeException(
                 "Container : dépendance circulaire détectée : {$chain}."
+            );
+        }
+    }
+
+    private function assertRegisterImplements(string $id, object|string $factory): void
+    {
+        // Si $id n'est pas un type connu (ex: nom de service arbitraire), pas de vérification.
+        if (!class_exists($id) && !interface_exists($id)) {
+            return;
+        }
+
+        $factoryType = is_object($factory) ? get_class($factory) : $factory;
+
+        if (!is_a($factoryType, $id, true)) {
+            throw new RuntimeException(
+                "Container : register() — « {$factoryType} » n'implémente pas / n'étend pas « {$id} »."
             );
         }
     }

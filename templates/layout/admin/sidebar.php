@@ -40,6 +40,10 @@ $url  = RRB\Http\UrlResolver::cast($tpl->get('url'));
                class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
                 ✏️ Contenu
             </a>
+            <a href="<?= $url('Admin\Faq.index') ?>"
+               class="flex items-center gap-2 px-3 py-2 rounded hover:bg-gray-700 transition">
+                FAQ
+            </a>
         </nav>
         <div class="px-4 pb-6">
             <form method="post" action="<?= $url('Admin\Auth.logout') ?>">
