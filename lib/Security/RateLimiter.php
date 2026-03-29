@@ -13,7 +13,7 @@ use RRB\Session\SessionInterface;
  * La session ne stocke que l'état pur : attempts + locked_until.
  *
  * Usage (injection via bindParameter) :
- *   $container->bindParameter(LoginController::class, 'rateLimiter',
+ *   $container->bind(LoginController::class, 'rateLimiter',
  *       fn(SessionInterface $session) => [$session, 'admin_login', 5, 900]
  *   );
  *   private readonly RateLimiter $rateLimiter,

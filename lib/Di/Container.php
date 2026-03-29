@@ -15,7 +15,7 @@ use RuntimeException;
  * - Résout récursivement les dépendances du constructeur
  * - Stocke les instances (comportement singleton par défaut)
  * - Ne gère que les dépendances typées par classe/interface ;
- *   les scalaires doivent être déclarés via bind() ou bindParameter().
+ *   les scalaires doivent être déclarés via register() ou bind().
  */
 final class Container
 {
@@ -25,60 +25,84 @@ final class Container
     /** @var array<string, \Closure> Registre interne unique des resolvers */
     private array $resolvers = [];
 
+    /** @var array<string, ServiceLifetime> Durée de vie des services bindés */
+    private array $resolverLifetimes = [];
+
     public function __construct() {
         $this->instances[Container::class] = $this;
     }
 
     /**
-     * Déclare une factory pour un type donné.
-     * Utile pour les interfaces ou les classes avec des arguments scalaires.
+     * Déclare un binding DI unique (type ou service nommé).
      *
-     * @param string             $abstract Nom de classe ou d'interface (FQCN)
-     * @param object|string      $factory  Closure(Container): object, FQCN de la classe concrète, ou instance déjà construite
+     * @param string             $id       ID du service (FQCN ou nom métier)
+     * @param object|string      $factory  Closure(Container): object, FQCN cible, ou instance déjà construite
+     * @param ServiceLifetime    $lifetime Durée de vie du resolver (SINGLETON par défaut)
      */
-    public function bind(string $abstract, object|string $factory): void
+    public function register(
+        string $id,
+        object|string $factory,
+        ServiceLifetime $lifetime = ServiceLifetime::SINGLETON,
+    ): void
     {
         if (!$factory instanceof \Closure && is_object($factory)) {
-            $this->instances[$abstract] = $factory;
+            $this->instances[$id] = $factory;
             return;
         }
+
         if (is_string($factory)) {
-            $factory = fn($c) => $c->get($factory);
+            $target = $factory;
+            $factory = fn(self $c) => $lifetime === ServiceLifetime::TRANSIENT && class_exists($target)
+                ? $c->make($target)
+                : $c->get($target);
         }
-        $this->resolvers[$this->typeResolverKey($abstract)] = $factory;
+
+        $this->resolvers[$this->resolverKey($id)] = $factory;
+        $this->resolverLifetimes[$id] = $lifetime;
     }
 
     /**
      * Déclare un resolver contextuel pour un paramètre précis d'une classe.
      *
      * Exemple:
-     *   $container->bindParameter(Foo::class, 'bar', fn(Config $c) => $c->getString('x.y'));
+     *   $container->bind(Foo::class, 'bar', fn(Config $c) => $c->getString('x.y'));
      */
-    public function bindParameter(string $class, string $parameter, \Closure $resolver): void
+    public function bind(string $class, string $parameter, \Closure $resolver): void
     {
         $this->resolvers[$this->parameterResolverKey($class, $parameter)] = $resolver;
     }
 
     /**
-     * Résout une dépendance, en construisant l'instance si nécessaire.
-     *
-     * @template T of object
-     * @param class-string<T> $abstract
-     * @return T
+        * Résout un service nommé ou une classe, en construisant l'instance si nécessaire.
      */
-    public function get(string $abstract): object
+    public function get(string $idOrClass): object
     {
-        if (isset($this->instances[$abstract])) {
-            /** @var T */
-            return $this->instances[$abstract];
+        $resolver = $this->resolveResolver($idOrClass);
+        if ($resolver !== null) {
+            $serviceKey = $this->resolverInstanceKey($idOrClass);
+            $lifetime   = $this->resolverLifetimes[$idOrClass] ?? ServiceLifetime::SINGLETON;
+
+            if ($lifetime === ServiceLifetime::SINGLETON && isset($this->instances[$serviceKey])) {
+                return $this->instances[$serviceKey];
+            }
+
+            $instance = $resolver($this);
+
+            if ($lifetime === ServiceLifetime::SINGLETON) {
+                $this->instances[$serviceKey] = $instance;
+            }
+
+            return $instance;
         }
 
-        $resolver = $this->resolveTypeResolver($abstract);
-        $instance = $resolver !== null
-            ? $resolver($this)
-            : $this->make($abstract);
+        if (isset($this->instances[$idOrClass])) {
+            /** @var T */
+            return $this->instances[$idOrClass];
+        }
 
-        $this->instances[$abstract] = $instance;
+        $instance = $this->make($idOrClass);
+
+        $this->instances[$idOrClass] = $instance;
 
         return $instance;
     }
@@ -145,7 +169,7 @@ final class Container
                 throw new RuntimeException(
                     "Container : impossible de résoudre le paramètre « \${$param->getName()} »"
                     . " du constructeur de « {$class} »."
-                    . " Déclarez une factory via bind()."
+                    . " Déclarez une factory via register()."
                 );
             }
         }
@@ -185,9 +209,9 @@ final class Container
         return ['matched' => true, 'value' => $value];
     }
 
-    private function resolveTypeResolver(string $abstract): ?\Closure
+    private function resolveResolver(string $id): ?\Closure
     {
-        return $this->resolvers[$this->typeResolverKey($abstract)] ?? null;
+        return $this->resolvers[$this->resolverKey($id)] ?? null;
     }
 
     private function resolveParameterResolver(string $class, string $parameter): ?\Closure
@@ -195,9 +219,14 @@ final class Container
         return $this->resolvers[$this->parameterResolverKey($class, $parameter)] ?? null;
     }
 
-    private function typeResolverKey(string $abstract): string
+    private function resolverKey(string $id): string
     {
-        return 'type:' . $abstract;
+        return 'id:' . $id;
+    }
+
+    private function resolverInstanceKey(string $id): string
+    {
+        return 'id-instance:' . $id;
     }
 
     private function parameterResolverKey(string $class, string $parameter): string

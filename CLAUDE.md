@@ -25,7 +25,7 @@ Regle DI:
 - toute la configuration DI doit vivre hors code metier (composition root), pas dans les classes source.
 - les attributs de binding dans le code source sont interdits.
 - bind() est utilise pour les mappings globaux (interface -> implementation).
-- bindParameter() est utilise pour les cas contextuels/scalaires (configuration par parametre).
+- bind() est utilise pour les cas contextuels/scalaires (configuration par parametre).
 
 Positionnement par rapport a la theorie "pure":
 - ecart assume 1: Domain peut utiliser Castable/Typable de RRB.
