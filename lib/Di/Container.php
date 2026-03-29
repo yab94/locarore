@@ -22,11 +22,8 @@ final class Container
     /** @var array<string, object> Instances déjà résolues */
     private array $instances = [];
 
-    /** @var array<string, callable> Factories déclarées explicitement */
-    private array $bindings = [];
-
-    /** @var array<string, \Closure> Resolvers contextuels par classe+paramètre */
-    private array $parameterBindings = [];
+    /** @var array<string, \Closure> Registre interne unique des resolvers */
+    private array $resolvers = [];
 
     public function __construct() {
         $this->instances[Container::class] = $this;
@@ -48,7 +45,7 @@ final class Container
         if (is_string($factory)) {
             $factory = fn($c) => $c->get($factory);
         }
-        $this->bindings[$abstract] = $factory;
+        $this->resolvers[$this->typeResolverKey($abstract)] = $factory;
     }
 
     /**
@@ -59,7 +56,7 @@ final class Container
      */
     public function bindParameter(string $class, string $parameter, \Closure $resolver): void
     {
-        $this->parameterBindings[$this->parameterBindingKey($class, $parameter)] = $resolver;
+        $this->resolvers[$this->parameterResolverKey($class, $parameter)] = $resolver;
     }
 
     /**
@@ -76,8 +73,9 @@ final class Container
             return $this->instances[$abstract];
         }
 
-        $instance = isset($this->bindings[$abstract])
-            ? ($this->bindings[$abstract])($this)
+        $resolver = $this->resolveTypeResolver($abstract);
+        $instance = $resolver !== null
+            ? $resolver($this)
             : $this->make($abstract);
 
         $this->instances[$abstract] = $instance;
@@ -176,20 +174,35 @@ final class Container
      */
     private function resolveParameterBinding(string $class, \ReflectionParameter $param): array
     {
-        $key = $this->parameterBindingKey($class, $param->getName());
-        if (!isset($this->parameterBindings[$key])) {
+        $resolver = $this->resolveParameterResolver($class, $param->getName());
+        if ($resolver === null) {
             return ['matched' => false];
         }
 
-        $value = $this->resolveClosure($this->parameterBindings[$key]);
+        $value = $this->resolveClosure($resolver);
         $this->assertParameterValueType($class, $param, $value);
 
         return ['matched' => true, 'value' => $value];
     }
 
-    private function parameterBindingKey(string $class, string $parameter): string
+    private function resolveTypeResolver(string $abstract): ?\Closure
     {
-        return $class . '::$' . $parameter;
+        return $this->resolvers[$this->typeResolverKey($abstract)] ?? null;
+    }
+
+    private function resolveParameterResolver(string $class, string $parameter): ?\Closure
+    {
+        return $this->resolvers[$this->parameterResolverKey($class, $parameter)] ?? null;
+    }
+
+    private function typeResolverKey(string $abstract): string
+    {
+        return 'type:' . $abstract;
+    }
+
+    private function parameterResolverKey(string $class, string $parameter): string
+    {
+        return 'param:' . $class . '::$' . $parameter;
     }
 
     private function assertParameterValueType(string $class, \ReflectionParameter $param, mixed $value): void

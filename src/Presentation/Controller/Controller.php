@@ -5,10 +5,22 @@ declare(strict_types=1);
 namespace Rore\Presentation\Controller;
 
 use Rore\Presentation\Seo\SlugResolver;
+use RRB\Bootstrap\Config;
+use RRB\Http\UrlResolver;
+use RRB\Security\CsrfTokenManager;
+use RRB\Session\SessionInterface;
+use RRB\View\HtmlEncoder;
+use RRB\View\PageMeta;
+use RRB\View\Template;
 
 abstract class Controller extends \RRB\Http\Controller
 {
     public function __construct(
+        readonly UrlResolver $urlResolver,
+        readonly Config $config,
+        private readonly HtmlEncoder $html,
+        private readonly SessionInterface $session,
+        private readonly CsrfTokenManager $csrfTokenManager,
         readonly SlugResolver $slugResolver,
         ...$parentDeps
     ) {
@@ -20,9 +32,52 @@ abstract class Controller extends \RRB\Http\Controller
         array  $data   = [],
         ?string $layout = null
     ): void {
-        parent::render($template, [
+        // Helpers globaux injectés dans chaque template
+        $shared = [
+            'config'      => $this->config,
+            'html'        => $this->html,
+            'url'         => $this->urlResolver,
+            'csrfToken'   => $this->csrfTokenManager->token(),
+            'flash'       => $this->getFlash(),
             'slug'    => $this->slugResolver,
-            ...$data,  // Les données spécifiques ont priorité
-        ], $layout);
+            'meta'        => $data['meta'] ?? new PageMeta(title: $this->config->getString('app.name')),
+        ];
+
+        $tpl     = new Template($template, [...$shared, ...$data]);
+        $content = $tpl->render();
+
+        echo $layout ? $tpl->partial($layout, ['content' => $content]) : $content;
+    }
+
+    protected function flash(string $type, string $message): void
+    {
+        $flash = $this->session->get('flash', []);
+        if (!is_array($flash)) {
+            $flash = [];
+        }
+        $flash[$type] = $message;
+        $this->session->set('flash', $flash);
+    }
+
+    protected function getFlash(): array
+    {
+        $flash = $this->session->get('flash', []);
+        $this->session->remove('flash');
+        return is_array($flash) ? $flash : [];
+    }
+
+    protected function requirePost(): void
+    {
+        if ($this->request->method !== 'POST') {
+            $this->response->setStatusCode(405);
+            $this->response->write('Method Not Allowed');
+            exit;
+        }
+        $posted = $this->request->body->getString($this->csrfTokenManager->postKey());
+        if (!$this->csrfTokenManager->validate($posted)) {
+            $this->response->setStatusCode(419);
+            $this->response->write('Token CSRF invalide.');
+            exit;
+        }
     }
 }
