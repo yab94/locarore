@@ -30,8 +30,9 @@ if ($_item) {
         'offers' => [
             '@type'         => 'Offer',
             'priceCurrency' => 'EUR',
-            'price'         => (string) ($_type === 'pack' ? $_item->getPricePerDay() : $_item->getPriceBase()),
-            'availability'  => 'https://schema.org/InStock',
+            'price'             => (string) ($_type === 'pack' ? $_item->getPricePerDay() : $_item->getPriceBase()),
+            'priceValidUntil'   => date('Y-12-31'),
+            'availability'      => 'https://schema.org/InStock',
         ],
     ];
 

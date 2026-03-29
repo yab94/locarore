@@ -49,6 +49,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
     <?php foreach ($tags as $tag): ?>
     <url>
         <loc><?= htmlspecialchars($baseUrl . $slug->tagUrl($tag)) ?></loc>
+        <lastmod><?= date('Y-m-d') ?></lastmod>
         <priority>0.6</priority>
     </url>
     <?php endforeach ?>

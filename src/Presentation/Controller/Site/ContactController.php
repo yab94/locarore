@@ -21,7 +21,9 @@ final class ContactController extends SiteController
     {
         $this->render('site/contact', [
             'meta' => (new \RRB\View\PageMeta(
-                title: 'Contactez-nous — ' . $this->config->getString('app.name'),
+                title:        'Contactez-nous — ' . $this->config->getString('app.name'),
+                description:  'Contactez ' . $this->config->getString('app.name') . ' pour toute demande de location de décoration événementielle à ' . $this->config->getString('seo.city') . ', près de ' . $this->config->getString('seo.nearby_city') . '.',
+                canonicalUrl: $this->slugResolver->siteUrl() . $this->urlResolver->resolve('Site\Contact.index'),
             )),
         ]);
     }

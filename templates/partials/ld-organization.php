@@ -9,11 +9,13 @@ $_meta    = \RRB\View\PageMeta::cast($tpl->get('meta'));
 $_siteUrl   = $_slug->siteUrl();
 $_name      = $_config->getString('app.name');
 $_desc      = $_config->getString('app.description');
-$_city       = $_config->getString('seo.city');
-$_postal     = $_config->getString('seo.postal_code');
-$_nearbyCity = $_config->getString('seo.nearby_city');
-$_region     = $_config->getString('seo.region');
-$_regionFull = $_config->getString('seo.region_full');
+$_city        = $_config->getString('seo.city');
+$_postal      = $_config->getString('seo.postal_code');
+$_nearbyCity  = $_config->getString('seo.nearby_city');
+$_region      = $_config->getString('seo.region');
+$_regionFull  = $_config->getString('seo.region_full');
+$_telephone   = $_config->getString('seo.telephone');
+$_openingHrs  = $_config->getString('seo.opening_hours');
 
 $_schema = [
     '@context' => 'https://schema.org',
@@ -37,6 +39,8 @@ $_schema = [
                 ['@type' => 'AdministrativeArea',   'name' => $_region],
                 ['@type' => 'AdministrativeArea',   'name' => $_regionFull],
             ],
+            ...($_telephone !== '' ? ['telephone' => $_telephone] : []),
+            ...($_openingHrs !== '' ? ['openingHours' => $_openingHrs] : []),
         ],
         [
             '@type'           => 'WebSite',
