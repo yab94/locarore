@@ -12,10 +12,10 @@ use RRB\Session\SessionInterface;
  * Les seuils et la clé sont fixés en constructeur.
  * La session ne stocke que l'état pur : attempts + locked_until.
  *
- * Usage (injection via #[Bind]) :
- *   #[Bind(static function(StorageInterface $s) {
- *       return [$s, 'admin_login', maxAttempts: 5, lockoutSeconds: 900];
- *   })]
+ * Usage (injection via bindParameter) :
+ *   $container->bindParameter(LoginController::class, 'rateLimiter',
+ *       fn(SessionInterface $session) => [$session, 'admin_login', 5, 900]
+ *   );
  *   private readonly RateLimiter $rateLimiter,
  */
 class RateLimiter

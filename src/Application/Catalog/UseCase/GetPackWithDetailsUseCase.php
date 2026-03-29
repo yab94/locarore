@@ -8,10 +8,6 @@ use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
 use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Récupère un pack avec toutes ses données liées.
@@ -19,11 +15,8 @@ use RRB\Di\BindAdapter;
 final class GetPackWithDetailsUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private readonly PackRepositoryInterface $packRepo,
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
     ) {}
 

@@ -8,7 +8,6 @@ use Rore\Domain\Catalog\Entity\Category;
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Domain\Catalog\Entity\Product;
 use Rore\Domain\Catalog\Entity\Tag;
-use RRB\Di\BindConfig;
 use RRB\Type\Castable;
 
 /**
@@ -20,15 +19,10 @@ final class SlugResolver
     use Castable;
 
     public function __construct(
-        #[BindConfig('seo.site_url')]
         private string $siteUrl,
-        #[BindConfig('seo.categories_base_url')]
         private string $categoriesBaseUrl,
-        #[BindConfig('seo.products_base_url')]
         private string $productsBaseUrl,
-        #[BindConfig('seo.packs_base_url')]
         private string $packsBaseUrl,
-        #[BindConfig('seo.tags_base_url')]
         private string $tagsBaseUrl,
     ) {
     }

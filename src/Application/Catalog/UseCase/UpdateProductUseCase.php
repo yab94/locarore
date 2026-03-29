@@ -9,18 +9,12 @@ use Rore\Application\Catalog\Port\TagRepositoryInterface;
 use Rore\Domain\Catalog\ValueObject\Slug;
 use Rore\Application\Catalog\Service\SlugUniquenessService;
 use Rore\Application\Catalog\Port\SlugUniquenessServiceInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use Rore\Infrastructure\Persistence\MySqlTagRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 class UpdateProductUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
-        #[BindAdapter(SlugUniquenessService::class)]
         private SlugUniquenessServiceInterface $slugChecker,
-        #[BindAdapter(MySqlTagRepositoryAdapter::class)]
         private TagRepositoryInterface $tagRepository,
     ) {}
 

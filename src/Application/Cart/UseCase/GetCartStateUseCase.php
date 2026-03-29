@@ -7,7 +7,6 @@ namespace Rore\Application\Cart\UseCase;
 use Rore\Domain\Cart\ValueObject\CartState;
 use Rore\Application\Cart\Port\CartServiceInterface;
 use Rore\Application\Cart\Service\CartService;
-use RRB\Di\BindAdapter;
 
 /**
  * Retourne un snapshot read-only de l'état du panier.
@@ -16,7 +15,6 @@ use RRB\Di\BindAdapter;
 final class GetCartStateUseCase
 {
     public function __construct(
-        #[BindAdapter(CartService::class)]
         private readonly CartServiceInterface $cart,
     ) {}
 

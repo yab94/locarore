@@ -6,8 +6,6 @@ namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
 use Rore\Domain\Reservation\ValueObject\ReservationStatus;
-use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Transitions manuelles de statut (retours arrière, corrections admin).
@@ -16,7 +14,6 @@ use RRB\Di\BindAdapter;
 class SetReservationStatusUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private ReservationRepositoryInterface $repo,
     ) {}
 

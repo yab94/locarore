@@ -6,7 +6,6 @@ namespace RRB\Http;
 
 use RRB\Bootstrap\Config;
 use RRB\Security\CsrfTokenManager;
-use RRB\Di\BindAdapter;
 use RRB\Session\PhpSession;
 use RRB\Session\SessionInterface;
 use RRB\View\HtmlEncoder;
@@ -21,7 +20,6 @@ abstract class Controller
         readonly UrlResolver $urlResolver,
         readonly Config $config,
         private readonly HtmlEncoder $html,
-        #[BindAdapter(PhpSession::class)]
         private readonly SessionInterface $session,
         private readonly CsrfTokenManager $csrfTokenManager,
     ) {}

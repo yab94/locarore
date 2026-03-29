@@ -5,13 +5,10 @@ declare(strict_types=1);
 namespace Rore\Application\Search\UseCase;
 
 use Rore\Application\Search\Port\SearchRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlSearchRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 class SearchUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlSearchRepositoryAdapter::class)]
         private readonly SearchRepositoryInterface $repository,
     ) {}
 

@@ -9,10 +9,6 @@ use Rore\Application\Catalog\Port\PackRepositoryInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Domain\Catalog\Service\PricingService;
 use Rore\Domain\Catalog\Service\PricingServiceInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Récupère les données du panier avec les prix calculés.
@@ -20,13 +16,9 @@ use RRB\Di\BindAdapter;
 final class GetCartDataUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
-        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private readonly PackRepositoryInterface $packRepo,
-        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
-        #[BindAdapter(PricingService::class)]
         private readonly PricingServiceInterface     $pricingService,
     ) {}
 

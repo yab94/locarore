@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RRB\Security;
 
-use RRB\Di\BindAdapter;
 use RRB\Session\PhpSession;
 use RRB\Session\SessionInterface;
 
@@ -20,7 +19,6 @@ final class CsrfTokenManager
     private const POST_KEY    = '_csrf';
 
     public function __construct(
-        #[BindAdapter(PhpSession::class)]
         private readonly SessionInterface $session,
     ) {}
 

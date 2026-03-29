@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Rore\Application\Settings\UseCase;
 
 use Rore\Application\Settings\Port\SettingsRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlSettingsRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Récupère tous les paramètres de configuration.
@@ -14,7 +12,6 @@ use RRB\Di\BindAdapter;
 final class GetAllSettingsUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlSettingsRepositoryAdapter::class)]
         private readonly SettingsRepositoryInterface $settingsRepo,
     ) {}
 

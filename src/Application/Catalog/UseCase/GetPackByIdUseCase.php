@@ -6,8 +6,6 @@ namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Domain\Catalog\Entity\Pack;
 use Rore\Application\Catalog\Port\PackRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlPackRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Récupère un pack par son ID.
@@ -15,7 +13,6 @@ use RRB\Di\BindAdapter;
 final class GetPackByIdUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlPackRepositoryAdapter::class)]
         private readonly PackRepositoryInterface $packRepo,
     ) {}
 

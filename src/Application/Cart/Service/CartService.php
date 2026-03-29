@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Rore\Application\Cart\Service;
 
-use RRB\Di\BindAdapter;
 use RRB\Type\Castable;
-use RRB\Session\PhpSession;
 use RRB\Session\SessionInterface;
 use Rore\Application\Cart\Port\CartServiceInterface;
 
@@ -16,7 +14,6 @@ final class CartService implements CartServiceInterface
     private const KEY = 'rore_cart';
 
     public function __construct(
-        #[BindAdapter(PhpSession::class)]
         private readonly SessionInterface $session,
     ) {}
 

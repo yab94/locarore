@@ -20,6 +20,7 @@ $config->parseIni(BASE_PATH . '/config/' . $config->getString('app.env') . '.ini
 // ─── Conteneur DI ──────────────────────────────────────────────────────────
 $container = new \RRB\Di\Container();
 $container->bind(\RRB\Bootstrap\Config::class, $config);
+require BASE_PATH . '/config/parameter-bindings.php';
 
 // ─── Router + UrlResolver ──────────────────────────────────────────────────
 $scanner = new \RRB\Http\RouteScanner();

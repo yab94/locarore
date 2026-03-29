@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Application\Catalog\Port\CategoryRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlCategoryRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Récupère toutes les catégories du catalogue.
@@ -14,7 +12,6 @@ use RRB\Di\BindAdapter;
 final class GetAllCategoriesUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlCategoryRepositoryAdapter::class)]
         private readonly CategoryRepositoryInterface $categoryRepo,
     ) {}
 

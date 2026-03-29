@@ -411,7 +411,7 @@ final class DddArchitectureTest
 
                 $type = $param->getType();
                 if ($type === null || !($type instanceof ReflectionNamedType)) continue;
-                if ($type->isBuiltin()) continue; // scalaires OK (#[BindConfig])
+                if ($type->isBuiltin()) continue; // scalaires OK (bindParameter)
 
                 $typeName = $type->getName();
 

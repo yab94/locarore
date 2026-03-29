@@ -8,7 +8,6 @@ use ReflectionClass;
 use ReflectionFunction;
 use ReflectionNamedType;
 use RuntimeException;
-use RRB\Bootstrap\Config;
 
 /**
  * Conteneur DI minimaliste avec auto-wiring par réflexion.
@@ -16,7 +15,7 @@ use RRB\Bootstrap\Config;
  * - Résout récursivement les dépendances du constructeur
  * - Stocke les instances (comportement singleton par défaut)
  * - Ne gère que les dépendances typées par classe/interface ;
- *   les scalaires doivent être déclarés via bind()
+ *   les scalaires doivent être déclarés via bind() ou bindParameter().
  */
 final class Container
 {
@@ -25,6 +24,9 @@ final class Container
 
     /** @var array<string, callable> Factories déclarées explicitement */
     private array $bindings = [];
+
+    /** @var array<string, \Closure> Resolvers contextuels par classe+paramètre */
+    private array $parameterBindings = [];
 
     public function __construct() {
         $this->instances[Container::class] = $this;
@@ -47,6 +49,17 @@ final class Container
             $factory = fn($c) => $c->get($factory);
         }
         $this->bindings[$abstract] = $factory;
+    }
+
+    /**
+     * Déclare un resolver contextuel pour un paramètre précis d'une classe.
+     *
+     * Exemple:
+     *   $container->bindParameter(Foo::class, 'bar', fn(Config $c) => $c->getString('x.y'));
+     */
+    public function bindParameter(string $class, string $parameter, \Closure $resolver): void
+    {
+        $this->parameterBindings[$this->parameterBindingKey($class, $parameter)] = $resolver;
     }
 
     /**
@@ -119,31 +132,10 @@ final class Container
                 continue;
             }
 
-            // Paramètre annoté #[Bind] → closure auto-wirée fournit la valeur
-            $fromAttrs = $param->getAttributes(Bind::class);
-            if ($fromAttrs !== []) {
-                /** @var Bind $from */
-                $from = $fromAttrs[0]->newInstance();
-                $from->validate($param);
-                $args[] = $this->resolveBind($from);
-                continue;
-            }
-
-            // Paramètre annoté #[BindConfig] → valeur lue dans la config
-            $configAttrs = $param->getAttributes(BindConfig::class);
-            if ($configAttrs !== []) {
-                /** @var BindConfig $cfg */
-                $cfg   = $configAttrs[0]->newInstance();
-                $args[] = $this->get(Config::class)->get($cfg->key);
-                continue;
-            }
-
-            // Paramètre annoté #[BindAdapter] → singleton résolu depuis le container
-            $adapterAttrs = $param->getAttributes(BindAdapter::class);
-            if ($adapterAttrs !== []) {
-                /** @var BindAdapter $adapter */
-                $adapter = $adapterAttrs[0]->newInstance();
-                $args[]  = $this->get($adapter->adapterClass);
+            // Binding contextuel classe+paramètre (déclaré hors code source)
+            $bound = $this->resolveParameterBinding($ref->getName(), $param);
+            if ($bound['matched']) {
+                $args[] = $bound['value'];
                 continue;
             }
 
@@ -164,12 +156,9 @@ final class Container
         return $ref->newInstanceArgs($args);
     }
 
-    /**
-     * Résout un #[Bind] : auto-wire les dépendances de la closure puis retourne sa valeur.
-     */
-    private function resolveBind(Bind $from): mixed
+    private function resolveClosure(\Closure $resolver): mixed
     {
-        $refFn       = new ReflectionFunction($from->resolver);
+        $refFn       = new ReflectionFunction($resolver);
         $closureArgs = [];
         foreach ($refFn->getParameters() as $p) {
             $t = $p->getType();
@@ -179,7 +168,74 @@ final class Container
                 $closureArgs[] = $p->getDefaultValue();
             }
         }
-        return ($from->resolver)(...$closureArgs);
+        return $resolver(...$closureArgs);
+    }
+
+    /**
+     * @return array{matched: bool, value?: mixed}
+     */
+    private function resolveParameterBinding(string $class, \ReflectionParameter $param): array
+    {
+        $key = $this->parameterBindingKey($class, $param->getName());
+        if (!isset($this->parameterBindings[$key])) {
+            return ['matched' => false];
+        }
+
+        $value = $this->resolveClosure($this->parameterBindings[$key]);
+        $this->assertParameterValueType($class, $param, $value);
+
+        return ['matched' => true, 'value' => $value];
+    }
+
+    private function parameterBindingKey(string $class, string $parameter): string
+    {
+        return $class . '::$' . $parameter;
+    }
+
+    private function assertParameterValueType(string $class, \ReflectionParameter $param, mixed $value): void
+    {
+        $type = $param->getType();
+        if (!$type instanceof ReflectionNamedType) {
+            return;
+        }
+
+        if ($value === null) {
+            if ($type->allowsNull()) {
+                return;
+            }
+            throw new RuntimeException(
+                "Container : binding contextuel invalide pour {$class}::\${$param->getName()} (null non autorisé)."
+            );
+        }
+
+        $typeName = $type->getName();
+        if ($type->isBuiltin()) {
+            $isValid = match ($typeName) {
+                'int' => is_int($value),
+                'float' => is_float($value),
+                'string' => is_string($value),
+                'bool' => is_bool($value),
+                'array' => is_array($value),
+                'mixed' => true,
+                default => true,
+            };
+
+            if (!$isValid) {
+                throw new RuntimeException(
+                    "Container : binding contextuel invalide pour {$class}::\${$param->getName()}"
+                    . " (attendu {$typeName}, reçu " . get_debug_type($value) . ")."
+                );
+            }
+
+            return;
+        }
+
+        if (!$value instanceof $typeName) {
+            throw new RuntimeException(
+                "Container : binding contextuel invalide pour {$class}::\${$param->getName()}"
+                . " (attendu {$typeName}, reçu " . get_debug_type($value) . ")."
+            );
+        }
     }
 
     /**
@@ -222,20 +278,14 @@ final class Container
 
                 $type = $param->getType();
 
-                $fromAttrs = $param->getAttributes(Bind::class);
-                if ($fromAttrs !== []) {
-                    /** @var Bind $from */
-                    $from = $fromAttrs[0]->newInstance();
-                    $parentDeps[] = $this->resolveBind($from);
-                } elseif ($param->getAttributes(BindConfig::class) !== []) {
-                    /** @var BindConfig $cfg */
-                    $cfg          = $param->getAttributes(BindConfig::class)[0]->newInstance();
-                    $parentDeps[] = $this->get(Config::class)->get($cfg->key);
-                } elseif ($param->getAttributes(BindAdapter::class) !== []) {
-                    /** @var BindAdapter $adapter */
-                    $adapter      = $param->getAttributes(BindAdapter::class)[0]->newInstance();
-                    $parentDeps[] = $this->get($adapter->adapterClass);
-                } elseif ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
+                // Binding contextuel classe+paramètre (déclaré hors code source)
+                $bound = $this->resolveParameterBinding($parent->getName(), $param);
+                if ($bound['matched']) {
+                    $parentDeps[] = $bound['value'];
+                    continue;
+                }
+
+                if ($type instanceof ReflectionNamedType && !$type->isBuiltin()) {
                     $parentDeps[] = $this->get($type->getName());
                 } elseif ($param->isDefaultValueAvailable()) {
                     $parentDeps[] = $param->getDefaultValue();

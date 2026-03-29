@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 /**
  * Récupère tous les produits du catalogue.
@@ -14,7 +12,6 @@ use RRB\Di\BindAdapter;
 final class GetAllProductsUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
     ) {}
 

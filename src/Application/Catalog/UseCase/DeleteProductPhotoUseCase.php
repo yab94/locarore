@@ -6,16 +6,11 @@ namespace Rore\Application\Catalog\UseCase;
 
 use Rore\Application\Catalog\Port\FileManagerInterface;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Infrastructure\File\FileManagerAdapter;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 class DeleteProductPhotoUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
-        #[BindAdapter(FileManagerAdapter::class)]
         private FileManagerInterface       $fileManager,
     ) {}
 

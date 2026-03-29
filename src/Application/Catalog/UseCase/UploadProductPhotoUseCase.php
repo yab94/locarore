@@ -4,28 +4,18 @@ declare(strict_types=1);
 
 namespace Rore\Application\Catalog\UseCase;
 
-use RRB\Di\BindConfig;
 use Rore\Application\Catalog\Port\FileUploaderInterface;
 use Rore\Application\Catalog\Port\ImageManagerInterface;
 use Rore\Domain\Catalog\Entity\ProductPhoto;
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
-use Rore\Infrastructure\File\FileUploaderAdapter;
-use Rore\Infrastructure\File\ImageManagerAdapter;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 class UploadProductPhotoUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private ProductRepositoryInterface $productRepository,
-        #[BindAdapter(FileUploaderAdapter::class)]
         private FileUploaderInterface      $fileUploader,
-        #[BindAdapter(ImageManagerAdapter::class)]
         private ImageManagerInterface      $imageManager,
-        #[BindConfig('upload.max_width')]
         private int                        $maxWidth,
-        #[BindConfig('upload.max_height')]
         private int                        $maxHeight,
     ) {}
 

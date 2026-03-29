@@ -6,16 +6,11 @@ namespace Rore\Application\Reservation\UseCase;
 
 use Rore\Application\Catalog\Port\ProductRepositoryInterface;
 use Rore\Application\Reservation\Port\ReservationRepositoryInterface;
-use Rore\Infrastructure\Persistence\MySqlProductRepositoryAdapter;
-use Rore\Infrastructure\Persistence\MySqlReservationRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 final class GetCalendarDataUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlReservationRepositoryAdapter::class)]
         private readonly ReservationRepositoryInterface $reservationRepo,
-        #[BindAdapter(MySqlProductRepositoryAdapter::class)]
         private readonly ProductRepositoryInterface $productRepo,
     ) {}
 

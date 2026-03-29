@@ -6,13 +6,10 @@ namespace Rore\Application\Contact\UseCase;
 
 use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
 use RuntimeException;
-use Rore\Infrastructure\Persistence\MySqlContactMessageRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 final class MarkMessageUnreadUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlContactMessageRepositoryAdapter::class)]
         private readonly ContactMessageRepositoryInterface $repo,
     ) {}
 

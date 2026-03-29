@@ -7,13 +7,10 @@ namespace Rore\Application\Contact\UseCase;
 use Rore\Domain\Contact\Entity\ContactMessage;
 use Rore\Application\Contact\Port\ContactMessageRepositoryInterface;
 use RuntimeException;
-use Rore\Infrastructure\Persistence\MySqlContactMessageRepositoryAdapter;
-use RRB\Di\BindAdapter;
 
 final class GetContactMessageUseCase
 {
     public function __construct(
-        #[BindAdapter(MySqlContactMessageRepositoryAdapter::class)]
         private readonly ContactMessageRepositoryInterface $repo,
     ) {}
 
