@@ -12,8 +12,8 @@ $rootCategories = array_filter($headerCategories, fn($c) => $c->getParentId() ==
         <!-- Logo -->
         <a href="/" class="shrink-0">
             <img src="/assets/images/logo-latyana-evenements.png"
-                 alt="Locarore"
-                 title="Locarore"
+                 alt="Latyana-Événements"
+                 title="Latyana-Événements - Location de décoration événementielle"
                  class="h-14 w-auto" width="auto" height="56" fetchpriority="high">
         </a>
 
